@@ -102,14 +102,26 @@ class CashBankAdjustment < ActiveRecord::Base
     end
     
     self.confirmed_at = params[:confirmed_at]
-    self.is_confirmed = true 
+    self.is_confirmed = true  
     
+    if self.cash_bank.exchange.is_base == false 
+      latest_exchange_rate = ExchangeRate.get_latest(
+          :ex_rate_date => self.adjustment_date,
+          :exchange_id => self.cash_bank.exchange_id
+        )
+      self.exchange_rate_amount = latest_exchange_rate.rate
+      self.exchange_rate_id =   latest_exchange_rate.id   
+    else
+      self.exchange_rate_amount = 1
+    end
+   
     if self.save 
       #       update cashbank 
       multiplier = 1 
       multiplier = -1 if self.status == ADJUSTMENT_STATUS[:deduction]
       cash_bank.update_amount( multiplier* amount )
-      
+    
+
       self.generate_cash_mutation  
     end
     
@@ -165,9 +177,7 @@ class CashBankAdjustment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.is_deleted = true
-    self.deleted_at = DateTime.now
-    self.save
+    self.destroy
     return self
   end
 end

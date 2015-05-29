@@ -2,10 +2,24 @@ require 'spec_helper'
 
 describe CashBankAdjustment do
   before(:each) do
+     ChartOfAccount.create_legacy
+    @exc_1 = Exchange.create_object(
+      :name => "@name_1",
+      :description => "@description_1",
+    )
+    
+    @exr_1 = ExchangeRate.create_object(
+      :exchange_id => @exc_1.id,
+      :ex_rate_date => DateTime.now,
+      :rate => BigDecimal("5000")
+    )
+    
+    
     @cb = CashBank.create_object(
       :name => "awesome name" ,
       :description => "ehaufeahifi heaw",
-      :is_bank => true 
+      :is_bank => true ,
+      :exchange_id => @exc_1.id
     )
     
   end
@@ -84,6 +98,8 @@ describe CashBankAdjustment do
     cba.should_not be_valid
   end
   
+ 
+  
   context "can't confirm cashbank adjustment if amount > cashbank.amount" do
     before(:each) do
       @adjustment_amount =  BigDecimal("50000") 
@@ -123,6 +139,11 @@ describe CashBankAdjustment do
       @cba.errors.size.should_not == 0 
       
     end
+   
+    it "should delete CashBankAdjustment" do
+      @cba.delete_object
+      CashBankAdjustment.count.should == 0
+    end
     
     it "should be valid" do
       @cba.should be_valid
@@ -141,6 +162,11 @@ describe CashBankAdjustment do
         @cba.reload 
         @cb.reload
         @final_cb_amount = @cb.amount 
+      end
+      
+      it "should assign exchange_rate_id and exchange_rate_amount" do
+        @cba.exchange_rate_id.should == @exr_1.id
+        @cba.exchange_rate_amount.should == @exr_1.rate
       end
       
       it "should increase cash_bank amount by the adjustment amount" do
@@ -175,6 +201,11 @@ describe CashBankAdjustment do
         cash_mutation.cash_bank_id.should == @cba.cash_bank_id
       end
 
+      it "should not delete CashBankAdjustment if is_confirmed == true" do
+        @cba.delete_object
+        @cba.errors.size.should_not  == 0
+      end
+      
     end
   end
   

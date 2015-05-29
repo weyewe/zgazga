@@ -1,6 +1,6 @@
 class PaymentVoucherDetail < ActiveRecord::Base
 
-  validate :valid_payable
+  validate :valid_payable_and_amount
   validate :valid_payment_voucher
   belongs_to :payable
   belongs_to :payment_voucher
@@ -18,20 +18,24 @@ class PaymentVoucherDetail < ActiveRecord::Base
       return self 
     end
   end 
-  
-  def valid_payable
+   
+  def valid_payable_and_amount
     return if  payable_id.nil?
-    cb = Payable.find_by_id payable_id
+    pyb = Payable.find_by_id payable_id
     
-    if cb.nil? 
+    if pyb.nil? 
       self.errors.add(:payable_id, "Harus ada payable id")
+      return self 
+    end
+    
+    if pyb.remaining_amount < amount
+      self.errors.add(:payable_id, "Amount melebih amount payable")
       return self 
     end
     
     pvcount = PaymentVoucherDetail.where(
       :payment_voucher_id => payment_voucher_id,
-      :is_deleted => false,
-      :payable_id => cb.id
+      :payable_id => pyb.id
       ).count  
     
     if self.persisted?
@@ -45,24 +49,37 @@ class PaymentVoucherDetail < ActiveRecord::Base
       return self 
        end
     end
+    
+    
+    
   end 
+  
+  
   
   def calculateTotalAmount
     amount = 0
-    PaymentVoucherDetail.where(:payment_voucher_id =>payment_voucher_id,:is_deleted => false).each do |pvd|
+    pph_21 = 0
+    pph_23 = 0
+    PaymentVoucherDetail.where(:payment_voucher_id =>payment_voucher_id).each do |pvd|
       amount += pvd.amount
+      pph_23 += pvd.pph_23
     end
-    PaymentVoucher.find_by_id(payment_voucher_id).update_amount(amount)
+    payment_voucher = PaymentVoucher.find_by_id(payment_voucher_id)
+    payment_voucher.update_amount(amount)
+    payment_voucher.update_total_pph_21(pph_21)
+    payment_voucher.update_total_pph_23(pph_23)
   end
   
   def self.create_object(params)
     new_object = self.new
     new_object.payment_voucher_id = params[:payment_voucher_id]
     new_object.payable_id = params[:payable_id]
-    new_object.save
+    new_object.amount_paid = params[:amount_paid]
+    new_object.amount = params[:amount]
+    new_object.pph_21 = params[:pph_21]
+    new_object.pph_23 = params[:pph_23]
+    new_object.rate = params[:rate]
     if new_object.save
-      new_object.amount = Payable.find_by_id(params[:payable_id]).amount
-      new_object.save
       new_object.calculateTotalAmount
     end
     return new_object
@@ -74,9 +91,12 @@ class PaymentVoucherDetail < ActiveRecord::Base
       return self 
     end
     self.payable_id = params[:payable_id]
+    self.amount_paid = params[:amount_paid]
+    self.amount = params[:amount]
+    self.pph_21 = params[:pph_21]
+    self.pph_23 = params[:pph_23]
+    self.rate = params[:rate]
     if self.save
-      self.amount = Payable.find_by_id(params[:payable_id]).amount
-      self.save
       self.calculateTotalAmount
     end
     return self
@@ -87,9 +107,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.is_deleted = true
-    self.deleted_at = DateTime.now
-    self.save
+    self.destroy
     return self
   end
   

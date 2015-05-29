@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe CashBank do
+   ChartOfAccount.create_legacy
   before(:each) do
     @name_1 = "BCA"
     @name_2 = "BNI"
@@ -11,7 +12,7 @@ describe CashBank do
         :description => "@description_1",
     )
     @exc_2 = Exchange.create_object(
-        :name => "@name_1",
+        :name => "@name_21",
         :description => "@description_1",
     )
   end
@@ -77,12 +78,15 @@ describe CashBank do
         :is_bank => false,
         :exchange_id => @exc_2.id
       )
-   
+     
+      @cb_1.errors.each do |x|
+      puts x
+      end
       @cb_1.errors.size.should == 0 
       @cb_1.name.should == @name_2
       @cb_1.description.should == @description_2
       @cb_1.is_bank.should be_false
-      @cb_1.exchange_id.should @exc_2.id
+      @cb_1.exchange_id.should == @exc_2.id
     end
     
     it "should not allow update if name is not valid" do
@@ -100,9 +104,14 @@ describe CashBank do
         :name => @name_2,
         :description => @description_2,
         :is_bank => false,
-        :exchange_id => @exc_2.id
+        :exchange_id => 12312
       )
       @cb_1.errors.size.should_not == 0 
+    end
+    
+    it "should delete CashBank" do
+      @cb_1.delete_object
+      CashBank.count.should == 0
     end
     
     context "can't update object that will dis validate the uniqueness contraint" do

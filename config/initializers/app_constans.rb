@@ -117,4 +117,141 @@ SOLUTION_CASE = {
 ADJUSTMENT_STATUS = {
   :addition => 1, 
   :deduction => 2 
+}
+
+TAX_CODE = {
+  :code_01 => "01",
+  :code_02 => "02",
+  :code_03 => "03",
+  :code_04 => "04",
+  :code_05 => "05",
+  :code_06 => "06",
+  :code_07 => "07",
+  :code_08 => "08",
+  :code_09 => "09",
   }
+
+TAX_VALUE = {
+  :code_01 => 10,
+  :code_02 => 10,
+  :code_03 => 10,
+  :code_04 => 1,
+  :code_05 => 10,
+  :code_06 => 10,
+  :code_07 => 0,
+  :code_08 => 0,
+  :code_09 => 0,
+  }
+
+CONTACT_TYPE = {
+  :customer => "Customer",
+  :supplier => "Supplier",
+  }
+
+ITEM_CASE = {
+  :ready => 1,
+  :pending_receival => 2,
+  :pending_delivery => 3,
+  :virtual => 4 
+  }
+
+ITEM_TYPE_CASE = {
+  :Accessory => "Accessory",	
+  :AdhesiveBlanket => "AdhesiveBlanket",
+  :AdhesiveRoller => "AdhesiveRoller",
+  :Bar => "Bar",
+  :Blanket => "Blanket",
+  :Bearing => "Bearing",
+  :RollBlanket => "RollBlanket",
+  :Chemical => "Chemical",
+  :Compound => "Compound",
+  :Consumable => "Consumable",
+  :Core => "Core",
+  :Glue => "Glue",
+  :Underpacking => "Underpacking",
+  :Roller => "Roller",
+  }
+
+ACCOUNT_GROUP = {
+  :asset => 1,
+  :expense => 2,
+  :liability => 3,
+  :equity => 4,
+  :revenue => 5
+  }
+
+STATUS_ACCOUNT = {
+  :debet => 1,
+  :credit => 2,
+  }
+
+STATUS_PEMBULATAN = {
+  :debet => 1,
+  :credit => 2,
+  }
+
+ACCOUNT_LEGACY_CODE = {
+  :asset => "A1",
+  :current_asset => "A11",
+  :cash_bank => "A1101",
+  :account_receivable => "A1102",
+  :gbch_receivable => "A1103",
+  :inventory => "A1104",
+  :raw => "A1104001",
+  :finished_goods => "A1104002",
+  :piutang_lain_lain => "A1106",
+  :ppn_masukan => "A1107",
+  :pph_23 => "A11070002",
+  :expense => "X2",
+  :cogs_expense => "X21E",
+  :cogs => "X21",
+  :cos => "X22",
+  :operational_expense => "X23",
+  :manufacturing_expense => "X2301",
+  :recovery_expense => "X2301001",
+  :conversion_expense => "X2301002",
+  :selling_general_and_administration_expense => "X2302",
+  :cash_bank_adjustment_expense => "X2302001",
+  :discount => "X2302002",
+  :sales_allowance => "X2302003",
+  :stock_adjustment_expense => "X2302004",
+  :sample_and_trial_expense => "X2302005", 
+  :non_operational_expense => "X24",
+  :depreciation_expense => "X2401",
+  :amortization => "X2402",
+  :interest_expense => "X2403",
+  :tax_expense => "X2404",
+  :divident_expense => "X2405",
+  :exchange_loss => "X25",
+  :biaya_pembulatan => "X62020014",
+  :biaya_admin_bank => "X62090002",
+  :liability => "L3",
+  :current_liability => "L31",
+  :account_payable => "L3101",
+  :gbch_payable => "L3102",
+  :goods_pending_clearance => "L3103",
+  :purchase_allowance => "L3105",
+  :hutang_lain_lain => "L3107",
+  :ppn_keluaran => "L3108",
+  :hutang_pph_21 => "L21050001",
+  :hutang_pph_23 => "L21050002",
+  :non_current_liability => "L32",
+  :equity => "E4",
+  :owners_equity => "E41",
+  :equity_adjustment => "E4101",
+  :net_earning => "E4102",
+  :exchange_gain => "E42",
+  :revenue => "R5",
+  :pendapatan_jasa_giro => "R71010001",
+  :pendapatan_bunga_bank => "R71010002",
+  }
+             
+ORDER_TYPE_CASE = {		
+  :trial_order => 0,	
+  :sample_order => 1,
+  :consignment => 2,	
+  :part_delivery_order => 3,	
+  :sales_order => 4,	
+  :sales_quotation => 5,		
+  }		
+       

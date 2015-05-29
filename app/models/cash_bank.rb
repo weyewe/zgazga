@@ -4,6 +4,7 @@ class CashBank < ActiveRecord::Base
   validates_presence_of :exchange_id
   has_many :cash_bank_adjustments
   belongs_to :receipt_voucher
+  belongs_to :exchange
   validate :valid_exchange_id
   
   def valid_exchange_id

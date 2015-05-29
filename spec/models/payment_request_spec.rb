@@ -2,214 +2,301 @@ require 'spec_helper'
 
 describe PaymentRequest do
   
-  before (:each) do       
-    @name_1 = "vendor1"
-    @address_1 = "address1" 
-    @requestdate = DateTime.now
-
-    @amount = BigDecimal("60000")
-    @description = "description"
-    @vd = Vendor.create_object(
-      :name => @name_1,
-      :address => @address_1,
-      :description => @description_1
+  before (:each) do      
+     ChartOfAccount.create_legacy
+   @cg_1 = ContactGroup.create_object(
+    :name => "Group1" ,
+    :description => "Description1"
     )
     
-    @vd2 = Vendor.create_object(
-      :name => "name_1",
-      :address => "@address_1",
-      :description =>" @description_1"
+  @ct_1 = Contact.create_object(
+    :name => "name_1" ,
+    :address => "address_1",
+    :delivery_address => "delivery_address_1",
+    :description => "description_1",
+    :npwp => "npwp_1" ,
+    :contact_no => "9928321",
+    :pic => "pic_1",
+    :pic_contact_no => "1232133",
+    :email => "email1@email.com",
+    :is_taxable => true,
+    :tax_code => TAX_CODE[:code_01],
+    :contact_type => CONTACT_TYPE[:supplier],
+    :default_payment_term => 30,
+    :nama_faktur_pajak => "nama_faktur_pajak_1",
+    :contact_group_id => @cg_1.id
     )
+
+  @ct_2 = Contact.create_object(
+    :name => "name_2" ,
+    :address => "address_2",
+    :delivery_address => "delivery_address_2",
+    :description => "description_2",
+    :npwp => "npwp_2" ,
+    :contact_no => "9219312",
+    :pic => "pic_2",
+    :pic_contact_no => "123242133",
+    :email => "email2@email.com",
+    :is_taxable => true,
+    :tax_code => TAX_CODE[:code_01],
+    :contact_type => CONTACT_TYPE[:supplier],
+    :default_payment_term => 30,
+    :nama_faktur_pajak => "nama_faktur_pajak_1",
+    :contact_group_id => @cg_1.id
+    )
+    
+  @coa_1 = ChartOfAccount.create_object(
+    :code => "1110101",
+    :name => "KAS",
+    :group => ACCOUNT_GROUP[:asset],
+    :level => 1
+    )
+    
+  @coa_2 = ChartOfAccount.create_object(
+    :code => "111220101",
+    :name => "BANK",
+    :group => ACCOUNT_GROUP[:asset],
+    :level => 1
+    )
+    
+  @exc_1 = Exchange.create_object(
+    :name => "IDR",
+    :description => "description_1",
+    )
+    
+  @exr_1 = ExchangeRate.create_object(
+    :exchange_id => @exc_1.id,
+    :ex_rate_date => DateTime.now,
+    :rate => BigDecimal("1")
+    )
+    @request_date_1 = DateTime.now
+    @request_date_2 = DateTime.now + 1.days
+    @due_date_1 = DateTime.now
+    @due_date_2 = DateTime.now + 1.days   
   end
   
-  it "should allow create payment_request" do
-    advp = PaymentRequest.create_object(
-      :vendor_id => @vd.id,
-      :request_date => @requestdate,
-      
-      :amount => @amount,
-      :description => @description
+  it "cannot create payment_request if contact not valid" do
+    pr = PaymentRequest.create_object(
+      :contact_id => 123213,
+      :request_date => @request_date_1,
+      :due_date => @due_date_1,
+      :exchange_id => @exc_1.id,
+      :chart_of_account_id => @coa_1.id
     )
-    advp.errors.size.should == 0
-    advp.should be_valid
-  end
-  
-  it "cannot create payment_request if vendor not valid" do
-    advp = PaymentRequest.create_object(
-      :vendor_id => 12,
-      :request_date => @requestdate,
-      
-      :amount => @amount,
-      :description => @description
-    )
-    advp.errors.size.should_not == 0
-    advp.should_not be_valid
+    pr.errors.size.should_not == 0
+    pr.should_not be_valid
   end
   
   it "cannot create payment_request if requestdate not valid" do
-    advp = PaymentRequest.create_object(
-      :vendor_id => @vd.id,
+    pr = PaymentRequest.create_object(
+      :contact_id => @ct_1.id,
       :request_date => nil,
-      
-      :amount => @amount,
-      :description => @description
+      :due_date => @due_date_1,
+      :exchange_id => @exc_1.id,
+      :chart_of_account_id => @coa_1.id
     )
-    advp.errors.size.should_not == 0
-    advp.should_not be_valid
+    pr.errors.size.should_not == 0
+    pr.should_not be_valid
   end
   
 
   
-  it "cannot create payment_request if amount not valid" do
-    advp = PaymentRequest.create_object(
-      :vendor_id => @vd.id,
-      :request_date => @requestdate,
-      
-      :amount => 0,
-      :description => @description
+  it "cannot create payment_request if due_date not valid" do
+    pr = PaymentRequest.create_object(
+      :contact_id => @ct_1.id,
+      :request_date => @request_date_1,
+      :due_date => nil,
+      :exchange_id => @exc_1.id,
+      :chart_of_account_id => @coa_1.id
     )
-    advp.errors.size.should_not == 0
-    advp.should_not be_valid
+    pr.errors.size.should_not == 0
+    pr.should_not be_valid
+  end
+  
+  it "cannot create payment_request if coa not valid" do
+    pr = PaymentRequest.create_object(
+      :contact_id => @ct_1.id,
+      :request_date => @request_date_1,
+      :due_date => @due_date_1,
+      :exchange_id => @exc_1.id,
+      :chart_of_account_id => 12321312
+    )
+    pr.errors.size.should_not == 0
+    pr.should_not be_valid
   end
   
   context "Created advance_payment" do
     before (:each) do
-       @advp = PaymentRequest.create_object(
-        :vendor_id => @vd.id,
-        :request_date => @requestdate,
-        
-        :amount => @amount,
-        :description => @description
-       )
+      @pr = PaymentRequest.create_object(
+        :contact_id => @ct_1.id,
+        :request_date => @request_date_1,
+        :due_date => @due_date_1,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => @coa_1.id
+        )
     end
     
     it "should create advance_payment" do
-      @advp.errors.size.should == 0
-      @advp.should be_valid
+      @pr.errors.size.should == 0
+      @pr.should be_valid
     end
     
     it "should update advance_payment" do
-      @new_requestdate = @requestdate + 1.days
-      @new_amount = @amount - 10000
-      @new_description = "description2" 
-      @advp.update_object(
-        :vendor_id => @vd2.id,
-        :request_date => @new_requestdate,
-        :amount => @new_amount,
-        :description => @new_description
+      @pr.update_object(
+        :contact_id => @ct_2.id,
+        :request_date => @request_date_2,
+        :due_date => @due_date_2,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => @coa_2.id
         )
-      @advp.errors.size.should == 0
-      @advp.should be_valid
-      @advp.request_date.should == @new_requestdate
-      @advp.amount.should == @new_amount
-      @advp.description.should == @new_description
+      @pr.should be_valid
+      @pr.errors.size.should == 0
+      
+      @pr.contact_id.should == @ct_2.id
+      @pr.request_date.should == @request_date_2
+      @pr.exchange_id.should == @exc_1.id
+      @pr.chart_of_account_id.should == @coa_2.id
     end
     
-    it "cannot update payment_request if vendor not valid" do
-    @advp.update_object(
-      :vendor_id => 12,
-      :request_date => @requestdate,
-      
-      :amount => @amount,
-      :description => @description
-    )
-    @advp.errors.size.should_not == 0
-    @advp.should_not be_valid
+    it "cannot update payment_request if contact not valid" do
+      @pr.update_object(
+        :contact_id => 123123,
+        :request_date => @request_date_2,
+        :due_date => @due_date_2,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => @coa_2.id
+        )
+      @pr.errors.size.should_not == 0
+      @pr.should_not be_valid
     end
   
     it "cannot update payment_request if requestdate not valid" do
-      @advp.update_object(
-        :vendor_id => @vd.id,
+      @pr.update_object(
+        :contact_id => @ct_2.id,
         :request_date => nil,
-        
-        :amount => @amount,
-        :description => @description
+        :due_date => @due_date_2,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => @coa_2.id
       )
-      @advp.errors.size.should_not == 0
-      @advp.should_not be_valid
+      @pr.errors.size.should_not == 0
+      @pr.should_not be_valid
     end
      
-    it "cannot update payment_request if amount not valid" do
-      @advp.update_object(
-        :vendor_id => @vd.id,
-        :request_date => @requestdate,
-        
-        :amount => 0,
-        :description => @description
+    it "cannot update payment_request if due_date not valid" do
+      @pr.update_object(
+        :contact_id => @ct_2.id,
+        :request_date => @request_date_2,
+        :due_date => nil,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => @coa_2.id
       )
-      @advp.errors.size.should_not == 0
-      @advp.should_not be_valid
+      @pr.errors.size.should_not == 0
+      @pr.should_not be_valid
     end
   
-    
-    it "should confirm_advance_payment" do
-        @advp.confirm_object(:confirmed_at => DateTime.now)
-        @advp.errors.size.should == 0
-        @advp.is_confirmed.should be_true
-        @advp.should be_valid
+    it "cannot update payment_request if coa not valid" do
+      @pr.update_object(
+        :contact_id => @ct_2.id,
+        :request_date => @request_date_2,
+        :due_date => @due_date_2,
+        :exchange_id => @exc_1.id,
+        :chart_of_account_id => 1231
+      )
+      @pr.errors.size.should_not == 0
+      @pr.should_not be_valid
     end
-  
     
-    context "Confirmed advance_payment" do
+    context "Create PaymentRequestDetail" do
       before(:each) do
-       @advp.confirm_object(:confirmed_at => DateTime.now)
+        @prd = PaymentRequestDetail.create_object(
+          :payment_request_id => @pr.id,
+          :chart_of_account_id => @coa_2.id,
+          :status => STATUS_ACCOUNT[:debet],
+          :amount => BigDecimal("100000"),
+          )
       end
       
-      it "cannot update payment_request if already confirmed" do
-        @advp.update_object(
-          :vendor_id => @vd2,
-          :request_date => @requestdate,
-          
-          :amount => @amount,
-          :description => @description
+      it "should create PaymentRequestDetail" do
+        @prd.errors.size.should == 0
+        @prd.should be_valid
+      end
+      
+      it "should not update PaymentRquest if have details" do
+        @pr.update_object(
+          :contact_id => @ct_2.id,
+          :request_date => @request_date_2,
+          :due_date => @due_date_2,
+          :exchange_id => @exc_1.id,
+          :chart_of_account_id => @coa_2.id
         )
-        @advp.errors.size.should_not == 0
+        @pr.errors.size.should_not == 0
       end
       
-      it "cannot confirm if already confirmed" do
-        @advp.confirm_object(:confirmed_at => DateTime.now)
-        @advp.errors.size.should_not == 0
-       
+      it "should not delete PaymentRequest if have details" do
+        @pr.delete_object
+        @pr.errors.size.should_not == 0
       end
       
-      it "should create  1 payable" do
-        payable_count = Payable.where(
-          :source_id => @advp.id,
-          :source_class => @advp.class.to_s,
-          :amount => BigDecimal(@advp.amount)
-          ).count
-        payable_count.should == 1
-      end
-      
-      context "Unconfirm advance_payment" do
+      context "Confirmed PaymentRequest" do
         before(:each) do
-          @advp.unconfirm_object
+         @pr.confirm_object(:confirmed_at => DateTime.now)
         end
-        
-        it "should unconfirm payment_request" do
-          @advp.errors.size.should == 0
-          @advp.is_confirmed.should be_false
-          @advp.confirmed_at == nil
+
+        it "should confirm PaymentRequest" do
+          @pr.errors.size.should == 0
+          @pr.is_confirmed.should be_true
         end
-        
-        it "cannot unconfirm if not confirmed" do
-          @advp.unconfirm_object
-          @advp.errors.size.should_not == 0
+
+        it "cannot update payment_request if already confirmed" do
+          @pr.update_object(
+            :contact_id => @ct_2.id,
+            :request_date => @request_date_2,
+            :due_date => @due_date_2,
+            :exchange_id => @exc_1.id,
+            :chart_of_account_id => @coa_2.id
+          )
+          @pr.errors.size.should_not == 0
         end
-        
-        it "should delete 1 payable" do
+
+        it "cannot confirm if already confirmed" do
+          @pr.confirm_object(:confirmed_at => DateTime.now)
+          @pr.errors.size.should_not == 0
+
+        end
+
+        it "should create  1 payable" do
           payable_count = Payable.where(
-                :source_id => @advp.id,
-                :source_class => @advp.class.to_s,
-                :amount => BigDecimal(@advp.amount),
-                :is_deleted => true
-          ).count
+            :source_id => @pr.id,
+            :source_class => @pr.class.to_s,
+            ).count
           payable_count.should == 1
         end
-        
+
+        context "Unconfirm advance_payment" do
+          before(:each) do
+            @pr.unconfirm_object
+          end
+
+          it "should unconfirm payment_request" do
+            @pr.errors.size.should == 0
+            @pr.is_confirmed.should be_false
+            @pr.confirmed_at == nil
+          end
+
+          it "cannot unconfirm if not confirmed" do
+            @pr.unconfirm_object
+            @pr.errors.size.should_not == 0
+          end
+
+          it "should delete 1 payable" do
+            payable_count = Payable.where(
+                  :source_id => @pr.id,
+                  :source_class => @pr.class.to_s,
+            ).count
+            payable_count.should == 0
+          end
+        end
       end
-      
     end
-    
   end
 end

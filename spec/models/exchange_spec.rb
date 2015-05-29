@@ -6,6 +6,7 @@ describe Exchange do
    @name_2 = "USD"
    @description_1 = "Description 1"
    @description_2 = "Description 2"
+   ChartOfAccount.create_legacy
   end
   
   it "should be allowed to create Exchange" do

@@ -2,12 +2,13 @@ class Exchange < ActiveRecord::Base
    validates_presence_of :name
    validates_uniqueness_of :name
   
-  def self.create_object( params )
-    new_object  = self.new
+  def self.create_object(params)
+    new_object = self.new
     new_object.name = params[:name]
     new_object.description = params[:description]
-    new_object.is_base = false
-    new_object.save
+    if new_object.save
+      ChartOfAccount.create_object_from_exchange(new_object)
+    end
     return new_object
   end
   

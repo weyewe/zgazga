@@ -33,6 +33,10 @@ class CashBankMutation < ActiveRecord::Base
       return self
     end
      
+    if target_cash_bank.exchange_id != source_cash_bank.exchange_id 
+      self.errors.add(:target_cash_bank_id, "Currency cashbank harus sama")
+      return self
+    end
   end 
   
   def valid_amount
@@ -70,7 +74,7 @@ class CashBankMutation < ActiveRecord::Base
     self.mutation_date = params[:mutation_date]
    
     
-    new_object.save
+    self.save
     return self
   end
   
@@ -90,6 +94,8 @@ class CashBankMutation < ActiveRecord::Base
       return self
     end
     
+    
+    
     if self.amount > source_cash_bank.amount 
       self.errors.add(:generic_errors,"Tidak Cukup Dana")
       return self
@@ -100,9 +106,20 @@ class CashBankMutation < ActiveRecord::Base
       return self 
     end
     
+    if self.source_cash_bank.exchange.is_base == false 
+      latest_exchange_rate = ExchangeRate.get_latest(
+        :ex_rate_date => self.adjustment_date,
+        :exchange_id => self.source_cash_bank.exchange_id
+        )
+      self.exchange_rate_amount = latest_exchange_rate.rate
+      self.exchange_rate_id =   latest_exchange_rate.id   
+    else
+      self.exchange_rate_amount = 1
+    end
     
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true
+    
     if self.save
       #       update target cashbank  
       target_cash_bank.update_amount( self.amount )
@@ -133,7 +150,6 @@ class CashBankMutation < ActiveRecord::Base
   
     end
   end
-  
   
   def destroy_cash_mutation
      CashMutation.where(
@@ -170,8 +186,6 @@ class CashBankMutation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.is_deleted = true
-    self.deleted_at = DateTime.now
-    self.save
+    self.destroy
   end
 end

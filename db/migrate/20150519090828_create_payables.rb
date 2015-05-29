@@ -6,9 +6,11 @@ class CreatePayables < ActiveRecord::Migration
       t.string  :source_code
       t.decimal :amount , :default        => 0,  :precision => 14, :scale => 2
       t.decimal :remaining_amount , :default        => 0,  :precision => 14, :scale => 2
-      t.boolean :is_deleted ,:default   => false
-      t.datetime :deleted_at
-      t.timestamps
+      t.integer :exchange_id
+      t.decimal :exchange_rate_amount, :default => 0 , :default => 0,  :precision => 18, :scale => 11
+      t.datetime :due_date
+      t.decimal :pending_clearence_amount , :default        => 0,  :precision => 14, :scale => 2
+      t.boolean :is_completed , :default => false
       t.timestamps
     end
   end

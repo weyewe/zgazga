@@ -8,8 +8,10 @@ class CreateCashBankMutations < ActiveRecord::Migration
       t.boolean :is_confirmed , :default => false
       t.text :description
       t.datetime  :confirmed_at
-      t.datetime :deleted_at 
-      t.boolean :is_deleted, :default => false 
+      t.string :no_bukti
+      t.integer :exchange_rate_id
+      t.decimal :exchange_rate_amount , :default        => 0,  :precision => 18, :scale => 11
+      t.datetime :mutation_date
       t.string :code
       t.timestamps
     end

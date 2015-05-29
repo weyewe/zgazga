@@ -1,17 +1,43 @@
 require 'spec_helper'
 describe CashBankMutation do
   before(:each) do
+     ChartOfAccount.create_legacy
     @initial_cb1_amount = BigDecimal("50000") 
+    @exc_1 = Exchange.create_object(
+      :name => "IDR",
+      :description => "@description_1",
+    )
+    
+    @exc_2 = Exchange.create_object(
+      :name => "USD",
+      :description => "@description_1",
+    )
+    
+    @exr_1 = ExchangeRate.create_object(
+      :exchange_id => @exc_1.id,
+      :ex_rate_date => DateTime.now,
+      :rate => BigDecimal("5000")
+    )
+    
     @cb1 = CashBank.create_object(
       :name => "source name" ,
       :description => "ehaufeahifi heaw",
-      :is_bank => true 
+      :is_bank => true ,
+      :exchange_id => @exc_1.id
     )
     
     @cb2 = CashBank.create_object(
       :name => "target name" ,
       :description => "ehaufeahifi heaw",
-      :is_bank => true 
+      :is_bank => true ,
+      :exchange_id => @exc_1.id
+    )
+    
+    @cb3 = CashBank.create_object(
+      :name => "target name2" ,
+      :description => "different exchange",
+      :is_bank => true ,
+      :exchange_id => @exc_2.id
     )
     
     cba = CashBankAdjustment.create_object(
@@ -43,7 +69,7 @@ describe CashBankMutation do
     cbm.should be_valid
   end
   
-  it"source and target cannot same" do
+  it "source and target cannot same" do
     cbm = CashBankMutation.create_object(
       :target_cash_bank_id => @cb2.id,
       :source_cash_bank_id => @cb2.id,
@@ -101,6 +127,17 @@ describe CashBankMutation do
     cbm.errors.size.should_not == 0
   end
   
+  it "should not create CashBankMutation if source & target CashBank Currency not same" do
+    cbm = CashBankMutation.create_object(
+      :target_cash_bank_id => @cb1.id,
+      :source_cash_bank_id => @cb3.id,
+      :amount =>  BigDecimal('-500'),
+      :description => "params[:description]",
+      :mutation_date => DateTime.now
+    )
+    cbm.errors.size.should_not == 1
+  end
+  
   it "cannot confirm if already confirmed" do
     cbm = CashBankMutation.create_object(
       :target_cash_bank_id => @cb1.id,
@@ -125,8 +162,112 @@ describe CashBankMutation do
     cbm.confirm_object(:confirmed_at => DateTime.now)
     cbm.errors.size.should_not == 0
   end
+  
+  context "create cash_bank_mutation" do
+    before (:each) do
+      @mutation_amount = BigDecimal('25000')
+      @source_cb = @cb1 
+      @target_cb = @cb2
+      @cbm = CashBankMutation.create_object(
+        :target_cash_bank_id => @target_cb.id,
+        :source_cash_bank_id => @source_cb.id,
+        :amount =>  @mutation_amount,
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+    end
+    
+    it "should delete cash_bank_mutation" do
+      @cbm.delete_object
+      CashBankMutation.count.should == 0
+    end
+    
+    it "should update cash_bank_mutation" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb2.id,
+        :source_cash_bank_id => @cb1.id,
+        :amount =>  BigDecimal('60000'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+        )   
+      @cbm.errors.size.should == 0
+      @cbm.target_cash_bank_id.should == @cb2.id
+      @cbm.source_cash_bank_id.should == @cb1.id
+      @cbm.amount.should == BigDecimal('60000')
+    end
+    
+    it "source and target cannot same" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb2.id,
+        :source_cash_bank_id => @cb2.id,
+        :amount =>  BigDecimal('25000'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+      @cbm.errors.size.should_not == 0
 
-  context "confirm cash_bank_mutation"do
+    end
+
+    it "source must valid" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb1.id,
+        :source_cash_bank_id => 20,
+        :amount =>  BigDecimal('25000'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+      @cbm.errors.size.should_not == 0
+
+    end
+
+    it "target must valid" do
+      @cbm.update_object(
+        :target_cash_bank_id => 10,
+        :source_cash_bank_id => @cb2.id,
+        :amount =>  BigDecimal('25000'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+      @cbm.errors.size.should_not == 0
+
+    end
+
+    it "mutation date must valid" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb1.id,
+        :source_cash_bank_id => @cb2.id,
+        :amount =>  BigDecimal('25000'),
+        :description => "params[:description]",
+        :mutation_date => nil
+      )
+      @cbm.errors.size.should_not == 0
+    end
+
+    it "amount must valid" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb1.id,
+        :source_cash_bank_id => @cb2.id,
+        :amount =>  BigDecimal('-500'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+      @cbm.errors.size.should_not == 0
+    end
+
+    it "should not create CashBankMutation if source & target CashBank Currency not same" do
+      @cbm.update_object(
+        :target_cash_bank_id => @cb1.id,
+        :source_cash_bank_id => @cb3.id,
+        :amount =>  BigDecimal('-500'),
+        :description => "params[:description]",
+        :mutation_date => DateTime.now
+      )
+      @cbm.errors.size.should_not == 1
+    end
+    
+  end
+  
+  context "confirm cash_bank_mutation" do
     before (:each) do 
       @mutation_amount = BigDecimal('25000')
       @source_cb = @cb1 
@@ -147,11 +288,16 @@ describe CashBankMutation do
       @cb2_final_amount = @cb2.amount
     end
     
-    it "should be confirmed"do
+    it "should be confirmed" do
       @cbm.is_confirmed.should be_true
     end
     
-    it"should increase target cash bank amount"do
+    it "should not delete CashBankMutation if is_confirmed == true" do
+      @cbm.delete_object
+      @cbm.errors.size.should_not == 0
+    end
+    
+    it "should increase target cash bank amount" do
       diff1 = @cb2_final_amount - @cb2_initial_amount
       diff1.should ==  @mutation_amount
     end
@@ -197,8 +343,6 @@ describe CashBankMutation do
         @cba.confirm_object(:confirmed_at => DateTime.now)
         @target_cb.reload
         @target_cb_amount_post_adjustment = @target_cb.amount
-        
-
       end
       
       it "should confirm adjustment" do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150526020059) do
+ActiveRecord::Schema.define(version: 20150529110005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,13 +33,13 @@ ActiveRecord::Schema.define(version: 20150526020059) do
 
   create_table "cash_bank_adjustments", force: true do |t|
     t.integer  "cash_bank_id"
-    t.decimal  "amount",          precision: 14, scale: 2, default: 0.0
-    t.integer  "status",                                   default: 1
+    t.decimal  "amount",               precision: 14, scale: 2,  default: 0.0
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.integer  "exchange_rate_id"
+    t.integer  "status",                                         default: 1
     t.datetime "adjustment_date"
     t.datetime "confirmed_at"
-    t.boolean  "is_confirmed",                             default: false
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",                               default: false
+    t.boolean  "is_confirmed",                                   default: false
     t.text     "description"
     t.string   "code"
     t.datetime "created_at"
@@ -49,13 +49,14 @@ ActiveRecord::Schema.define(version: 20150526020059) do
   create_table "cash_bank_mutations", force: true do |t|
     t.integer  "target_cash_bank_id"
     t.integer  "source_cash_bank_id"
-    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",               precision: 14, scale: 2,  default: 0.0
     t.datetime "mutation_date"
-    t.boolean  "is_confirmed",                                 default: false
+    t.boolean  "is_confirmed",                                   default: false
     t.text     "description"
     t.datetime "confirmed_at"
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",                                   default: false
+    t.string   "no_bukti"
+    t.integer  "exchange_rate_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -67,8 +68,6 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.text     "description"
     t.boolean  "is_bank",                              default: true
     t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",                           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -81,6 +80,81 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.integer  "status",                                 default: 1
     t.datetime "mutation_date"
     t.integer  "cash_bank_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "chart_of_accounts", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "group"
+    t.integer  "level"
+    t.integer  "parent_id"
+    t.boolean  "is_legacy",             default: false
+    t.boolean  "is_leaf",               default: false
+    t.boolean  "is_cash_bank_account",  default: false
+    t.string   "legacy_code"
+    t.boolean  "is_payable_receivable", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contact_groups", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contacts", force: true do |t|
+    t.string   "name"
+    t.text     "address"
+    t.text     "delivery_address"
+    t.text     "description"
+    t.string   "nama"
+    t.string   "npwp"
+    t.string   "contact_no"
+    t.string   "pic"
+    t.string   "pic_contact_no"
+    t.string   "email"
+    t.string   "is_taxable"
+    t.string   "tax_code"
+    t.string   "contact_type"
+    t.integer  "default_payment_term"
+    t.string   "nama_faktur_pajak"
+    t.integer  "contact_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "delivery_order_details", force: true do |t|
+    t.string   "code"
+    t.integer  "order_type"
+    t.string   "order_code"
+    t.integer  "delivery_order_id"
+    t.integer  "sales_order_detail_id"
+    t.integer  "item_id"
+    t.decimal  "amount",                  precision: 14, scale: 2, default: 0.0
+    t.decimal  "cogs",                    precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_invoiced_amount", precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_all_invoiced",                                  default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "delivery_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "sales_order_id"
+    t.datetime "delivery_date"
+    t.integer  "warehouse_id"
+    t.string   "nomor_surat"
+    t.decimal  "total_cogs",           precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_confirmed",                                   default: false
+    t.boolean  "is_invoice_completed",                           default: false
+    t.datetime "confirmed_at"
+    t.integer  "exchange_rate_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.text     "remark"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -103,7 +177,20 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.datetime "updated_at"
   end
 
+  create_table "employees", force: true do |t|
+    t.string   "name"
+    t.text     "address"
+    t.string   "contact_no"
+    t.string   "email"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "exchange_rates", force: true do |t|
+    t.integer  "exchange_id"
+    t.datetime "ex_rate_date"
+    t.decimal  "rate",         precision: 18, scale: 11, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -166,6 +253,39 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.datetime "updated_at"
   end
 
+  create_table "item_types", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_legacy",           default: false
+    t.integer  "chart_of_account_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "items", force: true do |t|
+    t.integer  "item_type_id"
+    t.string   "sku"
+    t.string   "name"
+    t.string   "description"
+    t.boolean  "is_tradeable",                                default: false
+    t.integer  "uom_id"
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_delivery",   precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_receival",   precision: 14, scale: 2, default: 0.0
+    t.decimal  "virtual",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "minimum_amount",     precision: 14, scale: 2, default: 0.0
+    t.decimal  "customer_amount",    precision: 14, scale: 2, default: 0.0
+    t.decimal  "selling_price",      precision: 14, scale: 2, default: 0.0
+    t.integer  "exchange_id"
+    t.integer  "price_mutation_id"
+    t.decimal  "avg_price",          precision: 14, scale: 2, default: 0.0
+    t.decimal  "customer_avg_price", precision: 14, scale: 2, default: 0.0
+    t.decimal  "price_list",         precision: 14, scale: 2, default: 0.0
+    t.integer  "sub_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "monthly_generators", force: true do |t|
     t.datetime "generated_date"
     t.string   "code"
@@ -182,65 +302,201 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
-    t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
-    t.decimal  "remaining_amount", precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_deleted",                                default: false
-    t.datetime "deleted_at"
+    t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
+    t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount",     precision: 18, scale: 11, default: 0.0
+    t.datetime "due_date"
+    t.decimal  "pending_clearence_amount", precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_completed",                                       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "payment_request_details", force: true do |t|
+    t.integer  "payment_request_id"
+    t.integer  "chart_of_account_id"
+    t.integer  "status",                                       default: 1
+    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_legacy",                                    default: false
+    t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "payment_requests", force: true do |t|
-    t.integer  "vendor_id"
+    t.integer  "contact_id"
+    t.string   "no_bukti"
     t.datetime "request_date"
     t.string   "code"
+    t.integer  "chart_of_account_id"
+    t.integer  "exchange_id"
     t.text     "description"
-    t.decimal  "amount",       precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                          default: false
+    t.decimal  "amount",               precision: 14, scale: 2,  default: 0.0
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.datetime "due_date"
+    t.integer  "exchange_rate_id"
+    t.boolean  "is_confirmed",                                   default: false
     t.datetime "confirmed_at"
-    t.boolean  "is_deleted",                            default: false
-    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "payment_voucher_details", force: true do |t|
     t.integer  "payment_voucher_id"
-    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_paid",        precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_21",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_23",             precision: 14, scale: 2,  default: 0.0
     t.integer  "payable_id"
-    t.boolean  "is_deleted",                                  default: false
-    t.datetime "deleted_at"
+    t.decimal  "rate",               precision: 18, scale: 11, default: 0.0
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "payment_vouchers", force: true do |t|
     t.string   "code"
-    t.text     "description"
-    t.integer  "vendor_id"
+    t.integer  "contact_id"
     t.integer  "cash_bank_id"
+    t.integer  "status_pembulatan"
     t.datetime "payment_date"
-    t.decimal  "amount",       precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                          default: false
+    t.decimal  "amount",              precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate_to_idr",         precision: 18, scale: 11, default: 0.0
+    t.decimal  "total_pph_23",        precision: 18, scale: 11, default: 0.0
+    t.decimal  "total_pph_21",        precision: 18, scale: 11, default: 0.0
+    t.decimal  "biaya_bank",          precision: 18, scale: 11, default: 0.0
+    t.decimal  "pembulatan",          precision: 18, scale: 11, default: 0.0
+    t.string   "no_bukti"
+    t.string   "gbch_no"
+    t.boolean  "is_gbch",                                       default: false
+    t.boolean  "is_reconciled",                                 default: false
+    t.datetime "reconciliation_date"
+    t.datetime "due_date"
+    t.boolean  "is_confirmed",                                  default: false
     t.datetime "confirmed_at"
-    t.boolean  "is_deleted",                            default: false
-    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_invoice_details", force: true do |t|
+    t.integer  "purchase_invoice_id"
+    t.integer  "purchase_receival_detail_id"
+    t.string   "code"
+    t.decimal  "amount",                      precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                       precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_invoices", force: true do |t|
+    t.integer  "purchase_receival_id"
+    t.string   "description"
+    t.string   "code"
+    t.string   "nomor_surat"
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.integer  "exchange_rate_id"
+    t.decimal  "amount_payable",       precision: 14, scale: 2,  default: 0.0
+    t.decimal  "discount",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_taxable",                                     default: false
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "confirmed_at"
+    t.datetime "invoice_date"
+    t.datetime "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_order_details", force: true do |t|
+    t.string   "code"
+    t.integer  "purchase_order_id"
+    t.integer  "item_id"
+    t.decimal  "amount",                  precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                   precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_all_received",                                  default: false
+    t.decimal  "pending_receival_amount", precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "contact_id"
+    t.datetime "purchase_date"
+    t.string   "nomor_surat"
+    t.integer  "exchange_id"
+    t.boolean  "is_receival_completed", default: false
+    t.text     "description"
+    t.boolean  "allow_edit_detail",     default: false
+    t.boolean  "is_confirmed",          default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_receival_details", force: true do |t|
+    t.string   "code"
+    t.integer  "purchase_receival_id"
+    t.integer  "purchase_order_detail_id"
+    t.integer  "item_id"
+    t.decimal  "amount",                   precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_invoiced_amount",  precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_all_invoiced",                                   default: false
+    t.decimal  "cogs",                     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_receivals", force: true do |t|
+    t.string   "code"
+    t.integer  "purchase_order_id"
+    t.datetime "receival_date"
+    t.integer  "warehouse_id"
+    t.string   "nomor_surat"
+    t.integer  "exchange_rate_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.decimal  "total_cogs",           precision: 14, scale: 2,  default: 0.0
+    t.decimal  "total_amount",         precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "confirmed_at"
+    t.boolean  "is_invoice_completed",                           default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "receipt_voucher_details", force: true do |t|
+    t.integer  "receipt_voucher_id"
+    t.decimal  "amount",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_paid",        precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_23",             precision: 14, scale: 2,  default: 0.0
+    t.integer  "receivable_id"
+    t.decimal  "rate",               precision: 18, scale: 11, default: 0.0
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "receipt_vouchers", force: true do |t|
     t.string   "code"
-    t.text     "description"
-    t.integer  "user_id"
-    t.integer  "receivable_id"
+    t.integer  "contact_id"
     t.integer  "cash_bank_id"
+    t.integer  "status_pembulatan"
     t.datetime "receipt_date"
-    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                           default: false
+    t.decimal  "amount",              precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate_to_idr",         precision: 18, scale: 11, default: 0.0
+    t.decimal  "total_pph_23",        precision: 18, scale: 11, default: 0.0
+    t.decimal  "biaya_bank",          precision: 18, scale: 11, default: 0.0
+    t.decimal  "pembulatan",          precision: 18, scale: 11, default: 0.0
+    t.string   "no_bukti"
+    t.string   "gbch_no"
+    t.boolean  "is_gbch",                                       default: false
+    t.boolean  "is_reconciled",                                 default: false
+    t.datetime "reconciliation_date"
+    t.datetime "due_date"
+    t.boolean  "is_confirmed",                                  default: false
     t.datetime "confirmed_at"
-    t.boolean  "is_deleted",                             default: false
-    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -249,10 +505,13 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
-    t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
-    t.decimal  "remaining_amount", precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_deleted",                                default: false
-    t.datetime "deleted_at"
+    t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
+    t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount",     precision: 18, scale: 11, default: 0.0
+    t.datetime "due_date"
+    t.decimal  "pending_clearence_amount", precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_completed",                                       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -262,6 +521,118 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.string   "title",       null: false
     t.text     "description", null: false
     t.json     "the_role",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_invoice_details", force: true do |t|
+    t.integer  "sales_invoice_id"
+    t.integer  "delivery_order_detail_id"
+    t.string   "code"
+    t.decimal  "amount",                   precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                    precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_invoices", force: true do |t|
+    t.integer  "delivery_order_id"
+    t.text     "description"
+    t.string   "code"
+    t.string   "nomor_surat"
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.decimal  "amount_receivable",    precision: 14, scale: 2,  default: 0.0
+    t.decimal  "discount",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
+    t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "confirmed_at"
+    t.datetime "invoice_date"
+    t.datetime "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_order_details", force: true do |t|
+    t.string   "code"
+    t.string   "order_code"
+    t.integer  "sales_order_id"
+    t.integer  "item_id"
+    t.decimal  "amount",                  precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_all_delivered",                                 default: false
+    t.decimal  "pending_delivery_amount", precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                   precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_service",                                       default: false
+    t.boolean  "is_confirmed",                                     default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "order_type"
+    t.string   "order_code"
+    t.integer  "contact_id"
+    t.integer  "employee_id"
+    t.datetime "sales_date"
+    t.string   "nomor_surat"
+    t.integer  "exchange_id"
+    t.boolean  "is_confirmed",          default: false
+    t.boolean  "is_delivery_completed", default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "stock_adjustment_details", force: true do |t|
+    t.integer  "stock_adjustment_id"
+    t.integer  "item_id"
+    t.string   "code"
+    t.integer  "status",                                       default: 1
+    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",               precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "stock_adjustments", force: true do |t|
+    t.integer  "warehouse_id"
+    t.datetime "adjustment_date"
+    t.text     "description"
+    t.string   "code"
+    t.decimal  "total",           precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                             default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "stock_mutations", force: true do |t|
+    t.integer  "item_id"
+    t.integer  "warehouse_id"
+    t.integer  "warehouse_item_id"
+    t.integer  "item_case"
+    t.integer  "status",                                     default: 1
+    t.string   "source_class"
+    t.integer  "source_id"
+    t.string   "source_code"
+    t.datetime "mutation_date"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sub_types", force: true do |t|
+    t.string   "name"
+    t.integer  "item_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "uoms", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -297,6 +668,46 @@ ActiveRecord::Schema.define(version: 20150526020059) do
     t.text     "description"
     t.datetime "deleted_at"
     t.boolean  "is_deleted",  default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "warehouse_items", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "item_id"
+    t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_receival", precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_delivery", precision: 14, scale: 2, default: 0.0
+    t.decimal  "customer_amount",  precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "warehouse_mutation_details", force: true do |t|
+    t.integer  "warehouse_mutation_id"
+    t.integer  "item_id"
+    t.string   "code"
+    t.decimal  "amount",                precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "warehouse_mutations", force: true do |t|
+    t.integer  "warehouse_from_id"
+    t.integer  "warehouse_to_id"
+    t.datetime "mutation_date"
+    t.text     "description"
+    t.string   "code"
+    t.boolean  "is_confirmed",      default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "warehouses", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
