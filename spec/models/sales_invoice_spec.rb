@@ -3,8 +3,6 @@ require 'spec_helper'
 describe SalesInvoice do
   
   before(:each) do
-  ChartOfAccount.create_legacy
-    
   @ep_1 = Employee.create_object(
     :name => "name1",
     :description => "description_1",
@@ -67,17 +65,17 @@ describe SalesInvoice do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
     
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -303,6 +301,7 @@ it "should not create SalesInvoice if invoice_date is not valid" do
         :delivery_order_detail_id => @dord_1.id,
         :amount => BigDecimal("10"),
         )
+        @si.reload
       end
       
       it "should create SalesInvoiceDetail" do
@@ -334,6 +333,14 @@ it "should not create SalesInvoice if invoice_date is not valid" do
         
         it "should confirm SalesInvoice" do
           @si.is_confirmed.should be true
+        end
+        
+        it "should create TransactionData" do
+          td = TransactionData.where(
+            :transaction_source_type => @si.class.to_s,
+            :transaction_source_id => @si.id
+            )
+          td.count.should == 1
         end
         
         it "should create 1 receivable" do

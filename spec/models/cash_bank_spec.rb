@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CashBank do
-   ChartOfAccount.create_legacy
+  
   before(:each) do
     @name_1 = "BCA"
     @name_2 = "BNI"

@@ -4,7 +4,7 @@ class CreateItemTypes < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.boolean :is_legacy , :default => false
-      t.integer :chart_of_account_id
+      t.integer :account_id
       t.timestamps
     end
   end

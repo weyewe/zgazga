@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe ReceiptVoucher do
   before(:each) do
-    ChartOfAccount.create_legacy
     
     @ep_1 = Employee.create_object(
       :name => "name1",
@@ -65,17 +64,17 @@ describe ReceiptVoucher do
       :contact_group_id => @cg_1.id
       )
 
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
     
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -427,7 +426,6 @@ describe ReceiptVoucher do
             @rv.errors.size.should_not == 0
           end
           
-          
         end
         
         it "should update each receivable.remaining_amount to 0" do
@@ -510,6 +508,14 @@ describe ReceiptVoucher do
         
         it "should update cashbank amount to 100000" do
           @cb_1.amount.should == BigDecimal("100000")
+        end
+        
+        it "should create TransactionData" do
+          td = TransactionData.where(
+            :transaction_source_type => @rv.class.to_s,
+            :transaction_source_id => @rv.id
+            )
+          td.count.should == 1
         end
         
         it "should create 1 cash mutation" do

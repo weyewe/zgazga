@@ -3,7 +3,6 @@ require 'spec_helper'
 describe StockAdjustment do
   
   before(:each) do
-     ChartOfAccount.create_legacy
     @wrh_1 = Warehouse.create_object(
       :name => "whname_1" ,
       :description => "description_1",
@@ -26,7 +25,7 @@ describe StockAdjustment do
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(

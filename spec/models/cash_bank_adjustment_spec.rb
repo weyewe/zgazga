@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CashBankAdjustment do
   before(:each) do
-     ChartOfAccount.create_legacy
+    
     @exc_1 = Exchange.create_object(
       :name => "@name_1",
       :description => "@description_1",
@@ -21,12 +21,12 @@ describe CashBankAdjustment do
       :is_bank => true ,
       :exchange_id => @exc_1.id
     )
-    
   end
   
   it "should have valid cb" do
     @cb.errors.size.should == 0
     @cb.should be_valid
+   
   end
 
   
@@ -158,6 +158,7 @@ describe CashBankAdjustment do
       before(:each) do 
         @initial_cb_amount = @cb.amount 
         @cba.confirm_object(:confirmed_at => DateTime.now )
+      
         @cba.is_confirmed.should be_true
         @cba.reload 
         @cb.reload
@@ -169,6 +170,10 @@ describe CashBankAdjustment do
         @cba.exchange_rate_amount.should == @exr_1.rate
       end
       
+      it "should create transactional data" do 
+        TransactionData.count.should == 1
+      end
+    
       it "should increase cash_bank amount by the adjustment amount" do
         diff=  @final_cb_amount - @initial_cb_amount
         diff.should == @adjustment_amount

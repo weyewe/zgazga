@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe SalesOrder do
   before(:each) do  
-     ChartOfAccount.create_legacy
   @ep_1 = Employee.create_object(
     :name => "name1",
     :description => "description_1",
@@ -70,7 +69,7 @@ describe SalesOrder do
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(

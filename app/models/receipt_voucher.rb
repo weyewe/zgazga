@@ -196,6 +196,7 @@ class ReceiptVoucher < ActiveRecord::Base
       if not self.is_gbch?
          self.generate_cash_mutation
          self.update_cash_bank_amount(self.amount)
+         AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
       end
     end
     return self
@@ -220,6 +221,7 @@ class ReceiptVoucher < ActiveRecord::Base
        if not self.is_gbch?
          self.delete_cash_mutation
          self.update_cash_bank_amount(self.amount * -1)
+         AccountingService::CreateReceiptVoucherJournal.undo_create_confirmation_journal(self)
        end
     end
     return self
@@ -246,6 +248,7 @@ class ReceiptVoucher < ActiveRecord::Base
       self.reconciled_detail
       self.generate_cash_mutation
       self.update_cash_bank_amount(self.amount)
+      AccountingService::CreateReceiptVoucherJournal.create_reconcile_journal(self)
     end
     return self
   end
@@ -273,6 +276,7 @@ class ReceiptVoucher < ActiveRecord::Base
       self.unreconciled_detail
       self.delete_cash_mutation
       self.update_cash_bank_amount(self.amount * -1)
+      AccountingService::CreateReceiptVoucherJournal.undo_create_reconcile_journal(self)
     end
     return self
   end

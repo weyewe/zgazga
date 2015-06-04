@@ -35,9 +35,7 @@ class HomeAssignment < ActiveRecord::Base
       :is_deleted => false 
       ).first
      
-#     current_home = self.home 
-    puts "gonnna go to the validaation"
-    puts "#{previous_assignment}"
+
     if self.persisted? 
       
       if  (not previous_assignment.nil?) and  previous_assignment.id != self.id

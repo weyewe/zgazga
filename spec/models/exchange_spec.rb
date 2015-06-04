@@ -6,7 +6,6 @@ describe Exchange do
    @name_2 = "USD"
    @description_1 = "Description 1"
    @description_2 = "Description 2"
-   ChartOfAccount.create_legacy
   end
   
   it "should be allowed to create Exchange" do
@@ -44,6 +43,13 @@ describe Exchange do
       )
     end
   
+     it "should update gbch_ar_ap_id  " do
+        @exc_1.account_payable_id.should_not == nil
+        @exc_1.account_receivable_id.should_not == nil
+        @exc_1.gbch_payable_id.should_not == nil
+        @exc_1.gbch_receivable_id.should_not == nil
+      end
+      
     it "should update exchange" do
       @exc_1.update_object(
         :name => @name_2,
@@ -106,6 +112,7 @@ describe Exchange do
         @base_exc.errors.size.should_not == 0 
       end
       
+     
       it "should not delete if is_base is true" do
         @base_exc.delete_object
         @base_exc.errors.size.should_not == 0

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PurchaseReceival do
   before(:each) do
-     ChartOfAccount.create_legacy
+   
   @wrh_1 = Warehouse.create_object(
     :name => "whname_1" ,
     :description => "description_1",
@@ -56,17 +56,19 @@ describe PurchaseReceival do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+  
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+   
       )
-    
+  
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -108,7 +110,8 @@ describe PurchaseReceival do
       :selling_price => BigDecimal("1000"),
       :exchange_id => @exc_1.id,
       )
-    
+   
+      
    @po_1 = PurchaseOrder.create_object(
       :contact_id => @ct_1.id,
       :purchase_date => DateTime.now,
@@ -345,6 +348,10 @@ it "should not create PurchaseReceival if receival_date is not valid" do
         it "should create 2 stockmutation" do
           sm = StockMutation.where(:source_id => @pr.id,:source_class => @pr.class.to_s)
           sm.count.should == 2
+        end
+        
+        it "should create TransactionalData" do 
+          puts TransactionData.all.inspect 
         end
         
         it "should not double confirm" do

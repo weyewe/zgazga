@@ -5,6 +5,7 @@ class PaymentVoucher < ActiveRecord::Base
   validate :valid_contact
   belongs_to :contact
   belongs_to :cash_bank
+  belongs_to :exchange
   has_many :payment_voucher_details
   
   
@@ -105,11 +106,11 @@ class PaymentVoucher < ActiveRecord::Base
     cb.update_amount(amount)
   end
   
-  def update_payable_remaining_amount(payable_id,amount)
+  def update_payable_remaining_amount(payable_id,amount)   
     rv = Payable.find_by_id(payable_id)
     rv.update_remaining_amount(amount)
   end
-  
+   
   def generate_cash_mutation()
       CashMutation.create_object(
         :source_class => self.class.to_s, 
@@ -205,6 +206,7 @@ class PaymentVoucher < ActiveRecord::Base
          self.generate_cash_mutation
          self.update_cash_bank_amount(self.amount * -1)
       end
+      AccountingService::CreatePaymentVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end
@@ -221,6 +223,7 @@ class PaymentVoucher < ActiveRecord::Base
        if not self.is_gbch?
          self.delete_cash_mutation
          self.update_cash_bank_amount(self.amount)
+         AccountingService::CreatePaymentVoucherJournal.undo_create_confirmation_journal(self)
        end
     end
     return self
@@ -250,6 +253,7 @@ class PaymentVoucher < ActiveRecord::Base
       self.reconciled_detail
       self.generate_cash_mutation
       self.update_cash_bank_amount(self.amount * -1)
+      AccountingService::CreatePaymentVoucherJournal.create_reconcile_journal(self)
     end
     return self
   end
@@ -273,6 +277,7 @@ class PaymentVoucher < ActiveRecord::Base
       self.unreconciled_detail
       self.delete_cash_mutation
       self.update_cash_bank_amount(self.amount)
+      AccountingService::CreatePaymentVoucherJournal.undo_create_reconcile_journal(self)
     end
     return self
   end

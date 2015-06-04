@@ -21,12 +21,12 @@ describe SubType do
     @itp_1 = ItemType.create_object(
       :name => "ItemType1" ,
       :description => @description_1,
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     @itp_2 = ItemType.create_object(
       :name => "ItemType2" ,
       :description => @description_2,
-      :chart_of_account_id => @coa_2.id
+      :account_id => @coa_2.id
       )
      
   end

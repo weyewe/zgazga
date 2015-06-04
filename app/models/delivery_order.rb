@@ -103,6 +103,7 @@ class DeliveryOrder < ActiveRecord::Base
     
     if self.save 
       self.update_delivery_order_confirm    
+      AccountingService::CreateDeliveryOrderJournal.create_confirmation_journal(self)
     end
     return self 
   end
@@ -117,6 +118,7 @@ class DeliveryOrder < ActiveRecord::Base
     self.confirmed_at = nil 
     if self.save
       self.update_delivery_order_unconfirm
+      AccountingService::CreateDeliveryOrderJournal.undo_create_confirmation_journal(self)
     end
     return self
   end
@@ -215,8 +217,10 @@ class DeliveryOrder < ActiveRecord::Base
       dod.cogs = 0
 #       set detail sales_order,pending_delivery_amount
       
-      dod.sales_order_detail.pending_delivery_amount += dod.amount
-      dod.sales_order_detail.is_all_delivered == false
+      if not dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
+        dod.sales_order_detail.pending_delivery_amount += dod.amount
+        dod.sales_order_detail.is_all_delivered == false
+      end
       dod.sales_order_detail.save
       dod.save
     end

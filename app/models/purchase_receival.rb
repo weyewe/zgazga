@@ -96,6 +96,7 @@ class PurchaseReceival < ActiveRecord::Base
     
     if self.save 
       self.update_purchase_receival_confirm    
+      AccountingService::CreatePurchaseReceivalJournal.create_confirmation_journal(self)
     end
     return self 
   end
@@ -110,6 +111,7 @@ class PurchaseReceival < ActiveRecord::Base
     self.confirmed_at = nil 
     if self.save
       self.update_purchase_receival_unconfirm
+      AccountingService::CreatePurchaseReceivalJournal.undo_create_confirmation_journal(self)
     end
     return self
   end
@@ -136,7 +138,7 @@ class PurchaseReceival < ActiveRecord::Base
     self.purchase_receival_details.each do |prd|
 #       Update Item PendingReceival
       
-      item_price = self.exchange_rate_amount * prd.purchase_order_detail.price    
+      item_price = (self.exchange_rate_amount * prd.purchase_order_detail.price).round(2)    
       prd.item.calculate_avg_price(:added_amount => prd.amount,:added_avg_price => item_price)
       
       new_stock_mutation = StockMutation.create_object(

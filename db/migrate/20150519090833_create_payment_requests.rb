@@ -5,7 +5,7 @@
       t.string :no_bukti
       t.datetime :request_date
       t.string :code
-      t.integer :chart_of_account_id
+      t.integer :account_id
       t.integer :exchange_id
       t.text :description 
       t.decimal :amount , :default        => 0,  :precision => 14, :scale => 2

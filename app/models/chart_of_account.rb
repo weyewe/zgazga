@@ -118,14 +118,18 @@ class ChartOfAccount < ActiveRecord::Base
     new_object.save
   end
   
+  def self.create_object_from_cash_bank(params)
+  end
+  
+  
+  
   def self.create_object(params)
     new_object = self.new
     new_object.code = params[:code]
     new_object.name = params[:name]
-    new_object.group = params[:group]
-    new_object.level = params[:level]
+    new_object.account_case = params[:account_case]
     new_object.parent_id = params[:parent_id]
-    new_object.is_leaf = params[:is_leaf]   
+    new_object.is_base_account = false
     new_object.save
     return new_object
   end

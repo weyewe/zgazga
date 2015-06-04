@@ -1,6 +1,6 @@
 class Payable < ActiveRecord::Base
   
-#   belongs_to :exchange    
+  belongs_to :exchange    
   
   def self.active_objects
   self

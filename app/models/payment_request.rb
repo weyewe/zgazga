@@ -1,13 +1,13 @@
 class PaymentRequest < ActiveRecord::Base
   has_many :payment_request_details
-  belongs_to :chart_of_account
+  belongs_to :account
   belongs_to :exchange
   validates_presence_of :contact_id
   validates_presence_of :request_date
   validates_presence_of :due_date
    
   validate :valid_contact
-  validate :valid_chart_of_account
+  validate :valid_account
   
   def self.active_objects
     return self
@@ -22,11 +22,11 @@ class PaymentRequest < ActiveRecord::Base
     end
   end
   
-  def valid_chart_of_account
-    return if chart_of_account_id.nil? 
-    coa = ChartOfAccount.find_by_id(chart_of_account_id)
+  def valid_account
+    return if account_id.nil? 
+    coa = Account.find_by_id(account_id)
     if coa.nil?
-      self.errors.add(:chart_of_account_id, "Harus ada Account Id")
+      self.errors.add(:account_id, "Harus ada Account Id")
       return self
     end
   end
@@ -37,7 +37,7 @@ class PaymentRequest < ActiveRecord::Base
     new_object.request_date = params[:request_date]
     new_object.due_date = params[:due_date]
     new_object.exchange_id = params[:exchange_id]
-    new_object.chart_of_account_id = params[:chart_of_account_id]
+    new_object.account_id = params[:account_id]
     if new_object.save
       new_object.code = "Pr-" + new_object.id.to_s  
       new_object.save
@@ -52,7 +52,7 @@ class PaymentRequest < ActiveRecord::Base
       return self
     end
     
-    if not self.payment_request_details.count == 0
+    if self.payment_request_details.count > 0
       self.errors.add(:generic_errors, "memiliki detail")
       return self 
     end
@@ -61,7 +61,7 @@ class PaymentRequest < ActiveRecord::Base
     self.request_date = params[:request_date]
     self.due_date = params[:due_date]
     self.exchange_id = params[:exchange_id]
-    self.chart_of_account_id = params[:chart_of_account_id]
+    self.account_id = params[:account_id]
     self.save
     return self
   end
@@ -114,7 +114,11 @@ class PaymentRequest < ActiveRecord::Base
     end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
-    self.generate_payable if self.save  
+    if self.save  
+      self.generate_payable 
+      AccountingService::CreatePaymentRequestJournal.create_confirmation_journal(self)
+    end
+    return self
   end
   
   def unconfirm_object
@@ -138,7 +142,9 @@ class PaymentRequest < ActiveRecord::Base
     self.confirmed_at = nil
     if self.save
       self.delete_payable
+      AccountingService::CreatePaymentRequestJournal.undo_create_confirmation_journal(self)
     end
+    return self
   end
   
   def delete_object
@@ -147,7 +153,7 @@ class PaymentRequest < ActiveRecord::Base
       return self 
     end
  
-    if not self.payment_request_details.count == 0
+    if self.payment_request_details.count > 0
       self.errors.add(:generic_errors, "memiliki detail")
       return self 
     end

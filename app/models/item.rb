@@ -1,5 +1,5 @@
 class Item < ActiveRecord::Base
-  
+  belongs_to :item_type
   validates_presence_of :sku
   validates_uniqueness_of :sku
   validates_presence_of :name
@@ -34,7 +34,7 @@ class Item < ActiveRecord::Base
     self.save
   end
   
-  def update_virtual_amount(amount)
+  def update_virtual(amount)
     self.virtual += amount
     self.save
   end

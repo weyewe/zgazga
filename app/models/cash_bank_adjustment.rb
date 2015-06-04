@@ -1,6 +1,5 @@
 class CashBankAdjustment < ActiveRecord::Base
   belongs_to :cash_bank
-  
   validates_presence_of :cash_bank_id
   validates_presence_of :adjustment_date
   validates_presence_of :status
@@ -58,7 +57,6 @@ class CashBankAdjustment < ActiveRecord::Base
     new_object.save
     new_object.code = "Cadj-" + new_object.id.to_s  
     new_object.save
-    
     return new_object
   end
   
@@ -67,7 +65,7 @@ class CashBankAdjustment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
-    
+   
     self.cash_bank_id = params[:cash_bank_id]
     self.amount = BigDecimal( params[:amount] || '0')
     self.status = params[:status]
@@ -119,10 +117,11 @@ class CashBankAdjustment < ActiveRecord::Base
       #       update cashbank 
       multiplier = 1 
       multiplier = -1 if self.status == ADJUSTMENT_STATUS[:deduction]
-      cash_bank.update_amount( multiplier* amount )
+      self.cash_bank.update_amount( multiplier* amount )
     
 
-      self.generate_cash_mutation  
+      self.generate_cash_mutation
+      AccountingService::CreateCashBankAdjustmentJournal.create_confirmation_journal(self)
     end
     
     return self 
@@ -164,7 +163,7 @@ class CashBankAdjustment < ActiveRecord::Base
       multiplier = 1 
       multiplier = -1 if self.status == ADJUSTMENT_STATUS[:addition]
       cash_bank.update_amount( multiplier* amount ) 
-      
+      AccountingService::CreateCashBankAdjustmentJournal.undo_create_confirmation_journal(self)
       self.destroy_cash_mutation 
     end
     

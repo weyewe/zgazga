@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe PurchaseInvoice do
   before(:each) do
-     ChartOfAccount.create_legacy
   @wrh_1 = Warehouse.create_object(
     :name => "whname_1" ,
     :description => "description_1",
@@ -56,17 +55,17 @@ describe PurchaseInvoice do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
     
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -273,12 +272,12 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
         :purchase_receival_detail_id => @prd_1.id,
         :amount => BigDecimal("10"),
         )
+      @pi.reload
       end
       
       it "should create PurchaseInvoiceDetail" do
         @pid_1.should be_valid
         @pid_1.errors.size.should == 0
-        
       end
       
       it "should not update PurchaseInvoice if have details" do
@@ -313,6 +312,11 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
             )
           payable.count.should == 1
           payable.first.amount.should == @pi.amount_payable
+        end
+        
+        it "should create TransactionData" do
+          TransactionData.count.should == 1
+          TransactionDate.first.is_confirmed == true
         end
         
         it "should set Purchase_receival is_invoice_completed to true" do

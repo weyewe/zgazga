@@ -6,6 +6,7 @@ class CreateSalesInvoiceDetails < ActiveRecord::Migration
       t.string :code
       t.decimal :amount, :default => 0 , :default => 0,  :precision => 14, :scale => 2
       t.decimal :price, :default => 0 , :default => 0,  :precision => 14, :scale => 2  
+      t.decimal :cos, :default => 0 , :default => 0,  :precision => 14, :scale => 2  
       t.timestamps
     end
   end

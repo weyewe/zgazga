@@ -108,7 +108,7 @@ class CashBankMutation < ActiveRecord::Base
     
     if self.source_cash_bank.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
-        :ex_rate_date => self.adjustment_date,
+        :ex_rate_date => self.mutation_date,
         :exchange_id => self.source_cash_bank.exchange_id
         )
       self.exchange_rate_amount = latest_exchange_rate.rate
@@ -147,7 +147,7 @@ class CashBankMutation < ActiveRecord::Base
         :cash_bank_id => self.source_cash_bank_id ,
         :source_code => self.code
         )
-  
+      AccountingService::CreateCashBankMutationJournal.create_confirmation_journal(self)
     end
   end
   
@@ -178,6 +178,7 @@ class CashBankMutation < ActiveRecord::Base
       source_cash_bank.update_amount(self.amount )
       
       self.destroy_cash_mutation    
+      AccountingService::CreateCashBankMutationJournal.undo_create_confirmation_journal(self)
     end  
   end
     

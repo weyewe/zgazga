@@ -105,6 +105,7 @@ class SalesInvoice < ActiveRecord::Base
     if self.save 
       self.generate_receivable    
       self.update_sales_invoice_confirm
+      AccountingService::CreateSalesInvoiceJournal.create_confirmation_journal(self)
     end
     return self 
   end
@@ -134,6 +135,7 @@ class SalesInvoice < ActiveRecord::Base
     if self.save
       self.delete_receivable
       self.update_sales_invoice_unconfirm
+      AccountingService::CreateSalesInvoiceJournal.undo_create_confirmation_journal(self)
     end
     return self
   end

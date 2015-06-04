@@ -1,6 +1,6 @@
 class Receivable < ActiveRecord::Base
   belongs_to :receipt_voucher
-  
+  belongs_to :exchange
   
   def self.active_objects
     return self

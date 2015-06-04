@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe DeliveryOrder do
   before(:each) do
-   ChartOfAccount.create_legacy
    @ep_1 = Employee.create_object(
     :name => "name1",
     :description => "description_1",
@@ -65,17 +64,17 @@ describe DeliveryOrder do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = ChartOfAccount.create_object(
+    @coa_1 = Account.create_object(
       :code => "1110101",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
     
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -337,6 +336,14 @@ it "should not create DeliveryOrder if delivery_date is not valid" do
         
         it "should confirm DeliveryOrder" do
           @dor.is_confirmed.should be true
+        end
+        
+        it "should create 1 TransactionalData" do
+         td = TransactionData.where(
+           :transaction_source_type => @dor.class.to_s,
+            :transaction_source_id => @dor.id
+            )
+          td.count.should == 1
         end
         
         it "should change Item pending_delivery amount to 0" do

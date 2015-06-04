@@ -60,7 +60,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     new_object.amount = BigDecimal( params[:amount] || '0')
     
     if new_object.save
-      new_object.price = new_object.purchase_receival_detail.purchase_order_detail.price
+      new_object.price = new_object.purchase_receival_detail.purchase_order_detail.price * new_object.amount
       new_object.code = "SadjD-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
@@ -96,9 +96,9 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
   def calculateTotalAmount
     amount = 0
     PurchaseInvoiceDetail.where(:purchase_invoice_id =>purchase_invoice_id).each do |pid|
-      amount += pid.amount * pid.price
+      amount += pid.price
     end
-    PurchaseInvoice.find_by_id(purchase_invoice_id).update_amount_payable(amount)
+    pi = PurchaseInvoice.find_by_id(purchase_invoice_id).update_amount_payable(amount)
   end
   
 end

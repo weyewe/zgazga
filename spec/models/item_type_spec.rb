@@ -6,13 +6,13 @@ describe ItemType do
     @name_2 = "item_type2"
     @description_1 = "description_1"
     @description_2 = "description_2"
-    @coa_1 = ChartOfAccount.create_object(
+    @coa_1 = Account.create_object(
         :code => "1110101",
         :name => "KAS",
         :group => ACCOUNT_GROUP[:asset],
         :level => 1
       )
-    @coa_2 = ChartOfAccount.create_object(
+    @coa_2 = Account.create_object(
         :code => "111102",
         :name => "BANK",
         :group => ACCOUNT_GROUP[:expense],
@@ -24,7 +24,7 @@ describe ItemType do
     itp = ItemType.create_object(
       :name => @name_1,
       :description => @description_1,
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
     )
     
     itp.should be_valid
@@ -35,7 +35,7 @@ describe ItemType do
     itp = ItemType.create_object(
       :name => nil ,
       :description => @description_1,
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     itp.errors.size.should_not == 0 
@@ -47,7 +47,7 @@ describe ItemType do
     itp = ItemType.create_object(
        :name => "" ,
        :description => @description_1,
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
     )
     
     itp.errors.size.should_not == 0 
@@ -55,11 +55,11 @@ describe ItemType do
     
   end
   
-  it "should create object if chart_of_account_id is not valid " do
+  it "should create object if account_id is not valid " do
     itp = ItemType.create_object(
        :name => @name_1 ,
        :description => @description_1,
-       :chart_of_account_id => 123
+       :account_id => 123
     )
     
     itp.errors.size.should_not == 0 
@@ -71,7 +71,7 @@ describe ItemType do
       @itp = ItemType.create_object(
         :name => @name_1 ,
         :description => @description_1,
-        :chart_of_account_id => @coa_1.id
+        :account_id => @coa_1.id
       )
     end
     
@@ -84,7 +84,7 @@ describe ItemType do
      @itp.update_object(
         :name => nil,
         :description => @description_1,
-       :chart_of_account_id => @coa_1.id
+       :account_id => @coa_1.id
      )
      @itp.errors.size.should_not == 0 
      @itp.should_not be_valid
@@ -94,7 +94,7 @@ describe ItemType do
      @itp.update_object(
        :name => "",
        :description => @description_1,
-       :chart_of_account_id => @coa_1.id
+       :account_id => @coa_1.id
      )
      @itp.errors.size.should_not == 0 
      @itp.should_not be_valid
@@ -104,7 +104,7 @@ describe ItemType do
      @itp.update_object(
        :name => @name_1,
         :description => @description_1,
-       :chart_of_account_id => 1234
+       :account_id => 1234
      )
      @itp.errors.size.should_not == 0 
      @itp.should_not be_valid
@@ -114,11 +114,11 @@ describe ItemType do
       @itp.update_object(
        :name => @name_2 ,
        :description => @description_2,
-        :chart_of_account_id => @coa_2.id
+        :account_id => @coa_2.id
       )
       @itp.name.should == @name_2
       @itp.description.should == @description_2
-      @itp.chart_of_account_id.should == @coa_2.id
+      @itp.account_id.should == @coa_2.id
     end
   
     it "should delete object" do

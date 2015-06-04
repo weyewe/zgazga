@@ -3,7 +3,6 @@ require 'spec_helper'
 describe PaymentVoucher do
  
   before(:each) do
-     ChartOfAccount.create_legacy
     @wrh_1 = Warehouse.create_object(
       :name => "whname_1" ,
       :description => "description_1",
@@ -57,17 +56,17 @@ describe PaymentVoucher do
       :contact_group_id => @cg_1.id
       )
 
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+   @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
     
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
-      :chart_of_account_id => @coa_1.id
+      :account_id => @coa_1.id
       )
     
     @sbp_1 = SubType.create_object(
@@ -157,7 +156,7 @@ describe PaymentVoucher do
     
     @cba = CashBankAdjustment.create_object(
         :cash_bank_id => @cb_1.id,
-        :amount =>  BigDecimal("100000") ,
+        :amount =>  BigDecimal("110000") ,
         :status => ADJUSTMENT_STATUS[:addition] ,
         :adjustment_date => DateTime.now  ,
         :description => nil ,
@@ -339,8 +338,8 @@ describe PaymentVoucher do
         @pvd = PaymentVoucherDetail.create_object(
           :payment_voucher_id => @pv.id,
           :payable_id => @payable_1.id,
-          :amount => BigDecimal("100000"),
-          :amount_paid => BigDecimal("100000"),
+          :amount => BigDecimal("110000"),
+          :amount_paid => BigDecimal("110000"),
           :pph_21 => BigDecimal("100"),
           :pph_23 => BigDecimal("100"),
           :rate => BigDecimal("1")
@@ -348,9 +347,9 @@ describe PaymentVoucher do
         @pv.reload
       end
       
-      it "should have detail and payment_voucher.amount == 100000" do
+      it "should have detail and payment_voucher.amount == 110000" do
         @pv.payment_voucher_details.count.should == 1
-        @pv.amount.should == BigDecimal("100000")
+        @pv.amount.should == BigDecimal("110000")
       end
       
       it "cannot delete payment_voucher if have detail" do
@@ -387,6 +386,14 @@ describe PaymentVoucher do
           @payable_1.remaining_amount.should == 0
         end
         
+        it "should create TransactionData" do
+          td = TransactionData.where(
+            :transaction_source_type => @pv.class.to_s,
+            :transaction_source_id => @pv.id
+            )
+          td.count.should == 1
+        end
+        
         context "reconcile payment_voucher" do
           before(:each) do
             @pv.reconcile_object(:reconciliation_date => DateTime.now)
@@ -401,6 +408,16 @@ describe PaymentVoucher do
             @cb_1.amount.should == BigDecimal("0")
           end
           
+           it "should create 2 TransactionData" do
+          td = TransactionData.where(
+            :transaction_source_type => @pv.class.to_s,
+            :transaction_source_id => @pv.id
+            )
+          td.count.should == 2
+             puts td.all.inspect
+        end
+          
+          
           context "unreconcile payment_voucher" do
             before(:each) do
               @pv.unreconcile_object
@@ -411,8 +428,8 @@ describe PaymentVoucher do
               @pv.is_reconciled.should == false
             end
 
-            it "should update cashbank amount to 100000" do
-              @cb_1.amount.should == BigDecimal("100000")
+            it "should update cashbank amount to 110000" do
+              @cb_1.amount.should == BigDecimal("110000")
             end
           end
         end
@@ -462,8 +479,8 @@ describe PaymentVoucher do
         @pvd = PaymentVoucherDetail.create_object(
           :payment_voucher_id => @pv.id,
           :payable_id => @payable_1.id,
-          :amount => BigDecimal("100000"),
-          :amount_paid => BigDecimal("100000"),
+          :amount => BigDecimal("110000"),
+          :amount_paid => BigDecimal("110000"),
           :pph_21 => BigDecimal("100"),
           :pph_23 => BigDecimal("100"),
           :rate => BigDecimal("1")
@@ -481,6 +498,15 @@ describe PaymentVoucher do
         
         it "should update cashbank amount to 0" do
           @cb_1.amount.should == BigDecimal("0")
+        end
+        
+        it "should create 1 transaction_data" do
+          td = TransactionData.where(
+            :transaction_source_type => @pv.class.to_s,
+            :transaction_source_id => @pv.id
+            )
+          td.count.should == 1
+
         end
         
         it "should create 1 cash mutation" do

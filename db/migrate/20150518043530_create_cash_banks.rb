@@ -6,6 +6,7 @@ class CreateCashBanks < ActiveRecord::Migration
       t.text :description
       t.boolean :is_bank, :default => true  
       t.decimal :amount , :default        => 0,  :precision => 14, :scale => 2 
+      t.integer :account_id
       t.timestamps
     end
   end

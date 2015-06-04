@@ -1,9 +1,9 @@
 class PaymentRequestDetail < ActiveRecord::Base
   
   validate :valid_payment_request
-  validate :valid_chart_of_account
+  validate :valid_account
   validate :valid_amount
-  belongs_to :chart_of_account
+  belongs_to :account
   belongs_to :payment_request
   
   def self.active_objects
@@ -26,16 +26,16 @@ class PaymentRequestDetail < ActiveRecord::Base
     end
   end 
     
-  def valid_chart_of_account
-    return if  chart_of_account_id.nil?
-    prd = ChartOfAccount.find_by_id chart_of_account_id
+  def valid_account
+    return if  account_id.nil?
+    prd = Account.find_by_id account_id
     if prd.nil? 
-      self.errors.add(:chart_of_account_id, "Harus ada Acccount Id")
+      self.errors.add(:account_id, "Harus ada Acccount Id")
       return self 
     end
     
     itemcount = PaymentRequestDetail.where(
-      :chart_of_account_id => chart_of_account_id,
+      :account_id => account_id,
       :payment_request_id => payment_request_id,
       ).count  
     
@@ -55,7 +55,7 @@ class PaymentRequestDetail < ActiveRecord::Base
   def self.create_object(params)
     new_object = self.new
     new_object.payment_request_id = params[:payment_request_id]
-    new_object.chart_of_account_id = params[:chart_of_account_id]
+    new_object.account_id = params[:account_id]
     new_object.status = params[:status]
     new_object.amount = BigDecimal( params[:amount] || '0')
     
@@ -72,7 +72,7 @@ class PaymentRequestDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.chart_of_account_id = params[:item_id]
+    self.account_id = params[:item_id]
     self.status = params[:status]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save

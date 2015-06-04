@@ -107,8 +107,10 @@ class PurchaseInvoice < ActiveRecord::Base
     self.is_confirmed = true  
     
     if self.save 
-      self.generate_payable    
+       
       self.update_purchase_invoice_confirm
+       self.generate_payable  
+      AccountingService::CreatePurchaseInvoiceJournal.create_confirmation_journal(self)
     end
     return self 
   end
@@ -138,6 +140,7 @@ class PurchaseInvoice < ActiveRecord::Base
     if self.save
       self.delete_payable
       self.update_purchase_invoice_unconfirm
+      AccountingService::CreatePurchaseInvoiceJournal.undo_create_confirmation_journal(self)
     end
     return self
   end
@@ -182,9 +185,11 @@ class PurchaseInvoice < ActiveRecord::Base
       when TAX_CODE[:code_09] 
         tax_value = TAX_VALUE[:code_09]
       end
-      self.tax = amount * tax_value / 100
+      self.tax = tax_value
+      self.amount_payable += amount * tax_value / 100
     end
     self.save
+    return self
   end
   
   

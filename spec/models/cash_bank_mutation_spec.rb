@@ -1,7 +1,7 @@
 require 'spec_helper'
 describe CashBankMutation do
   before(:each) do
-     ChartOfAccount.create_legacy
+   
     @initial_cb1_amount = BigDecimal("50000") 
     @exc_1 = Exchange.create_object(
       :name => "IDR",
