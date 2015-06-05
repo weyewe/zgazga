@@ -35,10 +35,11 @@ class TemporaryDeliveryOrderClearanceDetail < ActiveRecord::Base
 #     check remaining sales_order_detail_amount 
     sales_order_detail = (TemporaryDeliveryOrderDetail.find_by_id temporary_delivery_order_detail_id).sales_order_detail
     total_amount_clear = 0
-    TemporaryDeliveryOrderClearenceDetail.where(
-        :temporary_delivery_order_detail.item_id => tdocd.item_id,
-        :temporary_delivery_order_cleareance.is_confirmed == true
-        ).each do |tdcd|
+    tdod_id = temporary_delivery_order_detail_id
+    TemporaryDeliveryOrderClearanceDetail.joins(:temporary_delivery_order_clearance).where{(
+      (temporary_delivery_order_detail_id.eq tdod_id) &
+      (temporary_delivery_order_clearance.is_confirmed.eq true)
+      )}.each do |tdcd|
         total_amount_clear += tdcd.amount
     end
     if (sales_order_detail.pending_delivery_amount - total_amount_clear) < amount

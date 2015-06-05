@@ -193,7 +193,7 @@ describe TemporaryDeliveryOrderClearance do
     @nomor_surat_2 = "199.22"
   end
 
-  it "should not create TemporaryDeliveryOrderClearance if " do
+  it "should not create TemporaryDeliveryOrderClearance " do
     tdoc = TemporaryDeliveryOrderClearance.create_object(
       :temporary_delivery_order_id => @tdo_1.id,
       :clearance_date => @clearance_date_1,
@@ -203,4 +203,34 @@ describe TemporaryDeliveryOrderClearance do
     tdoc.errors.size.should == 0
   end
   
+  context "create TemporaryDeliveryOrderClearance" do
+    before(:each) do
+      @tdoc = TemporaryDeliveryOrderClearance.create_object(
+        :temporary_delivery_order_id => @tdo_1.id,
+        :clearance_date => @clearance_date_1,
+        )
+    end
+    context "create TemporaryDeliveryOrderClearanceDetail" do
+      before(:each) do
+        @tdocd = TemporaryDeliveryOrderClearanceDetail.create_object(
+          :temporary_delivery_order_clearance_id => @tdoc.id,
+          :temporary_delivery_order_detail_id => @tdod_1.id,
+          :amount => 1
+          )
+      end
+      
+      context "confirm TemporaryDeliveryOrderClearance" do
+        before(:each) do
+          @tdoc.confirm_object(:confirmed_at => DateTime.now)
+        end
+        
+        it "should confirm TemporaryDeliveryOrderClearance" do
+          @tdoc.errors.size.should == 0
+          @tdoc.is_confirmed.should == true
+        end
+      end
+    end
+    
+    
+  end
 end

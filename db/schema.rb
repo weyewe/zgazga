@@ -655,7 +655,7 @@ ActiveRecord::Schema.define(version: 20150604102422) do
 
   create_table "temporary_delivery_order_clearance_details", force: true do |t|
     t.string   "code"
-    t.integer  "temporary_delivery_order_clearence_id"
+    t.integer  "temporary_delivery_order_clearance_id"
     t.integer  "temporary_delivery_order_detail_id"
     t.decimal  "amount",                                precision: 14, scale: 2, default: 0.0
     t.decimal  "waste_cogs",                            precision: 14, scale: 2, default: 0.0

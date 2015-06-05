@@ -111,7 +111,7 @@ class TemporaryDeliveryOrderClearance < ActiveRecord::Base
         :amount => tdocd.amount ,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.clearance_date ,  
-        :item_id => tdocd.item_id,
+        :item_id => tdocd.temporary_delivery_order_detail.sales_order_detail.item_id,
         :item_case => ITEM_CASE[:virtual],
         :source_code => self.code
         ) 
@@ -124,7 +124,7 @@ class TemporaryDeliveryOrderClearance < ActiveRecord::Base
         :amount => tdocd.amount ,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.clearance_date ,  
-        :item_id => tdocd.item_id,
+        :item_id => tdocd.temporary_delivery_order_detail.sales_order_detail.item_id,
         :item_case => ITEM_CASE[:ready],
         :source_code => self.code
         ) 
@@ -135,10 +135,10 @@ class TemporaryDeliveryOrderClearance < ActiveRecord::Base
     self.temporary_delivery_order_clearance_details.each do |tdocd|
       sales_order_detail = tdocd.temporary_delivery_order_detail.sales_order_detail
       total_amount_clear = 0
-      TemporaryDeliveryOrderClearenceDetail.where(
-        :temporary_delivery_order_detail.item_id => tdocd.item_id,
-        :temporary_delivery_order_cleareance.is_confirmed => true
-        ).each do |tdcd|
+     TemporaryDeliveryOrderClearanceDetail.joins(:temporary_delivery_order_clearance).where{(
+       (temporary_delivery_order_detail_id.eq tdocd.id) &
+      (temporary_delivery_order_clearance.is_confirmed.eq true)
+      )}.each.each do |tdcd|
         total_amount_clear += tdcd.amount
       end
       if sales_order_detail.pending_delivery_amount == total_amount_clear
