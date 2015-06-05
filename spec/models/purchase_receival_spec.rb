@@ -351,7 +351,11 @@ it "should not create PurchaseReceival if receival_date is not valid" do
         end
         
         it "should create TransactionalData" do 
-          puts TransactionData.all.inspect 
+            td = TransactionData.where(
+            :transaction_source_type => @pr.class.to_s,
+            :transaction_source_id => @pr.id
+            )
+            td.count.should == 1
         end
         
         it "should not double confirm" do

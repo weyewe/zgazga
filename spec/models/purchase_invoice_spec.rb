@@ -315,8 +315,8 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
         end
         
         it "should create TransactionData" do
-          TransactionData.count.should == 1
-          TransactionDate.first.is_confirmed == true
+          TransactionData.count.should == 2
+          TransactionData.first.is_confirmed == true
         end
         
         it "should set Purchase_receival is_invoice_completed to true" do

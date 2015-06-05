@@ -44,11 +44,10 @@ describe PurchaseOrder do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
       )
     
     @itp_1 = ItemType.create_object(

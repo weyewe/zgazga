@@ -414,7 +414,6 @@ describe PaymentVoucher do
             :transaction_source_id => @pv.id
             )
           td.count.should == 2
-             puts td.all.inspect
         end
           
           

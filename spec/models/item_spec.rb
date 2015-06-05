@@ -19,11 +19,12 @@ describe Item do
     @price_list_1  =  BigDecimal("5000")
     @price_list_2 = BigDecimal("2500")
     
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+   
       )
     
     @itp_1 = ItemType.create_object(

@@ -6,17 +6,19 @@ describe SubType do
     @name_2 = "sub_type2"
     @description_1 = "description_1"
     @description_2 = "description_2"
-    @coa_1 = ChartOfAccount.create_object(
-      :code => "1110101",
+    @coa_1 = Account.create_object(
+      :code => "1110ko",
       :name => "KAS",
-      :group => ACCOUNT_GROUP[:asset],
-      :level => 1
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+   
       )
-    @coa_2 = ChartOfAccount.create_object(
-      :code => "111102",
-      :name => "BANK",
-      :group => ACCOUNT_GROUP[:expense],
-      :level => 2
+    @coa_2 = Account.create_object(
+      :code => "1110ko123",
+      :name => "BEBAN USAHA",
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:beban_usaha][:code]).id
+   
       )
     @itp_1 = ItemType.create_object(
       :name => "ItemType1" ,
