@@ -2,7 +2,7 @@ class TransactionDataDetail < ActiveRecord::Base
   
   belongs_to :account
   belongs_to :transaction_data
-  
+  belongs_to :transaction_data_non_base_exchange_detail
   validate :valid_account_id
   validate :valid_transaction_data_id 
   validate :valid_entry_case
@@ -91,8 +91,16 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object.entry_case = params[:entry_case]
     new_object.amount = BigDecimal(params[:amount] || '0')
     new_object.description = params[:description] 
-    new_object.save 
     
+    if new_object.save
+       transaction_data  = TransactionData.find params[:transaction_data_id] 
+       if not transaction_data.transaction_date_non_base_exchange.nil?
+          TransactionDataNonBaseExchangeDetail.create_object(
+            :transaction_data_detail_id => new_object.id ,
+            :amount => param[:real_amount]
+            )
+       end
+    end
     return new_object
   end
   
@@ -108,8 +116,14 @@ class TransactionDataDetail < ActiveRecord::Base
     end
     new_object.amount = self.amount
     new_object.description = "contra post #{DateTime.now} " + self.description
-    new_object.save
-    
+    if new_object.save
+      if not self.transaction_data_non_base_exchange_detail.nil?
+      TransactionDataNonBaseExchangeDetail.create_object(
+        :transaction_data_detail_id => new_object.id ,
+        :amount => self.transaction_data_non_base_exchange_detail.amount
+        )
+      end
+    end
     
   end
   

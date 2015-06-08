@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605102321) do
+ActiveRecord::Schema.define(version: 20150608041959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -615,6 +615,21 @@ ActiveRecord::Schema.define(version: 20150605102321) do
     t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
     t.string   "description"
     t.boolean  "is_bank_transaction",                          default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transaction_data_non_base_exchange_details", force: true do |t|
+    t.integer  "transaction_data_detail_id"
+    t.decimal  "amount",                     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transaction_data_non_base_exchanges", force: true do |t|
+    t.integer  "transaction_data_id"
+    t.integer  "exchange_id"
+    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

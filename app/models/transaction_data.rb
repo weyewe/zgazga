@@ -1,4 +1,5 @@
 class TransactionData < ActiveRecord::Base
+  belongs_to :transaction_date_non_base_exchange
   has_many :transaction_data_details 
   validates_presence_of :transaction_datetime 
   
@@ -17,8 +18,16 @@ class TransactionData < ActiveRecord::Base
       new_object.transaction_source_type = params[:transaction_source_type]
     end
     
-    new_object.save 
-    
+    if new_object.save
+      if not params[:exchange_id].nil?
+        if(Exchange.find_by_id params[:exchange_id]).is_base == false
+          TransactionDataNonBaseExchange.create_object(
+            :transaction_data_id => new_object.id,
+            :exchange_id => params[:exchange_id]
+          )
+        end
+      end
+    end
     return new_object
   end
    

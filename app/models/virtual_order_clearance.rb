@@ -38,7 +38,7 @@ class VirtualOrderClearance < ActiveRecord::Base
       return self 
     end
     
-    if self.virtual_order_clearances_details.count > 0
+    if self.virtual_order_clearance_details.count > 0
       self.errors.add(:generic_errors, "Sudah memiliki detail")
       return self 
     end
@@ -54,7 +54,7 @@ class VirtualOrderClearance < ActiveRecord::Base
       return self 
     end
     
-    if self.virtual_order_clearances_details.count > 0
+    if self.virtual_order_clearance_details.count > 0
       self.errors.add(:generic_errors, "Sudah memiliki detail")
       return self 
     end
