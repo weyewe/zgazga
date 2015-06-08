@@ -5,20 +5,9 @@ Ext.define('AM.model.ContactGroup', {
   	fields: [
     	{ name: 'id', type: 'int' },
 		{ name: 'name', type: 'string' },
-		{ name: 'address', type: 'string' },
-		{ name: 'delivery_address', type: 'string' },
+ 
 		{ name: 'description', type: 'string' },
-		{ name: 'npwp', type: 'string' },
-		{ name: 'contact_no', type: 'string' },
-		{ name: 'email', type: 'string' },
-		{ name: 'is_taxable', type: 'boolean' },
-		{ name: 'tax_code', type: 'string' },
-		{ name: 'contact_type', type: 'string' },
-		
-		{ name: 'default_payment_term', type: 'int' },
-		{ name: 'nama_faktur_pajak', type: 'string' },
-		{ name: 'contact_group_id', type: 'int' },
-		{ name: 'contact_group_name', type: 'string' },
+	 
 		
   	],
 

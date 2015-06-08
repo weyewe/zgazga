@@ -31,7 +31,7 @@ class CashBank < ActiveRecord::Base
   end
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self 
   end
   
   def update_object( params )    

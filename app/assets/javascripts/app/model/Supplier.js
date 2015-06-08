@@ -1,5 +1,5 @@
 
-Ext.define('AM.model.Customer', {
+Ext.define('AM.model.Supplier', {
   	extend: 'Ext.data.Model',
   	 
       
@@ -28,19 +28,19 @@ Ext.define('AM.model.Customer', {
 
    
   	idProperty: 'id' ,proxy: {
-			url: 'api/customers',
+			url: 'api/suppliers',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'customers',
+				root: 'suppliers',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { customer : record.data };
+					return { supplier : record.data };
 				}
 			}
 		}

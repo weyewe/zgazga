@@ -1,6 +1,6 @@
 json.success true 
 json.total @total
-json.customers @objects do |object|
+json.suppliers @objects do |object|
 	json.id 								object.id  
  
 	 

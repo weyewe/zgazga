@@ -48,10 +48,10 @@ Ext.define("AM.controller.Master", {
 	 
 
 	setupFolder : {
-		text 			: "Setup", 
+		text 			: "System Setup", 
 		viewClass : '',
 		iconCls		: 'text-folder', 
-    expanded	: true,
+		expanded	: true,
 		children 	: [
         
 			{ 
@@ -65,137 +65,99 @@ Ext.define("AM.controller.Master", {
 					action : 'index'
 				}
 				]
-			}, 
-// 			{ 
-// 				text:'Customer', 
-// 				viewClass:'AM.view.master.Customer', 
-// 				leaf:true, 
-// 				iconCls:'text',
-// 				conditions : [
-// 				{
-// 					controller : 'customers',
-// 					action : 'index'
-// 				}
-// 				]
-// 			},
-// 			{ 
-// 				text:'Item Type', 
-// 				viewClass:'AM.view.master.ItemType', 
-// 				leaf:true, 
-// 				iconCls:'text',
-// 				conditions : [
-// 					{
-// 						controller : 'item_types',
-// 						action : 'index'
-// 					}
-// 				]
-// 			} ,
-      { 
-				text:'Home', 
-				viewClass:'AM.view.master.Home', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'homes',
-						action : 'index'
-					}
-				]
-			} ,
-      { 
-				text:'Home Type', 
-				viewClass:'AM.view.master.HomeType', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'home_types',
-						action : 'index'
-					}
-				]
-			},
-      { 
-				text:'Home Assignment', 
-				viewClass:'AM.view.master.HomeAssignment', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'home_assignments',
-						action : 'index'
-					}
-				]
-			},
-      { 
-				text:'Vendor', 
-				viewClass:'AM.view.master.Vendor', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'vendors',
-						action : 'index'
-					}
-				]
-			},
-     { 
-				text:'CashBank', 
-				viewClass:'AM.view.master.CashBank', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'cashbanks',
-						action : 'index'
-					}
-				]
-			},
-      { 
-				text:'CashBankAdjustment', 
-				viewClass:'AM.view.master.CashBankAdjustment', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'cashbankadjustments',
-						action : 'index'
-					}
-				]
-			},
-      { 
-				text:'CashBankMutation', 
-				viewClass:'AM.view.master.CashBankMutation', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'cashbankmutations',
-						action : 'index'
-					}
-				]
-			},
-      { 
-				text:'CashMutation', 
-				viewClass:'AM.view.master.CashMutation', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'cashmutations',
-						action : 'index'
-					}
-				]
-			}
+			},  
     ]
 	},
 	
 	customerSetupFolder : {
-		text 			: "CustomerSetup", 
+		text 			: "Contact", 
 		viewClass : '',
 		iconCls		: 'text-folder', 
-    expanded	: true,
+		expanded	: true,
 		children 	: [
-        
+        	{ 
+				text:'Group', 
+				viewClass:'AM.view.master.ContactGroup', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'contact_groups',
+						action : 'index'
+					}
+				]
+			}, 
+		  
+			{ 
+				text:'Supplier', 
+				viewClass:'AM.view.master.Supplier', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'suppliers',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Customer', 
+				viewClass:'AM.view.master.Customer', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'customers',
+						action : 'index'
+					}
+				]
+			}, 
+    ]
+	},
+	
+	itemSetupFolder : {
+		text 			: "Inventory Setup", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+        	{ 
+				text:'Item Type', 
+				viewClass:'AM.view.master.ItemType', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'item_types',
+						action : 'index'
+					}
+				]
+			}, 
+		  
+			{ 
+				text:'SubType', 
+				viewClass:'AM.view.master.SubType', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sub_types',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'UoM', 
+				viewClass:'AM.view.master.Uom', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'uoms',
+						action : 'index'
+					}
+				]
+			}, 
 			{ 
 				text:'Item', 
 				viewClass:'AM.view.master.Item', 
@@ -208,7 +170,80 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
-    ]
+			{ 
+				text:'Warehouse', 
+				viewClass:'AM.view.master.Warehouse', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'warehouses',
+						action : 'index'
+					}
+				]
+			}, 
+    	]
+	},
+	
+	financeSetupFolder : {
+		text 			: "Finance Setup", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+        	{ 
+				text:'CashBank', 
+				viewClass:'AM.view.master.CashBank', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'cash_banks',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'CoA', 
+				viewClass:'AM.view.master.CashBank', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'cash_banks',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Currency', 
+				viewClass:'AM.view.master.Exchange', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'exchanges',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Exchange Rate', 
+				viewClass:'AM.view.master.ExchangeRate', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'exchange_rates',
+						action : 'index'
+					}
+				]
+			}, 
+		    
+    	]
 	},
 	
 	reportFolder : {
@@ -241,9 +276,9 @@ Ext.define("AM.controller.Master", {
 		
 		me.folderList = [
 			this.setupFolder,
-// 			this.customerSetupFolder,
-// 			// this.inventoryFolder,
-// 			this.reportFolder,
+			this.customerSetupFolder,
+			this.itemSetupFolder,
+			this.financeSetupFolder,
 			// this.projectReportFolder
 		];
 		

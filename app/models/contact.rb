@@ -2,11 +2,11 @@ class Contact < ActiveRecord::Base
   validates_presence_of :name 
   
   def self.customers
-    self.where(:customer_type => CONTACT_TYPE[:customer])
+    self.where(:contact_type => CONTACT_TYPE[:customer])
   end
   
   def self.suppliers
-    self.where(:customer_type => CONTACT_TYPE[:supplier] )
+    self.where(:contact_type => CONTACT_TYPE[:supplier] )
   end
   
   

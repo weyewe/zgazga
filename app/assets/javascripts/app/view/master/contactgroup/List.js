@@ -1,32 +1,30 @@
-Ext.define('AM.view.master.customer.List' ,{
+Ext.define('AM.view.master.contactgroup.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.customerlist',
+  	alias : 'widget.contactgrouplist',
 
-  	store: 'Customers', 
+  	store: 'ContactGroups', 
  
 
 	initComponent: function() {
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-			{	header: 'Email', dataIndex: 'email', flex: 1 },
-			{	header: 'Alamat', dataIndex: 'address', flex: 1 },
-			{	header: 'Contact', dataIndex: 'contact', flex: 1 },
+			{ header: 'Nama',  dataIndex: 'name', flex: 1}, 
+			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } , 
 		];
 
 		this.addObjectButton = new Ext.Button({
-			text: 'Add ',
+			text: 'Add',
 			action: 'addObject'
 		});
 
 		this.editObjectButton = new Ext.Button({
-			text: 'Edit ',
+			text: 'Edit',
 			action: 'editObject',
 			disabled: true
 		});
 
 		this.deleteObjectButton = new Ext.Button({
-			text: 'Delete ',
+			text: 'Delete',
 			action: 'deleteObject',
 			disabled: true
 		});
@@ -46,7 +44,7 @@ Ext.define('AM.view.master.customer.List' ,{
 			store	: this.store, 
 			displayInfo: true,
 			displayMsg: 'Displaying  {0} - {1} of {2}',
-			emptyMsg: "N/Ay" 
+			emptyMsg: "N/A" 
 		});
 
 		this.callParent(arguments);

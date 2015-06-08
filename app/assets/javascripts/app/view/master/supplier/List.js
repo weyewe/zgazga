@@ -1,8 +1,8 @@
-Ext.define('AM.view.master.customer.List' ,{
+Ext.define('AM.view.master.supplier.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.customerlist',
+  	alias : 'widget.supplierlist',
 
-  	store: 'Customers', 
+  	store: 'Suppliers', 
  
 
 	initComponent: function() {
