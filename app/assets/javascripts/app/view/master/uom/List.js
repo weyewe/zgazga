@@ -2,7 +2,7 @@ Ext.define('AM.view.master.uom.List' ,{
   	extend: 'Ext.grid.Panel',
   	alias : 'widget.uomlist',
 
-  	store: 'SubTypes', 
+  	store: 'Uoms', 
  
 
 	initComponent: function() {

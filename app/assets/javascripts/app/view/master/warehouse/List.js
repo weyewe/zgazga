@@ -2,7 +2,7 @@ Ext.define('AM.view.master.warehouse.List' ,{
   	extend: 'Ext.grid.Panel',
   	alias : 'widget.warehouselist',
 
-  	store: 'SubTypes', 
+  	store: 'Warehouses', 
  
 
 	initComponent: function() {
