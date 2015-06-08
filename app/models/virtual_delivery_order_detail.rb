@@ -2,6 +2,7 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
     
   belongs_to :virtual_delivery_order
   belongs_to :virtual_order_detail
+  belongs_to :item
   
   def self.active_objects
     self
