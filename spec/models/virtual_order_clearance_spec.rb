@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TemporaryDeliveryOrderClearance do
+describe VirtualOrderClearance do
   before(:each) do
    @ep_1 = Employee.create_object(
     :name => "name1",
@@ -117,30 +117,41 @@ describe TemporaryDeliveryOrderClearance do
       :exchange_id => @exc_1.id,
       )
     
-   @so_1 = SalesOrder.create_object(
+   @vo_1 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
-      :employee_id => @ep_1.id,
-      :sales_date => DateTime.now,
+      :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_1",
       :exchange_id => @exc_1.id
       )
   
-   @sod_1 = SalesOrderDetail.create_object(
-      :sales_order_id => @so_1.id,
+   @vod_1 = VirtualOrderDetail.create_object(
+      :virtual_order_id => @vo_1.id,
       :item_id => @item_1.id,
       :amount => BigDecimal("10"),
       :price => BigDecimal("10000"),
       :is_service => true
       )
     
-   @so_2 = SalesOrder.create_object(
+   @vo_2 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
-      :employee_id => @ep_1.id,
-      :sales_date => DateTime.now,
+      :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_2",
       :exchange_id => @exc_1.id
       )
     
+    @vdo_1 = VirtualDeliveryOrder.create_object(
+      :warehouse_id => @wrh_1.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "nomor_surat",
+      :virtual_order_id => @vo_1.id,
+      )
+    
+    @vdod_1 = VirtualDeliveryOrderDetail.create_object(
+      :virtual_delivery_order_id => @vdo_1.id,
+      :virtual_order_detail_id => @vod_1.id,
+      :amount => 5
+      )
+      
     @sa_1 = StockAdjustment.create_object(
       :warehouse_id => @wrh_1.id,
       :adjustment_date => DateTime.now,
@@ -155,82 +166,60 @@ describe TemporaryDeliveryOrderClearance do
       :status => ADJUSTMENT_STATUS[:addition]
       )
     
-    @dor_1 = DeliveryOrder.create_object(
-      :warehouse_id => @wrh_1.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "nomor_surat_1",
-      :sales_order_id => @so_1.id,
-      )
-    
-    @dor_2  = DeliveryOrder.create_object(
-      :warehouse_id => @wrh_1.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "nomor_surat_2",
-      :sales_order_id => @so_1.id,
-      )
-    
     @sa_1.confirm_object(:confirmed_at => DateTime.now)
-    @so_1.confirm_object(:confirmed_at => DateTime.now) 
-    @dor_1.confirm_object(:confirmed_at => DateTime.now) 
-    
-    @tdo_1 = TemporaryDeliveryOrder.create_object(
-      :warehouse_id => @wrh_1.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "nomor_surat_1",
-      :delivery_order_id => @dor_1.id,
-      )
-    
-    @tdod_1 = TemporaryDeliveryOrderDetail.create_object(
-          :temporary_delivery_order_id => @tdo_1.id,
-          :sales_order_detail_id => @sod_1.id,
-          :amount => 5
-          )
-    
-    @tdo_1.confirm_object(:confirmed_at => DateTime.now)
+    @vo_1.confirm_object(:confirmed_at => DateTime.now) 
+    @vdo_1.confirm_object(:confirmed_at => DateTime.now) 
     @clearance_date_1 = DateTime.now
     @clearance_date_2 = DateTime.now + 1.days
     @nomor_surat_1 = "991.22"
     @nomor_surat_2 = "199.22"
   end
-
-  it "should not create TemporaryDeliveryOrderClearance " do
-    tdoc = TemporaryDeliveryOrderClearance.create_object(
-      :temporary_delivery_order_id => @tdo_1.id,
-      :clearance_date => @clearance_date_1,
-      )
-    @tdo_1.should be_valid
-    tdoc.should be_valid
-    tdoc.errors.size.should == 0
-  end
   
-  context "create TemporaryDeliveryOrderClearance" do
+  context "Create VirtualOrderClearance" do
     before(:each) do
-      @tdoc = TemporaryDeliveryOrderClearance.create_object(
-        :temporary_delivery_order_id => @tdo_1.id,
-        :clearance_date => @clearance_date_1,
+    @voc = VirtualOrderClearance.create_object(
+        :virtual_delivery_order_id =>  @vdo_1.id,
+        :clearance_date => @clearance_date_1
         )
+    
     end
-    context "create TemporaryDeliveryOrderClearanceDetail" do
-      before(:each) do
-        @tdocd = TemporaryDeliveryOrderClearanceDetail.create_object(
-          :temporary_delivery_order_clearance_id => @tdoc.id,
-          :temporary_delivery_order_detail_id => @tdod_1.id,
-          :amount => 1
-          )
-      end
-      
-      context "confirm TemporaryDeliveryOrderClearance" do
+    
+    it "should create VirtualOrderClearance" do
+        @voc.errors.size.should == 0
+    end
+    
+    context "Create VirtualOrderClearanceDetail" do
         before(:each) do
-          @tdoc.confirm_object(:confirmed_at => DateTime.now)
+            @vocd = VirtualOrderClearanceDetail.create_object(
+                :virtual_order_clearance_id => @voc.id,
+                :virtual_delivery_order_detail_id => @vdod_1.id,
+                :amount => 5,
+                :selling_price => BigDecimal("1000")
+                )
         end
         
-        it "should confirm TemporaryDeliveryOrderClearance" do
-          @tdoc.errors.size.should == 0
-          @tdoc.is_confirmed.should == true
+        it "should create VirtualOrderClearanceDetail" do
+            @vocd.errors.size.should == 0
         end
-      end
+        
+        context "Confirm VirtualOrderClearance" do
+            before(:each) do
+                @voc.confirm_object(:confirmed_at => DateTime.now)
+            end
+            
+            it "should confirm VirtualOrderClearance" do
+                @voc.errors.size.should == 0
+            end
+            
+                    
+            context "Unconfirm VirtualOrderClearance" do
+                before(:each) do
+                    @voc.unconfirm_object
+                end
+            end
+            
+        end
     end
-    
-    
   end
+  
 end

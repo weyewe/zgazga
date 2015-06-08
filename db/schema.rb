@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604102422) do
+ActiveRecord::Schema.define(version: 20150605102321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,21 +27,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
     t.string   "code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "advanced_payments", force: true do |t|
-    t.integer  "home_id"
-    t.datetime "start_date"
-    t.integer  "duration"
-    t.string   "code"
-    t.text     "description"
-    t.decimal  "amount",       precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                          default: false
-    t.datetime "confirmed_at"
-    t.boolean  "is_deleted",                            default: false
-    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -96,21 +81,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.integer  "status",                                 default: 1
     t.datetime "mutation_date"
     t.integer  "cash_bank_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "chart_of_accounts", force: true do |t|
-    t.string   "code"
-    t.string   "name"
-    t.integer  "group"
-    t.integer  "level"
-    t.integer  "parent_id"
-    t.boolean  "is_legacy",             default: false
-    t.boolean  "is_leaf",               default: false
-    t.boolean  "is_cash_bank_account",  default: false
-    t.string   "legacy_code"
-    t.boolean  "is_payable_receivable", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -175,24 +145,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.datetime "updated_at"
   end
 
-  create_table "deposit_documents", force: true do |t|
-    t.string   "code"
-    t.text     "description"
-    t.integer  "user_id"
-    t.integer  "home_id"
-    t.datetime "deposit_date"
-    t.decimal  "amount_deposit", precision: 14, scale: 2, default: 0.0
-    t.decimal  "amount_charge",  precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                            default: false
-    t.datetime "confirmed_at"
-    t.boolean  "is_finished",                             default: false
-    t.datetime "finished_at"
-    t.boolean  "is_deleted",                              default: false
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "employees", force: true do |t|
     t.string   "name"
     t.text     "address"
@@ -219,36 +171,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.integer  "gbch_payable_id"
     t.integer  "gbch_receivable_id"
     t.boolean  "is_base",               default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "home_assignments", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "home_id"
-    t.boolean  "is_deleted",      default: false
-    t.datetime "deleted_at"
-    t.datetime "assignment_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "home_types", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",                           default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "homes", force: true do |t|
-    t.string   "name"
-    t.text     "address"
-    t.integer  "home_type_id"
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",   default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -302,18 +224,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.decimal  "customer_avg_price", precision: 14, scale: 2, default: 0.0
     t.decimal  "price_list",         precision: 14, scale: 2, default: 0.0
     t.integer  "sub_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "monthly_generators", force: true do |t|
-    t.datetime "generated_date"
-    t.string   "code"
-    t.text     "description"
-    t.boolean  "is_confirmed",   default: false
-    t.datetime "confirmed_at"
-    t.boolean  "is_deleted",     default: false
-    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -568,8 +478,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
     t.decimal  "discount",             precision: 14, scale: 2,  default: 0.0
     t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
     t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
-    t.boolean  "is_confirmed",                                   default: false
-    t.datetime "confirmed_at"
     t.datetime "invoice_date"
     t.datetime "due_date"
     t.datetime "created_at"
@@ -649,29 +557,6 @@ ActiveRecord::Schema.define(version: 20150604102422) do
   create_table "sub_types", force: true do |t|
     t.string   "name"
     t.integer  "item_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "temporary_delivery_order_clearance_details", force: true do |t|
-    t.string   "code"
-    t.integer  "temporary_delivery_order_clearance_id"
-    t.integer  "temporary_delivery_order_detail_id"
-    t.decimal  "amount",                                precision: 14, scale: 2, default: 0.0
-    t.decimal  "waste_cogs",                            precision: 14, scale: 2, default: 0.0
-    t.decimal  "selling_price",                         precision: 14, scale: 2, default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "temporary_delivery_order_clearances", force: true do |t|
-    t.string   "code"
-    t.integer  "temporary_delivery_order_id"
-    t.datetime "clearance_date"
-    t.decimal  "total_waste_cogs",            precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_waste",                                             default: false
-    t.boolean  "is_confirmed",                                         default: false
-    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -765,12 +650,87 @@ ActiveRecord::Schema.define(version: 20150604102422) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "vendors", force: true do |t|
-    t.string   "name"
-    t.text     "address"
-    t.text     "description"
-    t.datetime "deleted_at"
-    t.boolean  "is_deleted",  default: false
+  create_table "virtual_delivery_order_details", force: true do |t|
+    t.string   "code"
+    t.integer  "virtual_delivery_order_id"
+    t.integer  "virtual_order_detail_id"
+    t.integer  "item_id"
+    t.boolean  "is_reconciled",                                      default: false
+    t.boolean  "is_all_completed",                                   default: false
+    t.decimal  "amount",                    precision: 14, scale: 2, default: 0.0
+    t.decimal  "waste_cogs",                precision: 14, scale: 2, default: 0.0
+    t.decimal  "waste_amount",              precision: 14, scale: 2, default: 0.0
+    t.decimal  "restock_amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "selling_price",             precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "virtual_delivery_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "order_type"
+    t.integer  "virtual_order_id"
+    t.datetime "delivery_date"
+    t.integer  "warehouse_id"
+    t.string   "nomor_surat"
+    t.decimal  "total_waste_cogs",      precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_delivery_completed",                          default: false
+    t.boolean  "is_reconciled",                                  default: false
+    t.boolean  "is_pushed",                                      default: false
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "push_date"
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "virtual_order_clearance_details", force: true do |t|
+    t.string   "code"
+    t.integer  "virtual_order_clearance_id"
+    t.integer  "virtual_delivery_order_detail_id"
+    t.decimal  "amount",                           precision: 14, scale: 2, default: 0.0
+    t.decimal  "waste_cogs",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "selling_price",                    precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "virtual_order_clearances", force: true do |t|
+    t.string   "code"
+    t.integer  "virtual_delivery_order_id"
+    t.datetime "clearance_date"
+    t.decimal  "total_waste_cogs",          precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_waste",                                           default: false
+    t.boolean  "is_confirmed",                                       default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "virtual_order_details", force: true do |t|
+    t.string   "code"
+    t.integer  "virtual_order_id"
+    t.integer  "item_id"
+    t.decimal  "amount",                  precision: 14, scale: 2, default: 0.0
+    t.decimal  "pending_delivery_amount", precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                   precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_all_delivered",                                 default: false
+    t.boolean  "is_confirmed",                                     default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "virtual_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "contact_id"
+    t.integer  "order_type"
+    t.datetime "order_date"
+    t.string   "nomor_surat"
+    t.integer  "exchange_id"
+    t.boolean  "is_confirmed",          default: false
+    t.datetime "confirmed_at"
+    t.boolean  "is_delivery_completed", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -12,8 +12,7 @@ class CreateSalesInvoices < ActiveRecord::Migration
       t.decimal :discount,  :default => 0,  :precision => 14, :scale => 2
       t.decimal :dpp,  :default => 0,  :precision => 14, :scale => 2
       t.decimal :tax, :default => 0,  :precision => 14, :scale => 2
-      t.boolean :is_confirmed , :default => false
-      t.datetime :confirmed_at
+      
       t.datetime :invoice_date
       t.datetime :due_date
       t.timestamps

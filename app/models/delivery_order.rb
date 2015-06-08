@@ -1,6 +1,7 @@
 class DeliveryOrder < ActiveRecord::Base
   belongs_to :sales_order
   has_many :delivery_order_details
+  has_many :temporary_delivery_orders
   validates_presence_of :sales_order_id
   validates_presence_of :nomor_surat
   validates_presence_of :warehouse_id
@@ -113,16 +114,50 @@ class DeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
       self.update_delivery_order_unconfirm
       AccountingService::CreateDeliveryOrderJournal.undo_create_confirmation_journal(self)
+      if self.delivery_order_details.where(:order_type => ORDER_TYPE_CASE[:part_delivery_order]).count > 0
+        self.delivery_order_details.each do |dod|
+          dod.delete_object
+        end
+      end
     end
     return self
   end
    
+  def confirm_object_from_temporary_delivery_order(params)
+    if self.delivery_order_details.count > 0 
+      self.errors.add(:generic_errors,"Tidak boleh memiliki detail")
+      return self
+    end
+    self.temporary_delivery_orders.each do |tdo|
+      tdo.temporary_delivery_order_details.each do |tdod|
+        delivery_order_detail = self.delivery_order_details.where(:item_id => tdod.item_id)
+        if delivery_order_detail.count == 0 
+          # create new detail
+          DeliveryOrderDetail.create_object(
+          :delivery_order_id =>  self.id,
+          :sales_order_detail_id => tdod.sales_order_detail_id,
+          :order_type => ORDER_TYPE_CASE[:part_delivery_order],
+          :order_code => tdod.code,
+          :amount => tdod.amount
+          )
+        else
+          # update detail
+          delivery_order_detail.first.update_object(
+            :delivery_order_id =>  self.id,
+            :sales_order_detail_id => tdod.sales_order_detail_id,
+            :order_type => ORDER_TYPE_CASE[:part_delivery_order],
+            :amount => delivery_order_detail.first.amount + tdod.amount
+            )
+        end
+      end
+    end
+   return self.confirm_object(:confirmed_at => params[:confirmed_at])
+  end
   
   def delete_object
     if self.is_confirmed?
@@ -141,7 +176,6 @@ class DeliveryOrder < ActiveRecord::Base
   
   def update_delivery_order_confirm
     total_cogs = 0
-    total_amount = 0
     self.delivery_order_details.each do |dod|
 #       Update Item PendingReceival
       

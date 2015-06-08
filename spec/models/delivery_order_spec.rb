@@ -189,7 +189,7 @@ describe DeliveryOrder do
     dor.should_not be_valid
   end
   
-it "should not create DeliveryOrder if delivery_date is not valid" do
+  it "should not create DeliveryOrder if delivery_date is not valid" do
     dor = DeliveryOrder.create_object(
       :warehouse_id => @wrh_1.id,
       :delivery_date => nil,
@@ -299,6 +299,33 @@ it "should not create DeliveryOrder if delivery_date is not valid" do
       @dor.errors.size.should == 0
     end
     
+    context "Create TemporaryDeliveryOrder and Confirm DeliveryOrder from TemporaryDeliveryOrder" do
+      before(:each) do
+        @tdo = TemporaryDeliveryOrder.create_object(
+          :warehouse_id => @wrh_1.id,
+          :delivery_date => @delivery_date_1,
+          :nomor_surat => @nomor_surat_1,
+          :delivery_order_id => @dor.id,
+          )
+        @tdod = TemporaryDeliveryOrderDetail.create_object(
+          :temporary_delivery_order_id => @tdo.id,
+          :sales_order_detail_id => @sod_1.id,
+          :amount => 10
+          )
+        @tdo.confirm_object(:confirmed_at => DateTime.now)
+        @dor.confirm_object_from_temporary_delivery_order(:confirmed_at => DateTime.now)
+      end
+      
+      it "should create DeliveryOrderDetail" do
+        @dor.delivery_order_details.count.should == 1  
+      end
+      
+      it "should confirm DeliveryOrder" do
+        @dor.errors.size.should == 0
+        @dor.is_confirmed.should == true
+      end
+      
+    end
     context "Create DeliveryOrderDetail" do
       before(:each) do
       @dord_1 = DeliveryOrderDetail.create_object(

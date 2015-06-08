@@ -23,7 +23,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'simple_form'
 
 
-gem 'wicked_pdf'
+# gem 'wicked_pdf'
 gem 'dropbox-sdk'
 gem 'httparty'
 gem 'json'
@@ -68,8 +68,6 @@ gem 'squeel', :git => "git://github.com/activerecord-hackery/squeel.git"
 # https://github.com/activerecord-hackery/squeel.git
 group :production do
   gem 'rails_12factor'
-  gem 'rjb'
-  gem 'pdf-merger'
 end
 
 # gem 'rails_log_stdout',           github: 'Heroku/rails_log_stdout'
