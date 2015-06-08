@@ -5,11 +5,11 @@ class Api::SubTypesController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = SubType.where{  
+      @objects = SubType.joins(:item_type).where{  
         ( name =~ livesearch )  
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = SubType.where{ 
+      @total = SubType.joins(:item_type).where{ 
         ( name =~ livesearch  ) 
       }.count
       

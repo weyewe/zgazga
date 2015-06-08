@@ -1,6 +1,6 @@
 Ext.define('AM.view.master.ItemType', {
     extend: 'AM.view.Worksheet',
-    alias: 'widget.typeProcess',
+    alias: 'widget.itemtypeProcess',
 	 
 		
 		items : [

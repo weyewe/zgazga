@@ -1,12 +1,11 @@
-Ext.define('AM.model.Item', {
+Ext.define('AM.model.SubType', {
   	extend: 'Ext.data.Model',
   	fields: [
- 
-
     	{ name: 'id', type: 'int' },
-			
-    	{ name: 'sku', type: 'string' } ,
-
+			{ name: 'name', type: 'string' },
+			{ name: 'item_type_id', type: 'string' },
+			{ name: 'item_typee_name', type: 'string' },
+			 
   	],
 
 	 
@@ -14,19 +13,19 @@ Ext.define('AM.model.Item', {
 
    
   	idProperty: 'id' ,proxy: {
-			url: 'api/items',
+			url: 'api/sub_types',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'items',
+				root: 'sub_types',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { item : record.data };
+					return { sub_type : record.data };
 				}
 			}
 		}

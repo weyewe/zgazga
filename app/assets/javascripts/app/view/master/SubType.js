@@ -1,11 +1,11 @@
-Ext.define('AM.view.master.Item', {
+Ext.define('AM.view.master.SubType', {
     extend: 'AM.view.Worksheet',
-    alias: 'widget.itemProcess',
+    alias: 'widget.subtypeProcess',
 	 
 		
 		items : [
 			{
-				xtype : 'itemlist' ,
+				xtype : 'subtypelist' ,
 				flex : 1 //,
 				// html : 'hahaha'
 			} 

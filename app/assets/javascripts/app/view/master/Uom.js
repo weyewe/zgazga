@@ -1,11 +1,11 @@
-Ext.define('AM.view.master.Item', {
+Ext.define('AM.view.master.Uom', {
     extend: 'AM.view.Worksheet',
-    alias: 'widget.itemProcess',
+    alias: 'widget.uomProcess',
 	 
 		
 		items : [
 			{
-				xtype : 'itemlist' ,
+				xtype : 'uomlist' ,
 				flex : 1 //,
 				// html : 'hahaha'
 			} 

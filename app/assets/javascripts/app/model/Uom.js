@@ -1,12 +1,13 @@
-Ext.define('AM.model.Item', {
+
+Ext.define('AM.model.Uom', {
   	extend: 'Ext.data.Model',
+  	 
+      
   	fields: [
- 
-
     	{ name: 'id', type: 'int' },
-			
-    	{ name: 'sku', type: 'string' } ,
-
+		{ name: 'name', type: 'string' },
+ 
+		
   	],
 
 	 
@@ -14,19 +15,19 @@ Ext.define('AM.model.Item', {
 
    
   	idProperty: 'id' ,proxy: {
-			url: 'api/items',
+			url: 'api/uoms',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'items',
+				root: 'uoms',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { item : record.data };
+					return { uom : record.data };
 				}
 			}
 		}

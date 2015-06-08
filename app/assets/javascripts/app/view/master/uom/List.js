@@ -1,39 +1,31 @@
-Ext.define('AM.view.master.item.List' ,{
+Ext.define('AM.view.master.uom.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.itemlist',
+  	alias : 'widget.uomlist',
 
-  	store: 'Items', 
+  	store: 'SubTypes', 
  
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'Member', dataIndex: 'member_name' , flex : 1 },
-			{ header: 'SKU',  dataIndex: 'code', flex : 1  },
-			{ header: 'Description',  dataIndex: 'description', flex : 1  }, 
-			
+			{ header: 'ID', dataIndex: 'id'},
+			{ header: 'Nama',  dataIndex: 'name', flex: 1},
+			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
 		];
 
 		this.addObjectButton = new Ext.Button({
 			text: 'Add',
-			action: 'addObject',
-			disabled: true
+			action: 'addObject'
 		});
 
 		this.editObjectButton = new Ext.Button({
-			text: 'Edit',
+			text: 'Edit ',
 			action: 'editObject',
 			disabled: true
 		});
 
 		this.deleteObjectButton = new Ext.Button({
-			text: 'Delete',
+			text: 'Delete ',
 			action: 'deleteObject',
-			disabled: true
-		});
-		
-		this.deactivateObjectButton = new Ext.Button({
-			text: 'Deactivate',
-			action: 'deactivateObject',
 			disabled: true
 		});
 		
@@ -47,13 +39,12 @@ Ext.define('AM.view.master.item.List' ,{
 
 
 
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton,
-		  			'-', this.deactivateObjectButton ];
+		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton, this.searchField ];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
-			displayMsg: 'Displaying topics {0} - {1} of {2}',
-			emptyMsg: "No topics to display" 
+			displayMsg: 'Displaying  {0} - {1} of {2}',
+			emptyMsg: "N/A" 
 		});
 
 		this.callParent(arguments);
@@ -64,24 +55,14 @@ Ext.define('AM.view.master.item.List' ,{
 	getSelectedObject: function() {
 		return this.getSelectionModel().getSelection()[0];
 	},
-	
-	enableAddButton: function(){
-		this.addObjectButton.enable();
-	},
-	disableAddButton : function(){
-		this.addObjectButton.disable();
-	},
 
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
-		this.deactivateObjectButton.enable();
-		
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.deactivateObjectButton.disable();
 	}
 });
