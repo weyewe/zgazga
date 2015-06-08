@@ -206,12 +206,12 @@ Ext.define("AM.controller.Master", {
 			
 			{ 
 				text:'CoA', 
-				viewClass:'AM.view.master.CashBank', 
+				viewClass:'AM.view.master.Account', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'cash_banks',
+						controller : 'accounts',
 						action : 'index'
 					}
 				]
