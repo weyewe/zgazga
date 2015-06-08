@@ -25,6 +25,9 @@ Ticketie::Application.routes.draw do
     # master data 
     resources :app_users
     resources :customers 
+    resources :vendors 
+    resources :contact_groups 
+    
     resources :item_types  
     resources :items 
     

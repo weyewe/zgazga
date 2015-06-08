@@ -1,4 +1,4 @@
-Ext.define('AM.model.Customer', {
+Ext.define('AM.model.ContactGroup', {
   	extend: 'Ext.data.Model',
   	 
       
@@ -27,19 +27,19 @@ Ext.define('AM.model.Customer', {
 
    
   	idProperty: 'id' ,proxy: {
-			url: 'api/customers',
+			url: 'api/contact_groups',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'customers',
+				root: 'contact_groups',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { customer : record.data };
+					return { contact_group : record.data };
 				}
 			}
 		}

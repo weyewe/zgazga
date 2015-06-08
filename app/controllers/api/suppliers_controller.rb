@@ -1,4 +1,4 @@
-class Api::CustomersController < Api::BaseApiController
+class Api::SuppliersController < Api::BaseApiController
    
     
     
@@ -6,7 +6,7 @@ class Api::CustomersController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Contact.joins(:contact_group).customers.where{
+      @objects = Contact.joins(:contact_group).suppliers.where{
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -23,7 +23,7 @@ class Api::CustomersController < Api::BaseApiController
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Contact.joins(:contact_group).customers.where{  
+      @total = Contact.joins(:contact_group).suppliers.where{  
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -40,8 +40,8 @@ class Api::CustomersController < Api::BaseApiController
         
       }.count
     else
-      @objects = Contact.active_objects.customers.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = Contact.active_objects.customers.count
+      @objects = Contact.active_objects.suppliers.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = Contact.active_objects.suppliers.count
     end
     
     
@@ -49,15 +49,15 @@ class Api::CustomersController < Api::BaseApiController
   end
 
   def create
-    params[:customer][:contact_type] = CONTACT_TYPE[:customer] 
-    @object = Contact.create_object( params[:customer] )  
+    params[:supplier][:contact_type] = CONTACT_TYPE[:supplier] 
+    @object = Contact.create_object( params[:supplier] )  
     
     
  
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :customers => [@object] , 
-                        :total => Contact.active_objects.customers.count }  
+                        :suppliers => [@object] , 
+                        :total => Contact.active_objects.suppliers.count }  
     else
       msg = {
         :success => false, 
@@ -73,12 +73,12 @@ class Api::CustomersController < Api::BaseApiController
   def update
     
     @object = Contact.find_by_id params[:id] 
-    @object.update_object( params[:customer])
+    @object.update_object( params[:supplier])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :customers => [@object],
-                        :total => Contact.active_objects.customers.count  } 
+                        :suppliers => [@object],
+                        :total => Contact.active_objects.suppliers.count  } 
     else
       msg = {
         :success => false, 
@@ -96,9 +96,9 @@ class Api::CustomersController < Api::BaseApiController
     @object.delete_object
 
     if @object.is_deleted
-      render :json => { :success => true, :total => Contact.active_objects.customers.count }  
+      render :json => { :success => true, :total => Contact.active_objects.suppliers.count }  
     else
-      render :json => { :success => false, :total => Contact.active_objects.customers.count }  
+      render :json => { :success => false, :total => Contact.active_objects.suppliers.count }  
     end
   end
   
@@ -113,7 +113,7 @@ class Api::CustomersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Contact.active_objects.customers.where{ 
+      @objects = Contact.active_objects.suppliers.where{ 
                         ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -132,7 +132,7 @@ class Api::CustomersController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Contact.active_objects.customers.where{ 
+      @total = Contact.active_objects.suppliers.where{ 
                         ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -148,13 +148,13 @@ class Api::CustomersController < Api::BaseApiController
           ( contact_group.description =~ livesearch )
                               }.count
     else
-      @objects = Contact.active_objects.customers.where{ (id.eq selected_id)  
+      @objects = Contact.active_objects.suppliers.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Contact.active_objects.customers.where{ (id.eq selected_id)   
+      @total = Contact.active_objects.suppliers.where{ (id.eq selected_id)   
                               }.count 
     end
     
