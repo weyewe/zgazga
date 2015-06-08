@@ -30,11 +30,21 @@ Ticketie::Application.routes.draw do
     
     
     
-    
+    # ITEM DB
     resources :item_types  
     resources :sub_types
     resources :uoms 
     resources :items 
+    
+    #   warehousing
+    resources :warehouses
+  
+    
+    
+    # cashbank
+    resources :cash_banks
+    resources :exchanges 
+    
     
     resources :maintenances
     

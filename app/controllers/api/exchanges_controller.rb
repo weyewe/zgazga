@@ -1,35 +1,34 @@
-class Api::HomeAssignmentsController < Api::BaseApiController
+class Api::ExchangesController < Api::BaseApiController
   
   def index
     
     
     
+
+    
+    
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Home.where{ 
-        (
-          (name =~  livesearch ) | 
-          (address =~  livesearch ) 
-        )
+      @objects = Exchange.where{  
+        
+        ( name =~ livesearch  ) | 
+        ( description =~ livesearch  )  
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Home.where{ 
-        (
-          (name =~  livesearch ) | 
-          (code =~  livesearch )
-        )
+      @total = Exchange.where{ 
+        ( name =~ livesearch  ) | 
+        ( description =~ livesearch  )  
       }.count
       
       # calendar
       
     elsif params[:parent_id].present?
       # @group_loan = GroupLoan.find_by_id params[:parent_id]
-#     HomeAssignment.joins(:user => [:invoices])
-    @objects = HomeAssignment.joins(:user, :home).
-                  where(:home_id => params[:parent_id]).
+      @objects = Exchange.
+                  where(:exchange_id => params[:parent_id]).
                   page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = HomeAssignment.joins(:user, :home).where(:home_id => params[:parent_id]).count 
+      @total = Exchange.where(:exchange_id => params[:parent_id]).count 
     else
       @objects = []
       @total = 0 
@@ -39,18 +38,18 @@ class Api::HomeAssignmentsController < Api::BaseApiController
     
     
     
-    # render :json => { :homeassignments => @objects , :total => @total, :success => true }
+    # render :json => { :exchanges => @objects , :total => @total, :success => true }
   end
 
   def create
-    @object = HomeAssignment.create_object( params[:home_assignment] )  
+    @object = Exchange.create_object( params[:exchange] )  
     
     
  
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :home_assignments => [@object] , 
-                        :total => HomeAssignment.active_objects.count }  
+                        :exchanges => [@object] , 
+                        :total => Exchange.active_objects.count }  
     else
       msg = {
         :success => false, 
@@ -65,13 +64,13 @@ class Api::HomeAssignmentsController < Api::BaseApiController
 
   def update
     
-    @object = HomeAssignment.find_by_id params[:id] 
-    @object.update_object( params[:home_assignment])
+    @object = Exchange.find_by_id params[:id] 
+    @object.update_object( params[:exchange])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :home_assignments => [@object],
-                        :total => HomeAssignment.active_objects.count  } 
+                        :exchanges => [@object],
+                        :total => Exchange.active_objects.count  } 
     else
       msg = {
         :success => false, 
@@ -85,13 +84,13 @@ class Api::HomeAssignmentsController < Api::BaseApiController
   end
 
   def destroy
-    @object = HomeAssignment.find(params[:id])
+    @object = Exchange.find(params[:id])
     @object.delete_object
 
     if @object.is_deleted
-      render :json => { :success => true, :total => HomeAssignment.active_objects.count }  
+      render :json => { :success => true, :total => Exchange.active_objects.count }  
     else
-      render :json => { :success => false, :total => HomeAssignment.active_objects.count }  
+      render :json => { :success => false, :total => Exchange.active_objects.count }  
     end
   end
   
@@ -106,26 +105,26 @@ class Api::HomeAssignmentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = HomeAssignment.joins(:home,:user).where{ 
-                            (home.name =~ query)   | 
-                            (user.name =~ query)  
+      @objects = Exchange.joins(:exchange_type).where{ 
+            ( name =~ query  ) | 
+        ( description =~ query  )  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = HomeAssignment.joins(:home,:user).where{ 
-                              (home.name =~ query)   | 
-                              (user.name =~ query)
+      @total = Exchange.joins(:exchange_type).where{ 
+              ( name =~ query  ) | 
+        ( description =~ query  )  
                               }.count
     else
-      @objects = HomeAssignment.where{ (id.eq selected_id)  
+      @objects = Exchange.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = HomeAssignment.where{ (id.eq selected_id)   
+      @total = Exchange.where{ (id.eq selected_id)   
                               }.count 
     end
     
