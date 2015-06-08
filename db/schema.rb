@@ -550,7 +550,6 @@ ActiveRecord::Schema.define(version: 20150605102321) do
     t.string   "source_code"
     t.datetime "mutation_date"
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
-    t.datetime "created_at"
     t.datetime "updated_at"
   end
 

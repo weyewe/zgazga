@@ -2,27 +2,33 @@ class Api::ItemTypesController < Api::BaseApiController
   
   def index
     
+    
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = ItemType.where{
-        (is_deleted.eq false) & 
-        (
-          (name =~  livesearch ) 
-        )
-        
+      @objects = ItemType.where{  
+        ( name =~ livesearch ) | 
+        ( description =~ livesearch )
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = ItemType.where{
-        (is_deleted.eq false) & 
-        (
-          (name =~  livesearch )  
-        )
-        
+      @total = ItemType.where{ 
+        ( name =~ livesearch  ) | 
+        ( description =~ livesearch )
       }.count
+      
+      # calendar
+      
+    elsif params[:parent_id].present?
+      # @group_loan = GroupLoan.find_by_id params[:parent_id]
+      @objects = ItemType.
+                  where(:item_type_id => params[:parent_id]).
+                  page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = ItemType.where(:item_type_id => params[:parent_id]).count 
     else
-      @objects = ItemType.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = ItemType.active_objects.count
+      @objects = []
+      @total = 0 
     end
+    
+    
     
     
     
@@ -93,13 +99,17 @@ class Api::ItemTypesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = ItemType.active_objects.where{ (name =~ query)   
+      @objects = ItemType.joins(:item_type_type).where{ 
+                            ( name =~ query ) | 
+        ( description =~ query )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = ItemType.active_objects.where{ (name =~ query)  
+      @total = ItemType.joins(:item_type_type).where{ 
+              ( name =~ query ) | 
+        ( description =~ query )
                               }.count
     else
       @objects = ItemType.where{ (id.eq selected_id)  
@@ -113,6 +123,6 @@ class Api::ItemTypesController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

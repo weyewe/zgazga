@@ -1,4 +1,4 @@
-class Api::ItemsController < Api::BaseApiController
+class Api::UomsController < Api::BaseApiController
   
   def index
     
@@ -9,33 +9,22 @@ class Api::ItemsController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Item.joins(:item_type, :uom).where{  
-        
-        ( item_type.name =~ livesearch ) | 
-        ( item_type.description =~ livesearch ) | 
-        ( sku =~ livesearch  ) | 
-        ( name =~ livesearch  ) | 
-        ( description =~ livesearch  )
-        
-        
+      @objects = Uom.where{  
+        ( name =~ livesearch )
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Item.where{ 
-        ( item_type.name =~ livesearch ) | 
-        ( item_type.description =~ livesearch ) | 
-        ( sku =~ livesearch  ) | 
-        ( name =~ livesearch  ) | 
-        ( description =~ livesearch  )
+      @total = Uom.where{ 
+        ( name =~ livesearch )
       }.count
       
       # calendar
       
     elsif params[:parent_id].present?
       # @group_loan = GroupLoan.find_by_id params[:parent_id]
-      @objects = Item.
-                  where(:item_id => params[:parent_id]).
+      @objects = Uom.
+                  where(:uom_id => params[:parent_id]).
                   page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = Item.where(:item_id => params[:parent_id]).count 
+      @total = Uom.where(:uom_id => params[:parent_id]).count 
     else
       @objects = []
       @total = 0 
@@ -45,18 +34,18 @@ class Api::ItemsController < Api::BaseApiController
     
     
     
-    # render :json => { :items => @objects , :total => @total, :success => true }
+    # render :json => { :uoms => @objects , :total => @total, :success => true }
   end
 
   def create
-    @object = Item.create_object( params[:item] )  
+    @object = Uom.create_object( params[:uom] )  
     
     
  
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :items => [@object] , 
-                        :total => Item.active_objects.count }  
+                        :uoms => [@object] , 
+                        :total => Uom.active_objects.count }  
     else
       msg = {
         :success => false, 
@@ -71,13 +60,13 @@ class Api::ItemsController < Api::BaseApiController
 
   def update
     
-    @object = Item.find_by_id params[:id] 
-    @object.update_object( params[:item])
+    @object = Uom.find_by_id params[:id] 
+    @object.update_object( params[:uom])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :items => [@object],
-                        :total => Item.active_objects.count  } 
+                        :uoms => [@object],
+                        :total => Uom.active_objects.count  } 
     else
       msg = {
         :success => false, 
@@ -91,13 +80,13 @@ class Api::ItemsController < Api::BaseApiController
   end
 
   def destroy
-    @object = Item.find(params[:id])
+    @object = Uom.find(params[:id])
     @object.delete_object
 
     if @object.is_deleted
-      render :json => { :success => true, :total => Item.active_objects.count }  
+      render :json => { :success => true, :total => Uom.active_objects.count }  
     else
-      render :json => { :success => false, :total => Item.active_objects.count }  
+      render :json => { :success => false, :total => Uom.active_objects.count }  
     end
   end
   
@@ -112,32 +101,24 @@ class Api::ItemsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Item.joins(:item_type).where{ 
-                            ( item_type.name =~ query ) | 
-        ( item_type.description =~ query ) | 
-        ( sku =~ query  ) | 
-        ( name =~ query  ) | 
-        ( description =~ query  )
+      @objects = Uom.joins(:uom_type).where{ 
+                            ( name =~ livesearch )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.joins(:item_type).where{ 
-              ( item_type.name =~ query ) | 
-        ( item_type.description =~ query ) | 
-        ( sku =~ query  ) | 
-        ( name =~ query  ) | 
-        ( description =~ query  )
+      @total = Uom.joins(:uom_type).where{ 
+              ( name =~ livesearch )
                               }.count
     else
-      @objects = Item.where{ (id.eq selected_id)  
+      @objects = Uom.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Item.where{ (id.eq selected_id)   
+      @total = Uom.where{ (id.eq selected_id)   
                               }.count 
     end
     

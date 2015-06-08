@@ -24,11 +24,16 @@ Ticketie::Application.routes.draw do
     
     # master data 
     resources :app_users
-    resources :customers 
-    resources :vendors 
     resources :contact_groups 
+    resources :customers 
+    resources :suppliers 
+    
+    
+    
     
     resources :item_types  
+    resources :sub_types
+    resources :uoms 
     resources :items 
     
     resources :maintenances
