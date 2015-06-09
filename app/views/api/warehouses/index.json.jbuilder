@@ -6,6 +6,8 @@ json.warehouses @objects do |object|
  
 	 
 	json.name	object.name 
+	json.code object.code
+	json.description object.description 
 	 
 
 

@@ -32,8 +32,9 @@ class Api::WarehousesController < Api::BaseApiController
                   page(params[:page]).per(params[:limit]).order("id DESC")
       @total = Warehouse.where(:warehouse_id => params[:parent_id]).count 
     else
-      @objects = []
-      @total = 0 
+      @objects = Warehouse.page(params[:page]).per(params[:limit]).order("id DESC")
+      
+      @total = Warehouse.count
     end
     
     
@@ -89,7 +90,7 @@ class Api::WarehousesController < Api::BaseApiController
     @object = Warehouse.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => Warehouse.active_objects.count }  
     else
       render :json => { :success => false, :total => Warehouse.active_objects.count }  

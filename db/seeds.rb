@@ -166,3 +166,13 @@ end
       
     )
 end
+
+(1.upto 10).each do |x|
+  
+   Warehouse.create_object(
+      :name => "wh name #{x}",   
+      :code => "wh code #{x}",   
+      :description => "wh description #{x}",   
+      
+    )
+end

@@ -31,10 +31,15 @@ Ext.define('AM.view.master.warehouse.Form', {
 				{
 	        xtype: 'textfield',
 	        name : 'name',
-	        fieldLabel: 'Tipe Item Support'
+	        fieldLabel: 'Nama'
+	      },
+	      {
+	        xtype: 'textfield',
+	        name : 'code',
+	        fieldLabel: 'Code'
 	      },
 				{
-					xtype: 'textfield',
+					xtype: 'textarea',
 					name : 'description',
 					fieldLabel: 'Deskripsi'
 				}

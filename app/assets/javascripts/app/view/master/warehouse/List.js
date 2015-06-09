@@ -9,6 +9,7 @@ Ext.define('AM.view.master.warehouse.List' ,{
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
+				{	header: 'Code', dataIndex: 'code', flex: 1 } ,
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
 		];
 

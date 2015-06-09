@@ -6,6 +6,8 @@ Ext.define('AM.model.Warehouse', {
   	fields: [
     	{ name: 'id', type: 'int' },
 		{ name: 'name', type: 'string' },
+		{ name: 'code', type: 'string' },
+		{ name: 'description', type: 'string' },
  
 		
   	],

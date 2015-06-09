@@ -38,6 +38,7 @@ Ticketie::Application.routes.draw do
     resources :sub_types
     resources :uoms 
     resources :items 
+
     
     #   warehousing
     resources :warehouses
