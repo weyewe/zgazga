@@ -158,3 +158,11 @@ sub_type_array = []
       
     )
 end
+
+(1.upto 10).each do |x|
+  
+   Uom.create_object(
+      :name => "unit of measurement #{x}",   
+      
+    )
+end

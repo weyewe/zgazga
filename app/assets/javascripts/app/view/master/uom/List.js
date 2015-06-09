@@ -8,8 +8,7 @@ Ext.define('AM.view.master.uom.List' ,{
 	initComponent: function() {
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
+			{ header: 'Nama',  dataIndex: 'name', flex: 1}, 
 		];
 
 		this.addObjectButton = new Ext.Button({

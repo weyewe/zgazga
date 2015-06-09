@@ -31,13 +31,9 @@ Ext.define('AM.view.master.uom.Form', {
 				{
 	        xtype: 'textfield',
 	        name : 'name',
-	        fieldLabel: 'Tipe Item Support'
+	        fieldLabel: 'Nama UoM'
 	      },
-				{
-					xtype: 'textfield',
-					name : 'description',
-					fieldLabel: 'Deskripsi'
-				}
+	 
 			]
     }];
 
