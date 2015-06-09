@@ -129,3 +129,20 @@ customer_array = []
       :contact_group_id => contact_group_array[ rand(0..( contact_group_array.length - 1 ) )].id
     )
 end
+
+
+# creating item_type
+ledger_account_array = [] 
+Account.active_accounts.where(:account_case => ACCOUNT_CASE[:ledger] ).each do |account|
+  ledger_account_array << account 
+end
+
+(1.upto 10).each do |x|
+  
+  ItemType.create_object(
+      :name => "Item Type name #{x}",
+      :description => "Item type description #{x}",
+      :account_id => ledger_account_array[  rand( 0..(ledger_account_array.length - 1 ))].id 
+      
+    )
+end

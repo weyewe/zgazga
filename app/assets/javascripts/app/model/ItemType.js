@@ -4,6 +4,9 @@ Ext.define('AM.model.ItemType', {
     	{ name: 'id', type: 'int' },
 			{ name: 'name', type: 'string' },
 			{ name: 'description', type: 'string' },
+			{ name: 'account_code', type: 'string' },
+			{ name: 'account_name', type: 'string' },
+			{ name: 'account_id', type: 'int' },
 			 
   	],
 

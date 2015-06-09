@@ -114,21 +114,28 @@ Ext.define('AM.view.master.itemtype.Form', {
     this.callParent(arguments);
   },
 
-	setComboBoxData : function( record){
+	setSelectedAccount: function( account_id ){
+		var comboBox = this.down('form').getForm().findField('account_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : account_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( account_id );
+			}
+		});
+	},
 	
-		// var role_id = record.get("role_id");
-		// var comboBox = this.down('form').getForm().findField('role_id'); 
-		// var me = this; 
-		// var store = comboBox.store; 
-		// store.load({
-		// 	params: {
-		// 		selected_id : role_id 
-		// 	},
-		// 	callback : function(records, options, success){
-		// 		me.setLoading(false);
-		// 		comboBox.setValue( role_id );
-		// 	}
-		// });
+	setComboBoxData : function( record){
+		var me = this; 
+		me.setLoading(true);
+		
+		me.setSelectedAccount( record.get("account_id")  ) ;
 	}
 });
 

@@ -5,14 +5,18 @@ class Api::ItemTypesController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = ItemType.where{  
+      @objects = ItemType.joins(:account).where{  
         ( name =~ livesearch ) | 
-        ( description =~ livesearch )
+        ( description =~ livesearch ) | 
+        ( account.name =~ livesearch ) | 
+        ( account.code =~ livesearch )
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = ItemType.where{ 
-        ( name =~ livesearch  ) | 
-        ( description =~ livesearch )
+      @total = ItemType.joins(:account).where{ 
+        ( name =~ livesearch ) | 
+        ( description =~ livesearch ) | 
+        ( account.name =~ livesearch ) | 
+        ( account.code =~ livesearch )
       }.count
       
       # calendar
@@ -24,8 +28,8 @@ class Api::ItemTypesController < Api::BaseApiController
                   page(params[:page]).per(params[:limit]).order("id DESC")
       @total = ItemType.where(:item_type_id => params[:parent_id]).count 
     else
-      @objects = []
-      @total = 0 
+      @objects = ItemType.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = ItemType.count 
     end
     
     
@@ -81,7 +85,7 @@ class Api::ItemTypesController < Api::BaseApiController
     @object = ItemType.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted?
       render :json => { :success => true, :total => ItemType.active_objects.count }  
     else
       render :json => { :success => false, :total => ItemType.active_objects.count }  
@@ -99,17 +103,21 @@ class Api::ItemTypesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = ItemType.joins(:item_type_type).where{ 
-                            ( name =~ query ) | 
-        ( description =~ query )
+      @objects = ItemType.joins(:account).where{ 
+              ( name =~ query ) | 
+        ( description =~ query ) | 
+        ( account.name =~ query ) | 
+        ( account.code =~ query )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = ItemType.joins(:item_type_type).where{ 
-              ( name =~ query ) | 
-        ( description =~ query )
+      @total = ItemType.joins(:account).where{ 
+           ( name =~ query ) | 
+        ( description =~ query ) | 
+        ( account.name =~ query ) | 
+        ( account.code =~ query )
                               }.count
     else
       @objects = ItemType.where{ (id.eq selected_id)  

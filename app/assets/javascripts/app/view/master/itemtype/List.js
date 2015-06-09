@@ -9,7 +9,14 @@ Ext.define('AM.view.master.itemtype.List' ,{
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
+			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
+			{
+				xtype : 'templatecolumn',
+				text : "Account Terhubung",
+				flex : 1,
+				tpl : '<b>{account_name}</b>' +  ' {account_code}'
+								
+			},
 		];
 
 		this.addObjectButton = new Ext.Button({
