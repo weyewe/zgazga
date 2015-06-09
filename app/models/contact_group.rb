@@ -1,5 +1,7 @@
 class ContactGroup < ActiveRecord::Base
-    
+  
+  has_many :contacts 
+  
   validates_presence_of :name 
   
   def self.active_objects

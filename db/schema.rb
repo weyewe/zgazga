@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20150608041959) do
     t.integer  "rgt",                                                        null: false
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
     t.boolean  "is_contra_account",                          default: false
+    t.integer  "depth"
     t.integer  "normal_balance",                             default: 1
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
@@ -550,6 +551,7 @@ ActiveRecord::Schema.define(version: 20150608041959) do
     t.string   "source_code"
     t.datetime "mutation_date"
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
     t.datetime "updated_at"
   end
 

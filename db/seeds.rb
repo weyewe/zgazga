@@ -71,3 +71,61 @@ data_entry = User.create_object(
   )
 
 Account.create_base_objects
+
+
+
+# creating contact group  
+contact_group_array = [] 
+
+(1.upto 5).each do |x|
+  contact_group_array << ContactGroup.create_object(
+      :name => "contact group name #{x}",
+      :description => "description of the contact group #{x}"
+    )
+end
+
+# creating supplier 
+
+puts "contact_group_array: #{contact_group_array}"
+
+supplier_array = [] 
+(1.upto 5).each do |x|
+  supplier_array << Contact.create_object(
+      :name => "Supplier #{x}",
+      :address =>"öffice address of #{x}",
+      :contact_no => "tjeconcatnno_ #{x} supplier",
+      :delivery_address =>" delivery address of #{x}",
+      :description => "description of the contact group #{x}",
+      :default_payment_term =>  x , 
+      :npwp => "234234#{x}", 
+      :is_taxable => true,  
+      :tax_code => "23222afwea#{x}",
+      :nama_faktur_pajak => "awesome supplier #{x}",
+      :pic => "awesome supplier pic #{x}",
+      :pic_contact_no => "2342#{x}",
+      :email => "supplier_#{x}@gmail.com",
+      :contact_type => CONTACT_TYPE[:supplier],
+      :contact_group_id => contact_group_array[ rand(0..( contact_group_array.length - 1 ) )].id
+    )
+end
+
+customer_array = [] 
+(1.upto 5).each do |x|
+  customer_array << Contact.create_object(
+      :name => "Customer #{x}",
+      :address =>"öffice address of customer #{x}",
+      :contact_no => "tjeconcatnno_ #{x} customer",
+      :delivery_address =>" delivery address of #{x}",
+      :description => "description of the customer group #{x}",
+      :default_payment_term =>  x , 
+      :npwp => "2cust34234#{x}", 
+      :is_taxable => true,  
+      :tax_code => "23222acustfwea#{x}",
+      :nama_faktur_pajak => "awesome customer #{x}",
+      :pic => "awesome customer pic #{x}",
+      :pic_contact_no => "2342#{x}",
+      :email => "customer_#{x}@gmail.com",
+      :contact_type => CONTACT_TYPE[:customer],
+      :contact_group_id => contact_group_array[ rand(0..( contact_group_array.length - 1 ) )].id
+    )
+end

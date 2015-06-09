@@ -7,11 +7,40 @@ Ext.define('AM.view.master.customer.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-			{	header: 'Email', dataIndex: 'email', flex: 1 },
-			{	header: 'Alamat', dataIndex: 'address', flex: 1 },
-			{	header: 'Contact', dataIndex: 'contact', flex: 1 },
+			{ header: 'ID', dataIndex: 'id'}, 
+			{
+				xtype : 'templatecolumn',
+				text : "Badan Usaha",
+				flex : 1,
+				tpl : 'Badan Usaha: <b>{name}</b>' + '<br />'  + 
+						'Contact No: <b>{contact_no}</b>' + '<br />'  + '<br />'  +
+						'<b>Deskripsi</b>: <br />{description}' + '<br />'  +  '<br />'  +
+						'<b>Alamat</b>: <br />{address}' + '<br />'  + '<br />'  +
+						'<b>Alamat Pengiriman</b>: <br />{delivery_address}' + '<br />'  + '<br />'  +
+						
+						'Payment Term: {default_payment_term}' + '<br />'   
+								
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Tax Info",
+				flex : 1,
+				tpl : 'NPWP: <b>{npwp}</b>' + '<br />'  + 
+								'Wajib Pajak: <b>{is_taxable}</b>' + '<br />'  +
+								'Code Tax: {tax_code}' + '<br />'  +
+								'Nama faktur pajak: <br /> {nama_faktur_pajak}'     
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Contact Person",
+				flex : 1,
+				tpl : 'PIC: <b>{pic}</b>' + '<br />'  + 
+								'Contact No: <b>{pic_contact_no}</b>' + '<br />'  +
+								'Email: <br /> {email}' 
+			},
+			
+			 { header: 'ContactGroup', dataIndex: 'contact_group_name'}, 
 		];
 
 		this.addObjectButton = new Ext.Button({

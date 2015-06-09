@@ -2,7 +2,7 @@ Ext.define('AM.view.master.contactgroup.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.contactgroupform',
 
-  title : 'Add / Edit CashBank',
+  title : 'Add / Edit Contact Group',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
