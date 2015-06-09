@@ -22,8 +22,9 @@ class Api::SubTypesController < Api::BaseApiController
                   page(params[:page]).per(params[:limit]).order("id DESC")
       @total = SubType.where(:sub_type_id => params[:parent_id]).count 
     else
-      @objects = []
-      @total = 0 
+      @objects = SubType.joins(:item_type).page(params[:page]).per(params[:limit]).order("id DESC")
+      
+      @total = SubType.joins(:item_type). count
     end
     
     
@@ -79,7 +80,7 @@ class Api::SubTypesController < Api::BaseApiController
     @object = SubType.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => SubType.active_objects.count }  
     else
       render :json => { :success => false, :total => SubType.active_objects.count }  

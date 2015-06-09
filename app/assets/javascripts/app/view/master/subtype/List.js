@@ -9,7 +9,7 @@ Ext.define('AM.view.master.subtype.List' ,{
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
+			{	header: 'Item Type', dataIndex: 'item_type_name', flex: 1 } 
 		];
 
 		this.addObjectButton = new Ext.Button({

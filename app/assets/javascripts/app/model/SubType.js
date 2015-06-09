@@ -3,8 +3,8 @@ Ext.define('AM.model.SubType', {
   	fields: [
     	{ name: 'id', type: 'int' },
 			{ name: 'name', type: 'string' },
-			{ name: 'item_type_id', type: 'string' },
-			{ name: 'item_typee_name', type: 'string' },
+			{ name: 'item_type_id', type: 'int' },
+			{ name: 'item_type_name', type: 'string' },
 			 
   	],
 

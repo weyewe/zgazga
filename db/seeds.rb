@@ -137,12 +137,24 @@ Account.active_accounts.where(:account_case => ACCOUNT_CASE[:ledger] ).each do |
   ledger_account_array << account 
 end
 
+
+item_type_array = [] 
 (1.upto 10).each do |x|
   
-  ItemType.create_object(
+  item_type_array << ItemType.create_object(
       :name => "Item Type name #{x}",
       :description => "Item type description #{x}",
       :account_id => ledger_account_array[  rand( 0..(ledger_account_array.length - 1 ))].id 
+      
+    )
+end
+
+sub_type_array = [] 
+(1.upto 10).each do |x|
+  
+  sub_type_array << SubType.create_object(
+      :name => "Sub Type name #{x}", 
+      :item_type_id => item_type_array[  rand( 0..(item_type_array.length - 1 ))].id 
       
     )
 end

@@ -11,8 +11,7 @@ Ticketie::Application.routes.draw do
     put 'update_password' , :to => "passwords#update" , :as => :update_password
     get 'search_role' => 'roles#search', :as => :search_role, :method => :get
     get 'search_user' => 'app_users#search', :as => :search_user, :method => :get
-    get 'search_home' => 'homes#search', :as => :search_home, :method => :get
-    get 'search_item_type' => 'item_types#search', :as => :search_item_type, :method => :get
+    get 'search_home' => 'homes#search', :as => :search_home, :method => :get 
     get 'search_home_type' => 'home_types#search', :as => :search_home_type, :method => :get
     get 'search_item' => 'items#search', :as => :search_item, :method => :get
     get 'search_customer' => 'customers#search', :as => :search_customer, :method => :get
@@ -24,6 +23,7 @@ Ticketie::Application.routes.draw do
     
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
     get 'search_ledger_accounts' => 'accounts#search_ledger', :as => :search_ledger_account
+    get 'search_item_types' => 'item_types#search', :as => :search_item_type
     
     # master data 
     resources :app_users
