@@ -22,6 +22,8 @@ Ticketie::Application.routes.draw do
     get 'search_receivable' => 'receivables#search', :as => :search_receivable, :method => :get
     get 'work_customer_reports' => 'maintenances#customer_reports', :as => :work_customer_reports
     
+    get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
+    
     # master data 
     resources :app_users
     resources :contact_groups 

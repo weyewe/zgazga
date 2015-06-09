@@ -11,6 +11,9 @@ Ext.define('AM.model.Supplier', {
 		{ name: 'description', type: 'string' },
 		{ name: 'npwp', type: 'string' },
 		{ name: 'contact_no', type: 'string' },
+		
+		{ name: 'pic', type: 'string' },
+		{ name: 'pic_contact_no', type: 'string' },
 		{ name: 'email', type: 'string' },
 		{ name: 'is_taxable', type: 'boolean' },
 		{ name: 'tax_code', type: 'string' },

@@ -95,7 +95,7 @@ class Api::SuppliersController < Api::BaseApiController
     @object = Contact.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => Contact.active_objects.suppliers.count }  
     else
       render :json => { :success => false, :total => Contact.active_objects.suppliers.count }  

@@ -86,6 +86,39 @@ Ext.define('AM.view.master.supplier.Form', {
 	
 	picInfo: function(){
 		
+		var me = this; 
+		
+		var remoteJsonStoreContactGroup = Ext.create(Ext.data.JsonStore, {
+			storeId : 'member_search',
+			fields	: [
+			 		{
+						name : 'contact_group_name',
+						mapping : "name"
+					} ,
+					{
+						name : 'contact_group_description',
+						mapping : "description"
+					} ,
+			 
+					{
+						name : 'contact_group_id',
+						mapping : 'id'
+					}  
+			],
+			
+		 
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_contact_groups',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
+		
 		var taxInfo = {
 					xtype : 'fieldset',
 					title : "Tax Info",
@@ -168,11 +201,29 @@ Ext.define('AM.view.master.supplier.Form', {
 						anchor : '-10'
 					},
 					items : [
+					 
 						{
-							xtype: 'textfield',
-							fieldLabel : 'Contact Group',
+							fieldLabel: 'Contact Group',
+							xtype: 'combo',
+							queryMode: 'remote',
+							forceSelection: true, 
+							displayField : 'contact_group_name',
+							valueField : 'contact_group_id',
+							pageSize : 5,
+							minChars : 1, 
+							allowBlank : false, 
+							triggerAction: 'all',
+							store : remoteJsonStoreContactGroup , 
+							listConfig : {
+								getInnerTpl: function(){
+									return  	'<div data-qtip="{contact_group_name}">' + 
+															'<div class="combo-name">{contact_group_name}</div>' + 
+															'<div class="combo-name">Deskripsi: {contact_group_description}</div>' + 
+									 					'</div>';
+								}
+							},
 							name : 'contact_group_id' 
-						}, 
+						},
 					 
 						
 						
@@ -239,8 +290,28 @@ Ext.define('AM.view.master.supplier.Form', {
     this.callParent(arguments);
   },
 
-	setComboBoxData : function( record){
+	setSelectedContactGroup: function( contact_group_id ){
+		var comboBox = this.down('form').getForm().findField('contact_group_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : contact_group_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( contact_group_id );
+			}
+		});
+	},
 	
+	setComboBoxData : function( record){
+		var me = this; 
+		me.setLoading(true);
+		
+		me.setSelectedContactGroup( record.get("contact_group_id")  ) ;
 	}
 });
 
