@@ -23,6 +23,7 @@ Ticketie::Application.routes.draw do
     get 'work_customer_reports' => 'maintenances#customer_reports', :as => :work_customer_reports
     
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
+    get 'search_ledger_accounts' => 'accounts#search_ledger', :as => :search_ledger_account
     
     # master data 
     resources :app_users

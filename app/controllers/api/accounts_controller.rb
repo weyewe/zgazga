@@ -127,16 +127,26 @@ class Api::AccountsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = Account.active_accounts.where{ 
-                          (name =~ query)  & 
-                          (account_case.eq ACCOUNT_CASE[:ledger])
-        
+        (account_case.eq ACCOUNT_CASE[:ledger]) & 
+        (
+            (name =~ query)  | 
+            ( code =~ query )
+        )
+                      
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total =  Account.active_accounts.where{ (name =~ query)                   & 
-                        (account_case.eq ACCOUNT_CASE[:ledger])  }.count
+      @total =  Account.active_accounts.where{ 
+        
+          (account_case.eq ACCOUNT_CASE[:ledger]) & 
+          (
+              (name =~ query)  | 
+              ( code =~ query )
+          )
+        
+      }.count
     else
       @objects = Account.active_accounts.where{ (id.eq selected_id)  & 
                                   (account_case.eq ACCOUNT_CASE[:ledger])
@@ -149,6 +159,6 @@ class Api::AccountsController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @objects.count, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end
