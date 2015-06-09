@@ -93,13 +93,16 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object.description = params[:description] 
     
     if new_object.save
-       transaction_data  = TransactionData.find params[:transaction_data_id] 
-       if not transaction_data.transaction_date_non_base_exchange.nil?
-          TransactionDataNonBaseExchangeDetail.create_object(
+      exchange = Exchange.find_by_id params[:exchange_id]
+      if not exchange.nil? 
+        if exchange.is_base == false
+          TransactionDataNonBaseExchangeDetails.create_object(
             :transaction_data_detail_id => new_object.id ,
-            :amount => param[:real_amount]
+            :amount => params[:real_amount] ,
+            :exchange_id =>params[:exchange_id]
             )
-       end
+        end
+      end
     end
     return new_object
   end
@@ -118,9 +121,10 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object.description = "contra post #{DateTime.now} " + self.description
     if new_object.save
       if not self.transaction_data_non_base_exchange_detail.nil?
-      TransactionDataNonBaseExchangeDetail.create_object(
+      TransactionDataNonBaseExchangeDetails.create_object(
         :transaction_data_detail_id => new_object.id ,
-        :amount => self.transaction_data_non_base_exchange_detail.amount
+        :amount => self.transaction_data_non_base_exchange_detail.amount ,
+        :exchange_id => self.exchange_id
         )
       end
     end

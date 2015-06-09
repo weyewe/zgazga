@@ -94,7 +94,7 @@ ACCOUNT_CODE = {
     },
   :piutang_gbch  => {
     :code => "110402",
-    :name => "PIUTANG USAHA",
+    :name => "PIUTANG GBCH",
     :normal_balance => 1,
     :status => 1,
     :parent_code => "1104"
@@ -145,22 +145,22 @@ ACCOUNT_CODE = {
     :code => "11060001",
     :name => "UANG MUKA PEMBELIAN LOKAL",
     :normal_balance => 1,
-    :status => 2,
-    :parent_code => "1106"
+    :status => 1,
+    :parent_code => "110601"
     },
   :uang_muka_pembelian_impor => {
     :code => "11060002",
     :name => "UANG MUKA PEMBELIAN IMPOR",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1106"
+    :parent_code => "110601"
     },
   :uang_muka_lainnya => {
     :code => "11060003",
     :name => "UANG MUKA PEMBELIAN LAINNYA",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1106"
+    :parent_code => "110601"
     },
   :pajak_dibayar_di_muka_level_1 => {
     :code => "1107",
@@ -232,14 +232,14 @@ ACCOUNT_CODE = {
     :status => 1,
     :parent_code => "62"
     },
-  :biaya_keuangan => {
+  :biaya_keuangan_level_1 => {
     :code => "6209",
     :name => "BIAYA KEUANGAN",
     :normal_balance => 1,
     :status => 1,
     :parent_code => "62"
     },
-  :biaya_keuangan => {
+  :biaya_keuangan_level_2 => {
     :code => "620901",
     :name => "BIAYA KEUANGAN",
     :normal_balance => 1,
@@ -289,6 +289,21 @@ ACCOUNT_CODE = {
     :status => 2,
     :parent_code => "720101"
     }, 
+  :beban_non_operasional_level_1 => {
+    :code => "7202",
+    :name => "BEBAN NON OPERASIONAL",
+    :normal_balance => 1,
+    :status => 1,
+    :parent_code => "72"
+    },
+    
+  :beban_non_operasional_level_2 => {
+    :code => "720201",
+    :name => "BEBAN NON OPERASIONAL",
+    :normal_balance => 1,
+    :status => 1,
+    :parent_code => "7202"
+    },
   :laba_penjualan_aktiva_tetap => {
     :code => "72020001",
     :name => "LABA PENJUALAN AKTIVA TETAP",
@@ -297,20 +312,6 @@ ACCOUNT_CODE = {
     :parent_code => "720201"
     },  
  
-  :beban_non_operasional_level_1 => {
-    :code => "7202",
-    :name => "BEBAN NON OPERASIONAL",
-    :normal_balance => 1,
-    :status => 1,
-    :parent_code => "72"
-    },
-  :beban_non_operasional_level_2 => {
-    :code => "720201",
-    :name => "BEBAN NON OPERASIONAL",
-    :normal_balance => 1,
-    :status => 1,
-    :parent_code => "7202"
-    },
   :passiva => {
     :code => "3",
     :name => "PASSIVA",

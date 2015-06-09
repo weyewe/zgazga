@@ -144,8 +144,8 @@ TAX_VALUE = {
   }
 
 CONTACT_TYPE = {
-  :customer => "Customer",
-  :supplier => "Supplier",
+  :customer => "1",
+  :supplier => "2",
   }
 
 ITEM_CASE = {

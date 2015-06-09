@@ -11,7 +11,6 @@ module AccountingService
         :transaction_source_type => cash_bank_adjustment.class.to_s ,
         :code => TRANSACTION_DATA_CODE[:cash_bank_adjustment_journal],
         :is_contra_transaction => false ,
-        :exchange_id => cash_bank_adjustment.cash_bank.exchange_id,
       }, true )
 
       TransactionDataDetail.create_object(
@@ -19,7 +18,8 @@ module AccountingService
         :account_id          => cash_bank_adjustment.cash_bank.account_id     ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount ,
-        :real_amount         => cash_bank_adjustment.amount,
+        :real_amount         => cash_bank_adjustment.amount ,
+        :exchange_id         => cash_bank_adjustment.cash_bank.exchange_id ,
         :description => message
       )
 
@@ -28,7 +28,6 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:penyesuaian_modal_level_3][:code]).id        ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount,
-        :real_amount => cash_bank_adjustment.amount,
         :description => message
       )
       ta.confirm

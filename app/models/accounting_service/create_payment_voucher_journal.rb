@@ -23,6 +23,8 @@ module AccountingService
         :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => payment_voucher.amount ,
+        :exchange_id         => payment_voucher.cash_bank.exchange_id ,
         :description => message
         )
       if payment_voucher.biaya_bank > 0
@@ -32,6 +34,8 @@ module AccountingService
           :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
+          :real_amount         => payment_voucher.biaya_bank ,
+          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
           :description => message
           )
       end
@@ -47,6 +51,8 @@ module AccountingService
           :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id   ,
           :entry_case          => entry_case     ,
           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
+          :real_amount         => payment_voucher.pembulatan ,
+          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
           :description => message
           ) 
       end
@@ -57,6 +63,8 @@ module AccountingService
         :account_id          => payment_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => payment_voucher.amount ,
+        :exchange_id         => payment_voucher.cash_bank.exchange_id,
         :description => message
         )
       if payment_voucher.biaya_bank > 0
@@ -66,6 +74,8 @@ module AccountingService
           :account_id          => payment_voucher.cash_bank.account_id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
+          :real_amount         => payment_voucher.biaya_bank ,
+          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
           :description => message
           )
       end
@@ -81,6 +91,8 @@ module AccountingService
           :account_id          => payment_voucher.cash_bank.account_id  ,
           :entry_case          => entry_case     ,
           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
+          :real_amount         => payment_voucher.pembulatan ,
+          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
           :description => message
           ) 
       end
@@ -115,6 +127,8 @@ module AccountingService
         :account_id          => pvd.payable.exchange.account_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (pvd.amount * pvd.payable.exchange_rate_amount).round(2),
+        :real_amount         => pvd.amount ,
+        :exchange_id         => pvd.payable.exchange_id ,
         :description => message
       )
 #       Credit ExchangeGain or Debit ExchangeLost
@@ -130,7 +144,7 @@ module AccountingService
          TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
-           :entry_case          => NORMAL_BALANCE[:credit]     ,
+          :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => ((pvp.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * pvd.amount)).round(2),
           :description => message
           )     
@@ -238,15 +252,19 @@ module AccountingService
         :account_id          => payment_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (total * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
+        :exchange_id         => payment_voucher.cash_bank.exchange_id ,
         :description => message
         )
 
-  #     Debit GBCH
+  #     Debit GBCH Payable
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (total * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
+        :exchange_id         => payment_voucher.cash_bank.exchange_id ,
         :description => message
         )
       ta.confirm

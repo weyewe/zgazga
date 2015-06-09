@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150608041959) do
+ActiveRecord::Schema.define(version: 20150608103352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20150608041959) do
     t.integer  "rgt",                                                        null: false
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
     t.boolean  "is_contra_account",                          default: false
+    t.integer  "depth"
     t.integer  "normal_balance",                             default: 1
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
@@ -81,6 +82,18 @@ ActiveRecord::Schema.define(version: 20150608041959) do
     t.integer  "status",                                 default: 1
     t.datetime "mutation_date"
     t.integer  "cash_bank_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "closings", force: true do |t|
+    t.integer  "period"
+    t.integer  "year_period"
+    t.datetime "beginning_period"
+    t.datetime "end_date_period"
+    t.boolean  "is_year",          default: false
+    t.boolean  "is_closed",        default: false
+    t.datetime "closed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -478,6 +491,8 @@ ActiveRecord::Schema.define(version: 20150608041959) do
     t.decimal  "discount",             precision: 14, scale: 2,  default: 0.0
     t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
     t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "confirmed_at"
     t.datetime "invoice_date"
     t.datetime "due_date"
     t.datetime "created_at"
@@ -621,15 +636,8 @@ ActiveRecord::Schema.define(version: 20150608041959) do
 
   create_table "transaction_data_non_base_exchange_details", force: true do |t|
     t.integer  "transaction_data_detail_id"
-    t.decimal  "amount",                     precision: 14, scale: 2, default: 0.0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "transaction_data_non_base_exchanges", force: true do |t|
-    t.integer  "transaction_data_id"
     t.integer  "exchange_id"
-    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",                     precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -664,6 +672,23 @@ ActiveRecord::Schema.define(version: 20150608041959) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "valid_comb_income_statements", force: true do |t|
+    t.integer  "account_id"
+    t.integer  "closing_id"
+    t.decimal  "amount",     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "valid_combs", force: true do |t|
+    t.integer  "account_id"
+    t.integer  "closing_id"
+    t.integer  "entry_case"
+    t.decimal  "amount",     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "virtual_delivery_order_details", force: true do |t|
     t.string   "code"

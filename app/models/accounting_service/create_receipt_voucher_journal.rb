@@ -23,6 +23,8 @@ module AccountingService
         :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => receipt_voucher.amount ,
+        :exchange_id         => receipt_voucher.exchange_id ,
         :description => message
         )
       if receipt_voucher.biaya_bank > 0
@@ -32,6 +34,8 @@ module AccountingService
           :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
+          :real_amount         => receipt_voucher.biaya_bank ,
+          :exchange_id         => receipt_voucher.exchange_id ,
           :description => message
           )
       end
@@ -47,6 +51,8 @@ module AccountingService
           :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id   ,
           :entry_case          => entry_case     ,
           :amount              => (receipt_voucher.pembulatan * receipt_voucher.rate_to_idr).round(2),
+          :real_amount         => receipt_voucher.pembulatan ,
+          :exchange_id         => receipt_voucher.exchange_id ,
           :description => message
           ) 
       end
@@ -57,6 +63,8 @@ module AccountingService
         :account_id          => receipt_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => receipt_voucher.amount ,
+        :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => message
         )
       if receipt_voucher.biaya_bank > 0
@@ -66,6 +74,8 @@ module AccountingService
           :account_id          => receipt_voucher.cash_bank.account_id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
+          :real_amount         => receipt_voucher.biaya_bank ,
+          :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
           :description => message
           )
       end
@@ -81,6 +91,8 @@ module AccountingService
           :account_id          => receipt_voucher.cash_bank.account_id  ,
           :entry_case          => entry_case     ,
           :amount              => (receipt_voucher.pembulatan * receipt_voucher.rate_to_idr).round(2),
+          :real_amount         => receipt_voucher.pembulatan ,
+          :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
           :description => message
           ) 
       end
@@ -116,6 +128,8 @@ module AccountingService
         :account_id          => rvd.receivable.exchange.account_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (rvd.amount * rvd.receivable.exchange_rate_amount).round(2),
+        :real_amount         => rvd.amount ,
+        :exchange_id         => rvd.receivable.exchange_id ,
         :description => message
       )
 #       Credit ExchangeGain or Debit ExchangeLost
@@ -208,6 +222,8 @@ module AccountingService
         :account_id          => receipt_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (total * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
+        :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => message
         )
 
@@ -217,6 +233,8 @@ module AccountingService
         :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (total * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
+        :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => message
         )
       ta.confirm

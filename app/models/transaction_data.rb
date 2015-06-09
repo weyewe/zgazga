@@ -23,7 +23,6 @@ class TransactionData < ActiveRecord::Base
         if(Exchange.find_by_id params[:exchange_id]).is_base == false
           TransactionDataNonBaseExchange.create_object(
             :transaction_data_id => new_object.id,
-            :exchange_id => params[:exchange_id]
           )
         end
       end

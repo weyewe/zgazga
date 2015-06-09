@@ -260,7 +260,7 @@ class Account < ActiveRecord::Base
     ACCOUNT_CODE.each do |key,value|
       converted << [ key, value[:code] ] 
     end
-    sorted = converted.sort_by {|x| x[1]}
+    sorted = converted.sort_by {|x| x[1].to_i}
 
     sorted.each do |x|
       account = ACCOUNT_CODE[x[0]]
@@ -283,12 +283,12 @@ class Account < ActiveRecord::Base
       
       new_object.save
       
-      puts "ParentAccount code: #{parent_account.code}" if not parent_account.nil?
-      puts "current Account code: #{new_object.code}" if new_object.errors.messages.count  == 0
+      # puts "ParentAccount code: #{parent_account.code}" if not parent_account.nil?
+      # puts "current Account code: #{new_object.code}" if new_object.errors.messages.count  == 0
       
       if new_object.errors.messages.count  != 0
-        puts "The object: #{new_object.name}"
-        new_object.errors.messages.each {|x| puts "error: #{x}"}
+        # puts "The object: #{new_object.name}"
+        # new_object.errors.messages.each {|x| puts "error: #{x}"}
       end
       new_object.move_to_child_of(parent_account) if not parent_account.nil?
       

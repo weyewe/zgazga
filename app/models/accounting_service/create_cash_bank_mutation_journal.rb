@@ -17,6 +17,8 @@ module AccountingService
         :account_id          => cash_bank_mutation.target_cash_bank.account_id     ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => cash_bank_mutation.amount * cash_bank_mutation.exchange_rate_amount,
+        :real_amount         => cash_bank_mutation.amount ,
+        :exchange_id         => cash_bank_mutation.target_cash_bank.exchange_id ,
         :description => message
       )
     
@@ -26,19 +28,22 @@ module AccountingService
         :account_id          => cash_bank_mutation.source_cash_bank.account_id     ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => cash_bank_mutation.amount * cash_bank_mutation.exchange_rate_amount ,
+        :real_amount         => cash_bank_mutation.amount ,
+        :exchange_id         => cash_bank_mutation.source_cash_bank.exchange_id ,
         :description => message
       )
       ta.confirm
-    end
+  end
     
-    def CreateCashBankMutationJournal.undo_create_confirmation_journal(object)
-      last_transaction_data = TransactionData.where(
-        :transaction_source_id => object.id , 
-        :transaction_source_type => object.class.to_s ,
-        :code => TRANSACTION_DATA_CODE[:cash_bank_mutation_journal],
-        :is_contra_transaction => false
-      ).order("id DESC").first 
-      last_transaction_data.create_contra_and_confirm if not last_transaction_data.nil?
-    end
+  def CreateCashBankMutationJournal.undo_create_confirmation_journal(object)
+    last_transaction_data = TransactionData.where(
+      :transaction_source_id => object.id , 
+      :transaction_source_type => object.class.to_s ,
+      :code => TRANSACTION_DATA_CODE[:cash_bank_mutation_journal],
+      :is_contra_transaction => false
+    ).order("id DESC").first 
+    last_transaction_data.create_contra_and_confirm if not last_transaction_data.nil?
+  end
+    
   end
 end

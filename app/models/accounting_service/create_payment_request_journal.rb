@@ -8,7 +8,7 @@ module AccountingService
         :transaction_source_id => payment_request.id , 
         :transaction_source_type => payment_request.class.to_s ,
         :code => TRANSACTION_DATA_CODE[:payment_request_journal],
-        :is_contra_transaction => false 
+        :is_contra_transaction => false,
       }, true )
 
     
@@ -20,6 +20,8 @@ module AccountingService
       :account_id          => payment_request.account_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (payment_request.amount * payment_request.exchange_rate_amount).round(2),
+      :real_amount         => payment_request.amount ,
+      :exchange_id         => payment_request.exchange_id ,
       :description => message
       )
 

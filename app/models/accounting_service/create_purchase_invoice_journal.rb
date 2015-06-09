@@ -24,6 +24,8 @@ module AccountingService
       :account_id          => purchase_invoice.exchange.account_payable_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
+      :real_amount         => purchase_invoice.amount_payable ,
+      :exchange_id         => purchase_invoice.exchange_id ,
       :description => message
       )
 
