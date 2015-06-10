@@ -445,8 +445,7 @@ Ext.define('AM.view.master.item.Form', {
 		});
 	},
 	
-	setSelectedUom: function( uom_id ){
-		console.log("inside setSelectedUom")
+	setSelectedUom: function( uom_id ){ 
 		var comboBox = this.down('form').getForm().findField('uom_id'); 
 		var me = this; 
 		var store = comboBox.store; 
