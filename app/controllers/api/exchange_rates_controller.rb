@@ -9,17 +9,32 @@ class Api::ExchangeRatesController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = ExchangeRate.joins(:exchange).where{  
-        
-        ( exchange.name =~ livesearch  )  
-        
-      }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = ExchangeRate.joins(:exchange).where{ 
-        ( exchange.name =~ livesearch  )  
-      }.count
       
-      # calendar
+      if params[:parent_id].present?
+        selected_parent_id = params[:parent_id]
+        @objects = ExchangeRate.joins(:exchange).where{  
+          ( exchange_id.eq selected_parent_id ) & 
+          ( exchange.name =~ livesearch  )  
+          
+        }.page(params[:page]).per(params[:limit]).order("id DESC")
+        
+        @total = ExchangeRate.joins(:exchange).where{ 
+          ( exchange_id.eq selected_parent_id ) & 
+          ( exchange.name =~ livesearch  )  
+        }.count
+      else
+        @objects = ExchangeRate.joins(:exchange).where{  
+        
+          ( exchange.name =~ livesearch  )  
+          
+        }.page(params[:page]).per(params[:limit]).order("id DESC")
+        
+        @total = ExchangeRate.joins(:exchange).where{ 
+          ( exchange.name =~ livesearch  )  
+        }.count
+      end
+       
       
     elsif params[:parent_id].present?
       # @group_loan = GroupLoan.find_by_id params[:parent_id]
