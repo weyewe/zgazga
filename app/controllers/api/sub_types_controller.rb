@@ -98,14 +98,14 @@ class Api::SubTypesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = SubType.joins(:sub_type_type).where{ 
+      @objects = SubType.where{ 
                             ( name =~ query ) 
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = SubType.joins(:sub_type_type).where{ 
+      @total = SubType.where{ 
               ( name =~ query )  
                               }.count
     else
@@ -120,6 +120,6 @@ class Api::SubTypesController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

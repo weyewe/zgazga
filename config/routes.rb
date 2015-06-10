@@ -24,6 +24,8 @@ Ticketie::Application.routes.draw do
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
     get 'search_ledger_accounts' => 'accounts#search_ledger', :as => :search_ledger_account
     get 'search_item_types' => 'item_types#search', :as => :search_item_type
+    get 'search_sub_types' => 'sub_types#search', :as => :search_sub_type
+    get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     
     # master data 

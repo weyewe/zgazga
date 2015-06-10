@@ -93,7 +93,7 @@ Ext.define('AM.view.master.cashbank.Form', {
 								}
 							},
 							name : 'exchange_id' 
-						},
+				},
 			]
     }];
 

@@ -159,9 +159,10 @@ sub_type_array = []
     )
 end
 
+uom_array = []
 (1.upto 10).each do |x|
   
-   Uom.create_object(
+   uom_array << Uom.create_object(
       :name => "unit of measurement #{x}",   
       
     )
@@ -208,4 +209,30 @@ exchange_array.each do |ea|
             :rate => BigDecimal("10000") * selected_multiplier,
             :ex_rate_date => DateTime.now 
         )
+end
+
+item_array = [] 
+(1.upto 10).each do |x|
+  selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+  selected_sub_type = sub_type_array[  rand( 0..(sub_type_array.length - 1 ))]
+  selected_item_type = selected_sub_type.item_type 
+  selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+  
+  
+  item_array = Item.create_object(
+      :sub_type_id => selected_sub_type.id , 
+      :item_type_id => selected_item_type.id , 
+      :exchange_id => selected_exchange.id , 
+      :uom_id => selected_uom.id ,
+      
+      :name => "item_name #{x}",
+      :sku => "sjhfwjeklf#{x}",
+      :minimum_amount => BigDecimal( x.to_s ),
+      
+      :is_tradeable => true , 
+      :selling_price => BigDecimal("1000") * x ,
+      :price_list => BigDecimal("20000") * x ,
+      :description => "The descrition #{x}"
+      
+    )
 end

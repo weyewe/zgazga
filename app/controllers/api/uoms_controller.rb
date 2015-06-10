@@ -102,15 +102,15 @@ class Api::UomsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Uom.joins(:uom_type).where{ 
-                            ( name =~ livesearch )
+      @objects = Uom.where{ 
+                            ( name =~ query )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Uom.joins(:uom_type).where{ 
-              ( name =~ livesearch )
+      @total = Uom.where{ 
+              ( name =~ query )
                               }.count
     else
       @objects = Uom.where{ (id.eq selected_id)  
@@ -124,6 +124,6 @@ class Api::UomsController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

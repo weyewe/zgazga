@@ -1,31 +1,21 @@
 class Api::ItemsController < Api::BaseApiController
   
   def index
-    
-    
-    
-
-    
-    
+     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Item.joins(:item_type, :uom).where{  
+      @objects = Item.joins(:exchange, :item_type, :uom).where{  
         
-        ( item_type.name =~ livesearch ) | 
-        ( item_type.description =~ livesearch ) | 
-        ( sku =~ livesearch  ) | 
-        ( name =~ livesearch  ) | 
-        ( description =~ livesearch  )
-        
+        ( sku =~ livesearch ) | 
+        ( name =~ livesearch ) | 
+        ( description  =~ livesearch  )  
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Item.where{ 
-        ( item_type.name =~ livesearch ) | 
-        ( item_type.description =~ livesearch ) | 
-        ( sku =~ livesearch  ) | 
-        ( name =~ livesearch  ) | 
-        ( description =~ livesearch  )
+      @total = Item.joins(:exchange, :item_type, :uom).where{ 
+        ( sku =~ livesearch ) | 
+        ( name =~ livesearch ) | 
+        ( description  =~ livesearch  )   
       }.count
       
       # calendar
@@ -37,8 +27,9 @@ class Api::ItemsController < Api::BaseApiController
                   page(params[:page]).per(params[:limit]).order("id DESC")
       @total = Item.where(:item_id => params[:parent_id]).count 
     else
-      @objects = []
-      @total = 0 
+      @objects = Item.joins(:exchange, :item_type, :uom).page(params[:page]).per(params[:limit]).order("id DESC")
+      
+      @total = Item.count
     end
     
     
@@ -94,7 +85,7 @@ class Api::ItemsController < Api::BaseApiController
     @object = Item.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => Item.active_objects.count }  
     else
       render :json => { :success => false, :total => Item.active_objects.count }  
@@ -112,23 +103,19 @@ class Api::ItemsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Item.joins(:item_type).where{ 
-                            ( item_type.name =~ query ) | 
-        ( item_type.description =~ query ) | 
-        ( sku =~ query  ) | 
-        ( name =~ query  ) | 
-        ( description =~ query  )
+      @objects = Item.joins(:exchange, :item_type, :uom).where{ 
+            ( code  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.joins(:item_type).where{ 
-              ( item_type.name =~ query ) | 
-        ( item_type.description =~ query ) | 
-        ( sku =~ query  ) | 
-        ( name =~ query  ) | 
-        ( description =~ query  )
+      @total = Item.joins(:exchange, :item_type, :uom).where{ 
+               ( code  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
                               }.count
     else
       @objects = Item.where{ (id.eq selected_id)  
