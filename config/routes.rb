@@ -50,6 +50,7 @@ Ticketie::Application.routes.draw do
     resources :accounts
     resources :cash_banks
     resources :exchanges  
+    resources :exchange_rates 
     
     
     
