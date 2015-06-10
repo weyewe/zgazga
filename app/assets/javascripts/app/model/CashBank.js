@@ -8,6 +8,7 @@ Ext.define('AM.model.CashBank', {
 			{ name: 'amount', type: 'string' },
 			
 			{ name: 'exchange_id', type: 'int' },
+			{ name: 'exchange_name', type: 'string' },
      
   	],
 

@@ -4,24 +4,26 @@ class Api::CashBanksController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = CashBank.where{ 
+      @objects = CashBank.joins(:exchange).where{ 
         (
           (name =~  livesearch ) | 
-          (description =~  livesearch ) 
+          (description =~  livesearch ) |
+          ( exchange.name =~ livesearch )
            
         )
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = CashBank.where{
+      @total = CashBank.joins(:exchange).where{
         (
           (name =~  livesearch ) | 
-          (description =~  livesearch ) 
+          (description =~  livesearch )  |
+          ( exchange.name =~ livesearch )
         )
         
       }.count
     else
-      @objects = CashBank.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
+      @objects = CashBank.active_objects.joins(:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
       @total = CashBank.active_objects.count
     end
     

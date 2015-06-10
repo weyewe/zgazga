@@ -12,6 +12,34 @@ Ext.define('AM.view.master.cashbank.Form', {
 	
   initComponent: function() {
 	 
+	 	var me = this; 
+		var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
+			storeId : 'exchange_search',
+			fields	: [
+			 		{
+						name : 'exchange_name',
+						mapping : "name"
+					} ,
+ 
+			 
+					{
+						name : 'exchange_id',
+						mapping : 'id'
+					}  
+			],
+			
+		 
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_exchanges',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
     this.items = [{
       xtype: 'form',
@@ -39,16 +67,33 @@ Ext.define('AM.view.master.cashbank.Form', {
 					name : 'description',
 					fieldLabel: 'Deskripsi'
 				},
-        {
-					xtype: 'displayfield',
-					name : 'amount',
-					fieldLabel: 'Amount'
-				},
+ 
         {
 					fieldLabel : 'Is Bank?',
 					name : 'is_bank',
 					xtype : 'checkbox'
 				},
+				{
+							fieldLabel: 'Currency ',
+							xtype: 'combo',
+							queryMode: 'remote',
+							forceSelection: true, 
+							displayField : 'exchange_name',
+							valueField : 'exchange_id',
+							pageSize : 5,
+							minChars : 1, 
+							allowBlank : false, 
+							triggerAction: 'all',
+							store : remoteJsonStoreExchange , 
+							listConfig : {
+								getInnerTpl: function(){
+									return  	'<div data-qtip="{exchange_name}">' + 
+															'<div class="combo-name">{exchange_name}</div>'  
+									 					'</div>';
+								}
+							},
+							name : 'exchange_id' 
+						},
 			]
     }];
 
@@ -64,21 +109,28 @@ Ext.define('AM.view.master.cashbank.Form', {
     this.callParent(arguments);
   },
 
-	setComboBoxData : function( record){
+	setSelectedExchange: function( exchange_id ){
+		var comboBox = this.down('form').getForm().findField('exchange_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : exchange_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( exchange_id );
+			}
+		});
+	},
 	
-		// var role_id = record.get("role_id");
-		// var comboBox = this.down('form').getForm().findField('role_id'); 
-		// var me = this; 
-		// var store = comboBox.store; 
-		// store.load({
-		// 	params: {
-		// 		selected_id : role_id 
-		// 	},
-		// 	callback : function(records, options, success){
-		// 		me.setLoading(false);
-		// 		comboBox.setValue( role_id );
-		// 	}
-		// });
+	setComboBoxData : function( record){
+		var me = this; 
+		me.setLoading(true);
+		
+		me.setSelectedExchange( record.get("exchange_id")  ) ;
 	}
 });
 

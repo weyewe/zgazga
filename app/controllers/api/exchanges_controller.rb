@@ -106,7 +106,7 @@ class Api::ExchangesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Exchange.joins(:exchange_type).where{ 
+      @objects = Exchange.where{ 
             ( name =~ query  ) | 
         ( description =~ query  )  
                               }.
@@ -114,7 +114,7 @@ class Api::ExchangesController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Exchange.joins(:exchange_type).where{ 
+      @total = Exchange.where{ 
               ( name =~ query  ) | 
         ( description =~ query  )  
                               }.count
@@ -130,6 +130,6 @@ class Api::ExchangesController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end
