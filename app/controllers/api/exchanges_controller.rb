@@ -5,7 +5,7 @@ class Api::ExchangesController < Api::BaseApiController
     
     
 
-    
+    puts "=======> This is the index from exchanges controller \n"*10
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
@@ -88,7 +88,7 @@ class Api::ExchangesController < Api::BaseApiController
     @object = Exchange.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => Exchange.active_objects.count }  
     else
       render :json => { :success => false, :total => Exchange.active_objects.count }  

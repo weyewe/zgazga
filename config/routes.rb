@@ -48,7 +48,7 @@ Ticketie::Application.routes.draw do
     # finance
     resources :accounts
     resources :cash_banks
-    resources :exchanges 
+    resources :exchanges  
     
     
     
