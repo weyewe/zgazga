@@ -78,7 +78,7 @@ class Api::CashBanksController < Api::BaseApiController
     @object = CashBank.find(params[:id])
     @object.delete_object
 
-   if not @object.is_deleted?
+   if  @object.persisted?
       msg = {
         :success => false, 
         :message => {
@@ -87,7 +87,7 @@ class Api::CashBanksController < Api::BaseApiController
       }      
       render :json => msg
     else     
-      render :json => { :success => true, :total => PaymentRequest.active_objects.count }  
+      render :json => { :success => true, :total => CashBank.active_objects.count }  
     end
   end
   
