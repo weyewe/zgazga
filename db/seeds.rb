@@ -176,3 +176,12 @@ end
       
     )
 end
+
+(1.upto 10).each do |x|
+  
+   Exchange.create_object(
+      :name => "exchanges name #{x}",   
+      :description => "exchanges description #{x}",   
+      
+    )
+end

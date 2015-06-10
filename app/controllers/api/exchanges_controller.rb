@@ -30,8 +30,9 @@ class Api::ExchangesController < Api::BaseApiController
                   page(params[:page]).per(params[:limit]).order("id DESC")
       @total = Exchange.where(:exchange_id => params[:parent_id]).count 
     else
-      @objects = []
-      @total = 0 
+      @objects = Exchange.page(params[:page]).per(params[:limit]).order("id DESC")
+      
+      @total = Exchange.count
     end
     
     
