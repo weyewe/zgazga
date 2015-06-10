@@ -24,9 +24,9 @@ class Api::ExchangeRatesController < Api::BaseApiController
     elsif params[:parent_id].present?
       # @group_loan = GroupLoan.find_by_id params[:parent_id]
       @objects = ExchangeRate.
-                  where(:exchange_rate_id => params[:parent_id]).
+                  where(:exchange_id => params[:parent_id]).
                   page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = ExchangeRate.where(:exchange_rate_id => params[:parent_id]).count 
+      @total = ExchangeRate.where(:exchange_id => params[:parent_id]).count 
     else
       @objects = ExchangeRate.page(params[:page]).per(params[:limit]).order("id DESC")
       

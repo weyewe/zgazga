@@ -15,7 +15,8 @@ Ext.define('AM.view.master.exchangerate.List' ,{
 
 		this.addObjectButton = new Ext.Button({
 			text: 'Add',
-			action: 'addObject'
+			action: 'addObject',
+			disabled: true 
 		});
 
 		this.editObjectButton = new Ext.Button({
@@ -55,6 +56,14 @@ Ext.define('AM.view.master.exchangerate.List' ,{
 	
 	getSelectedObject: function() {
 		return this.getSelectionModel().getSelection()[0];
+	},
+	
+	enableAddButton: function(){
+		this.addObjectButton.enable();
+	},
+	
+	disableAddButton: function(){
+		this.addObjectButton.disable();
 	},
 
 	enableRecordButtons: function() {

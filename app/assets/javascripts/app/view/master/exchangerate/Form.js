@@ -2,7 +2,7 @@ Ext.define('AM.view.master.exchangerate.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.exchangerateform',
 
-  title : 'Add / Edit Currency',
+  title : 'Add / Edit Exchange Rate',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -55,27 +55,17 @@ Ext.define('AM.view.master.exchangerate.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-				{
-							fieldLabel: 'Currency ',
-							xtype: 'combo',
-							queryMode: 'remote',
-							forceSelection: true, 
-							displayField : 'exchange_name',
-							valueField : 'exchange_id',
-							pageSize : 5,
-							minChars : 1, 
-							allowBlank : false, 
-							triggerAction: 'all',
-							store : remoteJsonStoreExchange , 
-							listConfig : {
-								getInnerTpl: function(){
-									return  	'<div data-qtip="{exchange_name}">' + 
-															'<div class="combo-name">{exchange_name}</div>'  
-									 					'</div>';
-								}
-							},
-							name : 'exchange_id' 
-						},
+	      {
+	        xtype: 'hidden',
+	        name : 'exchange_id',
+	        fieldLabel: 'currency id'
+	      },
+	      {
+	        xtype: 'displayfield',
+	        name : 'exchange_name',
+	        fieldLabel: 'Currency'
+	      },
+				 
 	      {
       			xtype: 'datefield',
       			name : 'ex_rate_date',
@@ -125,6 +115,11 @@ Ext.define('AM.view.master.exchangerate.Form', {
 		me.setLoading(true);
 		
 		me.setSelectedExchange( record.get("exchange_id")  ) ;
-	}
+	},
+	
+	setParentData: function( record ){ 
+		this.down('form').getForm().findField('exchange_id').setValue(record.get('id')); 
+		this.down('form').getForm().findField('exchange_name').setValue(record.get('name'));  
+	},
 });
 
