@@ -2,6 +2,9 @@ class ItemType < ActiveRecord::Base
   
   validates_presence_of :name 
   validates_uniqueness_of :name
+  belongs_to :account 
+  
+  
   validate :valid_account
   
   def valid_account

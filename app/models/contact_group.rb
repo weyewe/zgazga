@@ -1,5 +1,7 @@
 class ContactGroup < ActiveRecord::Base
-    
+  
+  has_many :contacts 
+  
   validates_presence_of :name 
   
   def self.active_objects
@@ -22,6 +24,11 @@ class ContactGroup < ActiveRecord::Base
   end
   
   def delete_object
+    if self.contacts.count != 0
+      self.errors.add(:generic_errors, "Sudah ada contact")
+      return self 
+    end
+    
     self.destroy
   end
   

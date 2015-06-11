@@ -70,60 +70,169 @@ data_entry = User.create_object(
   :role_id => data_entry_role.id
   )
 
-
-# (1.upto 20).each do |x| 
-#   Vendor.create_object(
-#     :name => "Vendor #{x}",
-#     :address => "alamat vendor kita",
-#     :description => "boom! this is the description"
-#     )
-# end
-
-# home_type_array = []
-# ["ruko 1 lantai", "ruko 2 lantai", "ruko corner", "rumah tipe 21", "rumah tipe 88"].each do |x|
-#   home_type =  HomeType.create_object(
-#     :name => x,
-#     :description => "Description of #{x}",
-#     :amount => rand(1..10) * BigDecimal("40000")
-#     )
-#   home_type_array << home_type 
-# end
+Account.create_base_objects
 
 
-# cash_bank_array = []
-# ["BCA", "MANDIRI", "BCA2", "MANDIRI2", "KAS"].each do |x|
-#   cash_bank =  CashBank.create_object(
-#     :name => x,
-#     :description => "Description of #{x}",
-#     )
-#   cash_bank_array << cash_bank 
-# end
 
-# home_array = []
-# total_home_type = home_type_array.length 
-# (1.upto 20).each do |x|  
-#   selected_home_type = home_type_array[ rand(0..(total_home_type-1) )]
-#   home = Home.create_object(
-#     :home_type_id => selected_home_type.id ,
-#     :name => "#{x} #{selected_home_type.name} ",
-#     :address => "The address"
-#     )
-#   home_array << home 
-# end
+# creating contact group  
+contact_group_array = [] 
 
-# user_array = []
-# User.all.each {|u| user_array << u }
+(1.upto 5).each do |x|
+  contact_group_array << ContactGroup.create_object(
+      :name => "contact group name #{x}",
+      :description => "description of the contact group #{x}"
+    )
+end
 
-# total_user = user_array.length 
+# creating supplier 
 
-# home_array.each do |home|
-#   selected_user = user_array[ rand(0..(total_user-1) )]
+puts "contact_group_array: #{contact_group_array}"
+
+supplier_array = [] 
+(1.upto 5).each do |x|
+  supplier_array << Contact.create_object(
+  :name => "Supplier #{x}",
+      :address =>"öffice address of #{x}",
+      :contact_no => "tjeconcatnno_ #{x} supplier",
+      :delivery_address =>" delivery address of #{x}",
+      :description => "description of the contact group #{x}",
+      :default_payment_term =>  x , 
+      :npwp => "234234#{x}", 
+      :is_taxable => true,  
+      :tax_code => "23222afwea#{x}",
+      :nama_faktur_pajak => "awesome supplier #{x}",
+      :pic => "awesome supplier pic #{x}",
+      :pic_contact_no => "2342#{x}",
+      :email => "supplier_#{x}@gmail.com",
+      :contact_type => CONTACT_TYPE[:supplier],
+      :contact_group_id => contact_group_array[ rand(0..( contact_group_array.length - 1 ) )].id
+    )
+end
+
+customer_array = [] 
+(1.upto 5).each do |x|
+  customer_array << Contact.create_object(
+      :name => "Customer #{x}",
+      :address =>"öffice address of customer #{x}",
+      :contact_no => "tjeconcatnno_ #{x} customer",
+      :delivery_address =>" delivery address of #{x}",
+      :description => "description of the customer group #{x}",
+      :default_payment_term =>  x , 
+      :npwp => "2cust34234#{x}", 
+      :is_taxable => true,  
+      :tax_code => "23222acustfwea#{x}",
+      :nama_faktur_pajak => "awesome customer #{x}",
+      :pic => "awesome customer pic #{x}",
+      :pic_contact_no => "2342#{x}",
+      :email => "customer_#{x}@gmail.com",
+      :contact_type => CONTACT_TYPE[:customer],
+      :contact_group_id => contact_group_array[ rand(0..( contact_group_array.length - 1 ) )].id
+    )
+end
+
+
+# creating item_type
+ledger_account_array = [] 
+Account.active_accounts.where(:account_case => ACCOUNT_CASE[:ledger] ).each do |account|
+  ledger_account_array << account 
+end
+
+
+item_type_array = [] 
+(1.upto 10).each do |x|
   
-#   HomeAssignment.create_object(
-#     :user_id => selected_user.id ,
-#     :home_id => home.id ,
-#     :assignment_date => DateTime.now 
-    
-#     )
-# end
-   Account.create_base_objects
+  item_type_array << ItemType.create_object(
+      :name => "Item Type name #{x}",
+      :description => "Item type description #{x}",
+      :account_id => ledger_account_array[  rand( 0..(ledger_account_array.length - 1 ))].id 
+      
+    )
+end
+
+sub_type_array = [] 
+(1.upto 10).each do |x|
+  
+  sub_type_array << SubType.create_object(
+      :name => "Sub Type name #{x}", 
+      :item_type_id => item_type_array[  rand( 0..(item_type_array.length - 1 ))].id 
+      
+    )
+end
+
+uom_array = []
+(1.upto 10).each do |x|
+  
+   uom_array << Uom.create_object(
+      :name => "unit of measurement #{x}",   
+      
+    )
+end
+
+(1.upto 10).each do |x|
+  
+   Warehouse.create_object(
+      :name => "wh name #{x}",   
+      :code => "wh code #{x}",   
+      :description => "wh description #{x}",   
+      
+    )
+end
+
+
+exchange_array = []
+(1.upto 10).each do |x|
+  
+   exchange_array << Exchange.create_object(
+      :name => "exchanges name #{x}",   
+      :description => "exchanges description #{x}",   
+      
+    )
+end 
+
+cashbank_array = [] 
+(1.upto 10).each do |x|
+  selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+   cashbank_array << CashBank.create_object(
+      :name => "cb #{x}",   
+      :exchange_id => selected_exchange.id, 
+      :description => "exchanges description #{x}",   
+      
+    )
+end 
+
+
+multiplier = [2,3,5,6,4,3,4]
+exchange_array.each do |ea|
+    selected_multiplier = multiplier[  rand( 0..(multiplier.length - 1 ))]
+    ExchangeRate.create_object(
+            :exchange_id => ea.id , 
+            :rate => BigDecimal("10000") * selected_multiplier,
+            :ex_rate_date => DateTime.now 
+        )
+end
+
+item_array = [] 
+(1.upto 10).each do |x|
+  selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+  selected_sub_type = sub_type_array[  rand( 0..(sub_type_array.length - 1 ))]
+  selected_item_type = selected_sub_type.item_type 
+  selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+  
+  
+  item_array = Item.create_object(
+      :sub_type_id => selected_sub_type.id , 
+      :item_type_id => selected_item_type.id , 
+      :exchange_id => selected_exchange.id , 
+      :uom_id => selected_uom.id ,
+      
+      :name => "item_name #{x}",
+      :sku => "sjhfwjeklf#{x}",
+      :minimum_amount => BigDecimal( x.to_s ),
+      
+      :is_tradeable => true , 
+      :selling_price => BigDecimal("1000") * x ,
+      :price_list => BigDecimal("20000") * x ,
+      :description => "The descrition #{x}"
+      
+    )
+end

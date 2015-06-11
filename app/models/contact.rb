@@ -1,5 +1,6 @@
 class Contact < ActiveRecord::Base
   validates_presence_of :name 
+   belongs_to :contact_group
   validate :contact_type_must_be_valid
 
   def contact_type_must_be_valid
@@ -8,6 +9,14 @@ class Contact < ActiveRecord::Base
       self.errors.add(:contact_type, "Contact type harus ada")
       return self 
     end
+  end
+  
+  def self.customers
+    self.where(:contact_type => CONTACT_TYPE[:customer])
+  end
+  
+  def self.suppliers
+    self.where(:contact_type => CONTACT_TYPE[:supplier] )
   end
   
   

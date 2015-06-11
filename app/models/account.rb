@@ -2,6 +2,7 @@ class Account < ActiveRecord::Base
   acts_as_nested_set
   
   has_many :valid_combs
+  belongs_to :cash_bank 
   
   has_many :transaction_data_details
   

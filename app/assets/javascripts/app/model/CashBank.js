@@ -1,11 +1,14 @@
 Ext.define('AM.model.CashBank', {
   	extend: 'Ext.data.Model',
   	fields: [
-    	{ name: 'id', type: 'int' },
+    		{ name: 'id', type: 'int' },
 			{ name: 'name', type: 'string' },
 			{ name: 'description', type: 'string' },
-      { name: 'is_bank', type: 'boolean' },
+    		 { name: 'is_bank', type: 'boolean' },
 			{ name: 'amount', type: 'string' },
+			
+			{ name: 'exchange_id', type: 'int' },
+			{ name: 'exchange_name', type: 'string' },
      
   	],
 

@@ -1,43 +1,63 @@
 class Api::CustomersController < Api::BaseApiController
-  
+   
+    
+    
   def index
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Customer.active_objects.where{
-        (is_deleted.eq false) & 
-        (
-          (name =~  livesearch )  
-        )
+      @objects = Contact.joins(:contact_group).customers.where{
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( delivery_address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( npwp =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( pic =~ livesearch ) | 
+          ( pic_contact_no =~ livesearch ) | 
+          ( email =~ livesearch ) | 
+          ( tax_code =~ livesearch ) | 
+          ( nama_faktur_pajak =~ livesearch ) | 
+          ( contact_group.name =~ livesearch ) | 
+          ( contact_group.description =~ livesearch )
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Customer.active_objects.where{
-        (is_deleted.eq false) & 
-        (
-          (name =~  livesearch ) 
-        )
+      @total = Contact.joins(:contact_group).customers.where{  
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( delivery_address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( npwp =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( pic =~ livesearch ) | 
+          ( pic_contact_no =~ livesearch ) | 
+          ( email =~ livesearch ) | 
+          ( tax_code =~ livesearch ) | 
+          ( nama_faktur_pajak =~ livesearch ) | 
+          ( contact_group.name =~ livesearch ) | 
+          ( contact_group.description =~ livesearch )
         
       }.count
     else
-      @objects = Customer.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = Customer.active_objects.count
+      @objects = Contact.active_objects.customers.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = Contact.active_objects.customers.count
     end
     
     
-    
-    # render :json => { :customers => @objects , :total => @total, :success => true }
+     
   end
 
   def create
-    @object = Customer.create_object( params[:customer] )  
+    params[:customer][:contact_type] = CONTACT_TYPE[:customer] 
+    @object = Contact.create_object( params[:customer] )  
     
     
  
     if @object.errors.size == 0 
       render :json => { :success => true, 
                         :customers => [@object] , 
-                        :total => Customer.active_objects.count }  
+                        :total => Contact.active_objects.customers.count }  
     else
       msg = {
         :success => false, 
@@ -52,13 +72,13 @@ class Api::CustomersController < Api::BaseApiController
 
   def update
     
-    @object = Customer.find_by_id params[:id] 
+    @object = Contact.find_by_id params[:id] 
     @object.update_object( params[:customer])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :customers => [@object],
-                        :total => Customer.active_objects.count  } 
+                        :total => Contact.active_objects.customers.count  } 
     else
       msg = {
         :success => false, 
@@ -72,13 +92,13 @@ class Api::CustomersController < Api::BaseApiController
   end
 
   def destroy
-    @object = Customer.find(params[:id])
+    @object = Contact.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
-      render :json => { :success => true, :total => Customer.active_objects.count }  
+    if not @object.persisted?
+      render :json => { :success => true, :total => Contact.active_objects.customers.count }  
     else
-      render :json => { :success => false, :total => Customer.active_objects.count }  
+      render :json => { :success => false, :total => Contact.active_objects.customers.count }  
     end
   end
   
@@ -93,22 +113,48 @@ class Api::CustomersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Customer.active_objects.where{ (name =~ query)   
-                              }.
+      @objects = Contact.active_objects.customers.where{ 
+                        ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( delivery_address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( npwp =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( pic =~ livesearch ) | 
+          ( pic_contact_no =~ livesearch ) | 
+          ( email =~ livesearch ) | 
+          ( tax_code =~ livesearch ) | 
+          ( nama_faktur_pajak =~ livesearch ) | 
+          ( contact_group.name =~ livesearch ) | 
+          ( contact_group.description =~ livesearch )
+                  }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Customer.active_objects.where{ (name =~ query)  
+      @total = Contact.active_objects.customers.where{ 
+                        ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( delivery_address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( npwp =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( pic =~ livesearch ) | 
+          ( pic_contact_no =~ livesearch ) | 
+          ( email =~ livesearch ) | 
+          ( tax_code =~ livesearch ) | 
+          ( nama_faktur_pajak =~ livesearch ) | 
+          ( contact_group.name =~ livesearch ) | 
+          ( contact_group.description =~ livesearch )
                               }.count
     else
-      @objects = Customer.active_objects.where{ (id.eq selected_id)  
+      @objects = Contact.active_objects.customers.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Customer.active_objects.where{ (id.eq selected_id)   
+      @total = Contact.active_objects.customers.where{ (id.eq selected_id)   
                               }.count 
     end
     

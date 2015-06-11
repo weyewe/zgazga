@@ -1,5 +1,9 @@
 class Item < ActiveRecord::Base
   belongs_to :item_type
+  belongs_to :exchange
+  belongs_to :uom 
+  belongs_to :sub_type
+  
   validates_presence_of :sku
   validates_uniqueness_of :sku
   validates_presence_of :name

@@ -7,6 +7,8 @@ class ExchangeRate < ActiveRecord::Base
   validate :valid_rate
   validate :duplicate_ex_rate_date_and_exchange_id
   
+  belongs_to :exchange
+  
   def duplicate_ex_rate_date_and_exchange_id
     previous_exchange_rate =  ExchangeRate.where(
       :exchange_id => exchange_id,

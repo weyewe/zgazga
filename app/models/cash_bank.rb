@@ -5,6 +5,9 @@ class CashBank < ActiveRecord::Base
   has_many :cash_bank_adjustments
   belongs_to :receipt_voucher
   belongs_to :exchange
+  
+  has_one :account 
+  
   validate :valid_exchange_id
   
   def valid_exchange_id
@@ -31,7 +34,7 @@ class CashBank < ActiveRecord::Base
   end
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self 
   end
   
   def update_object( params )    
