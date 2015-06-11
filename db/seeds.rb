@@ -647,7 +647,7 @@ if Rails.env.development?
     end
   end
   
-  puts "virtual_order_clearance_array: #{virtual_order_clearance_array}"
+  # puts "virtual_order_clearance_array: #{virtual_order_clearance_array}"
   
   sales_invoice_array = []
   (1.upto 10).each do |x|

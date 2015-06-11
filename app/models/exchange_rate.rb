@@ -15,7 +15,7 @@ class ExchangeRate < ActiveRecord::Base
       :ex_rate_date => ex_rate_date
       ).first
     if self.persisted? 
-       if  (not previous_exchange_rate.nil?) and  previous_exchange_rate.id != self.id
+      if  (not previous_exchange_rate.nil?) and  previous_exchange_rate.id != self.id
         self.errors.add(:generic_errors, "Sudah ada")
         return self 
       end
