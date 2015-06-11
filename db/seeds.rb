@@ -73,9 +73,9 @@ data_entry = User.create_object(
 Account.create_base_objects
 
 
-# if Rails.env.development?
+if Rails.env.development?
 # if Rails.env.production?
-if Rails.env.test?
+# if Rails.env.test?
   # creating contact group  
   contact_group_array = [] 
   
