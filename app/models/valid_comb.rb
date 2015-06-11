@@ -1,7 +1,7 @@
 class ValidComb < ActiveRecord::Base
   belongs_to :account
   belongs_to :closing 
-  belongs_to :valid_comb_non_base_exchanges
+  belongs_to :valid_comb_non_base_exchange
   def ValidComb.previous_closing_valid_comb_amount( previous_closing, leaf_account )
     return BigDecimal("0") if previous_closing.nil?
     

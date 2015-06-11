@@ -137,7 +137,7 @@ module AccountingService
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selish_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
-          :amount              => ((payment_voucher.rate_to_idr * pvd.rate * pvd.amount) - (pvp.payable.exchange_rate_amount * pvd.amount)).round(2),
+          :amount              => ((payment_voucher.rate_to_idr * pvd.rate * pvd.amount) - (pvd.payable.exchange_rate_amount * pvd.amount)).round(2),
           :description => "Debit ExchangeLost"
           )   
       elsif pvd.payable.exchange_rate_amount > payment_voucher.rate_to_idr
@@ -145,7 +145,7 @@ module AccountingService
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
-          :amount              => ((pvp.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * pvd.amount)).round(2),
+          :amount              => ((pvd.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * pvd.amount)).round(2),
           :description => "Credit ExchangeGain"
           )     
       end

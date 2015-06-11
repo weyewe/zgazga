@@ -86,11 +86,16 @@ class Closing < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
     self.is_confirmed =false
     self.confirmed_at = nil
     if self.save
-      undo_create_journal
+      AccountingService::CreateExchangeGainLossJournal.undo_create_exchange_gain_loss_journal(self)
+      ValidComb.where(:closing_id => self.id).each do |valid_comb|
+        if not valid_comb.valid_comb_non_base_exchange.nil?
+          valid_comb.valid_comb_non_base_exchange.delete_object
+          valid_comb.delete_object
+        end
+      end
     end  
   end
   
@@ -125,9 +130,6 @@ class Closing < ActiveRecord::Base
     return previous_closing 
   end
   
-  def undo_create_journal
-    
-  end
   
   def generate_valid_combs
     self.generate_exchange_gain_loss

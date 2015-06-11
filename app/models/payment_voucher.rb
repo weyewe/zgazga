@@ -58,6 +58,9 @@ class PaymentVoucher < ActiveRecord::Base
     new_object.save
     if new_object.save
       new_object.code = "Pv-" + new_object.id.to_s
+      if new_object.cash_bank.exchange.is_base == true
+        new_object.rate_to_idr = 1
+      end
       new_object.save
     end
     return new_object
@@ -84,7 +87,11 @@ class PaymentVoucher < ActiveRecord::Base
     self.payment_date = params[:payment_date]
     self.contact_id = params[:contact_id]
     self.cash_bank_id = params[:cash_bank_id]
-    self.save
+    if self.save
+      if self.cash_bank.exchange.is_base == true
+        self.rate_to_idr = 1
+      end
+    end
     return self
   end
   

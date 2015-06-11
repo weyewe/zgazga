@@ -286,6 +286,16 @@ describe Closing do
       it "should confirm Closing" do
         @cls.is_confirmed.should == true  
       end 
-  end
+      
+      context "unconfirm closing" do
+        before(:each) do
+          @cls.unconfirm_object
+        end
+        it "should unconfirm Closing" do
+          @cls.is_confirmed.should == false
+        end
+      end
+      
+    end
 end
 end

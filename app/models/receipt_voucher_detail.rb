@@ -71,7 +71,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     new_object.receipt_voucher_id = params[:receipt_voucher_id]
     new_object.receivable_id = params[:receivable_id]
     new_object.amount_paid = params[:amount_paid]
-    new_object.amount = params[:amount]
+    new_object.amount =  params[:amount_paid] / params[:rate]
     new_object.pph_23 = params[:pph_23]
     new_object.rate = params[:rate]
     if new_object.save
@@ -87,7 +87,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     end
     self.receivable_id = params[:receivable_id]
     self.amount_paid = params[:amount_paid]
-    self.amount = params[:amount]
+    self.amount = params[:amount_paid] / params[:rate]
     self.pph_23 = params[:pph_23]
     self.rate = params[:rate]
     if self.save
