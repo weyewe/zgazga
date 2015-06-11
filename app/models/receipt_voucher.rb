@@ -110,12 +110,12 @@ class ReceiptVoucher < ActiveRecord::Base
     rv.update_remaining_amount(amount)
   end
   
-  def generate_cash_mutation()
+  def generate_cash_mutation(total)
       CashMutation.create_object(
         :source_class => self.class.to_s, 
         :source_id => self.id ,  
         :source_code => self.code,
-        :amount => self.amount ,  
+        :amount => total ,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.confirmed_at ,  
         :cash_bank_id => self.cash_bank_id 
@@ -194,9 +194,16 @@ class ReceiptVoucher < ActiveRecord::Base
     if self.save
       self.confirm_detail
       if not self.is_gbch?
-         self.generate_cash_mutation
-         self.update_cash_bank_amount(self.amount)
-         AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
+        biaya_pembulatan = 0 
+        if self.status_pembulatan == NORMAL_BALANCE[:credit]
+          biaya_pembulatan = self.pembulatan * -1
+        else
+          biaya_pembulatan = self.pembulatan
+        end
+        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        self.generate_cash_mutation(total)
+        self.update_cash_bank_amount(total)
+        AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
       end
     end
     return self
@@ -216,13 +223,20 @@ class ReceiptVoucher < ActiveRecord::Base
    
     self.is_confirmed = false
     self.confirmed_at = nil
-     if self.save
+    if self.save
       self.unconfirm_detail
-       if not self.is_gbch?
-         self.delete_cash_mutation
-         self.update_cash_bank_amount(self.amount * -1)
-         AccountingService::CreateReceiptVoucherJournal.undo_create_confirmation_journal(self)
-       end
+      if not self.is_gbch?
+        self.delete_cash_mutation
+        biaya_pembulatan = 0 
+        if self.status_pembulatan == NORMAL_BALANCE[:credit]
+          biaya_pembulatan = self.pembulatan * -1
+        else
+          biaya_pembulatan = self.pembulatan
+        end
+        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        self.update_cash_bank_amount(total * -1)
+        AccountingService::CreateReceiptVoucherJournal.undo_create_confirmation_journal(self)
+      end
     end
     return self
   end
@@ -246,8 +260,15 @@ class ReceiptVoucher < ActiveRecord::Base
     self.reconciliation_date = params[:reconciliation_date]
     if self.save
       self.reconciled_detail
-      self.generate_cash_mutation
-      self.update_cash_bank_amount(self.amount)
+      biaya_pembulatan = 0 
+      if self.status_pembulatan == NORMAL_BALANCE[:credit]
+        biaya_pembulatan = self.pembulatan * -1
+      else
+        biaya_pembulatan = self.pembulatan
+      end
+      total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+      self.generate_cash_mutation(total)
+      self.update_cash_bank_amount(total)
       AccountingService::CreateReceiptVoucherJournal.create_reconcile_journal(self)
     end
     return self
@@ -275,7 +296,14 @@ class ReceiptVoucher < ActiveRecord::Base
     if self.save
       self.unreconciled_detail
       self.delete_cash_mutation
-      self.update_cash_bank_amount(self.amount * -1)
+      biaya_pembulatan = 0 
+      if self.status_pembulatan == NORMAL_BALANCE[:credit]
+        biaya_pembulatan = self.pembulatan * -1
+      else
+        biaya_pembulatan = self.pembulatan
+      end
+      total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+      self.update_cash_bank_amount(total * -1)
       AccountingService::CreateReceiptVoucherJournal.undo_create_reconcile_journal(self)
     end
     return self

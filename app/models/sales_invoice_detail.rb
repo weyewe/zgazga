@@ -60,7 +60,7 @@ class SalesInvoiceDetail < ActiveRecord::Base
     new_object.amount = BigDecimal( params[:amount] || '0')
     
     if new_object.save
-      new_object.price = new_object.delivery_order_detail.sales_order_detail.price
+      new_object.price = (new_object.delivery_order_detail.sales_order_detail.price * new_object.amount).round(2)
       new_object.code = "SadjD-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
@@ -76,7 +76,7 @@ class SalesInvoiceDetail < ActiveRecord::Base
     self.delivery_order_detail_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
-      self.price = new_object.delivery_order_detail.purchase_order_detail.price
+      self.price = (new_object.delivery_order_detail.purchase_order_detail.price * self.amount).round(2)
       self.calculateTotalAmount
     end
     return self
@@ -96,9 +96,16 @@ class SalesInvoiceDetail < ActiveRecord::Base
   def calculateTotalAmount
     amount = 0
     SalesInvoiceDetail.where(:sales_invoice_id =>sales_invoice_id).each do |sid|
-      amount += sid.amount * sid.price
+      amount += sid.price
     end
-    SalesInvoice.find_by_id(sales_invoice_id).update_amount_receivable(amount)
+    sales_invoice = SalesInvoice.find_by_id(sales_invoice_id)
+    discount = sales_invoice.discount / 100 * amount
+    taxable_amount = amount - discount
+    tax = sales_invoice.tax / 100 * taxable_amount
+    sales_invoice.dpp = taxable_amount
+    sales_invoice.amount_receivable = taxable_amount + tax 
+    sales_invoice.save
+    # SalesInvoice.find_by_id(sales_invoice_id).update_amount_receivable(amount)
   end
   
 end

@@ -304,6 +304,7 @@ class Account < ActiveRecord::Base
     new_ar_account.name = "Account Receivable " + exchange.name.to_s
     new_ar_account.account_case = ACCOUNT_CASE[:ledger]
     new_ar_account.parent_id = ar_account.id
+    new_ar_account.normal_balance = ar_account.normal_balance
     new_ar_account.is_base_account = true
     new_ar_account.save
 #     puts new_ar_account.id
@@ -315,6 +316,7 @@ class Account < ActiveRecord::Base
     new_ar_gbch_account.name = "GBCH Receivable" + exchange.name.to_s
     new_ar_gbch_account.account_case = ACCOUNT_CASE[:ledger]
     new_ar_gbch_account.parent_id = ar_gbch_account.id
+    new_ar_gbch_account.normal_balance = ar_gbch_account.normal_balance
     new_ar_gbch_account.is_base_account = true
     new_ar_gbch_account.save
     created_account << new_ar_gbch_account.id
@@ -325,6 +327,7 @@ class Account < ActiveRecord::Base
     new_ap_account.name = "Account Payable" + exchange.name.to_s
     new_ap_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_account.parent_id = ap_account.id
+    new_ap_account.normal_balance = ap_account.normal_balance
     new_ap_account.is_base_account = true
     new_ap_account.save
     created_account << new_ap_account.id
@@ -335,6 +338,7 @@ class Account < ActiveRecord::Base
     new_ap_gbch_payable_account.name = "Account Payable" + exchange.name.to_s
     new_ap_gbch_payable_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_gbch_payable_account.parent_id = ap_gbch_payable_account.id
+    new_ap_gbch_payable_account.normal_balance = ap_gbch_payable_account.normal_balance
     new_ap_gbch_payable_account.is_base_account = true
     new_ap_gbch_payable_account.save
     created_account << new_ap_gbch_payable_account.id
@@ -353,6 +357,7 @@ class Account < ActiveRecord::Base
     end
     new_cash_bank_account.account_case = ACCOUNT_CASE[:ledger]
     new_cash_bank_account.parent_id = cash_bank_account.id
+    new_cash_bank_account.normal_balance = cash_bank_account.normal_balance
     new_cash_bank_account.is_base_account = true
     new_cash_bank_account.save
     return new_cash_bank_account

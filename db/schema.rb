@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150608103352) do
+ActiveRecord::Schema.define(version: 20150611012806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20150608103352) do
     t.boolean  "is_year",          default: false
     t.boolean  "is_closed",        default: false
     t.datetime "closed_at"
+    t.boolean  "is_confirmed",     default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -116,7 +118,7 @@ ActiveRecord::Schema.define(version: 20150608103352) do
     t.string   "pic"
     t.string   "pic_contact_no"
     t.string   "email"
-    t.string   "is_taxable"
+    t.boolean  "is_taxable"
     t.string   "tax_code"
     t.string   "contact_type"
     t.integer  "default_payment_term"
@@ -637,7 +639,7 @@ ActiveRecord::Schema.define(version: 20150608103352) do
   create_table "transaction_data_non_base_exchange_details", force: true do |t|
     t.integer  "transaction_data_detail_id"
     t.integer  "exchange_id"
-    t.decimal  "amount",                     precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",                     precision: 18, scale: 11, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -677,6 +679,14 @@ ActiveRecord::Schema.define(version: 20150608103352) do
     t.integer  "account_id"
     t.integer  "closing_id"
     t.decimal  "amount",     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "valid_comb_non_base_exchanges", force: true do |t|
+    t.integer  "valid_comb_id"
+    t.integer  "exchange_id"
+    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -156,7 +156,7 @@ describe PaymentVoucher do
     
     @cba = CashBankAdjustment.create_object(
         :cash_bank_id => @cb_1.id,
-        :amount =>  BigDecimal("110000") ,
+        :amount =>  BigDecimal("100000") ,
         :status => ADJUSTMENT_STATUS[:addition] ,
         :adjustment_date => DateTime.now  ,
         :description => nil ,
@@ -195,12 +195,12 @@ describe PaymentVoucher do
     @gbch_no_2 = "12345"
     @due_date_1 = DateTime.now
     @due_date_2 = DateTime.now + 1.days
-    @pembulatan_1 = BigDecimal("20000")
-    @pembulatan_2 = BigDecimal("30000")
+    @pembulatan_1 = BigDecimal("0")
+    @pembulatan_2 = BigDecimal("0")
     @status_pembulatan_1 = STATUS_PEMBULATAN[:debet]
     @status_pembulatan_2 = STATUS_PEMBULATAN[:kredit]
-    @biaya_bank_1 = BigDecimal("5000")
-    @biaya_bank_2 = BigDecimal("6000")
+    @biaya_bank_1 = BigDecimal("0")
+    @biaya_bank_2 = BigDecimal("0")
     @rate_to_idr_1 = BigDecimal("1")
     @rate_to_idr_2 = BigDecimal("1000")
     @payment_date_1 = DateTime.now
@@ -338,18 +338,19 @@ describe PaymentVoucher do
         @pvd = PaymentVoucherDetail.create_object(
           :payment_voucher_id => @pv.id,
           :payable_id => @payable_1.id,
-          :amount => BigDecimal("110000"),
-          :amount_paid => BigDecimal("110000"),
-          :pph_21 => BigDecimal("100"),
-          :pph_23 => BigDecimal("100"),
+          :amount => BigDecimal("100000"),
+          :amount_paid => BigDecimal("100000"),
+          :pph_21 => BigDecimal("0"),
+          :pph_23 => BigDecimal("0"),
           :rate => BigDecimal("1")
           )
         @pv.reload
+        @pvd.should be_valid
       end
       
-      it "should have detail and payment_voucher.amount == 110000" do
+      it "should have detail and payment_voucher.amount == 100000" do
         @pv.payment_voucher_details.count.should == 1
-        @pv.amount.should == BigDecimal("110000")
+        @pv.amount.should == BigDecimal("100000")
       end
       
       it "cannot delete payment_voucher if have detail" do
@@ -427,8 +428,8 @@ describe PaymentVoucher do
               @pv.is_reconciled.should == false
             end
 
-            it "should update cashbank amount to 110000" do
-              @cb_1.amount.should == BigDecimal("110000")
+            it "should update cashbank amount to 100000" do
+              @cb_1.amount.should == BigDecimal("100000")
             end
           end
         end
@@ -478,10 +479,10 @@ describe PaymentVoucher do
         @pvd = PaymentVoucherDetail.create_object(
           :payment_voucher_id => @pv.id,
           :payable_id => @payable_1.id,
-          :amount => BigDecimal("110000"),
-          :amount_paid => BigDecimal("110000"),
-          :pph_21 => BigDecimal("100"),
-          :pph_23 => BigDecimal("100"),
+          :amount => BigDecimal("100000"),
+          :amount_paid => BigDecimal("100000"),
+          :pph_21 => BigDecimal("0"),
+          :pph_23 => BigDecimal("0"),
           :rate => BigDecimal("1")
           )
         @pv.reload

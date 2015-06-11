@@ -1,4 +1,4 @@
-class TransactionDataNonBaseExchangeDetails < ActiveRecord::Base
+class TransactionDataNonBaseExchangeDetail < ActiveRecord::Base
     belongs_to :transaction_data_detail
     
     def self.create_object( params) 
@@ -9,5 +9,6 @@ class TransactionDataNonBaseExchangeDetails < ActiveRecord::Base
         new_object.save 
         return new_object
     end
+    
     
 end

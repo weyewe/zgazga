@@ -10,6 +10,7 @@ module AccountingService
         :code => TRANSACTION_DATA_CODE[:purchase_receival_journal],
         :is_contra_transaction => false 
       }, true )
+      
 #     debit raw
     purchase_receival.purchase_receival_details.each do |prd|
       TransactionDataDetail.create_object(
@@ -17,7 +18,7 @@ module AccountingService
         :account_id          => prd.item.item_type.account_id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (prd.amount * prd.purchase_order_detail.price * purchase_receival.exchange_rate_amount).round(2),
-        :description => message
+        :description => "Debit Raw"
         
       )
     end
@@ -28,7 +29,7 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id     ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (purchase_receival.total_amount * purchase_receival.exchange_rate_amount).round(2) ,
-        :description => message
+        :description => "Credit GoodsPendingClearance"
       )
      ta.confirm
    

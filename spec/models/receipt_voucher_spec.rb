@@ -217,12 +217,12 @@ describe ReceiptVoucher do
     @gbch_no_2 = "12345"
     @due_date_1 = DateTime.now
     @due_date_2 = DateTime.now + 1.days
-    @pembulatan_1 = BigDecimal("20000")
-    @pembulatan_2 = BigDecimal("30000")
+    @pembulatan_1 = BigDecimal("0")
+    @pembulatan_2 = BigDecimal("0")
     @status_pembulatan_1 = STATUS_PEMBULATAN[:debet]
     @status_pembulatan_2 = STATUS_PEMBULATAN[:kredit]
-    @biaya_bank_1 = BigDecimal("5000")
-    @biaya_bank_2 = BigDecimal("6000")
+    @biaya_bank_1 = BigDecimal("0")
+    @biaya_bank_2 = BigDecimal("0")
     @rate_to_idr_1 = BigDecimal("1")
     @rate_to_idr_2 = BigDecimal("1000")
     @receipt_date_1 = DateTime.now
@@ -363,7 +363,7 @@ describe ReceiptVoucher do
           :receivable_id => @receivable_1.id,
           :amount => BigDecimal("100000"),
           :amount_paid => BigDecimal("100000"),
-          :pph_23 => BigDecimal("100"),
+          :pph_23 => BigDecimal("0"),
           :rate => BigDecimal("1")
           )
        
@@ -492,7 +492,7 @@ describe ReceiptVoucher do
           :receivable_id => @receivable_1.id,
           :amount => BigDecimal("100000"),
           :amount_paid => BigDecimal("100000"),
-          :pph_23 => BigDecimal("100"),
+          :pph_23 => BigDecimal("0"),
           :rate => BigDecimal("1")
           )
         @rv.reload
@@ -516,6 +516,7 @@ describe ReceiptVoucher do
             :transaction_source_id => @rv.id
             )
           td.count.should == 1
+          td.first.is_confirmed == true
         end
         
         it "should create 1 cash mutation" do

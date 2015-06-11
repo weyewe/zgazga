@@ -11,7 +11,7 @@ class CreateContacts < ActiveRecord::Migration
       t.string :pic
       t.string :pic_contact_no
       t.string :email
-      t.string :is_taxable
+      t.boolean :is_taxable
       t.string :tax_code
       t.string :contact_type
       t.integer :default_payment_term

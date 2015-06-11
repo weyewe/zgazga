@@ -20,17 +20,17 @@ module AccountingService
       :account_id          => Account.find_by_code(ACCOUNT_CODE[:harga_pokok_penjualan_level_3][:code]).id    ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (delivery_order.total_cogs).round(2),
-      :description => message
+      :description => "Debit COGS"
       )
 
-#     Debit Account User Input
+#     Credit Raw
     delivery_order.delivery_order_details.each do |dod|
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => dod.item.item_type.account_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (dod.cogs).round(2),
-        :description => message
+        :description => "Credit Raw"
       )
     end
     ta.confirm

@@ -19,7 +19,7 @@ module AccountingService
         :amount              => cash_bank_mutation.amount * cash_bank_mutation.exchange_rate_amount,
         :real_amount         => cash_bank_mutation.amount ,
         :exchange_id         => cash_bank_mutation.target_cash_bank.exchange_id ,
-        :description => message
+        :description => "Debit Target CashBank"
       )
     
 #     credit source_cash_bank
@@ -30,7 +30,7 @@ module AccountingService
         :amount              => cash_bank_mutation.amount * cash_bank_mutation.exchange_rate_amount ,
         :real_amount         => cash_bank_mutation.amount ,
         :exchange_id         => cash_bank_mutation.source_cash_bank.exchange_id ,
-        :description => message
+        :description => "Credit Source CashBank"
       )
       ta.confirm
   end

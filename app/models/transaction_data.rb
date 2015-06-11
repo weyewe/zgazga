@@ -1,5 +1,5 @@
 class TransactionData < ActiveRecord::Base
-  belongs_to :transaction_date_non_base_exchange
+  # belongs_to :transaction_data_non_base_exchange_details
   has_many :transaction_data_details 
   validates_presence_of :transaction_datetime 
   
@@ -19,13 +19,13 @@ class TransactionData < ActiveRecord::Base
     end
     
     if new_object.save
-      if not params[:exchange_id].nil?
-        if(Exchange.find_by_id params[:exchange_id]).is_base == false
-          TransactionDataNonBaseExchange.create_object(
-            :transaction_data_id => new_object.id,
-          )
-        end
-      end
+      # if not params[:exchange_id].nil?
+      #   if(Exchange.find_by_id params[:exchange_id]).is_base == false
+      #     TransactionDataNonBaseExchange.create_object(
+      #       :transaction_data_id => new_object.id,
+      #     )
+      #   end
+      # end
     end
     return new_object
   end
@@ -111,7 +111,9 @@ class TransactionData < ActiveRecord::Base
   def internal_object_destroy
   end
   
-   
+  def delete_object
+    self.destroy
+  end
    
   def create_contra_and_confirm
     new_object = self.class.new 

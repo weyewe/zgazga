@@ -103,9 +103,9 @@ class SalesInvoice < ActiveRecord::Base
     self.is_confirmed = true  
     
     if self.save 
-      self.generate_receivable    
       self.update_sales_invoice_confirm
       AccountingService::CreateSalesInvoiceJournal.create_confirmation_journal(self)
+      self.generate_receivable  
     end
     return self 
   end
@@ -156,32 +156,32 @@ class SalesInvoice < ActiveRecord::Base
     return self
   end
   
-  def update_amount_receivable(amount)
-    self.amount_receivable = amount
-      tax_value = 0
-      case self.delivery_order.sales_order.contact.tax_code # a_variable is the variable we want to compare
-      when TAX_CODE[:code_01]  
-        tax_value = TAX_VALUE[:code_01]
-      when TAX_CODE[:code_02] 
-        tax_value = TAX_VALUE[:code_02]
-      when TAX_CODE[:code_03] 
-        tax_value = TAX_VALUE[:code_03]
-      when TAX_CODE[:code_04] 
-        tax_value = TAX_VALUE[:code_04]
-      when TAX_CODE[:code_05] 
-        tax_value = TAX_VALUE[:code_05]
-      when TAX_CODE[:code_06] 
-        tax_value = TAX_VALUE[:code_06]
-      when TAX_CODE[:code_07] 
-        tax_value = TAX_VALUE[:code_07]
-      when TAX_CODE[:code_08] 
-        tax_value = TAX_VALUE[:code_08]
-      when TAX_CODE[:code_09] 
-        tax_value = TAX_VALUE[:code_09]
-      end
-      self.tax = amount * tax_value / 100
-    self.save
-  end
+  # def update_amount_receivable(amount)
+  #   self.amount_receivable = amount
+  #   tax_value = 0
+  #   case self.delivery_order.sales_order.contact.tax_code # a_variable is the variable we want to compare
+  #   when TAX_CODE[:code_01]  
+  #     tax_value = TAX_VALUE[:code_01]
+  #   when TAX_CODE[:code_02] 
+  #     tax_value = TAX_VALUE[:code_02]
+  #   when TAX_CODE[:code_03] 
+  #     tax_value = TAX_VALUE[:code_03]
+  #   when TAX_CODE[:code_04] 
+  #     tax_value = TAX_VALUE[:code_04]
+  #   when TAX_CODE[:code_05] 
+  #     tax_value = TAX_VALUE[:code_05]
+  #   when TAX_CODE[:code_06] 
+  #     tax_value = TAX_VALUE[:code_06]
+  #   when TAX_CODE[:code_07] 
+  #     tax_value = TAX_VALUE[:code_07]
+  #   when TAX_CODE[:code_08] 
+  #     tax_value = TAX_VALUE[:code_08]
+  #   when TAX_CODE[:code_09] 
+  #     tax_value = TAX_VALUE[:code_09]
+  #   end
+  #   self.tax = amount * tax_value / 100
+  #   self.save
+  # end
   
   
   
@@ -209,13 +209,19 @@ class SalesInvoice < ActiveRecord::Base
  
   
   def update_sales_invoice_confirm
+    total_cos = 0
     self.sales_invoice_details.each do |sid|
+      
+      # TODO set detail.cos
+      total_cos += sid.cos
       sid.delivery_order_detail.pending_invoiced_amount -= sid.amount
       if sid.delivery_order_detail.pending_invoiced_amount == 0 
          sid.delivery_order_detail.is_all_invoiced == true
       end
       sid.delivery_order_detail.save
     end
+      self.total_cos = total_cos
+      self.save
       self.delivery_order.update_is_invoice_completed
   end
   

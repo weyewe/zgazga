@@ -309,6 +309,7 @@ it "should not create SalesInvoice if invoice_date is not valid" do
         @sid_1.errors.size.should == 0
         
       end
+    
       
       it "should not update SalesInvoice if have details" do
         @si.update_object(

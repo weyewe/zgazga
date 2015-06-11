@@ -25,7 +25,7 @@ module AccountingService
         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
         :real_amount         => payment_voucher.amount ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-        :description => message
+        :description => "Credit GBCHPayable"
         )
       if payment_voucher.biaya_bank > 0
 #     Credit GBCH for biaya bank
@@ -36,7 +36,7 @@ module AccountingService
           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.biaya_bank ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => message
+          :description => "Credit GBCH for BiayaBank"
           )
       end
       
@@ -53,7 +53,7 @@ module AccountingService
           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.pembulatan ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => message
+          :description => "Credit/Debit GBCH for Pembulatan"
           ) 
       end
     else
@@ -65,7 +65,7 @@ module AccountingService
         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
         :real_amount         => payment_voucher.amount ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id,
-        :description => message
+        :description => "Credit CashBank"
         )
       if payment_voucher.biaya_bank > 0
 #     Credit CashBank for biaya bank
@@ -76,7 +76,7 @@ module AccountingService
           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.biaya_bank ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => message
+          :description => "Credit CashBank for BiayaBank"
           )
       end
       
@@ -93,7 +93,7 @@ module AccountingService
           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.pembulatan ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => message
+          :description => "Credit/Debit CashBank for Pembulatan"
           ) 
       end
     end
@@ -105,7 +105,7 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_administrasi_bank][:code]).id   ,
         :entry_case          => NORMAL_BALANCE[:debit]      ,
         :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
-        :description => message
+        :description => "Debit BiayaBank"
         ) 
     end
     
@@ -116,7 +116,7 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_pembulatan][:code]).id   ,
         :entry_case          => payment_voucher.status_pembulatan ,
         :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
-        :description => message
+        :description => "Credit/Debit Pembulatan"
         ) 
     end    
     
@@ -129,7 +129,7 @@ module AccountingService
         :amount              => (pvd.amount * pvd.payable.exchange_rate_amount).round(2),
         :real_amount         => pvd.amount ,
         :exchange_id         => pvd.payable.exchange_id ,
-        :description => message
+        :description => "Debit AccountPayable"
       )
 #       Credit ExchangeGain or Debit ExchangeLost
       if pvd.payable.exchange_rate_amount < payment_voucher.rate_to_idr
@@ -138,7 +138,7 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selish_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => ((payment_voucher.rate_to_idr * pvd.rate * pvd.amount) - (pvp.payable.exchange_rate_amount * pvd.amount)).round(2),
-          :description => message
+          :description => "Debit ExchangeLost"
           )   
       elsif pvd.payable.exchange_rate_amount > payment_voucher.rate_to_idr
          TransactionDataDetail.create_object(
@@ -146,7 +146,7 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => ((pvp.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * pvd.amount)).round(2),
-          :description => message
+          :description => "Credit ExchangeGain"
           )     
       end
       
@@ -158,7 +158,7 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_21][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => pph_21,
-          :description => message
+          :description => "Credit HutangPPh21"
           )  
         if payment_voucher.is_gbch == true
 #           Debit GBCH for Hutang PPh 21 
@@ -167,7 +167,7 @@ module AccountingService
             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_21,
-            :description => message
+            :description => "Debit GBCH for HutangPPh21"
             )  
         else
 #           Debit CashBank for Hutang PPh 21
@@ -176,7 +176,7 @@ module AccountingService
             :account_id          => payment_voucher.cash_bank.account_id,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_21,
-            :description => message
+            :description => "Debit CashBank for HutangPPh21"
             )  
         end
       end
@@ -189,7 +189,7 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_23][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => pph_23,
-          :description => message
+          :description => "Credit HutangPPh23"
           )  
         if payment_voucher.is_gbch == true
 #           Debit GBCH for Hutang PPh 23
@@ -198,7 +198,7 @@ module AccountingService
             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_23,
-            :description => message
+            :description => "Debit GBCH for HutangPPh23"
             )  
         else
 #           Debit CashBank for Hutang PPh 23
@@ -207,7 +207,7 @@ module AccountingService
             :account_id          => payment_voucher.cash_bank.account_id,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_23,
-            :description => message
+            :description => "Debit CashBank for HutangPPh23"
             )  
         end
       end
@@ -254,7 +254,7 @@ module AccountingService
         :amount              => (total * payment_voucher.rate_to_idr).round(2),
         :real_amount         => total ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-        :description => message
+        :description => "Credit CashBank"
         )
 
   #     Debit GBCH Payable
@@ -265,7 +265,7 @@ module AccountingService
         :amount              => (total * payment_voucher.rate_to_idr).round(2),
         :real_amount         => total ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-        :description => message
+        :description => "Debit GBCH Payable"
         )
       ta.confirm
     end

@@ -14,7 +14,6 @@ class Exchange < ActiveRecord::Base
       new_object.account_payable_id = list_account_id[2]
       new_object.gbch_payable_id = list_account_id[3]
       new_object.save
-      
     end
     return new_object
   end

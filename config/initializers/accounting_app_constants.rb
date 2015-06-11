@@ -484,56 +484,56 @@ ACCOUNT_CODE = {
   :harga_pokok => {
     :code => "51",
     :name => "HARGA POKOK",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 1,
     :parent_code => "2"
     }, 
   :harga_pokok_penjualan_level_1 => {
     :code => "5101",
     :name => "HARGA POKOK PENJUALAN",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 1,
     :parent_code => "51"
     },  
   :harga_pokok_penjualan_level_2 => {
     :code => "510101",
     :name => "HARGA POKOK PENJUALAN",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 1,
     :parent_code => "5101"
     },  
   :harga_pokok_penjualan_level_3 => {
     :code => "51010001",
     :name => "HARGA POKOK PENJUALAN",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 2,
     :parent_code => "510101"
     },
   :potongan_pembelian => {
     :code => "51010002",
     :name => "POTONGAN PEMBELIAN",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 2,
     :parent_code => "510101"
     },
   :biaya_overhead_pabrik_level_1 => {
     :code => "5102",
     :name => "BIAYA OVERHEAD PABRIK",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 1,
     :parent_code => "51"
     },
   :biaya_overhead_pabrik_level_2 => {
     :code => "510201",
     :name => "BIAYA OVERHEAD PABRIK",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 1,
     :parent_code => "5102"
     },
   :biaya_overhead_pabrik_level_3 => {
     :code => "51020001",
     :name => "BIAYA OVERHEAD PABRIK",
-    :normal_balance => 2,
+    :normal_balance => 1,
     :status => 2,
     :parent_code => "510201"
     },
@@ -641,7 +641,7 @@ ACCOUNT_CODE = {
     :delivery_order_journal => 70 ,
     :sales_invoice_journal => 80 ,  
     :receipt_voucher_journal => 90, 
-    :receipt_voucher_journaqw12321 => 100, 
+    :closing_journal => 100, 
     :group_loan_run_away_declaration => 110 , 
     :group_loan_run_away_in_cycle_clearance => 120, 
     :group_loan_run_away_end_of_cycle_clearance => 130, 

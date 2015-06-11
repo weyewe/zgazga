@@ -26,7 +26,7 @@ module AccountingService
       :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
       :real_amount         => purchase_invoice.amount_payable ,
       :exchange_id         => purchase_invoice.exchange_id ,
-      :description => message
+      :description => "Credit Account Payable"
       )
 
 #     Debit GoodsPendingClearance
@@ -38,7 +38,7 @@ module AccountingService
         :account_id          => pid.purchase_receival_detail.item.item_type.account_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (detail_amount * purchase_invoice.exchange_rate_amount).round(2),
-        :description => message
+        :description => "Debit GoodsPendingClearance"
       )
     end
     
@@ -49,7 +49,7 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:ppn_masukan][:code]).id     ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (tax * purchase_invoice.exchange_rate_amount).round(2) ,
-        :description => message
+        :description => "Debit PPN Masukan"
         )
     end
     

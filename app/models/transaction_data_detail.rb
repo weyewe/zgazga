@@ -2,14 +2,12 @@ class TransactionDataDetail < ActiveRecord::Base
   
   belongs_to :account
   belongs_to :transaction_data
-  belongs_to :transaction_data_non_base_exchange_detail
+  has_many :transaction_data_non_base_exchange_details
   validate :valid_account_id
   validate :valid_transaction_data_id 
   validate :valid_entry_case
   validate :valid_amount
   validate :transaction_data_must_not_be_confirmed 
-  
-  
   
   validates_presence_of :account_id, :entry_case, :amount, :transaction_data_id 
   
@@ -96,7 +94,7 @@ class TransactionDataDetail < ActiveRecord::Base
       exchange = Exchange.find_by_id params[:exchange_id]
       if not exchange.nil? 
         if exchange.is_base == false
-          TransactionDataNonBaseExchangeDetails.create_object(
+          TransactionDataNonBaseExchangeDetail.create_object(
             :transaction_data_detail_id => new_object.id ,
             :amount => params[:real_amount] ,
             :exchange_id =>params[:exchange_id]

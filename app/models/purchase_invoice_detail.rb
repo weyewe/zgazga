@@ -98,7 +98,13 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     PurchaseInvoiceDetail.where(:purchase_invoice_id =>purchase_invoice_id).each do |pid|
       amount += pid.price
     end
-    pi = PurchaseInvoice.find_by_id(purchase_invoice_id).update_amount_payable(amount)
+    purchase_invoice = PurchaseInvoice.find_by_id(purchase_invoice_id)
+    discount = purchase_invoice.discount / 100 * amount
+    taxable_amount = amount - discount
+    tax = purchase_invoice.tax / 100 * taxable_amount
+    purchase_invoice.amount_payable = taxable_amount + tax 
+    purchase_invoice.save
+    
   end
   
 end

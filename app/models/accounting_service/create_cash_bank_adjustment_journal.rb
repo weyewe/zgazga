@@ -17,18 +17,18 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => cash_bank_adjustment.cash_bank.account_id     ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount ,
+        :amount              => (cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount).round(2) ,
         :real_amount         => cash_bank_adjustment.amount ,
         :exchange_id         => cash_bank_adjustment.cash_bank.exchange_id ,
-        :description => message
+        :description => "Debit CashBank"
       )
 
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:penyesuaian_modal_level_3][:code]).id        ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount,
-        :description => message
+        :amount              => (cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount).round(2),
+        :description => "Credit Penyesuaian Modal"
       )
       ta.confirm
     end

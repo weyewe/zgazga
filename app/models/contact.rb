@@ -1,5 +1,15 @@
 class Contact < ActiveRecord::Base
   validates_presence_of :name 
+  validate :contact_type_must_be_valid
+
+  def contact_type_must_be_valid
+    return if contact_type.nil?
+    if not [1,2].include?( contact_type) 
+      self.errors.add(:contact_type, "Contact type harus ada")
+      return self 
+    end
+  end
+  
   
   def self.active_objects
     self
