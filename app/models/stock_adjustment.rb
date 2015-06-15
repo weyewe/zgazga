@@ -11,6 +11,10 @@ class StockAdjustment < ActiveRecord::Base
     self 
   end
   
+  def active_children
+    self.stock_adjustment_details 
+  end
+  
   def valid_warehouse
     return if  warehouse_id.nil?
     

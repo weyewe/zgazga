@@ -8,13 +8,13 @@ class Api::StockAdjustmentsController < Api::BaseApiController
        @objects = StockAdjustment.active_objects.joins(:warehouse).where{
          (
            ( description =~  livesearch ) | 
-           ( code =~ livesearch) | 
+           ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
+       }.page(params[:page]).per(params[:limit]).order("stock_adjustments.id DESC")
 
-       @total = StockAdjustment.active_objects.where{
+       @total = StockAdjustment.active_objects.joins(:warehouse).where{
          (
            ( description =~  livesearch ) | 
            ( code =~ livesearch) | 
@@ -24,7 +24,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
  
 
      else
-       @objects = StockAdjustment.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = StockAdjustment.active_objects.joins(:warehouse).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = StockAdjustment.active_objects.count
      end
      
@@ -35,7 +35,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
 
   def create
     
-    params[:stock_adjustment][:transaction_datetime] =  parse_date( params[:stock_adjustment][:transaction_datetime] )
+    params[:stock_adjustment][:adjustment_date] =  parse_date( params[:stock_adjustment][:adjustment_date] )
     
     
     @object = StockAdjustment.create_object( params[:stock_adjustment])
@@ -47,7 +47,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
                           :id => @object.id, 
                           :code => @object.code ,
                           :description => @object.description ,
-                          :transaction_datetime => format_date_friendly(@object.transaction_datetime)  ,
+                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -77,7 +77,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
                           :id => @object.id, 
                           :code => @object.code ,
                           :description => @object.description ,
-                          :transaction_datetime => format_date_friendly(@object.transaction_datetime)  ,
+                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at)
                         
@@ -86,7 +86,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
   end
 
   def update
-    params[:stock_adjustment][:transaction_datetime] =  parse_date( params[:stock_adjustment][:transaction_datetime] )
+    params[:stock_adjustment][:adjustment_date] =  parse_date( params[:stock_adjustment][:adjustment_date] )
     params[:stock_adjustment][:confirmed_at] =  parse_date( params[:stock_adjustment][:confirmed_at] )
     
     @object = StockAdjustment.find(params[:id])
@@ -139,7 +139,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
                             :id => @object.id,
                             :code => @object.code ,
                             :description => @object.description ,
-                            :transaction_datetime => format_date_friendly(@object.transaction_datetime),
+                            :adjustment_date => format_date_friendly(@object.adjustment_date),
                             :is_confirmed => @object.is_confirmed,
                             :confirmed_at => format_date_friendly(@object.confirmed_at)
                           ],
@@ -163,7 +163,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     @object = StockAdjustment.find(params[:id])
     @object.delete_object
 
-    if (( not @object.persisted? )   or @object.is_deleted ) and @object.errors.size == 0
+    if not @object.persisted? 
       render :json => { :success => true, :total => StockAdjustment.active_objects.count }  
     else
       render :json => { :success => false, :total => StockAdjustment.active_objects.count, 
@@ -185,23 +185,33 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = StockAdjustment.where{  (title =~ query)   & 
-                                (is_deleted.eq false )
+      @objects = StockAdjustment.where{  
+        ( 
+           ( code =~ query )  
+         )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
+                        
+      @total = StockAdjustment.where{  
+        ( 
+           ( code =~ query )  
+         )}.count 
     else
-      @objects = StockAdjustment.where{ (id.eq selected_id)  & 
-                                (is_deleted.eq false )
+      @objects = StockAdjustment.where{ 
+                (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
+                        
+      @total = StockAdjustment.where{ 
+                              (id.eq selected_id)  
+                      }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @objects.count, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end
-+

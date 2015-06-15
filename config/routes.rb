@@ -54,28 +54,11 @@ Ticketie::Application.routes.draw do
     resources :exchanges  
     resources :exchange_rates 
     
+     
+    # operation
     
-    
-    resources :maintenances
-    
-    resources :home_types
-    resources :homes
-    resources :home_assignments
-    resources :vendors
-    resources :payment_requests
-    resources :payment_vouchers
-    resources :payment_voucher_details
-    resources :cash_banks
-    resources :cash_bank_adjustments
-    resources :cash_bank_mutations
-    resources :cash_mutations
-    resources :invoices
-    resources :advanced_payments
-    resources :receipt_vouchers
-    resources :monthly_generators
-    resources :monthly_generator_invoices
-    resources :deposit_documents
-    
+    resources :stock_adjustments
+    resources :stock_adjustment_details
   end
   
   
