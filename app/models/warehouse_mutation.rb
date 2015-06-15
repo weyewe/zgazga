@@ -1,5 +1,4 @@
 class WarehouseMutation < ActiveRecord::Base
-  
   has_many :warehouse_mutation_details
   validates_presence_of :warehouse_from_id
   validates_presence_of :warehouse_to_id
@@ -8,7 +7,11 @@ class WarehouseMutation < ActiveRecord::Base
   validate :valid_warehouse_from_id_and_warehouse_to_id
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.warehouse_mutation_details
   end
   
   def valid_warehouse_from_id_and_warehouse_to_id

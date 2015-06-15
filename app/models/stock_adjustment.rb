@@ -8,7 +8,11 @@ class StockAdjustment < ActiveRecord::Base
   validate :valid_warehouse
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self 
+  end
+  
+  def active_children
+    self.stock_adjustment_details 
   end
   
   def valid_warehouse

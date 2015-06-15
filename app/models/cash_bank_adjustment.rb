@@ -10,7 +10,7 @@ class CashBankAdjustment < ActiveRecord::Base
   validate :valid_amount
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_cash_bank

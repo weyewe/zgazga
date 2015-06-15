@@ -278,8 +278,8 @@ if Rails.env.development?
     selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
     selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
     warehouse_mutation = WarehouseMutation.create_object(
-      :warehouse_from_id => selected_warehouse_from,
-      :warehouse_to_id => selected_warehouse_to,
+      :warehouse_from_id => selected_warehouse_from.id,
+      :warehouse_to_id => selected_warehouse_to.id,
       :mutation_date => DateTime.now
       )
     (1.upto 10).each do |y| 
