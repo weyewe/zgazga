@@ -122,7 +122,7 @@ if Rails.env.development?
         :default_payment_term =>  x , 
         :npwp => "2cust34234#{x}", 
         :is_taxable => true,  
-        :tax_code => "23222acustfwea#{x}",
+        :tax_code => TAX_CODE[:code_01],
         :nama_faktur_pajak => "awesome customer #{x}",
         :pic => "awesome customer pic #{x}",
         :pic_contact_no => "2342#{x}",

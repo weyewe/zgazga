@@ -5,9 +5,10 @@ class SalesOrderDetail < ActiveRecord::Base
   validate :valid_item
   validate :valid_amount
   belongs_to :sales_order
+  belongs_to :item
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount
@@ -67,7 +68,7 @@ class SalesOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.stock_adjustment.is_confirmed?
+    if self.sales_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
@@ -80,7 +81,7 @@ class SalesOrderDetail < ActiveRecord::Base
   end
   
   def delete_object
-    if self.stock_adjustment.is_confirmed?
+    if self.sales_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end

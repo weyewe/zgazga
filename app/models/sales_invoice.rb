@@ -16,7 +16,11 @@ class SalesInvoice < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.sales_invoice_details 
   end
   
   def valid_delivery_order_id

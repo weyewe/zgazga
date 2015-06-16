@@ -12,11 +12,11 @@ class Contact < ActiveRecord::Base
   end
   
   def self.customers
-    self.where(:contact_type => CONTACT_TYPE[:customer])
+    self.where(:contact_type => CONTACT_TYPE[:customer].to_s)
   end
   
   def self.suppliers
-    self.where(:contact_type => CONTACT_TYPE[:supplier] )
+    self.where(:contact_type => CONTACT_TYPE[:supplier].to_s )
   end
   
   

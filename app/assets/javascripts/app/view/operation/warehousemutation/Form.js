@@ -133,8 +133,8 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
   },
   
   
-  setSelectedWarehouseSource: function( warehouse_id ){
-  	// console.log("inside warehouse source");
+  setSelectedWarehouseSource: function( warehouse_from_id ){
+  	console.log("inside warehouse source");
   	// console.log(warehouse_id);
 		var comboBox = this.down('form').getForm().findField('warehouse_from_id'); 
 		var me = this; 
@@ -143,16 +143,19 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : warehouse_id 
+				selected_id : warehouse_from_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( warehouse_id );
+				comboBox.setValue( warehouse_from_id );
 			}
 		});
 	},
 	
-	setSelectedWarehouseTarget: function( warehouse_id ){
+	setSelectedWarehouseTarget: function( warehouse_to_id ){
+  	console.log("inside warehouse target");
+  	console.log("The warehouse id : " + warehouse_to_id);
+  	// console.log(warehouse_id);
 		var comboBox = this.down('form').getForm().findField('warehouse_to_id'); 
 		var me = this; 
 		var store = comboBox.store; 
@@ -160,11 +163,11 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : warehouse_id 
+				selected_id : warehouse_to_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( warehouse_id );
+				comboBox.setValue( warehouse_to_id );
 			}
 		});
 	},

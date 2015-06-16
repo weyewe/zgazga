@@ -16,6 +16,7 @@ Ticketie::Application.routes.draw do
     get 'search_items' => 'items#search', :as => :search_item, :method => :get
     get 'search_customer' => 'customers#search', :as => :search_customer, :method => :get
     get 'search_vendor' => 'vendors#search', :as => :search_vendor, :method => :get
+    get 'search_employees' => 'employees#search', :as => :search_employee, :method => :get
     get 'search_cash_bank' => 'cash_banks#search', :as => :search_cash_bank, :method => :get
     get 'search_payable' => 'payables#search', :as => :search_payable, :method => :get
     get 'search_receivable' => 'receivables#search', :as => :search_receivable, :method => :get
@@ -28,12 +29,17 @@ Ticketie::Application.routes.draw do
     get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
+    get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
+    get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
+    get 'search_delivery_orders' => 'delivery_orders#search', :as => :search_delivery_order
+    get 'search_delivery_order_details' => 'delivery_order_details#search', :as => :search_delivery_order_detail
     
     # master data 
     resources :app_users
     resources :contact_groups 
     resources :customers 
     resources :suppliers 
+    resources :employees
     
     
     
@@ -66,6 +72,16 @@ Ticketie::Application.routes.draw do
     
     resources :cash_bank_adjustments
     resources :cash_bank_mutations
+    
+    resources :sales_orders
+    resources :sales_order_details
+    
+    resources :delivery_orders
+    resources :delivery_order_details
+    
+    resources :sales_invoices
+    resources :sales_invoice_details
+    
   end
   
   
