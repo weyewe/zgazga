@@ -183,6 +183,17 @@ STATUS_PEMBULATAN = {
   :credit => 2,
   }
 
+CROPPING_TYPE = {
+  :normal => 1,
+  :special => 2
+}
+
+APPLICATION_CASE = {
+  :sheetfed => 1,
+  :web => 2,
+  :both => 3
+}
+
 ORDER_TYPE_CASE = {		
   :trial_order => 0,	
   :sample_order => 1,
@@ -193,4 +204,9 @@ ORDER_TYPE_CASE = {
   }		
 
 
+CORE_BUILDER_TYPE = {		
+  :hollow => 0,	
+  :shaft => 1,
+  :none => 2
+  }	
 

@@ -54,6 +54,15 @@ class SalesInvoiceDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    
+    sales_invoice = SalesInvoice.find_by_id(params[:sales_invoice_id])
+    if not sales_invoice.nil?
+      if sales_invoice.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
+    end
+    
     new_object = self.new
     new_object.sales_invoice_id = params[:sales_invoice_id]
     new_object.delivery_order_detail_id = params[:delivery_order_detail_id]

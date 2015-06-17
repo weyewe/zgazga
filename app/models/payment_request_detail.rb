@@ -21,7 +21,7 @@ class PaymentRequestDetail < ActiveRecord::Base
     return if  payment_request_id.nil?
     po = PaymentRequest.find_by_id payment_request_id
     if po.nil? 
-      self.errors.add(:payment_request_id, "Harus ada Purchase Invoiceid")
+      self.errors.add(:payment_request_id, "Harus ada Payment RequestId")
       return self 
     end
   end 
@@ -53,6 +53,14 @@ class PaymentRequestDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    payment_request = PaymentRequest.find_by_id(params[:payment_request_id])
+    if not payment_request.nil?
+      if payment_request.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
+    end
+    
     new_object = self.new
     new_object.payment_request_id = params[:payment_request_id]
     new_object.account_id = params[:account_id]

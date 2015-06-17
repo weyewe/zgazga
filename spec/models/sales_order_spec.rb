@@ -59,51 +59,52 @@ describe SalesOrder do
     :contact_group_id => @cg_1.id
     )
     
-    @coa_1 = Account.create_object(
-      :code => "1110ko",
-      :name => "KAS",
-      :account_case => ACCOUNT_CASE[:ledger],
-      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
-   
-      )
-    
-    @itp_1 = ItemType.create_object(
-      :name => "ItemType_1" ,
-      :description => "Description1",
-      :account_id => @coa_1.id
-      )
-    
-    @sbp_1 = SubType.create_object(
-      :name => "SubType_1" ,
-      :item_type_id => @itp_1.id
-      )
-    
-    @uom_1 = Uom.create_object(
-      :name => "Uom_1" ,
-      )
-    
-    @exc_1 = Exchange.create_object(
-      :name => "IDR",
-      :description => "description_1",
-      )
-    
-    @exc_2 = Exchange.create_object(
-      :name => "USD",
-      :description => "description_2",
-      )
-    
-    @item_1 = Item.create_object(
-      :item_type_id => @itp_1.id,
-      :sub_type_id => @sbp_1.id,
-      :sku => "sku1",
-      :name => "itemname1",
-      :description => "description_1",
-      :is_tradeable => true,
-      :uom_id => @uom_1.id,
-      :minimum_amount => BigDecimal("10"),
-      :selling_price => BigDecimal("1000"),
-      :exchange_id => @exc_1.id,
-      )
+  @coa_1 = Account.create_object(
+    :code => "1110ko",
+    :name => "KAS",
+    :account_case => ACCOUNT_CASE[:ledger],
+    :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+ 
+    )
+  
+  @itp_1 = ItemType.create_object(
+    :name => "ItemType_1" ,
+    :description => "Description1",
+    :account_id => @coa_1.id
+    )
+  
+  @sbp_1 = SubType.create_object(
+    :name => "SubType_1" ,
+    :item_type_id => @itp_1.id
+    )
+  
+  @uom_1 = Uom.create_object(
+    :name => "Uom_1" ,
+    )
+  
+  @exc_1 = Exchange.create_object(
+    :name => "IDR",
+    :description => "description_1",
+    )
+  
+  @exc_2 = Exchange.create_object(
+    :name => "USD",
+    :description => "description_2",
+    )
+  
+  @item_1 = Item.create_object(
+    :item_type_id => @itp_1.id,
+    :sub_type_id => @sbp_1.id,
+    :sku => "sku1",
+    :name => "itemname1",
+    :description => "description_1",
+    :is_tradeable => true,
+    :uom_id => @uom_1.id,
+    :minimum_amount => BigDecimal("10"),
+    :selling_price => BigDecimal("1000"),
+    :price_list => BigDecimal("500"),
+    :exchange_id => @exc_1.id,
+    )
     @sales_date_1 = DateTime.now
     @sales_date_2 = DateTime.now + 1.days
     @nomor_surat_1 = "991.22"

@@ -190,8 +190,6 @@ class PaymentVoucher < ActiveRecord::Base
     end
   end
   
-  
-  
   def confirm_object(params)
     if self.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")

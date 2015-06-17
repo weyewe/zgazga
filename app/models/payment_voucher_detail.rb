@@ -71,6 +71,15 @@ class PaymentVoucherDetail < ActiveRecord::Base
   end
   
   def self.create_object(params)
+    
+    payment_voucher = PaymentVoucher.find_by_id(params[:payment_voucher_id])
+    if not payment_voucher.nil?
+      if payment_voucher.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
+    end
+    
     new_object = self.new
     new_object.payment_voucher_id = params[:payment_voucher_id]
     new_object.payable_id = params[:payable_id]

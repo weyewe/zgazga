@@ -54,6 +54,13 @@ class PurchaseOrderDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    purchase_order = PurchaseOrder.find_by_id(params[:purchase_order_id])
+    if not purchase_order.nil?
+      if purchase_order.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
+    end
     new_object = self.new
     new_object.purchase_order_id = params[:purchase_order_id]
     new_object.item_id = params[:item_id]
@@ -67,7 +74,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.stock_adjustment.is_confirmed?
+    if self.purchase_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
@@ -80,7 +87,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
   end
   
   def delete_object
-    if self.stock_adjustment.is_confirmed?
+    if self.purchase_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end

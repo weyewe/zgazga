@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150611012806) do
+ActiveRecord::Schema.define(version: 20150616050138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,94 @@ ActiveRecord::Schema.define(version: 20150611012806) do
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
     t.string   "code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blanket_order_details", force: true do |t|
+    t.integer  "blanket_order_id"
+    t.integer  "blanket_id"
+    t.decimal  "total_cost",               precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_cut",                                            default: false
+    t.boolean  "is_side_sealed",                                    default: false
+    t.boolean  "is_bar_prepared",                                   default: false
+    t.boolean  "is_adhesive_tape_applied",                          default: false
+    t.boolean  "is_bar_mounted",                                    default: false
+    t.boolean  "is_bar_heat_pressed",                               default: false
+    t.boolean  "is_bar_pull_off_tested",                            default: false
+    t.boolean  "is_qc_and_marked",                                  default: false
+    t.boolean  "is_packaged",                                       default: false
+    t.boolean  "is_rejected",                                       default: false
+    t.datetime "rejected_date"
+    t.boolean  "is_job_scheduled",                                  default: false
+    t.boolean  "is_finished",                                       default: false
+    t.datetime "finished_at"
+    t.decimal  "bar_cost",                 precision: 14, scale: 2, default: 0.0
+    t.decimal  "adhesive_cost",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_cost",        precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_usage",       precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_defect",      precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blanket_orders", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "warehouse_id"
+    t.string   "code"
+    t.integer  "amount_received"
+    t.integer  "amount_rejected"
+    t.integer  "amount_final"
+    t.string   "production_no"
+    t.datetime "order_date"
+    t.text     "notes"
+    t.boolean  "is_confirmed",    default: false
+    t.boolean  "is_completed",    default: false
+    t.boolean  "has_due_date",    default: false
+    t.datetime "confirmed_at"
+    t.datetime "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blankets", force: true do |t|
+    t.string   "roll_no"
+    t.integer  "contact_id"
+    t.integer  "machine_id"
+    t.integer  "adhesive_id"
+    t.integer  "adhesive2_id"
+    t.integer  "roll_blanket_item_id"
+    t.integer  "left_bar_item_id"
+    t.integer  "right_bar_item_id"
+    t.decimal  "ac",                   precision: 14, scale: 2, default: 0.0
+    t.decimal  "ar",                   precision: 14, scale: 2, default: 0.0
+    t.decimal  "thickness",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "ks",                   precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_bar_required",                               default: false
+    t.boolean  "has_left_bar",                                  default: false
+    t.boolean  "has_right_bar",                                 default: false
+    t.integer  "cropping_type",                                 default: 1
+    t.decimal  "left_over_ac",         precision: 14, scale: 2, default: 0.0
+    t.decimal  "left_over_ar",         precision: 14, scale: 2, default: 0.0
+    t.decimal  "special",              precision: 14, scale: 2, default: 0.0
+    t.integer  "application_case",                              default: 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blending_recipe_details", force: true do |t|
+    t.integer  "blending_recipe_id"
+    t.integer  "blending_item_id"
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blending_recipes", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "target_item_id"
+    t.decimal  "target_amount",  precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -128,6 +216,23 @@ ActiveRecord::Schema.define(version: 20150611012806) do
     t.datetime "updated_at"
   end
 
+  create_table "core_builders", force: true do |t|
+    t.string   "base_sku"
+    t.string   "sku_used_core"
+    t.string   "sku_new_core"
+    t.integer  "used_core_item_id"
+    t.integer  "new_core_item_id"
+    t.integer  "uom_id"
+    t.integer  "machine_id"
+    t.string   "core_builder_type_case"
+    t.string   "name"
+    t.text     "description"
+    t.decimal  "cd",                     precision: 14, scale: 2, default: 0.0
+    t.decimal  "tl",                     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "delivery_order_details", force: true do |t|
     t.string   "code"
     t.integer  "order_type"
@@ -213,6 +318,7 @@ ActiveRecord::Schema.define(version: 20150611012806) do
   create_table "item_types", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.string   "sku"
     t.boolean  "is_legacy",   default: false
     t.integer  "account_id"
     t.datetime "created_at"
@@ -220,6 +326,8 @@ ActiveRecord::Schema.define(version: 20150611012806) do
   end
 
   create_table "items", force: true do |t|
+    t.integer  "actable_id"
+    t.string   "actable_type"
     t.integer  "item_type_id"
     t.string   "sku"
     t.string   "name"
@@ -239,6 +347,14 @@ ActiveRecord::Schema.define(version: 20150611012806) do
     t.decimal  "customer_avg_price", precision: 14, scale: 2, default: 0.0
     t.decimal  "price_list",         precision: 14, scale: 2, default: 0.0
     t.integer  "sub_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "machines", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -466,6 +582,11 @@ ActiveRecord::Schema.define(version: 20150611012806) do
     t.string   "title",       null: false
     t.text     "description", null: false
     t.json     "the_role",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_types", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

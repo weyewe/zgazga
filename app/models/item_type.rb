@@ -21,9 +21,69 @@ class ItemType < ActiveRecord::Base
     self
   end
   
+  def self.create_base_objects
+    new_object = self.new
+    new_object.name = "Accessory"
+    new_object.description = "ACC"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id
+    new_object.is_legacy = true
+    new_object.save
+    new_object = self.new
+    new_object.name = "AdhesiveBlanket"
+    new_object.description = "ADB"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_blanket][:code]).id 
+    new_object.save
+    new_object = self.new
+    new_object.name = "AdhesiveRoller"
+    new_object.description = "ADR"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id 
+    new_object.save  
+    new_object = self.new
+    new_object.name = "Bar"
+    new_object.description = "BAR"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_blanket][:code]).id 
+    new_object.save
+    new_object = self.new
+    new_object.name = "Blanket"
+    new_object.description = "BLK"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:persediaan_printing_blanket][:code]).id 
+    new_object.save
+    new_object = self.new
+    new_object.name = "RollBlanket"
+    new_object.description = "RBL"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_blanket][:code]).id 
+    new_object.save
+    new_object = self.new
+    new_object.name = "Chemical"
+    new_object.description = "CHM"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:persediaan_printing_chemicals][:code]).id 
+    new_object.save  
+    new_object = self.new
+    new_object.name = "Compound"
+    new_object.description = "CMP"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id 
+    new_object.save  
+    new_object = self.new
+    new_object.name = "Core"
+    new_object.description = "CRE"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id 
+    new_object.save  
+    new_object = self.new
+    new_object.name = "Underpacking"
+    new_object.description = "UPC"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:persediaan_barang_lainnya][:code]).id 
+    new_object.save  
+    new_object = self.new
+    new_object.name = "Roller"
+    new_object.description = "ROL"
+    new_object.account_id = Account.find_by_code(ACCOUNT_CODE[:persediaan_printing_rollers][:code]).id 
+    new_object.save  
+  end
+  
   def self.create_object(params)
     new_object = self.new
     new_object.name = params[:name]
+    new_object.sku = params[:sku]
     new_object.description = params[:description]
     new_object.account_id = params[:account_id]
     new_object.save

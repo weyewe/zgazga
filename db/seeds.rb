@@ -71,7 +71,7 @@ data_entry = User.create_object(
   )
 
 Account.create_base_objects
-
+ItemType.create_base_objects
 
 if Rails.env.development?
 # if Rails.env.production?
@@ -151,10 +151,12 @@ if Rails.env.development?
   
   
   item_type_array = [] 
+  ItemType.create_base_objects
   (1.upto 10).each do |x|
     
     item_type_array << ItemType.create_object(
         :name => "Item Type name #{x}",
+        :sku => "Sku #{x}",
         :description => "Item type description #{x}",
         :account_id => ledger_account_array[  rand( 0..(ledger_account_array.length - 1 ))].id 
         
@@ -278,8 +280,8 @@ if Rails.env.development?
     selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
     selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
     warehouse_mutation = WarehouseMutation.create_object(
-      :warehouse_from_id => selected_warehouse_from,
-      :warehouse_to_id => selected_warehouse_to,
+      :warehouse_from_id => selected_warehouse_from.id,
+      :warehouse_to_id => selected_warehouse_to.id,
       :mutation_date => DateTime.now
       )
     (1.upto 10).each do |y| 

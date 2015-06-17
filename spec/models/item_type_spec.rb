@@ -123,7 +123,7 @@ describe ItemType do
   
     it "should delete object" do
       @itp.delete_object
-      ItemType.count.should == 0
+      @itp.should nil
     end
   end
 end

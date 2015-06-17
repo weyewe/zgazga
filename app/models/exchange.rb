@@ -39,7 +39,6 @@ class Exchange < ActiveRecord::Base
     self.name = params[:name]
     self.description = params[:description]    
     self.save
-    
     return self
   end
   
@@ -48,6 +47,14 @@ class Exchange < ActiveRecord::Base
       self.errors.add(:generic_errors, "Tidak dapat menghapus base currency")
       return self
     end
+    
+    if TransactionDataDetail.where(:account_id => self.account_payable_id).count > 0 or 
+      TransactionDataDetail.where(:account_id => self.account_receivable_id).count > 0 or 
+      TransactionDataDetail.where(:account_id => self.gbch_receivable_id).count > 0 or 
+      TransactionDataDetail.where(:account_id => self.gbch_payable_id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai")
+    end
+    
     self.destroy
     return self
   end

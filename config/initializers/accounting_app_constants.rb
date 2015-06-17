@@ -113,9 +113,44 @@ ACCOUNT_CODE = {
     :status => 1,
     :parent_code => "1105"
     },
+  :persediaan_printing_chemicals  => {
+    :code => "11050001",
+    :name => "PERSED. PRINTING CHEMICALS",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "1105"
+    },
+  :persediaan_printing_blanket  => {
+    :code => "11050002",
+    :name => "PERSED. PRINTING BLANKET",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "1105"
+    },  
+  :persediaan_printing_rollers  => {
+    :code => "11050003",
+    :name => "PERSED. PRINTING ROLLERS",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "1105"
+    },
   :persediaan_barang_lainnya  => {
     :code => "11050004",
     :name => "PERSED. BARANG LAINNYA",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "1105"
+    },
+  :bahan_baku_blanket  => {
+    :code => "11050102",
+    :name => "BAHAN BAKU BLANKET",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "1105"
+    },
+  :bahan_baku_rollers  => {
+    :code => "11050103",
+    :name => "BAHAN BAKU ROLLERS",
     :normal_balance => 1,
     :status => 2,
     :parent_code => "1105"
@@ -642,7 +677,7 @@ ACCOUNT_CODE = {
     :sales_invoice_journal => 80 ,  
     :receipt_voucher_journal => 90, 
     :closing_journal => 100, 
-    :group_loan_run_away_declaration => 110 , 
+    :blanket_order_detail_journal => 110 , 
     :group_loan_run_away_in_cycle_clearance => 120, 
     :group_loan_run_away_end_of_cycle_clearance => 130, 
     :group_loan_deceased_declaration => 140, 

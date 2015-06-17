@@ -80,7 +80,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => @exc_1.id,
-     
+      :price_list => @price_list_1
     )
     
     item.should be_valid
@@ -99,7 +99,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => @exc_1.id,
-     
+      :price_list => @price_list_1
       )
     
     item.errors.size.should_not == 0 
@@ -119,7 +119,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => @exc_1.id,
-      
+      :price_list => @price_list_1
     )
     
     item.errors.size.should_not == 0 
@@ -139,7 +139,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => @exc_1.id,
-     
+      :price_list => @price_list_1
       )
     
     item.errors.size.should_not == 0 
@@ -159,7 +159,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => @exc_1.id,
-     
+      :price_list => @price_list_1
       )
     
     item.errors.size.should_not == 0 
@@ -179,7 +179,7 @@ describe Item do
       :minimum_amount => @minimum_amount_1,
       :selling_price => @selling_price_1,
       :exchange_id => 23131,
-     
+      :price_list => @price_list_1
       )
     
     item.errors.size.should_not == 0 
@@ -200,6 +200,7 @@ describe Item do
         :minimum_amount => @minimum_amount_1,
         :selling_price => @selling_price_1,
         :exchange_id => @exc_1.id,
+        :price_list => @price_list_1
       )
     end
     
@@ -220,6 +221,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => @exc_2.id,
+        :price_list => @price_list_2
       )
       @item.errors.size.should == 0
       @item.item_type_id.should == @itp_2.id
@@ -232,6 +234,7 @@ describe Item do
       @item.minimum_amount.should == @minimum_amount_2
       @item.selling_price.should == @selling_price_2
       @item.exchange_id.should == @exc_2.id
+      @item.price_list.should == @price_list_2
     end
     
     it "cannot update object if name not valid" do
@@ -246,7 +249,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => @exc_2.id,
-       
+        :price_list => @price_list_2
       )
       @item.errors.size.should_not == 0 
       @item.should_not be_valid
@@ -264,7 +267,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => @exc_2.id,
-
+        :price_list => @price_list_2
       )
       @item.errors.size.should_not == 0 
       @item.should_not be_valid
@@ -282,7 +285,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => @exc_2.id,
-
+        :price_list => @price_list_2
       )
       @item.errors.size.should_not == 0 
       @item.should_not be_valid
@@ -300,7 +303,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => @exc_2.id,
-
+        :price_list => @price_list_2
       )
       @item.errors.size.should_not == 0 
       @item.should_not be_valid
@@ -318,7 +321,7 @@ describe Item do
         :minimum_amount => @minimum_amount_2,
         :selling_price => @selling_price_2,
         :exchange_id => 123123,
-
+        :price_list => @price_list_2
       )
       @item.errors.size.should_not == 0 
       @item.should_not be_valid

@@ -68,7 +68,7 @@ class WarehouseMutationDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.stock_adjustment.is_confirmed?
+    if self.warehouse_mutation.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
@@ -78,7 +78,7 @@ class WarehouseMutationDetail < ActiveRecord::Base
   end
   
   def delete_object
-    if self.stock_adjustment.is_confirmed?
+    if self.warehouse_mutation.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end

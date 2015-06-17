@@ -55,6 +55,14 @@ class DeliveryOrderDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    delivery_order = DeliveryOrder.find_by_id(params[:delivery_order_id])
+    if not delivery_order.nil?
+      if delivery_order.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
+    end
+    
     new_object = self.new
     new_object.delivery_order_id = params[:delivery_order_id]
     new_object.sales_order_detail_id = params[:sales_order_detail_id]
@@ -71,7 +79,7 @@ class DeliveryOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.stock_adjustment.is_confirmed?
+    if self.delivery_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end

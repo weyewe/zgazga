@@ -55,9 +55,10 @@ class SalesOrder < ActiveRecord::Base
     new_object.sales_date = params[:sales_date]
     new_object.nomor_surat = params[:nomor_surat]
     new_object.exchange_id = params[:exchange_id]
-    new_object.save
+    if new_object.save
     new_object.code = "Cadj-" + new_object.id.to_s  
     new_object.save
+    end
     
     return new_object
   end
