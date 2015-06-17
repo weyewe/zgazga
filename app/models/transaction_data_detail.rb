@@ -118,11 +118,11 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object.amount = self.amount
     new_object.description = "contra post #{DateTime.now} " + self.description
     if new_object.save
-      if not self.transaction_data_non_base_exchange_detail.nil?
-      TransactionDataNonBaseExchangeDetails.create_object(
+      if not self.transaction_data_non_base_exchange_details.count == 0
+      TransactionDataNonBaseExchangeDetail.create_object(
         :transaction_data_detail_id => new_object.id ,
-        :amount => self.transaction_data_non_base_exchange_detail.amount ,
-        :exchange_id => self.exchange_id
+        :amount => self.transaction_data_non_base_exchange_details.first.amount ,
+        :exchange_id => self.transaction_data_non_base_exchange_details.first.exchange_id
         )
       end
     end

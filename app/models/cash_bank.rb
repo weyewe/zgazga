@@ -40,30 +40,37 @@ class CashBank < ActiveRecord::Base
   def update_object( params )    
     if self.exchange_id != params[:exchange_id]
       if CashBankAdjustment.where(:cash_bank_id => self.id).count > 0
-        self.errors.add(:exchange_id, "Sudah terpakai di CashBankAdjustment")
+        self.errors.add(:generic_errors, "Sudah terpakai di CashBankAdjustment")
         return self
       end
       if CashBankMutation.where{
         ((source_cash_bank_id.eq self.id))|
         ((target_cash_bank_id.eq self.id))
         }.count > 0
-        self.errors.add(:exchange_id, "Sudah terpakai di CashBankMutation")
+        self.errors.add(:generic_errors, "Sudah terpakai di CashBankMutation")
         return self
       end
       if ReceiptVoucher.where(:cash_bank_id => self.id).count > 0
-        self.errors.add(:exchange_id, "Sudah terpakai di ReceiptVoucher")
+        self.errors.add(:generic_errors, "Sudah terpakai di ReceiptVoucher")
         return self
       end
       if PaymentVoucher.where(:cash_bank_id => self.id).count > 0
-        self.errors.add(:exchange_id, "Sudah terpakai di PaymentVoucher")
+        self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
         return self
+      end
+      if TransactionDataDetail.where(:account_id => self.account_id).count > 0 
+        self.errors.add(:generic_errors,"Account CashBank sudah terpakai")
       end
     end
     self.name = params[:name]
     self.description = params[:description]
     self.is_bank = params[:is_bank]
     self.exchange_id = params[:exchange_id]
-    self.save
+    if self.save
+      Account.where(:id => self.account_id).first.delete_object
+      self.account_id = Account.create_object_from_cash_bank(self).id
+      self.save
+    end
     return self
   end
   
@@ -87,6 +94,10 @@ class CashBank < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
       return self
     end
+    if TransactionDataDetail.where(:account_id => self.account_id).count > 0 
+      self.errors.add(:generic_errors,"Account CashBank sudah terpakai")
+    end
+    Account.where(:id => self.account_id).first.delete_object
     self.destroy
     return self
   end

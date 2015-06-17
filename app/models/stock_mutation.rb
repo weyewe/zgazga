@@ -35,7 +35,6 @@ class StockMutation < ActiveRecord::Base
     if not self.warehouse_item.nil?
       self.warehouse_item.update_amount(amount)
     end
-    
     if self.item_case == ITEM_CASE[:ready] 
      self.item.update_amount(amount)
     elsif self.item_case == ITEM_CASE[:pending_receival]

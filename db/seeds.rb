@@ -71,7 +71,7 @@ data_entry = User.create_object(
   )
 
 Account.create_base_objects
-
+ItemType.create_base_objects
 
 if Rails.env.development?
 # if Rails.env.production?
@@ -151,10 +151,12 @@ if Rails.env.development?
   
   
   item_type_array = [] 
+  ItemType.create_base_objects
   (1.upto 10).each do |x|
     
     item_type_array << ItemType.create_object(
         :name => "Item Type name #{x}",
+        :sku => "Sku #{x}",
         :description => "Item type description #{x}",
         :account_id => ledger_account_array[  rand( 0..(ledger_account_array.length - 1 ))].id 
         

@@ -78,7 +78,7 @@ group :development, :test do
   
 end
 
-
+gem 'active_record-acts_as' 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

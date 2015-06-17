@@ -52,6 +52,7 @@ describe WarehouseMutation do
       :uom_id => @uom_1.id,
       :minimum_amount => BigDecimal("10"),
       :selling_price => BigDecimal("1000"),
+      :price_list => BigDecimal("500"),
       :exchange_id => @exc_1.id,
       )
     

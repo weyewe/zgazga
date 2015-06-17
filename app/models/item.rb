@@ -1,4 +1,5 @@
 class Item < ActiveRecord::Base
+  actable
   belongs_to :item_type
   belongs_to :exchange
   belongs_to :uom 
@@ -8,6 +9,7 @@ class Item < ActiveRecord::Base
   validates_uniqueness_of :sku
   validates_presence_of :name
   validates_presence_of :item_type_id
+  validates_presence_of :exchange_id
   
   validate :valid_uom_id
   validate :valid_item_type_id
@@ -111,10 +113,10 @@ class Item < ActiveRecord::Base
     new_object.is_tradeable = params[:is_tradeable]
     new_object.uom_id = params[:uom_id]
 #     new_object.amount = params[:amount]
-    new_object.minimum_amount = params[:minimum_amount]
-    new_object.selling_price = params[:selling_price]
+    new_object.minimum_amount = BigDecimal( params[:minimum_amount] || '0')  
+    new_object.selling_price = BigDecimal( params[:selling_price] || '0')  
+    new_object.price_list = BigDecimal( params[:price_list] || '0')  
     new_object.exchange_id = params[:exchange_id]
-    new_object.price_list = params[:price_list]
     new_object.save
     return new_object
   end
@@ -129,10 +131,10 @@ class Item < ActiveRecord::Base
     self.is_tradeable = params[:is_tradeable]
     self.uom_id = params[:uom_id]
 #     self.amount = params[:amount]
-    self.minimum_amount = params[:minimum_amount]
-    self.selling_price = params[:selling_price]
+    self.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
+    self.selling_price =  BigDecimal( params[:selling_price] || '0') 
     self.exchange_id = params[:exchange_id]
-    self.price_list = params[:price_list]
+    self.price_list =  BigDecimal( params[:price_list] || '0') 
     self.save
     return self
   end
