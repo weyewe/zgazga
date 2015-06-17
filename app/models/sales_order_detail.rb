@@ -5,9 +5,10 @@ class SalesOrderDetail < ActiveRecord::Base
   validate :valid_item
   validate :valid_amount
   belongs_to :sales_order
+  belongs_to :item
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount

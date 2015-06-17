@@ -66,6 +66,18 @@ Ext.define("AM.controller.Master", {
 				}
 				]
 			},  
+			{ 
+				text:'Employee', 
+				viewClass:'AM.view.master.Employee', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'employees',
+					action : 'index'
+				}
+				]
+			},  
     ]
 	},
 	

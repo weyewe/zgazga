@@ -104,7 +104,7 @@ class Api::ItemsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = Item.joins(:exchange, :item_type, :uom).where{ 
-            ( code  =~ query ) | 
+            ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.
@@ -113,7 +113,7 @@ class Api::ItemsController < Api::BaseApiController
                         order("id DESC")
                         
       @total = Item.joins(:exchange, :item_type, :uom).where{ 
-               ( code  =~ query ) | 
+               ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.count
@@ -129,6 +129,6 @@ class Api::ItemsController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

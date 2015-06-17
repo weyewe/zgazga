@@ -46,145 +46,250 @@ Ext.define("AM.controller.Operation", {
 	},
 	
 	 
-
-	scheduledFolder : {
-		text 			: "Operation", 
+  salesFolder : {
+		text 			: "Penjualan", 
 		viewClass : '',
 		iconCls		: 'text-folder', 
-    expanded	: true,
+    	expanded	: true,
 		children 	: [
-        
-			{ 
-				text:'Invoice', 
-				viewClass:'AM.view.operation.Invoice', 
+        	{ 
+				text:'SalesOrder', 
+				viewClass:'AM.view.operation.SalesOrder', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
-				{
-					controller : 'invoices',
-					action : 'index'
-				}
-				]
-			}, 
-     	{ 
-				text:'Advanced Payment', 
-				viewClass:'AM.view.operation.AdvancedPayment', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-				{
-					controller : 'advanced_payments',
-					action : 'index'
-				}
-				]
-			}, 
-      	{ 
-				text:'Monthly Generator', 
-				viewClass:'AM.view.operation.MonthlyGenerator', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-				{
-					controller : 'monthly_generators',
-					action : 'index'
-				}
-				]
-			}, 
-      { 
-				text:'PaymentRequest', 
-				viewClass:'AM.view.operation.PaymentRequest', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-				{
-					controller : 'payment_requests',
-					action : 'index'
-				}
+					{
+						controller : 'sales_orders',
+						action : 'index'
+					}
 				]
 			}, 
 			{ 
-				text:'DepositDocument', 
-				viewClass:'AM.view.operation.DepositDocument', 
+				text:'DeliveryOrder', 
+				viewClass:'AM.view.operation.DeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
-				{
-					controller : 'deposit_documents',
-					action : 'index'
-				}
+					{
+						controller : 'delivery_orders',
+						action : 'index'
+					}
 				]
-			},  
-    ]
+			}, 
+			{ 
+				text:'Sales Invoice', 
+				viewClass:'AM.view.operation.SalesInvoice', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sales_invoices',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+			 
+		]
 	},
+	
+	purchaseFolder : {
+		text 			: "Pembelian", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'PurchaseOrder', 
+				viewClass:'AM.view.operation.PurchaseOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Penerimaan', 
+				viewClass:'AM.view.operation.PurchaseReceival', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_receivals',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Purchase Invoice', 
+				viewClass:'AM.view.operation.PurchaseInvoice', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_invoices',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+			 
+		]
+	},
+	
+	logisticFolder : {
+		text 			: "Logistic", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Penyesuaian Stock', 
+				viewClass:'AM.view.operation.StockAdjustment', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'stock_adjustments',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Pindah Gudang', 
+				viewClass:'AM.view.operation.WarehouseMutation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'warehouse_mutations',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+ 
+			 
+		]
+	},
+ 
   
   financeFolder : {
 		text 			: "Finance", 
 		viewClass : '',
 		iconCls		: 'text-folder', 
-    expanded	: true,
+    	expanded	: true,
 		children 	: [
-        
+        	{ 
+				text:'PaymentRequest', 
+				viewClass:'AM.view.operation.PaymentRequest', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'payment_requests',
+						action : 'index'
+					}
+				]
+			}, 
 			{ 
 				text:'PaymentVoucher', 
 				viewClass:'AM.view.operation.PaymentVoucher', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
-				{
-					controller : 'payment_vouchers',
-					action : 'index'
-				}
+					{
+						controller : 'payment_vouchers',
+						action : 'index'
+					}
 				]
 			}, 
-      { 
+			{ 
 				text:'ReceiptVoucher', 
 				viewClass:'AM.view.operation.ReceiptVoucher', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
-				{
-					controller : 'receipt_vouchers',
-					action : 'index'
-				}
+					{
+						controller : 'receipt_vouchers',
+						action : 'index'
+					}
 				]
 			}, 
+ 
 			 
-    ]
+		]
 	},
 	
-	emergencyFolder : {
-		text 			: "Emergency", 
+	cashbankFolder : {
+		text 			: "Cash dan Bank", 
 		viewClass : '',
 		iconCls		: 'text-folder', 
-    expanded	: true,
+    	expanded	: true,
 		children 	: [
-        
-			{ 
-				text:'Ticket', 
-				viewClass:'AM.view.operation.Item', 
+        	{ 
+				text:'Adjustment', 
+				viewClass:'AM.view.operation.CashBankAdjustment', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'items',
+						controller : 'cash_bank_adjustments',
 						action : 'index'
 					}
 				]
-			},
+			}, 
 			{ 
-				text:'Result', 
-				viewClass:'AM.view.operation.Contract', 
+				text:'Mutation', 
+				viewClass:'AM.view.operation.CashBankMutation', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'contract_maintenances',
+						controller : 'cash_bank_mutations',
 						action : 'index'
 					}
 				]
-			},
-    ]
+			}, 
+		]
 	},
+	
+	accountingFolder : {
+		text 			: "Accounting", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Memorial', 
+				viewClass:'AM.view.operation.Memorial', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'memorials',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Closing', 
+				viewClass:'AM.view.operation.Closing', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'closings',
+						action : 'index'
+					}
+				]
+			}, 
+		]
+	},
+ 
 	   
 	 
 	onActiveProtectedContent: function( panel, options) {
@@ -193,12 +298,13 @@ Ext.define("AM.controller.Operation", {
 		var email = currentUser['email'];
 		
 		me.folderList = [
-			this.scheduledFolder,
-      this.financeFolder
-			// this.emergencyFolder
-			// this.inventoryFolder,
-			// this.reportFolder,
-			// this.projectReportFolder
+			this.logisticFolder,
+			this.salesFolder,
+			this.purchaseFolder,
+ 			this.financeFolder,
+ 			this.accountingFolder,
+ 			this.cashbankFolder
+ 			
 		];
 		
 		var processList = panel.down('operationProcessList');

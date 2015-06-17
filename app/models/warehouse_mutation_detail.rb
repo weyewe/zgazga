@@ -6,9 +6,10 @@ class WarehouseMutationDetail < ActiveRecord::Base
   validate :valid_item
   validate :valid_amount
   belongs_to :warehouse_mutation
+  belongs_to :item
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
      
   

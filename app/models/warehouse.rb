@@ -1,4 +1,5 @@
 class Warehouse < ActiveRecord::Base
+  has_many :stock_adjustments 
   
   validates_presence_of :name 
   validates_presence_of :code 

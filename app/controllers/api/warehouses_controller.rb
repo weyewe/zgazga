@@ -108,7 +108,7 @@ class Api::WarehousesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Warehouse.joins(:warehouse_type).where{ 
+      @objects = Warehouse.where{ 
             ( code  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
@@ -117,7 +117,7 @@ class Api::WarehousesController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Warehouse.joins(:warehouse_type).where{ 
+      @total = Warehouse.where{ 
                ( code  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
@@ -134,6 +134,6 @@ class Api::WarehousesController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

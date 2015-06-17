@@ -1,5 +1,6 @@
 class DeliveryOrder < ActiveRecord::Base
   belongs_to :sales_order
+  belongs_to :warehouse
   has_many :delivery_order_details
   has_many :temporary_delivery_orders
   validates_presence_of :sales_order_id
@@ -12,7 +13,11 @@ class DeliveryOrder < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.delivery_order_details 
   end
   
   def valid_warehouse_id
