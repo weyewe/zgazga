@@ -24,9 +24,12 @@ gem 'simple_form'
 
 
 # gem 'wicked_pdf'
+gem 'wicked_pdf'
 gem 'dropbox-sdk'
 gem 'httparty'
 gem 'json'
+gem 'rjb'
+gem 'pdf-merger'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
