@@ -41,7 +41,7 @@ class Api::SalesOrdersController < Api::BaseApiController
 
   def create
     
-    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
+    params[:sales_order][:sales_date] =  parse_date( params[:sales_order][:sales_date] )
     
     
     @object = SalesOrder.create_object( params[:sales_order])
@@ -95,7 +95,7 @@ class Api::SalesOrdersController < Api::BaseApiController
   end
 
   def update
-    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
+    params[:sales_order][:sales_date] =  parse_date( params[:sales_order][:sales_date] )
     params[:sales_order][:confirmed_at] =  parse_date( params[:sales_order][:confirmed_at] )
     
     @object = SalesOrder.find(params[:id])

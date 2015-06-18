@@ -1,30 +1,26 @@
-class Api::StockAdjustmentsController < Api::BaseApiController
+class Api::WarehouseMutationsController < Api::BaseApiController
   
   def index
      
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = StockAdjustment.active_objects.joins(:warehouse).where{
+       @objects = WarehouseMutation.active_objects. where{
          (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( warehouse.name =~  livesearch)
+           ( code =~ livesearch)
          )
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = StockAdjustment.active_objects.joins(:warehouse).where{
+       @total = WarehouseMutation.active_objects. where{
          (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( warehouse.name =~  livesearch)
+           ( code =~ livesearch)
          )
        }.count
  
 
      else
-       @objects = StockAdjustment.active_objects.joins(:warehouse).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = StockAdjustment.active_objects.count
+       @objects = WarehouseMutation.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = WarehouseMutation.active_objects.count
      end
      
      
@@ -34,25 +30,33 @@ class Api::StockAdjustmentsController < Api::BaseApiController
 
   def create
     
-    params[:stock_adjustment][:adjustment_date] =  parse_date( params[:stock_adjustment][:adjustment_date] )
+    params[:warehouse_mutation][:mutation_date] =  parse_date( params[:warehouse_mutation][:mutation_date] )
     
     
-    @object = StockAdjustment.create_object( params[:stock_adjustment])
+    @object = WarehouseMutation.create_object( params[:warehouse_mutation])
  
     if @object.errors.size == 0 
-
-    
+      
+      
+ 
+	
       render :json => { :success => true, 
-                        :stock_adjustments => [
+                        :warehouse_mutations => [
                           :id => @object.id, 
-                          :warehouse_id => @object.warehouse_id, 
                           :code => @object.code ,
                           :description => @object.description , 
-                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
+                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
-                        :total => StockAdjustment.active_objects.count }  
+                        :total => WarehouseMutation.active_objects.count }  
     else
       puts "It is fucking error!!\n"*10
       @object.errors.messages.each {|x| puts x }
@@ -72,37 +76,42 @@ class Api::StockAdjustmentsController < Api::BaseApiController
   end
   
   def show
-    @object  = StockAdjustment.find params[:id]
+    @object  = WarehouseMutation.find params[:id]
     render :json => { :success => true,   
-                      :stock_adjustments => [
+                      :warehouse_mutations => [
                           :id => @object.id, 
-                          :warehouse_id => @object.warehouse_id, 
-                          :warehouse_name => @object.warehouse_id, 
                           :code => @object.code ,
                           :description => @object.description , 
-                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
+                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
-                      :total => StockAdjustment.active_objects.count  }
+                      :total => WarehouseMutation.active_objects.count  }
   end
 
   def update
-    params[:stock_adjustment][:adjustment_date] =  parse_date( params[:stock_adjustment][:adjustment_date] )
-    params[:stock_adjustment][:confirmed_at] =  parse_date( params[:stock_adjustment][:confirmed_at] )
+    params[:warehouse_mutation][:mutation_date] =  parse_date( params[:warehouse_mutation][:mutation_date] )
+    params[:warehouse_mutation][:confirmed_at] =  parse_date( params[:warehouse_mutation][:confirmed_at] )
     
-    @object = StockAdjustment.find(params[:id])
+    @object = WarehouseMutation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :stock_adjustments, :confirm)
+      if not current_user.has_role?( :warehouse_mutations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm_object(:confirmed_at => params[:stock_adjustment][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:warehouse_mutation][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -113,7 +122,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :stock_adjustments, :unconfirm)
+      if not current_user.has_role?( :warehouse_mutations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -128,7 +137,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       
       
     else
-      @object.update_object(params[:stock_adjustment])
+      @object.update_object(params[:warehouse_mutation])
     end
     
      
@@ -138,16 +147,22 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :stock_adjustments => [
+                        :warehouse_mutations => [
                           :id => @object.id, 
-                          :warehouse_id => @object.warehouse_id, 
                           :code => @object.code ,
                           :description => @object.description , 
-                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
+                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
-                        :total => StockAdjustment.active_objects.count  } 
+                        :total => WarehouseMutation.active_objects.count  } 
     else
       
       msg = {
@@ -164,13 +179,13 @@ class Api::StockAdjustmentsController < Api::BaseApiController
    
 
   def destroy
-    @object = StockAdjustment.find(params[:id])
+    @object = WarehouseMutation.find(params[:id])
     @object.delete_object
 
     if   not @object.persisted? 
-      render :json => { :success => true, :total => StockAdjustment.active_objects.count }  
+      render :json => { :success => true, :total => WarehouseMutation.active_objects.count }  
     else
-      render :json => { :success => false, :total => StockAdjustment.active_objects.count, 
+      render :json => { :success => false, :total => WarehouseMutation.active_objects.count, 
         :message => {
           :errors => extjs_error_format( @object.errors )  
         } 
@@ -189,7 +204,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = StockAdjustment.where{  
+      @objects = WarehouseMutation.where{  
         ( 
            ( code =~ query )  
          )
@@ -198,20 +213,20 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = StockAdjustment.where{  
+      @total = WarehouseMutation.where{  
         ( 
            ( code =~ query )  
          )
       }.count 
     else
-      @objects = StockAdjustment.where{ 
+      @objects = WarehouseMutation.where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = StockAdjustment.where{ 
+      @total = WarehouseMutation.where{ 
           (id.eq selected_id)  
       }.count 
     end
