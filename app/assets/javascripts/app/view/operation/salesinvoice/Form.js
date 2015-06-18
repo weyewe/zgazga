@@ -119,7 +119,7 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
     		 	{
     		        xtype: 'displayfield',
     		        name : 'amount_receivable',
-    		        fieldLabel: 'Total Amount'
+    		        fieldLabel: 'Amount'
     		 	},
     		 	{
     		        xtype: 'displayfield',

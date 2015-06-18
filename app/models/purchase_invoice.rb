@@ -16,7 +16,11 @@ class PurchaseInvoice < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.purchase_invoice_details 
   end
   
   def valid_purchase_receival_id

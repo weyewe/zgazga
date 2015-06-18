@@ -136,9 +136,9 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
     	        fieldLabel: 'Quantity'
     	     },
     	     {
-    	        xtype: 'textfield',
-    	        name : 'pending_delivery_amount',
-    	        fieldLabel: 'PendingDelivery Qty'
+    	        xtype: 'displayfield',
+    	        name : 'item_uom_name',
+    	        fieldLabel: 'UoM'
     	     },
     	     {
     	        xtype: 'textfield',

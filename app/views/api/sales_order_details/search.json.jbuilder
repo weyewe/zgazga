@@ -20,11 +20,10 @@ json.records @objects do |object|
 	json.item_uom_id 			object.item.uom.id 
 	json.item_uom_name 				object.item.uom.name
 	
+	json.is_service  object.is_service
 	if object.is_service == true
-		json.is_service  object.is_service
 		json.is_service_text  "Service"
 	else
-		json.is_service  object.is_service
 		json.is_service_text  "Trading"
 	end
  

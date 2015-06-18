@@ -12,7 +12,11 @@ class PurchaseReceival < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.purchase_receival_details 
   end
   
   def valid_warehouse_id
