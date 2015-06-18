@@ -1,66 +1,60 @@
-Ext.define('AM.controller.Templates', {
+Ext.define('AM.controller.CashBankAdjustments', {
   extend: 'Ext.app.Controller',
 
-  stores: ['Templates'],
-  models: ['Template'],
+  stores: ['CashBankAdjustments'],
+  models: ['CashBankAdjustment'],
 
   views: [
-    'template.template.List',
-    'template.template.Form' 
+    'operation.cashbankadjustment.List',
+    'operation.cashbankadjustment.Form' 
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'templatelist'
+			selector: 'cashbankadjustmentlist'
 		},
 		{
 			ref : 'searchField',
-			selector: 'templatelist textfield[name=searchField]'
+			selector: 'cashbankadjustmentlist textfield[name=searchField]'
 		}
 	],
 
   init: function() {
     this.control({
-      'templatelist': {
+      'cashbankadjustmentlist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'templateform button[action=save]': {
+      'cashbankadjustmentform button[action=save]': {
         click: this.updateObject
       },
-      'templatelist button[action=addObject]': {
+      'cashbankadjustmentlist button[action=addObject]': {
         click: this.addObject
       },
-      'templatelist button[action=editObject]': {
+      'cashbankadjustmentlist button[action=editObject]': {
         click: this.editObject
       },
-      'templatelist button[action=deleteObject]': {
+      'cashbankadjustmentlist button[action=deleteObject]': {
         click: this.deleteObject
       },
-	  	'templatelist textfield[name=searchField]': {
+	  	'cashbankadjustmentlist textfield[name=searchField]': {
         change: this.liveSearch
       },
-			'templatelist button[action=markasdeceasedObject]': {
-        click: this.markAsDeceasedObject
-			}	,
-			'markmemberasdeceasedform button[action=confirmDeceased]' : {
-				click : this.executeConfirmDeceased
-			},
+			'cashbankadjustmentProcess cashbankadjustmentlist button[action=confirmObject]': {
+        click: this.confirmObject
+      },
 
-			'templatelist button[action=unmarkasdeceasedObject]': {
-        click: this.unmarkAsDeceasedObject
-			}	,
-			'unmarkmemberasdeceasedform button[action=unconfirmDeceased]' : {
-				click : this.executeConfirmUndeceased
+			'cashbankadjustmentProcess cashbankadjustmentlist button[action=unconfirmObject]': {
+        click: this.unconfirmObject
+      },
+			'confirmcashbankadjustmentform button[action=confirm]' : {
+				click : this.executeConfirm
 			},
 			
-			'templatelist button[action=markasrunawayObject]': {
-        click: this.markAsRunAwayObject
-			}	,
-			'markmemberasrunawayform button[action=confirmRunAway]' : {
-				click : this.executeConfirmRunAway
+			'unconfirmcashbankadjustmentform button[action=confirm]' : {
+				click : this.executeUnconfirm
 			},
 		
     });
@@ -69,11 +63,11 @@ Ext.define('AM.controller.Templates', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getTemplatesStore().getProxy().extraParams = {
+		me.getCashBankAdjustmentsStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getTemplatesStore().load();
+		me.getCashBankAdjustmentsStore().load();
 	},
 	
 	markAsDeceasedObject: function(){
@@ -91,7 +85,7 @@ Ext.define('AM.controller.Templates', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getTemplatesStore();
+    var store = this.getCashBankAdjustmentsStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -147,7 +141,7 @@ Ext.define('AM.controller.Templates', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getTemplatesStore();
+    var store = this.getCashBankAdjustmentsStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -203,7 +197,7 @@ Ext.define('AM.controller.Templates', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getTemplatesStore();
+    var store = this.getCashBankAdjustmentsStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -250,14 +244,15 @@ Ext.define('AM.controller.Templates', {
 	},
 
   addObject: function() {
-    var view = Ext.widget('templateform');
+    var view = Ext.widget('cashbankadjustmentform');
     view.show();
   },
 
   editObject: function() {
+  	console.log("inside edit object");
 		var me = this; 
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('templateform');
+    var view = Ext.widget('cashbankadjustmentform');
 
 		
 
@@ -270,7 +265,7 @@ Ext.define('AM.controller.Templates', {
     var win = button.up('window');
     var form = win.down('form');
 
-    var store = this.getTemplatesStore();
+    var store = this.getCashBankAdjustmentsStore();
     var record = form.getRecord();
     var values = form.getValues();
 
@@ -316,7 +311,7 @@ Ext.define('AM.controller.Templates', {
 		}else{
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
-			var newObject = new AM.model.Template( values ) ;
+			var newObject = new AM.model.CashBankAdjustment( values ) ;
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -345,7 +340,7 @@ Ext.define('AM.controller.Templates', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getTemplatesStore();
+      var store = this.getCashBankAdjustmentsStore();
       store.remove(record);
       store.sync();
 // to do refresh programmatically
@@ -362,6 +357,123 @@ Ext.define('AM.controller.Templates', {
     } else {
       grid.disableRecordButtons();
     }
-  }
+  },
+  
+  
+  confirmObject: function(){
+		console.log("the  confirmObject ");
+		var view = Ext.widget('confirmcashbankadjustmentform');
+		console.log( view ) ;
+		var record = this.getList().getSelectedObject(); 
+		console.log( record ) ;
+		view.down('form').loadRecord(record);
+ 
+	},
+  
+  unconfirmObject: function(){
+ 
+		
+		var view = Ext.widget('unconfirmcashbankadjustmentform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+    view.show();
+	},
+  
+	executeConfirm : function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
 
+    var store = this.getCashBankAdjustmentsStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'confirmed_at' , values['confirmed_at'] );
+			 
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
+			form.setLoading(true);
+			record.save({
+				params : {
+					confirm: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					list.fireEvent('confirmed', record);
+					
+					
+					store.load();
+					win.close();
+					
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	
+	
+	
+	executeUnconfirm : function(button){
+		// console.log("unconfirm deceased");
+
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getCashBankAdjustmentsStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unconfirm: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					list.fireEvent('confirmed', record);
+					
+					
+					store.load();
+					win.close();
+					
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	
 });
