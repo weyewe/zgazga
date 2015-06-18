@@ -29,10 +29,16 @@ Ticketie::Application.routes.draw do
     get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
+    
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
     get 'search_delivery_orders' => 'delivery_orders#search', :as => :search_delivery_order
     get 'search_delivery_order_details' => 'delivery_order_details#search', :as => :search_delivery_order_detail
+    
+    get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
+    get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
+    get 'search_purchase_receivals' => 'purchase_receivals#search', :as => :search_purchase_receival
+    get 'search_purchase_receival_details' => 'purchase_receival_details#search', :as => :search_purchase_receival_detail
     
     # master data 
     resources :app_users
@@ -81,6 +87,15 @@ Ticketie::Application.routes.draw do
     
     resources :sales_invoices
     resources :sales_invoice_details
+    
+    resources :purchase_orders
+    resources :purchase_order_details
+    
+    resources :purchase_receivals
+    resources :purchase_receival_details
+    
+    resources :purchase_invoices
+    resources :purchase_invoice_details
     
   end
   

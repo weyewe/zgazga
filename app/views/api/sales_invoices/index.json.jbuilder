@@ -25,7 +25,7 @@ json.sales_invoices @objects do |object|
 	json.code 					 object.code
 	json.nomor_surat 					 object.nomor_surat
  	
- 	json.tax_value		TAX_VALUE[ "code_#{object.delivery_order.sales_order.contact.tax_code}".to_sym ]
+ 	json.tax_value		object.delivery_order.sales_order.contact.is_taxable ? TAX_VALUE[ "code_#{object.delivery_order.sales_order.contact.tax_code}".to_sym ] : ""
  	
 	
 	

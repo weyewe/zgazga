@@ -13,7 +13,11 @@ class PurchaseOrder < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
+  end
+  
+  def active_children
+    self.purchase_order_details 
   end
   
   def valid_contact_id
