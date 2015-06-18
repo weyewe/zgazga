@@ -182,62 +182,6 @@ Ext.define('AM.controller.CashBankAdjustments', {
 	
 	// RUN AWAY
 	
-	markAsRunAwayObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('markmemberasrunawayform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		view.down('form').getForm().findField('run_away_at').setValue(record.get('run_away_at')); 
-    view.show();
-	},
-	
-	executeConfirmRunAway : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getCashBankAdjustmentsStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			record.set( 'run_away_at' , values['run_away_at'] );
-			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			form.setLoading(true);
-			record.save({
-				params : {
-					mark_as_run_away: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
- 
-
 	loadObjectList : function(me){
 		me.getStore().getProxy().extraParams = {}
 		me.getStore().load();
@@ -404,7 +348,7 @@ Ext.define('AM.controller.CashBankAdjustments', {
 				},
 				success : function(record){
 					form.setLoading(false);
-					
+					// list.disableRecordButtons(record);
 					list.fireEvent('confirmed', record);
 					
 					
@@ -454,7 +398,7 @@ Ext.define('AM.controller.CashBankAdjustments', {
 				},
 				success : function(record){
 					form.setLoading(false);
-					
+					// list.disableRecordButtons(record);
 					list.fireEvent('confirmed', record);
 					
 					

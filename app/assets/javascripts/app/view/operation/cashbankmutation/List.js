@@ -109,8 +109,8 @@ Ext.define('AM.view.operation.cashbankmutation.List' ,{
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.confirmObjectButton.enable(); 
-		this.unconfirmObjectButton.enable(); 
+		this.confirmObjectButton.disable(); 
+		this.unconfirmObjectButton.disable(); 
 		
 		selectedObject = this.getSelectedObject();
 
