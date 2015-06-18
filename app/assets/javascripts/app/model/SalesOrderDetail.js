@@ -20,7 +20,6 @@ Ext.define('AM.model.SalesOrderDetail', {
     	    
     	    { name: 'is_service', type: 'boolean' }, 
 			{ name: 'is_service_text', type: 'string' }, 
-	 
 			
   	],
 

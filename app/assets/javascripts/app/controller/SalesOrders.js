@@ -127,7 +127,6 @@ Ext.define('AM.controller.SalesOrders', {
   },
 
 	confirmObject: function(){
-		console.log("inside confirm object");
 		// console.log("the startObject callback function");
 		var record = this.getList().getSelectedObject();
 		if(record){
@@ -210,7 +209,6 @@ Ext.define('AM.controller.SalesOrders', {
 
 	unconfirmObject: function(){
 		// console.log("the startObject callback function");
-		console.log("inside unconfirm object");
 		var view = Ext.widget('unconfirmsalesorderform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
@@ -219,7 +217,6 @@ Ext.define('AM.controller.SalesOrders', {
 	},
 	
 	executeConfirm: function(button){
-		console.log("Gonna send data to sales order: confirm");
 		var me = this; 
 		var win = button.up('window');
     var form = win.down('form');
@@ -245,8 +242,6 @@ Ext.define('AM.controller.SalesOrders', {
 				success : function(record){
 					form.setLoading(false);
 					
-					console.log("The new record");
-					console.log(record);
 					me.reloadRecord( record ) ; 
 					
 					list.enableRecordButtons(); 
@@ -255,7 +250,7 @@ Ext.define('AM.controller.SalesOrders', {
 					win.close();
 				},
 				failure : function(record,op ){
-					console.log("Fail update");
+					// console.log("Fail update");
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

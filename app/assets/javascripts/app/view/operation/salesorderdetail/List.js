@@ -16,7 +16,6 @@ Ext.define('AM.view.operation.salesorderdetail.List' ,{
 			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
       		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
 			
-			
 			 
 		];
 		

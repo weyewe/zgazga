@@ -1,4 +1,4 @@
-Ext.define('AM.view.operation.salesorder.UnstartForm', {
+Ext.define('AM.view.operation.salesorder.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmsalesorderform',
 

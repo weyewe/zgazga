@@ -263,7 +263,6 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	},
 	
 	setSelectedExchange: function( exchange_id ){
-		console.log("set selected exchange");
 		var comboBox = this.down('form').getForm().findField('exchange_id'); 
 		var me = this; 
 		var store = comboBox.store; 
@@ -280,13 +279,12 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		console.log("inside setComboBoxData");
-		
+	setComboBoxData : function( record){ 
+
 		var me = this; 
 		me.setLoading(true);
 		
-		// me.setSelectedCustomer( record.get("contact_id")  ) ;
+		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
 		me.setSelectedEmployee( record.get("employee_id")  ) ;
 		me.setSelectedExchange( record.get("exchange_id")  ) ;
 		me.setSelectedCustomer( record.get("contact_id")  ) ;

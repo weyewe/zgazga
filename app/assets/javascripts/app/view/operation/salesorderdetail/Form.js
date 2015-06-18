@@ -14,48 +14,48 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
   initComponent: function() {
 	
 	
-	    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-			type : 'array',
-			storeId : 'sales_status_search',
-			fields	: [ 
-				{ name : "is_service"}, 
-				{ name : "is_service_text"}  
-			], 
-			data : [
-				{ is_service : false, is_service_text : "Trading"},
-				{ is_service : true, is_service_text : "Service"}
-			] 
-		});
-		
-		
-		var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-			storeId : 'item_search',
-			fields	: [
-			 		{
-						name : 'item_sku',
-						mapping : "sku"
-					}, 
-					{
-						name : 'item_name',
-						mapping : 'name'
-					},
-					{
-						name : 'item_id',
-						mapping : "id"
-					}, 
-		 
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_items',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
+    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
+		type : 'array',
+		storeId : 'sales_status_search',
+		fields	: [ 
+			{ name : "is_service"}, 
+			{ name : "is_service_text"}  
+		], 
+		data : [
+			{ is_service : false, is_service_text : "Trading"},
+			{ is_service : true, is_service_text : "Service"}
+		] 
+	});
+	
+	
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
+		fields	: [
+		 		{
+					name : 'item_sku',
+					mapping : "sku"
+				}, 
+				{
+					name : 'item_name',
+					mapping : 'name'
+				},
+				{
+					name : 'item_id',
+					mapping : "id"
+				}, 
+	 
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_items',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
 		
 	
 	 
@@ -149,6 +149,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 		
 	 
 			
+			
 			]
     }];
 
@@ -205,6 +206,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 		me.setSelectedItem( record.get("item_id")  ) ; 
 		me.setSelectedStatus( record.get("is_service")  ) ; 
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('sales_order_code').setValue(record.get('code')); 
