@@ -221,3 +221,8 @@ BASE_MASTER_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/master"
 BASE_MASTER_DETAIL_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/masterdetail"
 
 BASE_RESULT_FOLDER = "#{Dir.pwd}/lib/tasks/result"
+
+
+WickedPdf.config = {
+  exe_path: '/usr/local/bin/wkhtmltopdf'
+}

@@ -2,7 +2,14 @@ Ticketie::Application.routes.draw do
   devise_for :users
   
   root :to => 'home#index' 
- 
+  resources :sales_orders
+  resources :delivery_orders
+  resources :sales_invoices
+  resources :purchase_orders
+  resources :purchase_receivals
+  resources :purchase_invoices
+  
+  
   
   
   namespace :api do
