@@ -2,7 +2,7 @@ class Api::PurchaseInvoiceDetailsController < Api::BaseApiController
   
   def index
     @parent = PurchaseInvoice.find_by_id params[:purchase_invoice_id]
-    @objects = @parent.active_children.joins(:purchase_invoice, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:purchase_invoice,  :purchase_receival_detail => [:item => [:uom]]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 

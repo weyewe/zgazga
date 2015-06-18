@@ -1,6 +1,7 @@
 class PurchaseOrderDetail < ActiveRecord::Base
   
   validates_presence_of :item_id
+  belongs_to :item
  
   validate :valid_purchase_order
   validate :valid_item
