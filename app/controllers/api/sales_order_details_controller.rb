@@ -67,11 +67,11 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }
-        }  
+      }  
     end
   end
- 
-  def search
+  
+    def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -83,34 +83,38 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
-            ( item.sku  =~ query ) | 
+        ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
-               ( item.sku  =~ query ) | 
+        ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  |
         ( code  =~ query  )  
-                              }.count
+      }.count
     else
-      @objects = SalesOrderDetail.where{ (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = SalesOrderDetail.where{ 
+              (id.eq selected_id)  
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
    
-      @total = SalesOrderDetail.where{ (id.eq selected_id)   
-                              }.count 
+      @total = SalesOrderDetail.where{ 
+              (id.eq selected_id)   
+      }.count 
     end
     
     
     # render :json => { :records => @objects , :total => @total, :success => true }
   end
+ 
+  
  
 end

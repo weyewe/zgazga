@@ -6,8 +6,7 @@ Ext.define('AM.view.master.Employee', {
 		items : [
 			{
 				xtype : 'employeelist' ,
-				flex : 1 //,
-				// html : 'hahaha'
+				flex : 1 
 			} 
 		]
 });

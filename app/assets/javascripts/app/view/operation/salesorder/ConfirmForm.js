@@ -1,19 +1,16 @@
-Ext.define('AM.view.master.cashbankadjustment.ConfirmForm', {
+Ext.define('AM.view.operation.salesorder.ConfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.confirmcashbankadjustmentform',
+  alias : 'widget.confirmsalesorderform',
 
-  title : 'Confirm',
+  title : 'Confirm SalesOrder',
   layout: 'fit',
-	width	: 500,
+	width	: 400,
   autoShow: true,  // does it need to be called?
 	modal : true, 
 // win.show() 
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-		
-		
-		
     this.items = [{
       xtype: 'form',
 			msgTarget	: 'side',
@@ -24,23 +21,30 @@ Ext.define('AM.view.master.cashbankadjustment.ConfirmForm', {
 					anchor: '100%'
       },
       items: [
-        {
-	        xtype: 'hidden',
-	        name : 'id',
-	        fieldLabel: 'id'
-	      },
+
 				{
 					xtype: 'displayfield',
-					fieldLabel: 'Code ',
+					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-				  {
-					xtype: 'datefield',
-					name : 'confirmed_at',
-					fieldLabel: 'Tanggal Konfirmasi',
-					format: 'Y-m-d',
+			 
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Tanggal Transaksi',
+					name: 'transaction_datetime' 
 				},
-				
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Deskripsi',
+					name: 'description' 
+				},
+				{
+					xtype: 'datefield',
+					fieldLabel: 'Tanggal Konfirmasi',
+					name: 'confirmed_at' ,
+					format: 'Y-m-d',
+				},  
+		 
 			]
     }];
 
@@ -58,5 +62,7 @@ Ext.define('AM.view.master.cashbankadjustment.ConfirmForm', {
 
 	setParentData: function( record ) {
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
+		this.down('form').getForm().findField('description').setValue(record.get('description')); 
 	}
 });

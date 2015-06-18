@@ -210,3 +210,14 @@ CORE_BUILDER_TYPE = {
   :none => 2
   }	
 
+
+
+BASE_JS_APP = "#{Dir.pwd}/app/assets/javascripts/app"
+ 
+
+BASE_CONTROLLER_FOLDER = "#{Dir.pwd}/app/controllers"
+
+BASE_MASTER_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/master"
+BASE_MASTER_DETAIL_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/masterdetail"
+
+BASE_RESULT_FOLDER = "#{Dir.pwd}/lib/tasks/result"

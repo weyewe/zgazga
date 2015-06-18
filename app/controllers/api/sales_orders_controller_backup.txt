@@ -1,35 +1,37 @@
-class Api::SalesInvoicesController < Api::BaseApiController
+class Api::SalesOrdersController < Api::BaseApiController
   
   def index
      
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
+       @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
          (
            ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
-           ( delivery_order.code =~  livesearch) |
-           ( delivery_order.nomor_surat =~  livesearch)
+           ( contact.name =~  livesearch) | 
+           ( employee.name =~  livesearch) | 
+           ( exchange.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("sales_invoices.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
+       @total = SalesOrder.active_objects.where{
          (
            ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
-           ( delivery_order.code =~  livesearch) |
-           ( delivery_order.nomor_surat =~  livesearch)
+           ( contact.name =~  livesearch) | 
+           ( employee.name =~  livesearch) | 
+           ( exchange.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = SalesInvoice.active_objects.count
+       @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = SalesOrder.active_objects.count
      end
      
      
@@ -39,25 +41,24 @@ class Api::SalesInvoicesController < Api::BaseApiController
 
   def create
     
-    params[:sales_invoice][:invoice_date] =  parse_date( params[:sales_invoice][:invoice_date] )
+    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
     
     
-    @object = SalesInvoice.create_object( params[:sales_invoice])
+    @object = SalesOrder.create_object( params[:sales_order])
  
     if @object.errors.size == 0 
       
       render :json => { :success => true, 
-                        :sales_invoices => [
+                        :sales_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :description => @object.description ,
                           :nomor_surat => @object.nomor_surat ,
-                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
-                          :due_date => format_date_friendly(@object.due_date)  ,
+                          :description => @object.description ,
+                          :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
-                        :total => SalesInvoice.active_objects.count }  
+                        :total => SalesOrder.active_objects.count }  
     else
       puts "It is fucking error!!\n"*10
       @object.errors.messages.each {|x| puts x }
@@ -77,37 +78,36 @@ class Api::SalesInvoicesController < Api::BaseApiController
   end
   
   def show
-    @object  = SalesInvoice.find params[:id]
+    @object  = SalesOrder.find params[:id]
     render :json => { :success => true,   
-                      :sales_invoices => [
+                      :sales_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :description => @object.description ,
                           :nomor_surat => @object.nomor_surat ,
-                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
-                          :due_date => format_date_friendly(@object.due_date)  ,
+                          :description => @object.description ,
+                          :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at)
                         
                         ],
-                      :total => SalesInvoice.active_objects.count  }
+                      :total => SalesOrder.active_objects.count  }
   end
 
   def update
-    params[:sales_invoice][:invoice_date] =  parse_date( params[:sales_invoice][:invoice_date] )
-    params[:sales_invoice][:confirmed_at] =  parse_date( params[:sales_invoice][:confirmed_at] )
+    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
+    params[:sales_order][:confirmed_at] =  parse_date( params[:sales_order][:confirmed_at] )
     
-    @object = SalesInvoice.find(params[:id])
+    @object = SalesOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_invoices, :confirm)
+      if not current_user.has_role?( :sales_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:sales_invoice][:confirmed_at] ) 
+          @object.confirm(:confirmed_at => params[:sales_order][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -118,7 +118,7 @@ class Api::SalesInvoicesController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_invoices, :unconfirm)
+      if not current_user.has_role?( :sales_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -133,7 +133,7 @@ class Api::SalesInvoicesController < Api::BaseApiController
       
       
     else
-      @object.update_object(params[:sales_invoice])
+      @object.update_object(params[:sales_order])
     end
     
      
@@ -143,16 +143,16 @@ class Api::SalesInvoicesController < Api::BaseApiController
     
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :sales_invoices => [
+                        :sales_orders => [
                             :id => @object.id,
                             :code => @object.code ,
                             :nomor_surat => @object.nomor_surat ,
-                            :invoice_date => format_date_friendly(@object.invoice_date)  ,
-                            :due_date => format_date_friendly(@object.due_date)  ,
+                            :description => @object.description ,
+                            :sales_date => format_date_friendly(@object.sales_date),
                             :is_confirmed => @object.is_confirmed,
                             :confirmed_at => format_date_friendly(@object.confirmed_at)
                           ],
-                        :total => SalesInvoice.active_objects.count  } 
+                        :total => SalesOrder.active_objects.count  } 
     else
       
       msg = {
@@ -169,13 +169,13 @@ class Api::SalesInvoicesController < Api::BaseApiController
    
 
   def destroy
-    @object = SalesInvoice.find(params[:id])
+    @object = SalesOrder.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
-      render :json => { :success => true, :total => SalesInvoice.active_objects.count }  
+    if   not @object.persisted? 
+      render :json => { :success => true, :total => SalesOrder.active_objects.count }  
     else
-      render :json => { :success => false, :total => SalesInvoice.active_objects.count, 
+      render :json => { :success => false, :total => SalesOrder.active_objects.count, 
         :message => {
           :errors => extjs_error_format( @object.errors )  
         } 
@@ -194,30 +194,31 @@ class Api::SalesInvoicesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = SalesInvoice.where{  
+      @objects = SalesOrder.where{  
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
-      @total = SalesInvoice.where{  
+      @total = SalesOrder.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
-      @objects = SalesInvoice.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = SalesOrder.where{ 
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
-      @total = SalesInvoice.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+      @total = SalesOrder.where{ 
+          (id.eq selected_id)  
+      }.count 
     end
     
     

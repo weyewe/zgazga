@@ -7,7 +7,7 @@ class Api::SalesOrdersController < Api::BaseApiController
        livesearch = "%#{params[:livesearch]}%"
        @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
          (
-           ( description =~  livesearch ) | 
+           
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
@@ -15,12 +15,12 @@ class Api::SalesOrdersController < Api::BaseApiController
            ( exchange.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("sales_orders.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = SalesOrder.active_objects.where{
          (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch) | 
+            
+           ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
            ( employee.name =~  livesearch) | 
@@ -41,7 +41,7 @@ class Api::SalesOrdersController < Api::BaseApiController
 
   def create
     
-    params[:sales_order][:sales_date] =  parse_date( params[:sales_order][:sales_date] )
+    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
     
     
     @object = SalesOrder.create_object( params[:sales_order])
@@ -52,8 +52,7 @@ class Api::SalesOrdersController < Api::BaseApiController
                         :sales_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat , 
                           :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
@@ -83,18 +82,20 @@ class Api::SalesOrdersController < Api::BaseApiController
                       :sales_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat , 
                           :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at),
+                          :contact_id => @object.contact_id,
+                          :exchange_id => @object.exchange_id,
+                          :employee_id => @object.employee_id
                         
                         ],
                       :total => SalesOrder.active_objects.count  }
   end
 
   def update
-    params[:sales_order][:sales_date] =  parse_date( params[:sales_order][:sales_date] )
+    params[:sales_order][:transaction_datetime] =  parse_date( params[:sales_order][:transaction_datetime] )
     params[:sales_order][:confirmed_at] =  parse_date( params[:sales_order][:confirmed_at] )
     
     @object = SalesOrder.find(params[:id])
@@ -107,7 +108,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:sales_order][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:sales_order][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -125,7 +126,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -146,11 +147,13 @@ class Api::SalesOrdersController < Api::BaseApiController
                         :sales_orders => [
                             :id => @object.id,
                             :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :description => @object.description ,
+                            :nomor_surat => @object.nomor_surat , 
                             :sales_date => format_date_friendly(@object.sales_date),
                             :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                            :confirmed_at => format_date_friendly(@object.confirmed_at),
+                            :contact_id => @object.contact_id,
+                            :exchange_id => @object.exchange_id,
+                            :employee_id => @object.employee_id
                           ],
                         :total => SalesOrder.active_objects.count  } 
     else
@@ -172,7 +175,7 @@ class Api::SalesOrdersController < Api::BaseApiController
     @object = SalesOrder.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => SalesOrder.active_objects.count }  
     else
       render :json => { :success => false, :total => SalesOrder.active_objects.count, 
@@ -198,26 +201,27 @@ class Api::SalesOrdersController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = SalesOrder.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = SalesOrder.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = SalesOrder.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     

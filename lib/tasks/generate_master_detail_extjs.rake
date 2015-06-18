@@ -3,22 +3,14 @@ require 'pg'
 require 'active_record'
 require 'csv'
 
-BASE_JS_APP = "#{Dir.pwd}/app/assets/javascripts/app"
-BASE_VIEW_FOLDER = "#{BASE_JS_APP}/view"
-BASE_MODEL_FOLDER = "#{BASE_JS_APP}/model"
-BASE_CONTROLLER_FOLDER = "#{BASE_JS_APP}/controller"
-BASE_STORE_FOLDER = "#{BASE_JS_APP}/store"
-
-BASE_MASTER_DETAIL_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/masterdetail"
-
-BASE_RESULT_FOLDER = "#{Dir.pwd}/lib/tasks/result"
+ 
 
 
-namespace :master_detail do
+namespace :master_detail_extjs do
   task :generate_asset_and_controller_files => :environment do
     puts "the first"
 
-    main_view_name = 'AM.view.operation.HomeAssignment'
+    main_view_name = 'AM.view.operation.SalesOrder'
     tokenized_main_view_name = main_view_name.split('.')
 
     tokenized_length = tokenized_main_view_name.length
@@ -40,6 +32,8 @@ namespace :master_detail do
     puts "???????????????????????? Gonna execute view content folder \n"*10
     md_create_view_content_folder( tab_name, entity_name, downcase_tokenized_entity_name)
     md_create_master_form(tab_name, entity_name, downcase_tokenized_entity_name)
+    md_create_master_confirm_form(tab_name, entity_name, downcase_tokenized_entity_name)
+    md_create_master_unconfirm_form(tab_name, entity_name, downcase_tokenized_entity_name)
     md_create_master_list(tab_name, entity_name, downcase_tokenized_entity_name)
 
     md_create_master_model(tab_name, entity_name, downcase_tokenized_entity_name)
@@ -60,7 +54,7 @@ namespace :master_detail do
 
   def md_create_content_folder( tab_name, entity_name, downcase_tokenized_entity_name )
     puts "23424 gonna create content folder"
-    content_folder = "#{BASE_RESULT_FOLDER}/view/#{tab_name}"
+    content_folder = "#{BASE_JS_APP}/view/#{tab_name}"
     puts ">>>>>>>>>>>> contnet_folder: #{content_folder}"
     if  not File.directory?( content_folder) 
       FileUtils.mkdir_p(content_folder)
@@ -82,7 +76,7 @@ namespace :master_detail do
 
     
 
-    result_filename = BASE_RESULT_FOLDER + "/view/#{tab_name}/"  + entity_name + ".js"
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/"  + entity_name + ".js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -91,7 +85,7 @@ namespace :master_detail do
    
     folder_name = downcase_tokenized_entity_name.join('')
 
-    content_folder = BASE_RESULT_FOLDER + "/view/" + tab_name
+    content_folder = BASE_JS_APP + "/view/" + tab_name
     if  not File.directory?( content_folder)
       FileUtils.mkdir_p(content_folder)  
     end
@@ -127,7 +121,47 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/view/#{tab_name}/#{folder_name}/"  + "Form.js"
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}/"  + "Form.js"
+    File.open(result_filename, 'w') { |file| file.write( text ) }
+  end
+  
+  def md_create_master_confirm_form(tab_name, entity_name, downcase_tokenized_entity_name)
+    puts "Create master confirm form  "
+    form_template = "#{BASE_MASTER_DETAIL_TEMPLATE_FOLDER}/master_confirm_form.js" 
+    text = File.open(  form_template ).read 
+
+   
+    folder_name = downcase_tokenized_entity_name.join('') 
+
+   
+
+    text.gsub!("template.template", "#{tab_name}.#{folder_name}")
+    text.gsub!("confirmtemplate", "confirm#{folder_name}")
+    text.gsub!("Template", "#{entity_name}")
+
+   
+
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}/"  + "ConfirmForm.js"
+    File.open(result_filename, 'w') { |file| file.write( text ) }
+  end
+  
+  def md_create_master_unconfirm_form(tab_name, entity_name, downcase_tokenized_entity_name)
+    puts "Create master_form  "
+    form_template = "#{BASE_MASTER_DETAIL_TEMPLATE_FOLDER}/master_unconfirm_form.js" 
+    text = File.open(  form_template ).read 
+
+   
+    folder_name = downcase_tokenized_entity_name.join('') 
+
+   
+
+    text.gsub!("template.template", "#{tab_name}.#{folder_name}")
+    text.gsub!("confirmtemplate", "confirm#{folder_name}")
+    text.gsub!("Template", "#{entity_name}")
+
+   
+
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}/"  + "UnconfirmForm.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -147,7 +181,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/view/#{tab_name}/#{folder_name}/"  + "List.js"
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}/"  + "List.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -170,7 +204,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/model/"  + "#{entity_name}.js"
+    result_filename = BASE_JS_APP + "/model/"  + "#{entity_name}.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -191,7 +225,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/store/"  + "#{entity_name}s.js"
+    result_filename = BASE_JS_APP + "/store/"  + "#{entity_name}s.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -205,6 +239,11 @@ namespace :master_detail do
     downcase_tokenized_entity_name.each {|x| folder_name << x }
 
     downcase_merged_entity_name = downcase_tokenized_entity_name.join("_")
+    first_letter_downcased = entity_name.dup
+    
+    first_letter_downcased[0] = first_letter_downcased[0].downcase
+    
+    puts "The first letter_downcased: #{first_letter_downcased}"
    
 
      
@@ -213,15 +252,15 @@ namespace :master_detail do
     text.gsub!("templatel", "#{folder_name}l") 
     text.gsub!("templatef", "#{folder_name}f") 
     text.gsub!("templated", "#{folder_name}d")
-    text.gsub!("templateD", "#{folder_name}D")  
+    text.gsub!("templateDetailList", "#{first_letter_downcased}DetailList")  
     text.gsub!("templateP", "#{folder_name}P")  
     text.gsub!("Template", "#{entity_name}")  
-    text.gsub!("template_", "#{folder_name}_")  
+    text.gsub!("template_", "#{downcase_merged_entity_name}_")  
 
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/controller/"  + "#{entity_name}s.js"
+    result_filename = BASE_JS_APP + "/controller/"  + "#{entity_name}s.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -245,7 +284,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/view/#{tab_name}/#{folder_name}detail/"  + "Form.js"
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}detail/"  + "Form.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -265,7 +304,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/view/#{tab_name}/#{folder_name}detail/"  + "List.js"
+    result_filename = BASE_JS_APP + "/view/#{tab_name}/#{folder_name}detail/"  + "List.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -288,7 +327,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/model/"  + "#{entity_name}Detail.js"
+    result_filename = BASE_JS_APP + "/model/"  + "#{entity_name}Detail.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -309,7 +348,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/store/"  + "#{entity_name}Details.js"
+    result_filename = BASE_JS_APP + "/store/"  + "#{entity_name}Details.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -335,7 +374,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/controller/"  + "#{entity_name}Details.js"
+    result_filename = BASE_JS_APP + "/controller/"  + "#{entity_name}Details.js"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -359,7 +398,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/server_controller/"  + "#{entity_name}sController.rb"
+    result_filename = BASE_CONTROLLER_FOLDER + "/api/"  + "#{downcase_merged_entity_name}s_controller.rb"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 
@@ -383,7 +422,7 @@ namespace :master_detail do
 
    
 
-    result_filename = BASE_RESULT_FOLDER + "/server_controller/"  + "#{entity_name}DetailsController.rb"
+    result_filename = BASE_CONTROLLER_FOLDER + "/api/"  + "#{downcase_merged_entity_name}_details_controller.rb"
     File.open(result_filename, 'w') { |file| file.write( text ) }
   end
 end

@@ -14,9 +14,11 @@ Ticketie::Application.routes.draw do
     get 'search_home' => 'homes#search', :as => :search_home, :method => :get 
     get 'search_home_type' => 'home_types#search', :as => :search_home_type, :method => :get
     get 'search_items' => 'items#search', :as => :search_item, :method => :get
-    get 'search_customer' => 'customers#search', :as => :search_customer, :method => :get
-    get 'search_vendor' => 'vendors#search', :as => :search_vendor, :method => :get
+
+
     get 'search_employees' => 'employees#search', :as => :search_employee, :method => :get
+    get 'search_customers' => 'customers#search', :as => :search_customer, :method => :get
+    get 'search_suppliers' => 'suppliers#search', :as => :search_supplier, :method => :get
     get 'search_cash_bank' => 'cash_banks#search', :as => :search_cash_bank, :method => :get
     get 'search_payable' => 'payables#search', :as => :search_payable, :method => :get
     get 'search_receivable' => 'receivables#search', :as => :search_receivable, :method => :get

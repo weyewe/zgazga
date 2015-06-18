@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.salesorderdetailform',
 
-  title : 'Add / Edit SalesOrder Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -12,6 +12,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
+	
 	
 	    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
 			type : 'array',
@@ -148,7 +149,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 		
 	 
 			
-		]
+			]
     }];
 
     this.buttons = [{
@@ -194,6 +195,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 			}
 		});
 	},
+	
 	
 	setComboBoxData : function( record){
 		var me = this; 

@@ -9,20 +9,24 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			{ header: 'Tanggal Penjualan', dataIndex: 'sales_date', flex: 2 },
-		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
-			{ header: 'Marketing',  dataIndex: 'employee_name', flex: 2},
-			{ header: 'Currency',  dataIndex: 'exchange_name', flex: 2},
+			{	header: 'Description', dataIndex: 'description', flex: 2 },
+			
+			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
+			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
+			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
+		 
+			
+			
 			
 			
  
 			{
 				xtype : 'templatecolumn',
-				text : "Konfirmasi",
+				text : "Transaksi",
 				flex : 3,
-				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
+				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
 			},
 			
 			

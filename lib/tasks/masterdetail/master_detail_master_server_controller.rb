@@ -163,7 +163,7 @@ class Api::TemplatesController < Api::BaseApiController
     @object = Template.find(params[:id])
     @object.delete_object
 
-    if (( not @object.persisted? )   or @object.is_deleted ) and @object.errors.size == 0
+    if   not @object.persisted? 
       render :json => { :success => true, :total => Template.active_objects.count }  
     else
       render :json => { :success => false, :total => Template.active_objects.count, 
@@ -185,22 +185,33 @@ class Api::TemplatesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = Template.where{  (title =~ query)   & 
-                                (is_deleted.eq false )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = Template.where{  
+          (title =~ query)   & 
+          (is_deleted.eq false )
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+                        
+      @total = Template.where{  
+          (title =~ query)   & 
+          (is_deleted.eq false )
+        
+      }.count 
     else
-      @objects = Template.where{ (id.eq selected_id)  & 
-                                (is_deleted.eq false )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = Template.where{ 
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+                        
+      @total = SalesOrder.where{ 
+          (id.eq selected_id)  
+      }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @objects.count, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end
