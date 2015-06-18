@@ -17,7 +17,7 @@ class Api::SalesOrdersController < Api::BaseApiController
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = SalesOrder.active_objects.where{
+       @total = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
          (
             
            ( code =~ livesearch)  | 
