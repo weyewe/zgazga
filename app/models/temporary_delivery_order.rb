@@ -96,6 +96,14 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
       return self 
     end    
     
+    # check sales_order_detail pending_delivery_amount
+    self.temporary_delivery_order_details.each do |tdod|
+      if tdod.sales_order_detail.pending_delivery_amount < tdod.amount
+        self.errors.add(:generic_errors, "Pending Delivery Amount < TemporaryDeliveryOrderDetail amount")
+        return self
+      end
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     

@@ -13,7 +13,7 @@ class Blanket < ActiveRecord::Base
   validate :valid_roll_blanket_item_id
   validate :valid_adhesive
   validate :valid_left_bar_and_right_bar
-  
+  validate :valid_cropping_type
   
   def valid_cropping_type
     return if cropping_type.nil?
@@ -116,15 +116,6 @@ class Blanket < ActiveRecord::Base
         self.errors.add(:roll_blanket_item_id, "Roll Blanket tidak valid")
         return self
       end
-    end
-  end
-  
-  def valid_contact_id
-    return if contact_id.nil? 
-    contact = Contact.find_by_id(contact_id)
-    if contact.nil? 
-      self.errors.add(:contact_id, "Harus ada contact_id")
-      return self
     end
   end
     

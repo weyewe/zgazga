@@ -89,6 +89,7 @@ class StockAdjustmentDetail < ActiveRecord::Base
     if new_object.save
       new_object.code = "SadjD-" + new_object.id.to_s  
       new_object.calculateTotalAmount
+      new_object.save
     end
     return new_object
   end

@@ -1,7 +1,6 @@
 class CreateCoreBuilders < ActiveRecord::Migration
   def change
     create_table :core_builders do |t|
-      t.string :base_sku
       t.string :sku_used_core
       t.string :sku_new_core
       t.integer :used_core_item_id
@@ -9,8 +8,6 @@ class CreateCoreBuilders < ActiveRecord::Migration
       t.integer :uom_id
       t.integer :machine_id
       t.string  :core_builder_type_case
-      t.string  :name
-      t.text  :description
       t.decimal :cd, :default        => 0,  :precision => 14, :scale => 2
       t.decimal :tl, :default        => 0,  :precision => 14, :scale => 2
       t.timestamps

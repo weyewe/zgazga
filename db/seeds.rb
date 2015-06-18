@@ -507,7 +507,7 @@ if Rails.env.development?
   delivery_order_array = []
   (1.upto 5).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 1))]
+    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 6))]
     delivery_order = DeliveryOrder.create_object(
       :warehouse_id => selected_warehouse.id,
       :delivery_date => DateTime.now,
@@ -535,7 +535,7 @@ if Rails.env.development?
   delivery_order_non_detail_array = []
   (1.upto 5).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 1))]
+    selected_sales_order = sales_order_array[rand(6..(sales_order_array.length - 1))]
     delivery_order = DeliveryOrder.create_object(
       :warehouse_id => selected_warehouse.id,
       :delivery_date => DateTime.now,

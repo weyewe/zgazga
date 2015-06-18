@@ -2,11 +2,38 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
   
   belongs_to :temporary_delivery_order
   belongs_to :sales_order_detail
+  validate :valid_sales_order_detail
   
   def self.active_objects
     self
   end
-
+  
+  def valid_sales_order_detail
+    return if  sales_order_detail_id.nil?
+    pod = SalesOrderDetail.find_by_id sales_order_detail_id
+    if pod.nil? 
+      self.errors.add(:item_id, "Harus ada sales_order_detail_id")
+      return self 
+    end
+    
+    itemcount = TemporaryDeliveryOrderDetail.where(
+      :sales_order_detail_id => sales_order_detail_id,
+      :temporary_delivery_order_id => temporary_delivery_order_id,
+      ).count  
+    
+    if self.persisted?
+       if itemcount > 1
+         self.errors.add(:item_id, "Item sudah terpakai")
+      return self 
+       end
+    else
+       if itemcount > 0
+         self.errors.add(:item_id, "Item sudah terpakai")
+      return self 
+       end
+    end
+  end 
+  
   def self.create_object(params)
     new_object = self.new
     new_object.temporary_delivery_order_id = params[:temporary_delivery_order_id]

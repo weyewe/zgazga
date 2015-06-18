@@ -1,11 +1,24 @@
 require 'spec_helper'
 
-describe BlanketOrderDetail do
+describe BlanketWarehouseMutation do
   before(:each) do
+    @wrh_1 = Warehouse.create_object(
+      :name => "whname_1" ,
+      :description => "description_1",
+      :code => "code_1"
+      )
+    
+    @wrh_2 = Warehouse.create_object(
+      :name => "name_2" ,
+      :description => "description_1",
+      :code => "code_2"
+      )
+      
     @cg_1 = ContactGroup.create_object(
       :name => "Group1" ,
       :description => "Description1"
       )
+      
     @ct_1 = Contact.create_object(
       :name => "name_1" ,
       :address => "address_1",
@@ -218,24 +231,12 @@ describe BlanketOrderDetail do
       :exchange_id => @exc_1.id,
       )
     
-    @wrh_1 = Warehouse.create_object(
-        :name => "name_1" ,
-        :description => "description_1",
-        :code => "code_1"
-      )
-      
-    @wrh_2 = Warehouse.create_object(
-        :name => "name_2" ,
-        :description => "description_1",
-        :code => "code_2"
-      )
-      
     @sa_1 = StockAdjustment.create_object(
       :warehouse_id => @wrh_1.id,
       :adjustment_date => DateTime.now,
       :description => "description_1"
       )
-
+     
     @sad_1 = StockAdjustmentDetail.create_object(
       :stock_adjustment_id => @sa_1.id,
       :item_id => @blanket_1.item.id,
@@ -243,7 +244,7 @@ describe BlanketOrderDetail do
       :amount => BigDecimal("10"),
       :status => ADJUSTMENT_STATUS[:addition]
       )
-     
+      
     @sad_2 = StockAdjustmentDetail.create_object(
       :stock_adjustment_id => @sa_1.id,
       :item_id => @bar_1.id,
@@ -270,117 +271,113 @@ describe BlanketOrderDetail do
     
     @sa_1.confirm_object(:confirmed_at => DateTime.now)
     
-    
-    @production_no_1 = "production_no_1"
-    @production_no_2 = "production_no_2"
-    @order_date_1 = DateTime.now
-    @order_date_2 = DateTime.now + 1.days
-    @notes_1 = "Notes1"
-    @notes_2 = "Notes2"
-    @has_due_date_1 = true
-    @has_due_date_2 = false
-    @due_date_1 = DateTime.now
-    @due_date_2 = DateTime.now + 1.days
-    
-    
-    
-   @bo = BlanketOrder.create_object(
+    @bo = BlanketOrder.create_object(
       :contact_id => @ct_1.id,
       :warehouse_id => @wrh_1.id,
-      :order_date => @order_date_1,
-      :production_no => @production_no_1,
-      :has_due_date => @has_due_date_1,
-      :due_date => @due_date_1,
+      :order_date => DateTime.now,
+      :production_no => "production_no_1",
+      :has_due_date => true,
+      :due_date => DateTime.now,
       )
+      
+    @bod = BlanketOrderDetail.create_object(
+      :blanket_order_id => @bo.id,
+      :blanket_id => @blanket_1.id
+      )
+    
+    @bo.confirm_object(:confirmed_at => DateTime.now)
+    
+    @bod.finish_object(
+      :finished_at => DateTime.now,
+      :roll_blanket_usage => 5,
+      :roll_blanket_defect => 5
+      )
+    
+    @mutation_date_1 = DateTime.now
+    @mutation_date_2 = DateTime.now + 1.days
+    @amount_1 = BigDecimal("1")
+    @amount_2 = BigDecimal("2")
   end
   
-  context "create BlanketOrderDetail" do
+  context "create BlanketWarehouseMutation" do
     before(:each) do
-      @bod = BlanketOrderDetail.create_object(
-          :blanket_order_id => @bo.id,
-          :blanket_id => @blanket_1.id
-          )
+      @bwm = BlanketWarehouseMutation.create_object(
+        :blanket_order_id => @bo.id,
+        :warehouse_from_id => @wrh_1.id,
+        :warehouse_to_id => @wrh_2.id,
+        :mutation_date => @mutation_date_1,
+        :amount => @amount_1,
+        )
     end
     
-    it "should create BlanketOrderDetail" do
-      @bod.errors.size.should == 0
-      @bod.should be_valid
+    it "should create BlanketWarehouseMutation" do
+      @bwm.errors.size.should == 0
+      @bwm.should be_valid
     end
     
-    it "should update BlanketOrderDetail" do
+    it "should update BlanketWarehouseMutation" do
+      @bwm.update_object(
+        :blanket_order_id => @bo.id,
+        :warehouse_from_id => @wrh_2.id,
+        :warehouse_to_id => @wrh_1.id,
+        :mutation_date => @mutation_date_2,
+        :amount => @amount_2,
+        )
+      @bwm.errors.size.should == 0
+      @bwm.should be_valid
+      @bwm.blanket_order_id.should == @bo.id
+      @bwm.warehouse_from_id.should == @wrh_2.id
+      @bwm.warehouse_to_id.should == @wrh_1.id
+      @bwm.mutation_date.should == @mutation_date_2
+      @bwm.amount.should == @amount_2
     end
     
-    it "should delete BlanketOrderDetail" do
-      @bod.delete_object
-      BlanketOrderDetail.count.should == 0
+    it "should delete BlanketWarehouseMutation" do 
+      @bwm.delete_object
+      @bwm.errors.size.should == 0
+      BlanketWarehouseMutation.count.should == 0
     end
     
-    context "confirm BlanketOrder" do
+    context "create BlanketWarehouseMutationDetail" do
       before(:each) do
-        @bo.confirm_object(:confirmed_at => DateTime.now)
+        @bwmd = BlanketWarehouseMutationDetail.create_object(
+          :blanket_warehouse_mutation_id  => @bwm.id,
+          :blanket_order_detail_id => @bod.id,
+          )
       end
       
-      it "should confirm BlanketOrder" do
-        @bo.errors.size.should == 0
-        @bo.is_confirmed.should == true
+      it "should create BlanketWarehouseMutationDetail" do
+        @bwmd.errors.size.should == 0
+        @bwmd.should be_valid
       end
       
-      context "finish BlanketOrderDetail" do
+      context "confirm BlanketWarehouseMutation" do
         before(:each) do
-          @bod.finish_object(
-            :finished_at => DateTime.now,
-            :roll_blanket_usage => 5,
-            :roll_blanket_defect => 5
+          @bwm.confirm_object(
+            :confirmed_at => DateTime.now
             )
         end
         
-        it "should finish BlanketOrderDetail" do
-          @bod.errors.size.should == 0
-          @bod.is_finished.should == true
+        it "should confirm BlanketWarehouseMutation" do
+          @bwm.errors.size.should == 0
+          @bwm.is_confirmed.should == true
         end
+        
+        context "unconfirm BlanketWarehouseMutation" do
+          before(:each) do
+            @bwm.unconfirm_object
+          end
+          
+          it "should unconfirm BlanketWarehouseMutation" do
+            @bwm.errors.size.should == 0
+            @bwm.is_confirmed.should == false
+          end
+          
+        end
+      end
       
-        context "unfinish BlanketOrderDetail" do
-          before(:each) do
-            @bod.unfinish_object
-          end
-          
-          it "should unfinish BlanketOrderDetail" do
-            @bod.errors.size.should == 0
-            @bod.is_finished.should == false
-          end
-        end
-        
-      end
-      context "reject BlanketOrderDetail" do
-        before(:each) do
-          @bod.reject_object(
-          :rejected_date => DateTime.now,
-          :roll_blanket_usage => 5,
-          :roll_blanket_defect => 5
-          )
-        end
-        
-        it "should reject BlanketOrderDetail" do
-          @bod.errors.size.should == 0
-          @bod.is_rejected.should == true
-        end
-        
-        context "undo reject BlanketOrderDetail" do
-          before(:each) do
-            @bod.unreject_object
-          end
-          
-          it "should unreject BlanketOrderDetail" do
-            @bod.errors.size.should == 0
-            @bod.is_rejected.should == false
-          end
-          
-        end
-        
-      end
-    
     end
     
-    
   end
+      
 end

@@ -15,6 +15,7 @@ class BlanketOrderDetail < ActiveRecord::Base
       self.errors.add(:blanket_order_id, "Harus ada BlanketOrder id")
       return self 
     end
+    
   end
   
   def valid_blanket
@@ -184,6 +185,7 @@ class BlanketOrderDetail < ActiveRecord::Base
     # revese stock_mutation
     StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
       sm.reverse_stock_mutate_object
+      sm.delete_object
     end
     AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
   end
@@ -294,6 +296,7 @@ class BlanketOrderDetail < ActiveRecord::Base
     # revese stock_mutation
     StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
       sm.reverse_stock_mutate_object
+      sm.delete_object
     end
     AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
   end

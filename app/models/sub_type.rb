@@ -1,7 +1,7 @@
 class SubType < ActiveRecord::Base
   belongs_to :item_type 
   
-  
+  validates_uniqueness_of :name
   validates_presence_of :name 
   validate :valid_item_type
   
