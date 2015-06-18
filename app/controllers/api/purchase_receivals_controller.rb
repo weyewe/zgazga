@@ -5,32 +5,30 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PurchaseReceival.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).where{
          (
-           
+           ( nomor_surat =~  livesearch ) | 
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( warehouse.name =~  livesearch) |
+           ( purchase_order.code =~  livesearch) |
+           ( purchase_order.nomor_surat =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = PurchaseReceival.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).where{
          (
-            
+           ( nomor_surat =~  livesearch ) | 
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( warehouse.name =~  livesearch) |
+           ( purchase_order.code =~  livesearch) |
+           ( purchase_order.nomor_surat =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = PurchaseReceival.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = PurchaseReceival.active_objects.count
      end
      
@@ -41,7 +39,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
 
   def create
     
-    params[:purchase_receival][:transaction_datetime] =  parse_date( params[:purchase_receival][:transaction_datetime] )
+    params[:purchase_receival][:receival_date] =  parse_date( params[:purchase_receival][:receival_date] )
     
     
     @object = PurchaseReceival.create_object( params[:purchase_receival])
@@ -52,8 +50,8 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
                         :purchase_receivals => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :receival_date => format_date_friendly(@object.receival_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -82,20 +80,17 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
                       :purchase_receivals => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :receival_date => format_date_friendly(@object.receival_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at)
                         
                         ],
                       :total => PurchaseReceival.active_objects.count  }
   end
 
   def update
-    params[:purchase_receival][:transaction_datetime] =  parse_date( params[:purchase_receival][:transaction_datetime] )
+    params[:purchase_receival][:receival_date] =  parse_date( params[:purchase_receival][:receival_date] )
     params[:purchase_receival][:confirmed_at] =  parse_date( params[:purchase_receival][:confirmed_at] )
     
     @object = PurchaseReceival.find(params[:id])
@@ -145,15 +140,12 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_receivals => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :receival_date => format_date_friendly(@object.receival_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at)
                           ],
                         :total => PurchaseReceival.active_objects.count  } 
     else

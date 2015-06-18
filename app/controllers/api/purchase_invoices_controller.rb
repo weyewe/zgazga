@@ -5,32 +5,31 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PurchaseInvoice.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = PurchaseInvoice.active_objects.joins(:purchase_receival =>[:purchase_order =>[:contact,:exchange]]).where{
          (
-           
+           ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( purchase_receival.code =~  livesearch) |
+           ( purchase_receival.nomor_surat =~  livesearch)
          )
+
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = PurchaseInvoice.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = PurchaseInvoice.active_objects.joins(:purchase_receival =>[:purchase_order =>[:contact,:exchange]]).where{
          (
-            
+           ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( purchase_receival.code =~  livesearch) |
+           ( purchase_receival.nomor_surat =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = PurchaseInvoice.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = PurchaseInvoice.active_objects.joins(:purchase_receival =>[:purchase_order =>[:contact,:exchange]]).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = PurchaseInvoice.active_objects.count
      end
      
@@ -41,7 +40,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
 
   def create
     
-    params[:purchase_invoice][:transaction_datetime] =  parse_date( params[:purchase_invoice][:transaction_datetime] )
+    params[:purchase_invoice][:invoice_date] =  parse_date( params[:purchase_invoice][:invoice_date] )
     
     
     @object = PurchaseInvoice.create_object( params[:purchase_invoice])
@@ -52,8 +51,10 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
                         :purchase_invoices => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -82,20 +83,19 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
                       :purchase_invoices => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => PurchaseInvoice.active_objects.count  }
   end
 
   def update
-    params[:purchase_invoice][:transaction_datetime] =  parse_date( params[:purchase_invoice][:transaction_datetime] )
+    params[:purchase_invoice][:invoice_date] =  parse_date( params[:purchase_invoice][:invoice_date] )
     params[:purchase_invoice][:confirmed_at] =  parse_date( params[:purchase_invoice][:confirmed_at] )
     
     @object = PurchaseInvoice.find(params[:id])
@@ -145,15 +145,14 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_invoices => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PurchaseInvoice.active_objects.count  } 
     else

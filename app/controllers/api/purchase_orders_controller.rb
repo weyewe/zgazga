@@ -5,32 +5,30 @@ class Api::PurchaseOrdersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PurchaseOrder.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = PurchaseOrder.active_objects.joins(:contact,:exchange).where{
          (
-           
+           ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
            ( exchange.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = PurchaseOrder.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = PurchaseOrder.active_objects.joins(:contact,:exchange).where{
          (
-            
+           ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
            ( exchange.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = PurchaseOrder.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = PurchaseOrder.active_objects.joins(:contact,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = PurchaseOrder.active_objects.count
      end
      
@@ -41,7 +39,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
 
   def create
     
-    params[:purchase_order][:transaction_datetime] =  parse_date( params[:purchase_order][:transaction_datetime] )
+    params[:purchase_order][:purchase_date] =  parse_date( params[:purchase_order][:purchase_date] )
     
     
     @object = PurchaseOrder.create_object( params[:purchase_order])
@@ -52,8 +50,10 @@ class Api::PurchaseOrdersController < Api::BaseApiController
                         :purchase_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :description => @object.description ,
+                          :purchase_date => format_date_friendly(@object.purchase_date)  ,
+                          :allow_edit_detail => @object.allow_edit_detail,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -82,20 +82,19 @@ class Api::PurchaseOrdersController < Api::BaseApiController
                       :purchase_orders => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :description => @object.description ,
+                          :purchase_date => format_date_friendly(@object.purchase_date)  ,
+                          :allow_edit_detail => @object.allow_edit_detail,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => PurchaseOrder.active_objects.count  }
   end
 
   def update
-    params[:purchase_order][:transaction_datetime] =  parse_date( params[:purchase_order][:transaction_datetime] )
+    params[:purchase_order][:purchase_date] =  parse_date( params[:purchase_order][:purchase_date] )
     params[:purchase_order][:confirmed_at] =  parse_date( params[:purchase_order][:confirmed_at] )
     
     @object = PurchaseOrder.find(params[:id])
@@ -145,15 +144,14 @@ class Api::PurchaseOrdersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :description => @object.description ,
+                          :purchase_date => format_date_friendly(@object.purchase_date)  ,
+                          :allow_edit_detail => @object.allow_edit_detail,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PurchaseOrder.active_objects.count  } 
     else

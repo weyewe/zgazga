@@ -83,7 +83,7 @@ class Api::PurchaseOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = PurchaseOrderDetail.joins(:purchase_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
+            ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
@@ -93,10 +93,10 @@ class Api::PurchaseOrderDetailsController < Api::BaseApiController
       order("id DESC")
                         
       @total = PurchaseOrderDetail.joins(:purchase_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
+            ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
+        ( item.description  =~ query  )  | 
+        ( code  =~ query  )   
       }.count
     else
       @objects = PurchaseOrderDetail.where{ 
