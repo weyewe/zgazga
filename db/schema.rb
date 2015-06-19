@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617065711) do
+ActiveRecord::Schema.define(version: 20150618045842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,7 +241,6 @@ ActiveRecord::Schema.define(version: 20150617065711) do
   end
 
   create_table "core_builders", force: true do |t|
-    t.string   "base_sku"
     t.string   "sku_used_core"
     t.string   "sku_new_core"
     t.integer  "used_core_item_id"
@@ -249,10 +248,13 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.integer  "uom_id"
     t.integer  "machine_id"
     t.string   "core_builder_type_case"
-    t.string   "name"
-    t.text     "description"
     t.decimal  "cd",                     precision: 14, scale: 2, default: 0.0
     t.decimal  "tl",                     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cores", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -610,9 +612,19 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.datetime "updated_at"
   end
 
+  create_table "roller_builders", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roller_types", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rollers", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
