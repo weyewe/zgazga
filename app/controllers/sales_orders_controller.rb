@@ -1,10 +1,6 @@
 class SalesOrdersController < ApplicationController 
   
-  WickedPdf.config = {
  
-  :exe_path => '/usr/local/bin/wkhtmltopdf'
-}
-    
   def show
     @object = SalesOrder.find(params[:id])
     

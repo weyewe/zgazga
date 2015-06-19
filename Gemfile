@@ -7,8 +7,7 @@ gem 'awesome_nested_set'
 gem 'pg'
 gem 'whenever', :require => false
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
-
+ 
 gem 'mina'
 gem 'mina-unicorn',    :require => false
 gem 'unicorn'
@@ -27,9 +26,7 @@ gem 'simple_form'
 gem 'wicked_pdf'
 gem 'dropbox-sdk'
 gem 'httparty'
-gem 'json'
-gem 'rjb' 
- 
+gem 'json' 
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -59,8 +56,9 @@ gem 'devise'
 gem "kaminari"  
 gem 'uuidtools'
 
-# gem 'bootstrap-sass', '~> 2.3.1.0'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.3.5'
+gem 'sass-rails', '>= 3.2'
+ 
 # gem 'the_role' #, '~> 2.5.2'
 # gem 'the_role_bootstrap3_ui'
 # gem 'the_role', '~> 3.0.0'
