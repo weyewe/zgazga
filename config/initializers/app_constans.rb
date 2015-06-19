@@ -226,3 +226,13 @@ BASE_RESULT_FOLDER = "#{Dir.pwd}/lib/tasks/result"
 WickedPdf.config = {
   exe_path: '/usr/local/bin/wkhtmltopdf'
 }
+
+BASE_MIGRATION_LOCATION = "#{Rails.root}/zga_migration"
+BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
+BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
+
+MIGRATION_FILENAME = {
+  :contact_group => 'ContactGroup.csv',
+  :contact =>  'Contact.csv'
+  
+} 
