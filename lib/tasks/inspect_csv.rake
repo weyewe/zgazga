@@ -2,15 +2,29 @@ require 'rubygems'
 require 'pg'
 require 'active_record'
 require 'csv'
+require 'rake'
 
-
+# call this using 
+# rake task_name['yhooooo',4]   => no spaces allowed in the argument 
+task :task_name, :display_value  do |t, args|
+    puts args.display_value 
+#   args.display_times.to_i.times do
+#     puts args.display_value
+#   end
+end
  
 
-task :inspect_csv => :environment do
+#  rake inspect_csv['ContactGroup.csv']
+task :inspect_csv,  :filename do   | t, args| 
     
-    filename = 'Contact.csv'
+ 
+    filename = args.filename
+    
+ 
+  
+  
+    
     csv_file_location = "#{Rails.root}/zga_migration/original/" + filename
-    
     handler = open( csv_file_location )
     csv_string = handler.read.encode!("UTF-8", "iso-8859-1", invalid: :replace) 
     
@@ -48,9 +62,11 @@ task :inspect_csv => :environment do
     
 end
 
-task :see_all_column_data => :environment do
-    column = 0
-    filename = 'ContactGroup.csv'
+
+# rake see_single_column_data['ContactGroup.csv',1]   << no spaces allowed 
+task :see_single_column_data , :filename, :column  do | t, args | 
+    column = args.column.to_i
+    filename = args.filename
     csv_file_location = "#{Rails.root}/zga_migration/original/" + filename
     
     awesome_row_counter = -1 
