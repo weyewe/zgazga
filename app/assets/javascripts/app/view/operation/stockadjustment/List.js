@@ -24,8 +24,6 @@ Ext.define('AM.view.operation.stockadjustment.List' ,{
 				tpl : 'Tanggal konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
 							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
 			},
-			
-			
 		];
 
 		this.addObjectButton = new Ext.Button({

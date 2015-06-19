@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.paymentvoucherdetailform',
 
-  title : 'Add / Edit Paymentvoucher Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,37 +13,51 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 	
   initComponent: function() {
 	
-		 var me = this; 
-    
-    var remoteJsonStoreType = Ext.create(Ext.data.JsonStore, {
-			storeId : 'type_search',
-			fields	: [
-			 		{
-						name : 'payable_source_code',
-						mapping : "source_code"
-					} ,
-          {
-						name : 'payable_amount',
-						mapping : "amount"
-					} ,
-					{
-						name : 'payable_id',
-						mapping : "id"
-					}  
-			],
-			
-		 
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_payable',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
+	
+    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
+		type : 'array',
+		storeId : 'sales_status_search',
+		fields	: [ 
+			{ name : "is_service"}, 
+			{ name : "is_service_text"}  
+		], 
+		data : [
+			{ is_service : false, is_service_text : "Trading"},
+			{ is_service : true, is_service_text : "Service"}
+		] 
+	});
+	
+	
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
+		fields	: [
+		 		{
+					name : 'item_sku',
+					mapping : "sku"
+				}, 
+				{
+					name : 'item_name',
+					mapping : 'name'
+				},
+				{
+					name : 'item_id',
+					mapping : "id"
+				}, 
+	 
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_items',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+		
+	
 	 
 		
     this.items = [{
@@ -61,38 +75,80 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-				{
+			{
 	        xtype: 'hidden',
-	        name : 'payment_voucher_id',
-	        fieldLabel: 'payment_voucher_id'
-	      },{
-		      xtype: 'displayfield',
-	        name : 'paymentvoucher_code',
-	        fieldLabel: 'Kode Paymentvoucher'
-		    },
-				{
-					fieldLabel: 'PaymentRequest',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'payable_source_code',
-					valueField : 'payable_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{payable_id}">' + 
-													'<div class="combo-name">{payable_source_code}</div>' +
-                          '<div class="combo-name">{payable_amount}</div>' + 
-							 					'</div>';
-						}
-					},
-					name : 'payable_id' 
+	        name : 'sales_order_id',
+	        fieldLabel: 'sales_order_id'
+	      },
+	      {
+            xtype: 'displayfield',
+            name : 'sales_order_code',
+            fieldLabel: 'Kode SalesOrder'
+        },
+			{
+				fieldLabel: 'Status',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'is_service_text',
+				valueField : 'is_service',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : localJsonStoreStatus , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{is_service_text}">' +  
+												'<div class="combo-name">{is_service_text}</div>' +  
+						 					'</div>';
+					}
 				},
+				name : 'is_service' 
+			},
+			{
+				fieldLabel: 'Item',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'item_name',
+				valueField : 'item_id',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : remoteJsonStoreItem , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{item_name}">' +  
+												'<div class="combo-name">'  + 
+															" ({item_name}) " 		+ "<br />" 	 + 
+															'{item_sku}' 			+  
+												 "</div>" +  
+						 					'</div>';
+					}
+				},
+				name : 'item_id' 
+			},
 				
+			{
+    	        xtype: 'textfield',
+    	        name : 'amount',
+    	        fieldLabel: 'Quantity'
+    	     },
+    	     {
+    	        xtype: 'displayfield',
+    	        name : 'item_uom_name',
+    	        fieldLabel: 'UoM'
+    	     },
+    	     {
+    	        xtype: 'textfield',
+    	        name : 'price',
+    	        fieldLabel: 'Value per item'
+    	     },
+		
+	 
+			
 			
 			]
     }];
@@ -109,22 +165,37 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedAccount: function( account_id ){
+	setSelectedItem: function( item_id ){
 		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('payable_id'); 
+		var comboBox = this.down('form').getForm().findField('item_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : account_id 
+				selected_id : item_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( payable_id );
+				comboBox.setValue( item_id );
 			}
 		});
 	},
 	
+	setSelectedStatus: function( is_service ){
+		// console.log("inside set selected original account id ");
+		var comboBox = this.down('form').getForm().findField('is_service'); 
+		var me = this; 
+		var store = comboBox.store;  
+		store.load({
+			params: {
+				selected_id : is_service 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( is_service );
+			}
+		});
+	},
 	
 	
 	setComboBoxData : function( record){
@@ -132,12 +203,14 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 		me.setLoading(true);
 		
 		
-		me.setSelectedAccount( record.get("account_id")  ) ; 
+		me.setSelectedItem( record.get("item_id")  ) ; 
+		me.setSelectedStatus( record.get("is_service")  ) ; 
 	},
 	
+	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('paymentvoucher_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('payment_voucher_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
 	}
  
 });

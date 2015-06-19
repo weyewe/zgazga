@@ -8,26 +8,26 @@ Ext.define('AM.view.operation.paymentvoucher.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-      
-      { header: 'Code',  dataIndex: 'code', flex: 1},
-			{ header: 'Vendor',  dataIndex: 'vendor_name', flex: 1},
-      { header: 'CashBank',  dataIndex: 'cash_bank_name', flex: 1},
-			{	header: 'Total Amount', dataIndex: 'amount', flex: 1 },
-		  {	header: 'Tanggal Pembayaran', dataIndex: 'payment_date', flex: 1 },    
-			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 },
-		  {	header: 'Konfirmasi', dataIndex: 'is_confirmed', flex: 1 },
-      {	header: 'Tanggal Konfirmasi', dataIndex: 'confirmed_at', flex: 1 },
+			{ header: 'Kode',  dataIndex: 'code', flex: 1},
+			{	header: 'Description', dataIndex: 'description', flex: 2 },
+			
+			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
+			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
+			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
+		 
+			
+			
 			
 			
  
-// 			{
-// 				xtype : 'templatecolumn',
-// 				text : "Transaksi",
-// 				flex : 3,
-// 				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-// 							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-// 							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
-// 			},
+			{
+				xtype : 'templatecolumn',
+				text : "Transaksi",
+				flex : 3,
+				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+			},
 			
 			
 		];

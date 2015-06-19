@@ -24,9 +24,12 @@ gem 'simple_form'
 
 
 # gem 'wicked_pdf'
+gem 'wicked_pdf'
 gem 'dropbox-sdk'
 gem 'httparty'
 gem 'json'
+gem 'rjb' 
+ 
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -56,7 +59,8 @@ gem 'devise'
 gem "kaminari"  
 gem 'uuidtools'
 
-gem 'bootstrap-sass', '~> 2.3.1.0'
+# gem 'bootstrap-sass', '~> 2.3.1.0'
+gem 'bootstrap-sass'
 # gem 'the_role' #, '~> 2.5.2'
 # gem 'the_role_bootstrap3_ui'
 # gem 'the_role', '~> 3.0.0'

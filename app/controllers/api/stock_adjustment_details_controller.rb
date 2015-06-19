@@ -67,10 +67,8 @@ class Api::StockAdjustmentDetailsController < Api::BaseApiController
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }
-        }  
+      }  
     end
   end
- 
   
- 
 end

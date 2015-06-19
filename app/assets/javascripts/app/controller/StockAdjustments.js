@@ -17,7 +17,7 @@ Ext.define('AM.controller.StockAdjustments', {
 			selector: 'stockadjustmentlist'
 		},
 		{
-			ref : 'childList',
+			ref : 'stockAdjustmentDetailList',
 			selector : 'stockadjustmentdetaillist'
 		},
 		
@@ -123,7 +123,7 @@ Ext.define('AM.controller.StockAdjustments', {
     var view = Ext.widget('stockadjustmentform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +345,20 @@ Ext.define('AM.controller.StockAdjustments', {
   },
 
 	updateChildGrid: function(record){
-		var stockAdjustmentDetailGrid = this.getChildList();
-		// stockAdjustmentDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		stockAdjustmentDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getStockAdjustmentDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		stockAdjustmentDetailGrid.getStore().getProxy().extraParams.stockadjustment_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.stock_adjustment_id =  record.get('id') ;
 		 
-		stockAdjustmentDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				stock_adjustment_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				stockAdjustmentDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

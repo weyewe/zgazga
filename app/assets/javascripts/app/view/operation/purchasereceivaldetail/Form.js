@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.purchasereceivaldetailform',
 
-  title : 'Add / Edit PurchaseReceival Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -56,7 +56,6 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 			autoLoad : false 
 		});
 		
-	
 	 
 		
     this.items = [{
@@ -120,8 +119,7 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
     	     },
 		
 	 
-			
-		]
+			]
     }];
 
     this.buttons = [{
@@ -135,7 +133,7 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 
     this.callParent(arguments);
   },
-
+  
 	setSelectedPurchaseOrderDetail: function( purchase_order_detail_id ){
 		// console.log("inside set selected original account id ");
 		var comboBox = this.down('form').getForm().findField('purchase_order_detail_id'); 
@@ -152,8 +150,6 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 		});
 	},
 	
-	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -161,6 +157,7 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 		
 		me.setSelectedPurchaseOrderDetail( record.get("purchase_order_detail_id")  ) ;  
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('purchase_receival_code').setValue(record.get('code')); 

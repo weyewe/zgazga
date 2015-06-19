@@ -1,8 +1,7 @@
 Ext.define('AM.model.PurchaseReceivalDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
+ 
  
 	
 	
@@ -24,7 +23,6 @@ Ext.define('AM.model.PurchaseReceivalDetail', {
     	    { name: 'purchase_order_detail_item_uom_name', type: 'string' }, 
 			
 	 
-			
 			
   	],
 

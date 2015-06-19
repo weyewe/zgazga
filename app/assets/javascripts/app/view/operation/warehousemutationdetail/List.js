@@ -14,7 +14,6 @@ Ext.define('AM.view.operation.warehousemutationdetail.List' ,{
       		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
 			
 			
-			 
 		];
 		
 

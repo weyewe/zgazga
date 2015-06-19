@@ -17,7 +17,7 @@ Ext.define('AM.controller.PurchaseReceivals', {
 			selector: 'purchasereceivallist'
 		},
 		{
-			ref : 'childList',
+			ref : 'purchaseReceivalDetailList',
 			selector : 'purchasereceivaldetaillist'
 		},
 		
@@ -123,7 +123,7 @@ Ext.define('AM.controller.PurchaseReceivals', {
     var view = Ext.widget('purchasereceivalform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +345,20 @@ Ext.define('AM.controller.PurchaseReceivals', {
   },
 
 	updateChildGrid: function(record){
-		var purchaseReceivalDetailGrid = this.getChildList();
-		// purchaseReceivalDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		purchaseReceivalDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getPurchaseReceivalDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		purchaseReceivalDetailGrid.getStore().getProxy().extraParams.purchasereceival_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.purchase_receival_id =  record.get('id') ;
 		 
-		purchaseReceivalDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				purchase_receival_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				purchaseReceivalDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

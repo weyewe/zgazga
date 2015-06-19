@@ -1,18 +1,34 @@
 Ext.define('AM.model.PaymentRequest', {
   	extend: 'Ext.data.Model',
   	fields: [
-    	{ name: 'id', type: 'int' },
-			{ name: 'vendor_name', type: 'string' },
-			{ name: 'vendor_id', type: 'int' },
-      { name: 'code', type: 'string' },
-      { name: 'amount', type: 'string' },
-      { name: 'description', type: 'string' },
-      { name: 'request_date', type: 'string' },
-      { name: 'confirmed_at', type: 'string' },
-		  { name: 'is_confirmed', type: 'boolean' },
+
+    	    { name: 'id', type: 'int' },
+    	    { name: 'sales_date', type: 'string' },
+			{ name: 'nomor_surat', type: 'string' } ,
+			{ name: 'code', type: 'string' } ,
+			
+			{ name: 'contact_id', type: 'int' },
+    	    { name: 'contact_name', type: 'string' },
+    	    
+    	    { name: 'employee_id', type: 'int' },
+    	    { name: 'employee_name', type: 'string' },
+    	    
+    	    { name: 'exchange_id', type: 'int' },
+    	    { name: 'exchange_name', type: 'string' },
+			
+			{ name: 'is_confirmed', type: 'boolean' } , 
+			{ name: 'confirmed_at', type: 'string' }   ,
+			
+			
   	],
+
+	 
+
+
    
-  	idProperty: 'id' ,proxy: {
+  	idProperty: 'id' ,
+
+		proxy: {
 			url: 'api/payment_requests',
 			type: 'rest',
 			format: 'json',

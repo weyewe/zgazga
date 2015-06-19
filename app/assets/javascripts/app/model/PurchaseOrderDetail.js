@@ -1,11 +1,8 @@
 Ext.define('AM.model.PurchaseOrderDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
  
-	
-	
+
 	        { name: 'purchase_order_id', type: 'int' }, 
 	 
     	    { name: 'id', type: 'int' },
@@ -20,9 +17,6 @@ Ext.define('AM.model.PurchaseOrderDetail', {
     	    
     	    { name: 'item_uom_id', type: 'int' },
     	    { name: 'item_uom_name', type: 'string' }, 
-    	    
-	 
-			
 			
   	],
 

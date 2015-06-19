@@ -2,18 +2,15 @@ Ext.define('AM.view.operation.cashbankmutation.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmcashbankmutationform',
 
-  title : 'Unconfirm',
+  title : 'Unconfirm CashBankMutation',
   layout: 'fit',
-	width	: 500,
+	width	: 400,
   autoShow: true,  // does it need to be called?
 	modal : true, 
 // win.show() 
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-		
-		
-		
     this.items = [{
       xtype: 'form',
 			msgTarget	: 'side',
@@ -24,24 +21,24 @@ Ext.define('AM.view.operation.cashbankmutation.UnconfirmForm', {
 					anchor: '100%'
       },
       items: [
-        {
-	        xtype: 'hidden',
-	        name : 'id',
-	        fieldLabel: 'id'
-	      },
+
 				{
 					xtype: 'displayfield',
-					fieldLabel: 'Code ',
+					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-		 
-				
+			 
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Tanggal Konfirmasi',
+					name: 'confirmed_at' 
+				}
 			]
     }];
 
     this.buttons = [{
       text: 'Unconfirm',
-      action: 'unconfirm'
+      action: 'confirm'
     }, {
       text: 'Cancel',
       scope: this,
@@ -52,6 +49,9 @@ Ext.define('AM.view.operation.cashbankmutation.UnconfirmForm', {
   },
 
 	setParentData: function( record ) {
+		// console.log("Inside set Parent Data");
+// d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('confirmed_at').setValue(record.get('confirmed_at')); 
 	}
 });

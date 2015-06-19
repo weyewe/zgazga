@@ -11,11 +11,9 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	 
-   
-		
-    var remoteJsonStoreType = Ext.create(Ext.data.JsonStore, {
-			storeId : 'type_search',
+	
+    var remoteJsonStoreSource = Ext.create(Ext.data.JsonStore, {
+			storeId : 'source_cb',
 			fields	: [
 			 		{
 						name : 'cash_bank_name',
@@ -42,8 +40,8 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 			autoLoad : false 
 		});
     
-     var remoteJsonStoreType2 = Ext.create(Ext.data.JsonStore, {
-			storeId : 'type_search',
+     var remoteJsonStoreTarget = Ext.create(Ext.data.JsonStore, {
+			storeId : 'target_cb',
 			fields	: [
 			 		{
 						name : 'cash_bank_name',
@@ -69,6 +67,8 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 			},
 			autoLoad : false 
 		});
+    
+    
     
     this.items = [{
       xtype: 'form',
@@ -80,78 +80,78 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 					anchor: '100%'
       },
       items: [
-				{
-	        xtype: 'hidden',
-	        name : 'id',
-	        fieldLabel: 'id'
-	      },
-        {
-	        xtype: 'displayfield',
-	        name : 'code',
-	        fieldLabel: 'Code'
-	      },
-				{
-					fieldLabel: 'Source CashBank',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'cash_bank_name',
-					valueField : 'cash_bank_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType2 , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{cash_bank_name}">' + 
-													'<div class="combo-name">{cash_bank_name}</div>' + 
-                          '<div class="combo-name">{cash_bank_amount}</div>'
-							 					'</div>';
-						}
-					},
-					name : 'source_cash_bank_id' 
+			{
+		        xtype: 'hidden',
+		        name : 'id',
+		        fieldLabel: 'id'
+	       },
+    		 {
+		        xtype: 'displayfield',
+		        name : 'code',
+		        fieldLabel: 'Code'
+	       },
+			{
+				fieldLabel: 'Source CashBank',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'cash_bank_name',
+				valueField : 'cash_bank_id',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : remoteJsonStoreSource , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{cash_bank_name}">' + 
+												'<div class="combo-name">{cash_bank_name}</div>' + 
+                      '<div class="combo-name">{cash_bank_amount}</div>'
+						 					'</div>';
+					}
 				},
-        {
-					fieldLabel: 'Target CashBank',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'cash_bank_name',
-					valueField : 'cash_bank_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{cash_bank_name}">' + 
-													'<div class="combo-name">{cash_bank_name}</div>' + 
-                          '<div class="combo-name">{cash_bank_amount}</div>'
-							 					'</div>';
-						}
-					},
-					name : 'target_cash_bank_id' 
-				},,
+				name : 'source_cash_bank_id' 
+			},
+    	   {
+				fieldLabel: 'Target CashBank',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'cash_bank_name',
+				valueField : 'cash_bank_id',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : remoteJsonStoreTarget , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{cash_bank_name}">' + 
+												'<div class="combo-name">{cash_bank_name}</div>' + 
+                      '<div class="combo-name">{cash_bank_amount}</div>'
+						 					'</div>';
+					}
+				},
+				name : 'target_cash_bank_id' 
+			},,
        
-        {
-					xtype: 'numberfield',
-					name : 'amount',
-					fieldLabel: 'Amount'
-				},
-        {
-					xtype: 'datefield',
-					name : 'mutation_date',
-					fieldLabel: 'Tanggal Adjust',
-					format: 'Y-m-d',
-				},
-         {
-					xtype: 'textarea',
-					name : 'description',
-					fieldLabel: 'Deskripsi'
-				},
-			]
+    	    {
+				xtype: 'numberfield',
+				name : 'amount',
+				fieldLabel: 'Amount'
+			},
+    	   {
+				xtype: 'datefield',
+				name : 'mutation_date',
+				fieldLabel: 'Tanggal Adjust',
+				format: 'Y-m-d',
+			},
+        	{
+				xtype: 'textarea',
+				name : 'description',
+				fieldLabel: 'Deskripsi'
+			},
+		]
     }];
 
     this.buttons = [{
@@ -165,8 +165,9 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 
     this.callParent(arguments);
   },
-
-  setSelectedType: function( source_cash_bank_id ){
+  
+  
+    setSelectedCashBankSource: function( source_cash_bank_id ){
       var comboBox = this.down('form').getForm().findField('source_cash_bank_id'); 
       var me = this; 
       var store = comboBox.store;  
@@ -181,7 +182,7 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
       });
     },
 
-   setSelectedStatus: function( target_cash_bank_id ){
+   setSelectedCashBankTarget: function( target_cash_bank_id ){
       var comboBox = this.down('form').getForm().findField('target_cash_bank_id'); 
       var me = this; 
       var store = comboBox.store;  
@@ -196,14 +197,15 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
       });
     },
   
+  
+
 	setComboBoxData : function( record){
 		
 		var me = this; 
 		me.setLoading(true);
-    
-    console.log( record.get("status"));
-		me.setSelectedStatus( record.get("target_cash_bank_id")  ) ; 
-		me.setSelectedType( record.get("source_cash_bank_id")  ) ; 
-  }
+     
+		me.setSelectedCashBankTarget( record.get("target_cash_bank_id")  ) ; 
+		me.setSelectedCashBankSource( record.get("source_cash_bank_id")  ) ; 
+	}
 });
 

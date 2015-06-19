@@ -29,7 +29,6 @@ Ext.define('AM.model.SalesInvoice', {
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
 			
-	 
 			
 			
   	],

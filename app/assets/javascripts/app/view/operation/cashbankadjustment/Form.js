@@ -11,7 +11,7 @@ Ext.define('AM.view.operation.cashbankadjustment.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	 
+	
     var localJsonStoreStatus = Ext.create(Ext.data.Store, {
 			type : 'array',
 			storeId : 'status_selector',
@@ -25,7 +25,7 @@ Ext.define('AM.view.operation.cashbankadjustment.Form', {
 			] 
 		});
 		
-    var remoteJsonStoreType = Ext.create(Ext.data.JsonStore, {
+    var remoteJsonStoreCashBank = Ext.create(Ext.data.JsonStore, {
 			storeId : 'type_search',
 			fields	: [
 			 		{
@@ -68,66 +68,68 @@ Ext.define('AM.view.operation.cashbankadjustment.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-				{
-					fieldLabel: 'CashBank',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'cash_bank_name',
-					valueField : 'cash_bank_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{cash_bank_name}">' + 
-													'<div class="combo-name">{cash_bank_name}</div>' + 
-                          '<div class="combo-name">{cash_bank_amount}</div>'
-							 					'</div>';
-						}
-					},
-					name : 'cash_bank_id' 
+			{
+				fieldLabel: 'CashBank',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'cash_bank_name',
+				valueField : 'cash_bank_id',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : remoteJsonStoreCashBank , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{cash_bank_name}">' + 
+												'<div class="combo-name">{cash_bank_name}</div>' + 
+                      '<div class="combo-name">{cash_bank_amount}</div>'
+						 					'</div>';
+					}
 				},
+				name : 'cash_bank_id' 
+			},
        
-        {
+        	{
 					xtype: 'numberfield',
 					name : 'amount',
 					fieldLabel: 'Amount'
+			},
+        	{
+				fieldLabel: 'Status',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'status_text',
+				valueField : 'status',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : localJsonStoreStatus,
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{status_text}">' +  
+												'<div class="combo-name">{status_text}</div>' +
+						 					'</div>';
+					}
 				},
-        {
-					fieldLabel: 'Status',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'status_text',
-					valueField : 'status',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : localJsonStoreStatus,
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{status_text}">' +  
-													'<div class="combo-name">{status_text}</div>' +
-							 					'</div>';
-						}
-					},
-					name : 'status' 
-				},
-        {
-					xtype: 'datefield',
-					name : 'adjustment_date',
-					fieldLabel: 'Tanggal Adjust',
-					format: 'Y-m-d',
-				},
-        {
-					xtype: 'textarea',
-					name : 'description',
-					fieldLabel: 'Deskripsi'
-				},
+				name : 'status' 
+			},
+    	  {
+				xtype: 'datefield',
+				name : 'adjustment_date',
+				fieldLabel: 'Tanggal Adjust',
+				format: 'Y-m-d',
+			},
+    	  {
+				xtype: 'textarea',
+				name : 'description',
+				fieldLabel: 'Deskripsi'
+			},
+			
+			
 			]
     }];
 
@@ -143,7 +145,9 @@ Ext.define('AM.view.operation.cashbankadjustment.Form', {
     this.callParent(arguments);
   },
 
-  setSelectedType: function( cash_bank_id ){
+
+
+  setSelectedCashBank: function( cash_bank_id ){ 
       var comboBox = this.down('form').getForm().findField('cash_bank_id'); 
       var me = this; 
       var store = comboBox.store;  
@@ -173,14 +177,12 @@ Ext.define('AM.view.operation.cashbankadjustment.Form', {
       });
     },
   
-	setComboBoxData : function( record){
-		
+	setComboBoxData : function( record){ 
 		var me = this; 
 		me.setLoading(true);
-    
-    console.log( record.get("status"));
-		me.setSelectedStatus( record.get("status")  ) ; 
-		me.setSelectedType( record.get("cash_bank_id")  ) ; 
-  }
+     
+		// me.setSelectedStatus( record.get("status")  ) ; 
+		me.setSelectedCashBank( record.get("cash_bank_id")  ) ; 
+	}
 });
 

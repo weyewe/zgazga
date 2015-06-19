@@ -12,8 +12,8 @@ Ext.define('AM.view.operation.purchaseinvoice.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
+			var me = this; 
 	
-	var me = this; 
 	
 	var remoteJsonStorePurchaseReceival = Ext.create(Ext.data.JsonStore, {
 		storeId : 'purchase_receival_search',
@@ -45,6 +45,7 @@ Ext.define('AM.view.operation.purchaseinvoice.Form', {
 		},
 		autoLoad : false 
 	});
+		
 		
     this.items = [{
       xtype: 'form',
@@ -142,7 +143,6 @@ Ext.define('AM.view.operation.purchaseinvoice.Form', {
     this.callParent(arguments);
   },
   
-  
   setSelectedPurchaseReceival: function( purchase_receival_id ){
 		var comboBox = this.down('form').getForm().findField('purchase_receival_id'); 
 		var me = this; 
@@ -160,15 +160,17 @@ Ext.define('AM.view.operation.purchaseinvoice.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		
+	setComboBoxData : function( record){ 
+
 		var me = this; 
 		me.setLoading(true);
 		
 		me.setSelectedPurchaseReceival( record.get("purchase_receival_id")  ) ;
+ 
 	}
  
 });
+
 
 
 

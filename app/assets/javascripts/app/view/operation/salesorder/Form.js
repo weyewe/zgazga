@@ -12,8 +12,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	
-	var me = this; 
+			var me = this; 
 	
 	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
 		storeId : 'contact_search',
@@ -36,7 +35,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_customer',
+			url : 'api/search_customers',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -107,6 +106,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		},
 		autoLoad : false 
 	});
+	 
 		
     this.items = [{
       xtype: 'form',
@@ -118,7 +118,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 					anchor: '100%'
       },
       items: [
-    					{
+   					{
         	        xtype: 'hidden',
         	        name : 'id',
         	        fieldLabel: 'id'
@@ -213,7 +213,6 @@ Ext.define('AM.view.operation.salesorder.Form', {
     					},
     					name : 'exchange_id' 
     				},
-			
 			]
     }];
 
@@ -229,8 +228,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
     this.callParent(arguments);
   },
   
-  
-  setSelectedContact: function( contact_id ){
+    setSelectedCustomer: function( contact_id ){
 		var comboBox = this.down('form').getForm().findField('contact_id'); 
 		var me = this; 
 		var store = comboBox.store; 
@@ -281,17 +279,20 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		
+	setComboBoxData : function( record){ 
+
 		var me = this; 
 		me.setLoading(true);
 		
-		me.setSelectedContact( record.get("contact_id")  ) ;
+		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
 		me.setSelectedEmployee( record.get("employee_id")  ) ;
 		me.setSelectedExchange( record.get("exchange_id")  ) ;
+		me.setSelectedCustomer( record.get("contact_id")  ) ;
+ 
 	}
  
 });
+
 
 
 

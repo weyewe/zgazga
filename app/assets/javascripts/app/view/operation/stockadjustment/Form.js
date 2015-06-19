@@ -12,8 +12,7 @@ Ext.define('AM.view.operation.stockadjustment.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	
-	var me = this; 
+			var me = this; 
 	
 	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
 		storeId : 'warehouse_search',
@@ -116,7 +115,40 @@ Ext.define('AM.view.operation.stockadjustment.Form', {
     this.callParent(arguments);
   },
   
-  
+    setSelectedCustomer: function( contact_id ){
+		var comboBox = this.down('form').getForm().findField('contact_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : contact_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( contact_id );
+			}
+		});
+	},
+	
+	setSelectedEmployee: function( employee_id ){
+		var comboBox = this.down('form').getForm().findField('employee_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : employee_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( employee_id );
+			}
+		});
+	},
+	
   setSelectedWarehouse: function( warehouse_id ){
 		var comboBox = this.down('form').getForm().findField('warehouse_id'); 
 		var me = this; 
@@ -134,15 +166,17 @@ Ext.define('AM.view.operation.stockadjustment.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		
+	setComboBoxData : function( record){ 
+
 		var me = this; 
 		me.setLoading(true);
 		
 		me.setSelectedWarehouse( record.get("warehouse_id")  ) ;
+ 
 	}
  
 });
+
 
 
 

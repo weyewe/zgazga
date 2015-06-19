@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.warehousemutationdetailform',
 
-  title : 'Add / Edit WarehouseMutation Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,40 +13,36 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 	
   initComponent: function() {
 	
-		
-		
-		var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-			storeId : 'item_search',
-			fields	: [
-			 		{
-						name : 'item_sku',
-						mapping : "sku"
-					}, 
-					{
-						name : 'item_name',
-						mapping : 'name'
-					},
-					{
-						name : 'item_id',
-						mapping : "id"
-					}, 
-		 
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_items',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
-		
-	
+
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
+		fields	: [
+		 		{
+					name : 'item_sku',
+					mapping : "sku"
+				}, 
+				{
+					name : 'item_name',
+					mapping : 'name'
+				},
+				{
+					name : 'item_id',
+					mapping : "id"
+				}, 
 	 
-		
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_items',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+	
     this.items = [{
       xtype: 'form',
 			msgTarget	: 'side',
@@ -105,7 +101,9 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 		
 	 
 			
-		]
+			
+			
+			]
     }];
 
     this.buttons = [{
@@ -137,7 +135,6 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 	},
 	
 	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -145,6 +142,7 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 		
 		me.setSelectedItem( record.get("item_id")  ) ;  
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('warehouse_mutation_code').setValue(record.get('code')); 

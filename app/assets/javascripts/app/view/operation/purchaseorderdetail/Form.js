@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.purchaseorderdetailform',
 
-  title : 'Add / Edit PurchaseOrder Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -12,7 +12,7 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-		
+	
 		
 		var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
 			storeId : 'item_search',
@@ -43,7 +43,6 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 			autoLoad : false 
 		});
 		
-	
 	 
 		
     this.items = [{
@@ -114,7 +113,10 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 		
 	 
 			
-		]
+	 
+			
+			
+			]
     }];
 
     this.buttons = [{
@@ -145,7 +147,6 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 		});
 	},
 	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -153,6 +154,7 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 		
 		me.setSelectedItem( record.get("item_id")  ) ; 
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('purchase_order_code').setValue(record.get('code')); 

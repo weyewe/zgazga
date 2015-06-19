@@ -11,13 +11,12 @@ class Api::StockAdjustmentsController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch)
          )
-
-       }.page(params[:page]).per(params[:limit]).order("stock_adjustments.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
        @total = StockAdjustment.active_objects.joins(:warehouse).where{
          (
            ( description =~  livesearch ) | 
-           ( code =~ livesearch) | 
+           ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch)
          )
        }.count
@@ -41,12 +40,14 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     @object = StockAdjustment.create_object( params[:stock_adjustment])
  
     if @object.errors.size == 0 
-      
+
+    
       render :json => { :success => true, 
                         :stock_adjustments => [
                           :id => @object.id, 
+                          :warehouse_id => @object.warehouse_id, 
                           :code => @object.code ,
-                          :description => @object.description ,
+                          :description => @object.description , 
                           :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
@@ -75,11 +76,13 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     render :json => { :success => true,   
                       :stock_adjustments => [
                           :id => @object.id, 
+                          :warehouse_id => @object.warehouse_id, 
+                          :warehouse_name => @object.warehouse_id, 
                           :code => @object.code ,
-                          :description => @object.description ,
+                          :description => @object.description , 
                           :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => StockAdjustment.active_objects.count  }
@@ -99,7 +102,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:stock_adjustment][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:stock_adjustment][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -117,7 +120,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -136,12 +139,13 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :stock_adjustments => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :description => @object.description ,
-                            :adjustment_date => format_date_friendly(@object.adjustment_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :warehouse_id => @object.warehouse_id, 
+                          :code => @object.code ,
+                          :description => @object.description , 
+                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => StockAdjustment.active_objects.count  } 
     else
@@ -163,7 +167,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
     @object = StockAdjustment.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => StockAdjustment.active_objects.count }  
     else
       render :json => { :success => false, :total => StockAdjustment.active_objects.count, 
@@ -189,26 +193,27 @@ class Api::StockAdjustmentsController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = StockAdjustment.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = StockAdjustment.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = StockAdjustment.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     
