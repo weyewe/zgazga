@@ -30,6 +30,8 @@ gem 'httparty'
 gem 'json'
 gem 'rjb' 
 
+gem 'wkhtmltopdf-binary'
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
