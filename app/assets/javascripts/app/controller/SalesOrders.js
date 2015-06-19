@@ -58,6 +58,10 @@ Ext.define('AM.controller.SalesOrders', {
 			'salesorderProcess salesorderlist button[action=confirmObject]': {
         click: this.confirmObject
       },
+      
+      'salesorderProcess salesorderlist button[action=downloadObject]': {
+        click: this.downloadObject
+			}	,
 
 			'salesorderProcess salesorderlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
@@ -389,6 +393,16 @@ Ext.define('AM.controller.SalesOrders', {
 		        //do something whether the load succeeded or failed
 		    }
 		});
+	},
+	
+	
+		downloadObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id")
+			if( record ){
+				window.open( 'sales_orders/' + id + '.pdf' );
+			}
+			
 	},
 
 	

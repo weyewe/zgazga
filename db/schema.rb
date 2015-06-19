@@ -241,7 +241,6 @@ ActiveRecord::Schema.define(version: 20150618045842) do
   end
 
   create_table "core_builders", force: true do |t|
-    t.string   "base_sku"
     t.string   "sku_used_core"
     t.string   "sku_new_core"
     t.integer  "used_core_item_id"
@@ -249,8 +248,6 @@ ActiveRecord::Schema.define(version: 20150618045842) do
     t.integer  "uom_id"
     t.integer  "machine_id"
     t.string   "core_builder_type_case"
-    t.string   "name"
-    t.text     "description"
     t.decimal  "cd",                     precision: 14, scale: 2, default: 0.0
     t.decimal  "tl",                     precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
@@ -621,6 +618,8 @@ ActiveRecord::Schema.define(version: 20150618045842) do
   end
 
   create_table "roller_types", force: true do |t|
+    t.string   "name"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -542,7 +542,6 @@ GEM
       chronic (>= 0.6.3)
     wicked_pdf (0.11.0)
       rails
-    wkhtmltopdf-binary (0.9.9.3)
 
 PLATFORMS
   ruby
@@ -550,7 +549,7 @@ PLATFORMS
 DEPENDENCIES
   active_record-acts_as
   awesome_nested_set
-  bootstrap-sass (~> 2.3.1.0)
+  bootstrap-sass
   coffee-rails (~> 4.0.0)
   devise
   dropbox-sdk
@@ -581,4 +580,3 @@ DEPENDENCIES
   uuidtools
   whenever
   wicked_pdf
-  wkhtmltopdf-binary
