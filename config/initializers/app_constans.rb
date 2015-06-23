@@ -233,6 +233,8 @@ BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
 
 MIGRATION_FILENAME = {
   :contact_group => 'ContactGroup.csv',
-  :contact =>  'Contact.csv'
+  :contact =>  'Contact.csv',
+  :user => 'UserAccounts.csv',
+  :employee => 'Employees.csv'
   
 } 
