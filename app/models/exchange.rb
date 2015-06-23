@@ -20,7 +20,7 @@ class Exchange < ActiveRecord::Base
   
   def self.create_object_for_base_exchange
     new_object  = self.new
-    new_object.name = "IDR"
+    new_object.name = EXCHANGE_BASE_NAME
     new_object.description = ""
     new_object.is_base = true
     new_object.save

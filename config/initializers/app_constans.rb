@@ -244,3 +244,5 @@ MIGRATION_FILENAME = {
   :coa => 'Accounts.csv'
   
 } 
+
+EXCHANGE_BASE_NAME = "Rupiah"

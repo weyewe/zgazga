@@ -37,7 +37,7 @@ namespace :migrate_zga do
                         
             is_base = false
             is_base = true if row[3] == "True" 
-            next if is_base  
+            
              
             
             is_deleted = false
@@ -46,13 +46,19 @@ namespace :migrate_zga do
              
               
             
-  
-            object = Exchange.create_object( 
-                        :name                      => name , 
-                        :description                      => description  
+            object = nil 
+            
+            if not is_base
+              object = Exchange.create_object( 
+                        :name           => name , 
+                        :description    => description  
                 )
                 
-            object.errors.messages.each {|x| puts "Error: #{x}" } 
+              object.errors.messages.each {|x| puts "Error: #{x}" } 
+            else
+              object = Exchange.find_by_name EXCHANGE_BASE_NAME
+            end
+            
                 
 
             result_array << [ id , object.id , object.name, object.description  ] 
@@ -74,8 +80,8 @@ namespace :migrate_zga do
   task :cash_bank => :environment do  
 
     exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] ) 
-  puts "exchange_mapping_hash: >>>>>>>>>>>>>>>>>\n\n"
-  puts exchange_mapping_hash
+  # puts "exchange_mapping_hash: >>>>>>>>>>>>>>>>>\n\n"
+  # puts exchange_mapping_hash
     
     migration_filename = MIGRATION_FILENAME[:cash_bank]
     original_location =   original_file_location( migration_filename )
