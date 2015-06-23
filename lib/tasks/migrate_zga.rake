@@ -13,6 +13,20 @@ def lookup_file_location(  migration_filename)
   BASE_MIGRATION_LOOKUP_LOCATION + '/' + migration_filename
 end
 
+def get_mapping_hash( filename) 
+  file_location = lookup_file_location(  filename ) 
+  
+  hash =  {} 
+  
+  CSV.open(file_location, 'r') do |csv| 
+      csv.each do |row| 
+        hash[ row[0] ]  = row[1] 
+      end
+  end
+  
+  return hash 
+end
+
 namespace :migrate_zga do 
 
   task :contact_group => :environment do  
@@ -61,19 +75,7 @@ namespace :migrate_zga do
     puts "Done migrating contact group. Total contact_group: #{ContactGroup.count}"
   end
   
-  def get_mapping_hash( filename) 
-    file_location = lookup_file_location(  filename ) 
-    
-    hash =  {} 
-    
-    CSV.open(file_location, 'r') do |csv| 
-        csv.each do |row| 
-          hash[ row[0] ]  = row[1] 
-        end
-    end
-    
-    return hash 
-  end
+
   
   task :contact => :environment do
     
