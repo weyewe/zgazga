@@ -24,6 +24,14 @@ class Exchange < ActiveRecord::Base
     new_object.description = ""
     new_object.is_base = true
     new_object.save
+    list_account_id = Account.create_object_from_exchange(new_object)
+#       0 =  account_receivable  | 1 = gbch_receivable | 2 = account_payable | 3 = gbch_payable
+      new_object.account_receivable_id = list_account_id[0]
+      new_object.gbch_receivable_id = list_account_id[1]
+      new_object.account_payable_id = list_account_id[2]
+      new_object.gbch_payable_id = list_account_id[3]
+      new_object.save
+
     return new_object
   end
   

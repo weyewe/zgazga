@@ -87,11 +87,13 @@ namespace :migrate_zga do
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     result_array = [] 
-   
+    awesome_row_counter = - 1 
     
-    #   Id,Name,Address,DeliveryAddress,NPWP,Description,ContactNo,PIC,PICContactNo,Email,IsTaxable,TaxCode,IsDeleted,CreatedAt,UpdatedAt,DeletedAt,ContactType,DefaultPaymentTerm,NamaFakturPajak,ContactGroupId
     CSV.open(original_location, 'r') do |csv| 
         csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
           id = row[0]
           contact_group_id = row[1]
           name = row[2]

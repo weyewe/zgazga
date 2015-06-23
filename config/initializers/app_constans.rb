@@ -235,6 +235,10 @@ MIGRATION_FILENAME = {
   :contact_group => 'ContactGroup.csv',
   :contact =>  'Contact.csv',
   :user => 'UserAccounts.csv',
-  :employee => 'Employees.csv'
+  :employee => 'Employees.csv',
+  :item_type => 'ItemTypes.csv',
+  :uom => 'UoMs.csv',
+  :warehouse => 'Warehouses.csv',
+  :coa => 'Accounts.csv'
   
 } 

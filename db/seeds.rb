@@ -70,6 +70,7 @@ data_entry = User.create_object(
   :role_id => data_entry_role.id
   )
 
+Exchange.create_object_for_base_exchange
 Account.create_base_objects
 ItemType.create_base_objects
 

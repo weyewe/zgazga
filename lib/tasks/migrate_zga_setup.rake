@@ -6,6 +6,7 @@ require 'csv'
 
 namespace :migrate_zga do 
 
+
   task :user => :environment do  
     
     admin_role = Role.find_by_name ROLE_NAME[:admin]
@@ -86,10 +87,13 @@ namespace :migrate_zga do
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     result_array = [] 
-   
+    awesome_row_counter = - 1 
     
     CSV.open(original_location, 'r') do |csv| 
         csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
           id = row[0]
           name = row[1]
           address = row[2]
@@ -104,6 +108,9 @@ namespace :migrate_zga do
           is_deleted = false
           is_deleted = true if row[6] == "True"
               
+          next if is_deleted
+          
+          
           object = Employee.create_object(
             :name       => name  , 
             :contact_no => contact_no, 
@@ -112,6 +119,10 @@ namespace :migrate_zga do
             :description => description
             
             )
+            
+            employee_count = Employee.count
+            
+            # puts "The employee_count is : #{employee_count}"
             
             
           object.errors.messages.each {|x| puts "Error: #{x}" } 
