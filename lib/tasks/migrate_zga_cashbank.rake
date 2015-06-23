@@ -152,15 +152,132 @@ namespace :migrate_zga do
     lookup_location =  lookup_file_location(  migration_filename ) 
     
     result_array = [] 
+    
+    
+    
+  
+    # simplest case: if there is no cashbank or currency 
+    
+    # only legacy involved 
+    
+    # only have: boolean column: is_legacy , and code 
+    
+    # for each row, extract the data to be shown. 
+    # if legacy: find the similar column in the database. take note of the id 
+    
+    account_mapper_hash = {} 
     awesome_row_counter = - 1
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row|
+            awesome_row_counter = awesome_row_counter + 1  
+            next if awesome_row_counter == 0 
+            
+            id = row[0]
+            code = row[1]
+            
+            name = row[3]
+            parent_id = row[6]
+            
+            
+            is_legacy = false
+            is_legacy = true if row[7] == "True"
+          
+            next if   not is_legacy  
+            
+            new_account = Account.find_by_code code 
+            if new_account.nil?
+              puts "emergency in account migration: #{id} - #{code} has no match"
+            else
+              account_mapper_hash[id] = new_account.id
+            end
+              
+        end
+    end
     
-    # create initial hash  from master data
-    # get all data which is legacy. create mapping 
     
-    # example case: in the old data, id = 5. It is used as parent_id of another account
-    # what is the new id?  => it has to migrate coa, exchange rate, and item_type together. 
-    # then, create the mapping for further migration
+    puts "the account mapper"
+    puts account_mapper_hash    #( purely created account ) 
     
+=begin
+  Next, we are having something new: non legacy, but not generated from somewhere else
+=end
+    
+      
+    awesome_row_counter = - 1
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row|
+            awesome_row_counter = awesome_row_counter + 1  
+            next if awesome_row_counter == 0 
+            
+            id = row[0]
+            code = row[1]
+            
+            name = row[3]
+            parent_id = row[6]
+            
+            
+            is_cash_bank_account = false
+            is_cash_bank_account = true if row[9] == "True" 
+            
+            is_payable_receivable = false
+            is_payable_receivable = true if row[10] == "True" 
+            
+            is_legacy = false
+            is_legacy = true if row[7] == "True"
+          
+            next if    is_legacy   or  is_cash_bank_account or  is_payable_receivable 
+            
+            is_leaf = false
+            is_leaf = true if row[8] == "True" 
+            
+            actual_account_case = ACCOUNT_CASE[:ledger] 
+            actual_account_case = ACCOUNT_CASE[:group]  if not is_leaf
+              
+            
+            new_parent_id = nil 
+            if not parent_id.nil?
+              new_parent_id = account_mapper_hash[parent_id]
+              if new_parent_id.nil?
+                puts "Shhite, the new parent id is nil... can't do anything else. current_code: #{code}"
+                puts "is_legacy: #{is_legacy}"
+              end
+            end
+
+  
+  
+
+    
+    
+
+            
+            
+            
+            new_account = Account.find_by_code code 
+            if new_account.nil?
+
+              object = Account.create_object( 
+                          :name                      => name , 
+                          :code                      => code  ,
+                          :parent_id                 => new_parent_id , 
+                          :account_case              => actual_account_case 
+                  )
+             account_mapper_hash[id] = object.id 
+            else
+              account_mapper_hash[id] = new_account.id
+            end
+              
+        end
+    end
+    
+    puts "after additional free account"
+    puts account_mapper_hash
+    
+    
+    
+    
+  
+  # account table is a self-join table. 
+  # migration strategy is to create lookup table 
 =begin
 
     Create account from cashbank: 
@@ -171,84 +288,107 @@ namespace :migrate_zga do
 =end
 
 =begin
-    Create account from Exchange: 
+    Create account from Exchange (4 accounts created): 
     
+#     create ar
     ar_account = Account.find_by_code(ACCOUNT_CODE[:piutang_usaha_level_2][:code])
     new_ar_account = self.new
     new_ar_account.code = ar_account.code + exchange.id.to_s
+    new_ar_account.name = "Account Receivable " + exchange.name.to_s
+    
+#     create ar_gbch
+    ar_gbch_account = Account.find_by_code(ACCOUNT_CODE[:piutang_gbch][:code])
+    new_ar_gbch_account = self.new
+    new_ar_gbch_account.code = ar_gbch_account.code + exchange.id.to_s
+    new_ar_gbch_account.name = "GBCH Receivable" + exchange.name.to_s
+    
+#     create ap
+    ap_account = Account.find_by_code(ACCOUNT_CODE[:hutang_usaha_level_2][:code])
+    new_ap_account = self.new
+    new_ap_account.code =  ap_account.code + exchange.id.to_s
+    new_ap_account.name = "Account Payable" + exchange.name.to_s
+    
+#     create gbch_payable
+    ap_gbch_payable_account = Account.find_by_code(ACCOUNT_CODE[:hutang_gbch][:code])
+    new_ap_gbch_payable_account = self.new
+    new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + exchange.id.to_s
+    new_ap_gbch_payable_account.name = "Account Payable" + exchange.name.to_s    
+    
+    
+    
 =end
 
+
+  
     
-    
-    
-    
+     
     
     # based on initial hash, create new data + 
-    CSV.open(original_location, 'r') do |csv| 
-        csv.each do |row|
-            awesome_row_counter = awesome_row_counter + 1  
-            next if awesome_row_counter == 0 
+    # CSV.open(original_location, 'r') do |csv| 
+    #     csv.each do |row|
+    #         awesome_row_counter = awesome_row_counter + 1  
+    #         next if awesome_row_counter == 0 
             
-            id = row[0]
-            code = row[1]
-            parse_code = row[2]
-            name = row[3]
-            parent_id = row[6]
+    #         id = row[0]
+    #         code = row[1]
+            
+    #         name = row[3]
+    #         parent_id = row[6]
             
             
-            is_legacy = row[7]
-            is_leaf = row[8]
-            is_cash_bank_account = row[9]
-            is_payable_receivable = row[10] 
+    #         is_legacy = row[7]
+    #         is_leaf = row[8]
+    #         is_cash_bank_account = row[9]
+    #         is_payable_receivable = row[10] 
             
              
             
-            is_deleted = false
-            is_deleted = true if row[13] == "True" 
-            next if is_deleted  
+    #         is_deleted = false
+    #         is_deleted = true if row[13] == "True" 
+    #         next if is_deleted  
             
-            is_legacy = false
-            is_legacy = true if row[7] == "True"
+    #         is_legacy = false
+    #         is_legacy = true if row[7] == "True"
             
-            is_leaf = false
-            is_leaf = true if row[8] == "True" 
+    #         is_leaf = false
+    #         is_leaf = true if row[8] == "True" 
             
-            is_cash_bank_account = false
-            is_cash_bank_account = true if row[9] == "True" 
+    #         is_cash_bank_account = false
+    #         is_cash_bank_account = true if row[9] == "True" 
             
-            is_payable_receivable = false
-            is_payable_receivable = true if row[10] == "True" 
+    #         is_payable_receivable = false
+    #         is_payable_receivable = true if row[10] == "True" 
             
-            next if is_legacy | is_cash_bank_account | is_payable_receivable
+    #         next if is_legacy | is_cash_bank_account | is_payable_receivable
             
-            actual_account_case = ACCOUNT_CASE[:ledger] 
-            actual_account_case = ACCOUNT_CASE[:group]  if not is_leaf
+    #         actual_account_case = ACCOUNT_CASE[:ledger] 
+    #         actual_account_case = ACCOUNT_CASE[:group]  if not is_leaf
               
             
   
-            object = Account.create_object( 
-                        :name                      => name , 
-                        :code                      => code  ,
-                        :parent_id                 => new_parent_id , 
-                        :account_case              => actual_account_case 
-                )
+            # object = Account.create_object( 
+            #             :name                      => name , 
+            #             :code                      => code  ,
+            #             :parent_id                 => new_parent_id , 
+            #             :account_case              => actual_account_case 
+            #     )
                 
-            object.errors.messages.each {|x| puts "Error: #{x}" } 
+    #         object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
 
-            result_array << [ id , object.id , object.name, object.code, object.parent_id, object.account_case  ] 
-        end
-    end
+    #         result_array << [ id , object.id , object.name, object.code, object.parent_id, object.account_case  ] 
+    #     end
+    # end
      
  
-    # write the new csv LOOKUP file ( with mapping for the ID )
-    CSV.open(lookup_location, 'w') do |csv|
-      result_array.each do |el| 
-        csv <<  el 
-      end
-    end
+    # # write the new csv LOOKUP file ( with mapping for the ID )
+    # CSV.open(lookup_location, 'w') do |csv|
+    #   result_array.each do |el| 
+    #     csv <<  el 
+    #   end
+    # end
     
-    puts "Done migrating account. Total account: #{Account.count}"
+    # puts "Done migrating account. Total account: #{Account.count}"
   end
   
 
