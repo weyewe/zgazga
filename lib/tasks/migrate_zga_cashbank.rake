@@ -34,6 +34,10 @@ namespace :migrate_zga do
             name = row[1]
             description = row[2] 
                         
+                        
+            is_base = false
+            is_base = true if row[3] == "True" 
+            next if is_base  
              
             
             is_deleted = false
@@ -70,7 +74,8 @@ namespace :migrate_zga do
   task :cash_bank => :environment do  
 
     exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] ) 
-
+  puts "exchange_mapping_hash: >>>>>>>>>>>>>>>>>\n\n"
+  puts exchange_mapping_hash
     
     migration_filename = MIGRATION_FILENAME[:cash_bank]
     original_location =   original_file_location( migration_filename )
@@ -88,15 +93,14 @@ namespace :migrate_zga do
             code = row[1]
             name = row[2]
             description = row[3]
-            exchange_id = row[4]
-            amount = row[5]
-            is_bank = row[6]
-            is_deleted = row[7]
+            exchange_id = row[4] 
             
              
+            is_bank = false
+            is_bank = true if row[6] == "True" 
             
             is_deleted = false
-            is_deleted = true if row[13] == "True" 
+            is_deleted = true if row[7] == "True" 
             next if is_deleted  
              
               
@@ -104,15 +108,15 @@ namespace :migrate_zga do
   
             object = CashBank.create_object( 
                         :name                   => name , 
-                        :description            => code  ,
-                        :is_bank                => new_parent_id , 
-                        :exchange_id            => actual_account_case 
+                        :description            => description  ,
+                        :is_bank                => is_bank , 
+                        :exchange_id            => new_exchange_id 
                 )
                 
             object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
 
-            result_array << [ id , object.id , object.name, object.code, object.parent_id, object.account_case  ] 
+            result_array << [ id , object.id , object.name, object.description, object.is_bank, object.exchange_id ] 
         end
     end
      

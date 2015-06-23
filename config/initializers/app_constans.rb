@@ -239,7 +239,7 @@ MIGRATION_FILENAME = {
   :item_type => 'ItemTypes.csv',
   :uom => 'UoMs.csv',
   :warehouse => 'Warehouses.csv',
-  :cash_banks => "CashBanks.csv",
+  :cash_bank => "CashBanks.csv",
   :exchange => "Currencies.csv",
   :coa => 'Accounts.csv'
   
