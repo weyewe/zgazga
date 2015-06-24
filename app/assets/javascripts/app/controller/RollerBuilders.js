@@ -1,62 +1,62 @@
-Ext.define('AM.controller.CashBankMutations', {
+Ext.define('AM.controller.RollerBuilders', {
   extend: 'Ext.app.Controller',
 
-  stores: ['CashBankMutations'],
-  models: ['CashBankMutation'],
+  stores: ['RollerBuilders'],
+  models: ['RollerBuilder'],
 
   views: [
-    'operation.cashbankmutation.List',
-    'operation.cashbankmutation.Form' 
+    'master.rollerbuilder.List',
+    'master.rollerbuilder.Form' 
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'cashbankmutationlist'
+			selector: 'rollerbuilderlist'
 		},
 		{
 			ref : 'searchField',
-			selector: 'cashbankmutationlist textfield[name=searchField]'
+			selector: 'rollerbuilderlist textfield[name=searchField]'
 		}
 	],
 
   init: function() {
     this.control({
-      'cashbankmutationlist': {
+      'rollerbuilderlist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'cashbankmutationform button[action=save]': {
+      'rollerbuilderform button[action=save]': {
         click: this.updateObject
       },
-      'cashbankmutationlist button[action=addObject]': {
+      'rollerbuilderlist button[action=addObject]': {
         click: this.addObject
       },
-      'cashbankmutationlist button[action=editObject]': {
+      'rollerbuilderlist button[action=editObject]': {
         click: this.editObject
       },
-      'cashbankmutationlist button[action=deleteObject]': {
+      'rollerbuilderlist button[action=deleteObject]': {
         click: this.deleteObject
       },
-	  	'cashbankmutationlist textfield[name=searchField]': {
+	  	'rollerbuilderlist textfield[name=searchField]': {
         change: this.liveSearch
       },
-			'cashbankmutationlist button[action=markasdeceasedObject]': {
+			'rollerbuilderlist button[action=markasdeceasedObject]': {
         click: this.markAsDeceasedObject
 			}	,
 			'markmemberasdeceasedform button[action=confirmDeceased]' : {
 				click : this.executeConfirmDeceased
 			},
 
-			'cashbankmutationlist button[action=unmarkasdeceasedObject]': {
+			'rollerbuilderlist button[action=unmarkasdeceasedObject]': {
         click: this.unmarkAsDeceasedObject
 			}	,
 			'unmarkmemberasdeceasedform button[action=unconfirmDeceased]' : {
 				click : this.executeConfirmUndeceased
 			},
 			
-			'cashbankmutationlist button[action=markasrunawayObject]': {
+			'rollerbuilderlist button[action=markasrunawayObject]': {
         click: this.markAsRunAwayObject
 			}	,
 			'markmemberasrunawayform button[action=confirmRunAway]' : {
@@ -69,11 +69,11 @@ Ext.define('AM.controller.CashBankMutations', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getCashBankMutationsStore().getProxy().extraParams = {
+		me.getRollerBuildersStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getCashBankMutationsStore().load();
+		me.getRollerBuildersStore().load();
 	},
 	
 	markAsDeceasedObject: function(){
@@ -91,7 +91,7 @@ Ext.define('AM.controller.CashBankMutations', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getCashBankMutationsStore();
+    var store = this.getRollerBuildersStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -147,7 +147,7 @@ Ext.define('AM.controller.CashBankMutations', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getCashBankMutationsStore();
+    var store = this.getRollerBuildersStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -203,7 +203,7 @@ Ext.define('AM.controller.CashBankMutations', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getCashBankMutationsStore();
+    var store = this.getRollerBuildersStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -250,14 +250,14 @@ Ext.define('AM.controller.CashBankMutations', {
 	},
 
   addObject: function() {
-    var view = Ext.widget('cashbankmutationform');
+    var view = Ext.widget('rollerbuilderform');
     view.show();
   },
 
   editObject: function() {
 		var me = this; 
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('cashbankmutationform');
+    var view = Ext.widget('rollerbuilderform');
 
 		
 
@@ -270,7 +270,7 @@ Ext.define('AM.controller.CashBankMutations', {
     var win = button.up('window');
     var form = win.down('form');
 
-    var store = this.getCashBankMutationsStore();
+    var store = this.getRollerBuildersStore();
     var record = form.getRecord();
     var values = form.getValues();
 
@@ -316,7 +316,7 @@ Ext.define('AM.controller.CashBankMutations', {
 		}else{
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
-			var newObject = new AM.model.CashBankMutation( values ) ;
+			var newObject = new AM.model.RollerBuilder( values ) ;
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -345,7 +345,7 @@ Ext.define('AM.controller.CashBankMutations', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getCashBankMutationsStore();
+      var store = this.getRollerBuildersStore();
       store.remove(record);
       store.sync();
 // to do refresh programmatically

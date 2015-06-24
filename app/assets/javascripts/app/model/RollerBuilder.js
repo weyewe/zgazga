@@ -1,4 +1,4 @@
-Ext.define('AM.model.CashBankMutation', {
+Ext.define('AM.model.RollerBuilder', {
   	extend: 'Ext.data.Model',
   	fields: [
     	{ name: 'id', type: 'int' },
@@ -17,19 +17,19 @@ Ext.define('AM.model.CashBankMutation', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/cash_bank_mutations',
+			url: 'api/roller_builders',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'cash_bank_mutations',
+				root: 'roller_builders',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { cash_bank_mutation : record.data };
+					return { roller_builder : record.data };
 				}
 			}
 		}

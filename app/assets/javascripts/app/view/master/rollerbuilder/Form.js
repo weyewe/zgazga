@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.cashbankmutation.Form', {
+Ext.define('AM.view.master.rollerbuilder.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.cashbankmutationform',
+  alias : 'widget.rollerbuilderform',
 
-  title : 'Add / Edit CashBankMutation',
+  title : 'Add / Edit RollerBuilder',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

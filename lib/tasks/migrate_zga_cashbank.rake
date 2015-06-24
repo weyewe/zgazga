@@ -139,12 +139,15 @@ namespace :migrate_zga do
   
 
   task :coa => :environment do  
+    
+    cash_bank_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:cash_bank] ) 
     # base migration
 
     
     # migrate the cashbank
     
     # build the coa lookup  
+    
  
     
     migration_filename = MIGRATION_FILENAME[:coa]
@@ -243,14 +246,6 @@ namespace :migrate_zga do
               end
             end
 
-  
-  
-
-    
-    
-
-            
-            
             
             new_account = Account.find_by_code code 
             if new_account.nil?
@@ -278,6 +273,7 @@ namespace :migrate_zga do
     
     
     
+    
   
   # account table is a self-join table. 
   # migration strategy is to create lookup table 
@@ -289,6 +285,84 @@ namespace :migrate_zga do
     new_cash_bank_account = self.new
     new_cash_bank_account.code = cash_bank_account.code + cash_bank.id.to_s
 =end
+
+
+    awesome_row_counter = - 1
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row|
+            awesome_row_counter = awesome_row_counter + 1  
+            next if awesome_row_counter == 0 
+            
+            id = row[0]
+            code = row[1]
+            
+            name = row[3]
+            parent_id = row[6]
+            
+            is_deleted = false
+            is_deleted = true if row[13] == "True" 
+            
+            
+            is_cash_bank_account = false
+            is_cash_bank_account = true if row[9] == "True" 
+            
+
+          
+            next if is_deleted 
+            next if    not is_cash_bank_account 
+            
+  
+            
+            new_parent_id = nil 
+            if not parent_id.nil?
+              new_parent_id = account_mapper_hash[parent_id]
+              if new_parent_id.nil?
+                puts "Shhite, the new parent id is nil... can't do anything else. current_code: #{code}"
+                puts "is_legacy: #{is_legacy}"
+              end
+            end
+
+            # new account will always be nil. 
+            # but remember, we have created cashbank. so, there must be an account created
+            
+            # problem: we only need to find the mapping
+            
+            # information: we have code. we only need to extract the linked cash_bank
+            # based on the linked cash_bank, we can deduce the new code.
+            # there we have the mapping from old account to new account
+            
+            # new_code = ACCOUNT_CODE[:kas_dan_setara_kas][:code] + cash_bank.id.to_s
+            
+            # puts "ACCOUNT_CODE: #{ACCOUNT_CODE[:kas_dan_setara_kas][:code]} => The code is #{code}"
+            
+            old_cash_bank_id  = code.gsub(ACCOUNT_CODE[:kas_dan_setara_kas][:code], ''  )
+            
+            # puts "the old cb id: #{old_cash_bank_id}"
+            
+            new_cb_id = cash_bank_mapping_hash[old_cash_bank_id]
+            # puts ">> The new cb id #{new_cb_id}"
+            
+            if not  new_cb_id.nil?
+              new_account_code = ACCOUNT_CODE[:kas_dan_setara_kas][:code].to_s +  new_cb_id 
+              account = Account.find_by_code( new_account_code ) 
+              
+              if account.nil?
+                puts "Fucker.. the account is nil. code: #{code}"
+                
+              else
+                account_mapper_hash[id] = account.id 
+              end
+            end
+            
+
+        end
+    end
+    
+    puts "after additional cashbank"
+    puts account_mapper_hash
+    
+    
+
 
 =begin
     Create account from Exchange (4 accounts created): 

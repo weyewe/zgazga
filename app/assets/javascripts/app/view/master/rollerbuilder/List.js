@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.cashbankmutation.List' ,{
+Ext.define('AM.view.master.rollerbuilder.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.cashbankmutationlist',
+  	alias : 'widget.rollerbuilderlist',
 
-  	store: 'CashBankMutations', 
+  	store: 'RollerBuilders', 
  
 
 	initComponent: function() {

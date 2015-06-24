@@ -10,7 +10,7 @@ namespace :master_extjs do
   task :generate_asset_and_controller_files => :environment do
     puts "the first"
 
-    main_view_name = 'AM.view.operation.CashBankMutation'
+    main_view_name = 'AM.view.master.RollerBuilder'
     tokenized_main_view_name = main_view_name.split('.')
 
     tokenized_length = tokenized_main_view_name.length
@@ -83,6 +83,7 @@ namespace :master_extjs do
     end
 
     content_folder = content_folder + "/" + folder_name
+    puts "The content folder: #{content_folder}"
     if  not File.directory?( content_folder)
       FileUtils.mkdir_p(content_folder)  
     end

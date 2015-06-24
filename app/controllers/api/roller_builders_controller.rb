@@ -1,4 +1,4 @@
-class Api::CashBankMutationsController < Api::BaseApiController
+class Api::RollerBuildersController < Api::BaseApiController
   
   def index
      
@@ -7,7 +7,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = CashBankMutation.where{
+        @objects = RollerBuilder.where{
           (
             ( name =~  livesearch )  | 
             ( address =~ livesearch ) | 
@@ -18,7 +18,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        @total = CashBankMutation.where{
+        @total = RollerBuilder.where{
           (
             ( name =~  livesearch )  | 
             ( address =~ livesearch ) | 
@@ -30,20 +30,20 @@ class Api::CashBankMutationsController < Api::BaseApiController
    
     else
       puts "In this shite"
-      @objects = CashBankMutation.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = CashBankMutation.count 
+      @objects = RollerBuilder.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = RollerBuilder.count 
     end
     
     
-    # render :json => { :cash_bank_mutations => @objects , :total => @total , :success => true }
+    # render :json => { :roller_builders => @objects , :total => @total , :success => true }
   end
 
   def create
-    @object = CashBankMutation.create_object( params[:cash_bank_mutation] )
+    @object = RollerBuilder.create_object( params[:roller_builder] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :cash_bank_mutations => [@object] , 
-                        :total => CashBankMutation.active_objects.count  }  
+                        :roller_builders => [@object] , 
+                        :total => RollerBuilder.active_objects.count  }  
     else
       msg = {
         :success => false, 
@@ -57,16 +57,16 @@ class Api::CashBankMutationsController < Api::BaseApiController
   end
 
   def update
-    @object = CashBankMutation.find(params[:id]) 
+    @object = RollerBuilder.find(params[:id]) 
     
 
-    @object.update_object( params[:cash_bank_mutation] )
+    @object.update_object( params[:roller_builder] )
     
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :cash_bank_mutations => [@object],
-                        :total => CashBankMutation.active_objects.count } 
+                        :roller_builders => [@object],
+                        :total => RollerBuilder.active_objects.count } 
     else
       msg = {
         :success => false, 
@@ -82,14 +82,14 @@ class Api::CashBankMutationsController < Api::BaseApiController
   end
   
   def show
-    @object = CashBankMutation.find_by_id params[:id]
+    @object = RollerBuilder.find_by_id params[:id]
     render :json => { :success => true, 
-                      :cash_bank_mutations => [@object] , 
-                      :total => CashBankMutation.count }
+                      :roller_builders => [@object] , 
+                      :total => RollerBuilder.count }
   end
 
   def destroy
-    @object = CashBankMutation.find(params[:id])
+    @object = RollerBuilder.find(params[:id])
     
     begin
       ActiveRecord::Base.transaction do 
@@ -102,7 +102,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
     
 
     if not @object.persisted?  
-      render :json => { :success => true, :total => CashBankMutation.active_objects.count }  
+      render :json => { :success => true, :total => RollerBuilder.active_objects.count }  
     else
       msg = {
         :success => false, 
@@ -127,7 +127,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = CashBankMutation.where{ 
+      @objects = RollerBuilder.where{ 
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( description =~ livesearch ) | 
@@ -138,7 +138,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = CashBankMutation.where{ 
+      @total = RollerBuilder.where{ 
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( description =~ livesearch ) | 
@@ -147,13 +147,13 @@ class Api::CashBankMutationsController < Api::BaseApiController
         
                               }.count
     else
-      @objects = CashBankMutation.where{ (id.eq selected_id)  
+      @objects = RollerBuilder.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = CashBankMutation.where{ (id.eq selected_id)   
+      @total = RollerBuilder.where{ (id.eq selected_id)   
                               }.count 
     end
     

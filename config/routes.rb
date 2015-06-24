@@ -106,6 +106,8 @@ Ticketie::Application.routes.draw do
     resources :purchase_invoices
     resources :purchase_invoice_details
     
+    resources :roller_builders
+    
   end
   
   
