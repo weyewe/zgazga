@@ -4,7 +4,7 @@ describe CashBankMutation do
    
     @initial_cb1_amount = BigDecimal("50000") 
     @exc_1 = Exchange.create_object(
-      :name => "IDR",
+      :name => "IDR1",
       :description => "@description_1",
     )
     

@@ -5,7 +5,7 @@ describe ExchangeRate do
    @ex_rate_date_1 = DateTime.now
    @ex_rate_date_2 = DateTime.now + 1.days
    @exc_1 = Exchange.create_object(
-      :name => "IDR",
+      :name => "IDR1",
       :description => "Description"
    )
    @exc_2 = Exchange.create_object(

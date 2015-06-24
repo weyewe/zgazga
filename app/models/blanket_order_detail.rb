@@ -112,6 +112,15 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.roll_blanket_defect = params[:roll_blanket_defect]
     self.is_finished = true
     self.finished_at = params[:finished_at]
+    self.is_cut = true
+    self.is_side_sealed = true
+    self.is_bar_prepared = true
+    self.is_adhesive_tape_applied = true
+    self.is_bar_mounted = true
+    self.is_bar_heat_pressed = true
+    self.is_bar_pull_off_tested = true
+    self.is_qc_and_marked = true
+    self.is_packaged = true
     if self.save
     self.calculate_total_cost
     # add blanket_order_amount_final
@@ -171,6 +180,15 @@ class BlanketOrderDetail < ActiveRecord::Base
     # set all cost to 0
     self.is_finished = false
     self.finished_at = nil
+    self.is_cut = false
+    self.is_side_sealed = false
+    self.is_bar_prepared = false
+    self.is_adhesive_tape_applied = false
+    self.is_bar_mounted = false
+    self.is_bar_heat_pressed = false
+    self.is_bar_pull_off_tested = false
+    self.is_qc_and_marked = false
+    self.is_packaged = false
     self.total_cost = 0
     self.adhesive_cost = 0
     self.roll_blanket_cost = 0
@@ -344,13 +362,12 @@ class BlanketOrderDetail < ActiveRecord::Base
     if BlanketOrderDetail.where{
       (blanket_order_id.eq self.blanket_order_id) &
       ((is_finished.eq false) & (is_rejected.eq false)) 
-    }.count == 0
+      }.count == 0
       self.blanket_order.is_completed = true
-      self.blanket_order.save
     else
       self.blanket_order.is_completed = false
-      self.blanket_order.save
     end
+      self.blanket_order.save
   end
   
   def update_warehouse_item_amount(params)

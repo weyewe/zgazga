@@ -1,7 +1,6 @@
 class WarehouseItem < ActiveRecord::Base
 
   belongs_to :warehouse
-#   belongs_to :stock_mutation
   def self.active_objects
     self
   end

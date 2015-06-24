@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617065711) do
+ActiveRecord::Schema.define(version: 20150619114046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 20150617065711) do
 
   create_table "blending_recipe_details", force: true do |t|
     t.integer  "blending_recipe_id"
-    t.integer  "blending_item_id"
+    t.integer  "item_id"
     t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -140,6 +140,18 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.text     "description"
     t.integer  "target_item_id"
     t.decimal  "target_amount",  precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "blending_work_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "blending_recipe_id"
+    t.text     "description"
+    t.datetime "blending_date"
+    t.integer  "warehouse_id"
+    t.boolean  "is_confirmed",       default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -177,6 +189,7 @@ ActiveRecord::Schema.define(version: 20150617065711) do
 
   create_table "cash_banks", force: true do |t|
     t.string   "name"
+    t.string   "code"
     t.integer  "exchange_id"
     t.text     "description"
     t.boolean  "is_bank",                              default: true
@@ -241,6 +254,8 @@ ActiveRecord::Schema.define(version: 20150617065711) do
   end
 
   create_table "core_builders", force: true do |t|
+    t.string   "name"
+    t.text     "description"
     t.string   "base_sku"
     t.string   "sku_used_core"
     t.string   "sku_new_core"
@@ -249,10 +264,63 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.integer  "uom_id"
     t.integer  "machine_id"
     t.string   "core_builder_type_case"
-    t.string   "name"
-    t.text     "description"
     t.decimal  "cd",                     precision: 14, scale: 2, default: 0.0
     t.decimal  "tl",                     precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cores", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "customer_items", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "warehouse_item_id"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "virtual",           precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "customer_stock_adjustment_details", force: true do |t|
+    t.integer  "customer_stock_adjustment_id"
+    t.integer  "item_id"
+    t.string   "code"
+    t.integer  "status",                                                default: 1
+    t.decimal  "amount",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "price",                        precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "customer_stock_adjustments", force: true do |t|
+    t.integer  "warehouse_id"
+    t.integer  "contact_id"
+    t.datetime "adjustment_date"
+    t.text     "description"
+    t.string   "code"
+    t.decimal  "total",           precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                             default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "customer_stock_mutations", force: true do |t|
+    t.integer  "item_id"
+    t.integer  "contact_id"
+    t.integer  "customer_item_id"
+    t.integer  "warehouse_id"
+    t.integer  "warehouse_item_id"
+    t.integer  "item_case"
+    t.integer  "status",                                     default: 1
+    t.string   "source_class"
+    t.integer  "source_id"
+    t.string   "source_code"
+    t.datetime "mutation_date"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -601,6 +669,59 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.datetime "updated_at"
   end
 
+  create_table "recovery_accessory_details", force: true do |t|
+    t.integer  "recovery_order_detail_id"
+    t.integer  "item_id"
+    t.integer  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "recovery_order_details", force: true do |t|
+    t.integer  "recovery_order_id"
+    t.integer  "roller_identification_form_detail_id"
+    t.integer  "roller_builder_id"
+    t.decimal  "total_cost",                           precision: 14, scale: 2, default: 0.0
+    t.decimal  "compound_usage",                       precision: 14, scale: 2, default: 0.0
+    t.string   "core_type_case",                                                default: "R"
+    t.boolean  "is_disassembled",                                               default: false
+    t.boolean  "is_stripped_and_glued",                                         default: false
+    t.boolean  "is_wrapped",                                                    default: false
+    t.boolean  "is_vulcanized",                                                 default: false
+    t.boolean  "is_faced_off",                                                  default: false
+    t.boolean  "is_conventional_grinded",                                       default: false
+    t.boolean  "is_cnc_grinded",                                                default: false
+    t.boolean  "is_polished_and_gc",                                            default: false
+    t.boolean  "is_packaged",                                                   default: false
+    t.boolean  "is_rejected",                                                   default: false
+    t.datetime "rejected_date"
+    t.boolean  "is_finished",                                                   default: false
+    t.datetime "finished_date"
+    t.decimal  "accessories_cost",                     precision: 14, scale: 2, default: 0.0
+    t.decimal  "core_cost",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "compound_cost",                        precision: 14, scale: 2, default: 0.0
+    t.integer  "compound_under_layer_id"
+    t.decimal  "compound_under_layer_usage",           precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "recovery_orders", force: true do |t|
+    t.integer  "roller_identification_form_id"
+    t.integer  "warehouse_id"
+    t.string   "code"
+    t.integer  "amount_received",               default: 0
+    t.integer  "amount_rejected",               default: 0
+    t.integer  "amount_final",                  default: 0
+    t.boolean  "is_completed",                  default: false
+    t.boolean  "is_confirmed",                  default: false
+    t.datetime "confirmed_at"
+    t.boolean  "has_due_date",                  default: false
+    t.datetime "due_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", force: true do |t|
     t.string   "name",        null: false
     t.string   "title",       null: false
@@ -610,9 +731,94 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.datetime "updated_at"
   end
 
+  create_table "roller_accessory_details", force: true do |t|
+    t.integer  "roller_identification_form_detail_id"
+    t.integer  "item_id"
+    t.integer  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_builders", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "base_sku"
+    t.string   "sku_roller_used_core"
+    t.string   "sku_roller_new_core"
+    t.integer  "roller_used_core_item_id"
+    t.integer  "roller_new_core_item_id"
+    t.integer  "uom_id"
+    t.integer  "adhesive_id"
+    t.integer  "machine_id"
+    t.integer  "roller_type_id"
+    t.integer  "compound_id"
+    t.integer  "core_builder_id"
+    t.boolean  "is_crowning",                                       default: false
+    t.boolean  "is_grooving",                                       default: false
+    t.boolean  "is_chamfer",                                        default: false
+    t.decimal  "crowning_size",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "grooving_width",           precision: 14, scale: 2, default: 0.0
+    t.decimal  "grooving_depth",           precision: 14, scale: 2, default: 0.0
+    t.decimal  "grooving_position",        precision: 14, scale: 2, default: 0.0
+    t.decimal  "rd",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "cd",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "rl",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "wl",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "tl",                       precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_identification_form_details", force: true do |t|
+    t.integer  "roller_identification_form_id"
+    t.integer  "detail_id"
+    t.integer  "material_case"
+    t.integer  "core_builder_id"
+    t.integer  "roller_type_id"
+    t.integer  "machine_id"
+    t.integer  "repair_request_case"
+    t.decimal  "rd",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "cd",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "rl",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "wl",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "tl",                            precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_job_scheduled",                                       default: false
+    t.boolean  "is_delivered",                                           default: false
+    t.boolean  "is_roller_built",                                        default: false
+    t.boolean  "is_confirmed",                                           default: false
+    t.datetime "confirmed_at"
+    t.string   "roller_no"
+    t.decimal  "gl",                            precision: 14, scale: 2, default: 0.0
+    t.decimal  "groove_length",                 precision: 14, scale: 2, default: 0.0
+    t.decimal  "groove_amount",                 precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_identification_forms", force: true do |t|
+    t.string   "code"
+    t.integer  "warehouse_id"
+    t.string   "nomor_disasembly"
+    t.datetime "incoming_roll"
+    t.integer  "contact_id"
+    t.boolean  "is_in_house",      default: false
+    t.integer  "amount"
+    t.datetime "identified_date"
+    t.boolean  "is_confirmed",     default: false
+    t.datetime "confirmed_at"
+    t.boolean  "is_completed",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roller_types", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rollers", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -676,6 +882,15 @@ ActiveRecord::Schema.define(version: 20150617065711) do
     t.boolean  "is_confirmed",          default: false
     t.boolean  "is_delivery_completed", default: false
     t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "service_costs", force: true do |t|
+    t.integer  "item_id"
+    t.integer  "roller_builder_id"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "avg_price",         precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

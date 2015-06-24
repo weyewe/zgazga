@@ -72,6 +72,7 @@ data_entry = User.create_object(
 
 Account.create_base_objects
 ItemType.create_base_objects
+Exchange.create_object_for_base_exchange
 
 if Rails.env.development?
 # if Rails.env.production?
@@ -211,7 +212,7 @@ if Rails.env.development?
         :name => "cb #{x}",   
         :exchange_id => selected_exchange.id, 
         :description => "exchanges description #{x}",   
-        
+        :code => "code #{x}"
       )
   end 
   

@@ -203,6 +203,10 @@ ORDER_TYPE_CASE = {
   :sales_quotation => 5,		
   }		
 
+CORE_TYPE_CASE = {
+  :r => "R",
+  :z => "Z"
+}
 
 CORE_BUILDER_TYPE = {		
   :hollow => 0,	
@@ -210,3 +214,18 @@ CORE_BUILDER_TYPE = {
   :none => 2
   }	
 
+MATERIAL_CASE ={
+  :new => 1,
+  :used => 2
+  }
+  
+REPAIR_REQUEST_CASE ={
+  :bearing_set => 1,
+  :centre_drill => 2,
+  :none => 3,
+  :bearing_set_and_centre_drill => 4,
+  :repair_corosive => 5,
+  :bearing_set_and_repair_corosive => 6,
+  :centre_drill_and_repair_corosive =>7,
+  :all => 8,
+  }

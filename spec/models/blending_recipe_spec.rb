@@ -41,7 +41,7 @@ describe BlendingRecipe do
     )
   
   @exc_1 = Exchange.create_object(
-    :name => "IDR",
+    :name => "IDR1",
     :description => @description_1,
     )
   
@@ -164,8 +164,8 @@ describe BlendingRecipe do
       before(:each) do
         @brd = BlendingRecipeDetail.create_object(
           :blending_recipe_id => @br.id,
-          :blending_item_id => @item_2.id,
-          :amount => @amoun_1
+          :item_id => @item_2.id,
+          :amount => @amount_1
           )
       end
         

@@ -1,14 +1,14 @@
 class BlendingRecipeDetail < ActiveRecord::Base
     
   belongs_to :blending_recipe
+  belongs_to :item
   validates_presence_of :blending_recipe_id
-  validates_presence_of :blending_item_id
+  validates_presence_of :item_id
   validate :valid_blending_item_id
   
   def self.active_objects
     self
   end
-  
   
   def valid_blending_recipe
     return if  blending_recipe_id.nil?
@@ -20,10 +20,10 @@ class BlendingRecipeDetail < ActiveRecord::Base
   end 
   
   def valid_blending_item_id
-    return if  blending_item_id.nil?
-    item = Item.find_by_id blending_item_id
+    return if item_id.nil?
+    item = Item.find_by_id item_id
     if item.nil? 
-      self.errors.add(:blending_item_id, "Harus ada Blending Item Id")
+      self.errors.add(:item_id, "Harus ada Item Id")
       return self 
     end
   end
@@ -31,7 +31,7 @@ class BlendingRecipeDetail < ActiveRecord::Base
   def self.create_object(params)
     new_object = self.new
     new_object.blending_recipe_id = params[:blending_recipe_id]
-    new_object.blending_item_id = params[:blending_item_id]
+    new_object.item_id = params[:item_id]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save
     end
@@ -40,7 +40,7 @@ class BlendingRecipeDetail < ActiveRecord::Base
   
   def update_object(params)
     self.blending_recipe_id = params[:blending_recipe_id]
-    self.blending_item_id = params[:blending_item_id]
+    self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
     end

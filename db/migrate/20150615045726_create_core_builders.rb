@@ -1,6 +1,9 @@
 class CreateCoreBuilders < ActiveRecord::Migration
   def change
     create_table :core_builders do |t|
+      t.string :name
+      t.text :description
+      t.string :base_sku
       t.string :sku_used_core
       t.string :sku_new_core
       t.integer :used_core_item_id

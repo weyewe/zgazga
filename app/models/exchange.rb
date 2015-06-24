@@ -18,6 +18,22 @@ class Exchange < ActiveRecord::Base
     return new_object
   end
   
+  def account_receivable
+    Account.find_by_id(self.account_receivable_id)
+  end
+  
+  def gbch_receivable
+    Account.find_by_id(self.gbch_receivable_id)
+  end
+  
+  def account_payable
+    Account.find_by_id(self.account_payable_id)
+  end
+  
+  def gbch_payable
+    Account.find_by_id(self.gbch_payable_id)
+  end
+  
   def self.create_object_for_base_exchange
     new_object  = self.new
     new_object.name = "IDR"
@@ -38,7 +54,16 @@ class Exchange < ActiveRecord::Base
     end
     self.name = params[:name]
     self.description = params[:description]    
-    self.save
+    if self.save
+      self.account_payable.name = "Account Payable" + exchange.name.to_s
+      self.account_payable.save
+      self.account_receivable.name = "Account Receivable " + exchange.name.to_s
+      self.account_receivable.save
+      self.gbch_payable.name = "GBCH Payable" + exchange.name.to_s
+      self.gbch_payable.save
+      self.gbch_receivable.name = "GBCH Receivable" + exchange.name.to_s
+      self.gbch_receivable.save
+    end
     return self
   end
   

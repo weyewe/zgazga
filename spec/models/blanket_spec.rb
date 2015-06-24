@@ -66,22 +66,22 @@ describe Blanket do
       )
     
     @itp_1 = ItemType.create_object(
-      :name => "RollBlanket" ,
+      :name => "RollBlanket2" ,
       :description => "Description1",
       :account_id => @coa_1.id
       )
     
-    @itp_2 = ItemType.create_object(
-      :name => "Adhesive" ,
-      :description => "Description1",
-      :account_id => @coa_1.id
-      )
+    # @itp_2 = ItemType.create_object(
+    #   :name => "Adhesive" ,
+    #   :description => "Description1",
+    #   :account_id => @coa_1.id
+    #   )
     
-    @itp_3 = ItemType.create_object(
-      :name => "Bar" ,
-      :description => "Description1",
-      :account_id => @coa_1.id
-      )
+    # @itp_3 = ItemType.create_object(
+    #   :name => "Bar" ,
+    #   :description => "Description1",
+    #   :account_id => @coa_1.id
+    #   )
       
     @sbp_1 = SubType.create_object(
       :name => "SubType_1" ,
@@ -102,7 +102,7 @@ describe Blanket do
       )
     
     @exc_1 = Exchange.create_object(
-      :name => "IDR",
+      :name => "IDR1",
       :description => @description_1,
       )
     
@@ -319,6 +319,11 @@ describe Blanket do
       )
     end
     
+    it "should create Blanket" do
+      @blanket.errors.size.should == 0
+      @blanket.should be_valid
+    end
+    
     it "should not update Blanket if sku is not valid" do
       @blanket.update_object(
         :sku => nil,
@@ -433,11 +438,6 @@ describe Blanket do
       @blanket.application_case.should == @application_case_2
       @blanket.left_over_ac.should == @left_over_ac_2
       @blanket.left_over_ar.should == @left_over_ar_2
-    end
-    
-    it "should create Blanket" do
-      @blanket.errors.size.should == 0
-      @blanket.should be_valid
     end
     
     it "should delete Blanket" do

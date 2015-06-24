@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Exchange do
   before(:each) do
-   @name_1 = "IDR"
+   @name_1 = "IDR1"
    @name_2 = "USD"
    @description_1 = "Description 1"
    @description_2 = "Description 2"

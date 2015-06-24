@@ -73,7 +73,7 @@ class StockAdjustment < ActiveRecord::Base
     
   def validate_warehouse_item_amount
     self.stock_adjustment_details.each do |sad|
-      item_in_warehouse = WarehouseItem.where(:warehouse_id => self.warehouse_id,:item_id => sad.item_id).first
+      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => sad.item_id)
       if not item_in_warehouse.nil?
         if sad.status == ADJUSTMENT_STATUS[:deduction] and sad.amount > item_in_warehouse.amount 
           self.errors.add(:generic_errors, "Amount Item di warehouse kurang")
@@ -111,7 +111,7 @@ class StockAdjustment < ActiveRecord::Base
   def update_warehouse_item_unconfirm
     self.stock_adjustment_details.each do |sad|
       sad.item.calculate_avg_price(:added_amount => (sad.amount * -1),:added_avg_price => sad.price)
-      item_in_warehouse = WarehouseItem.where(:warehouse_id => self.warehouse_id,:item_id => sad.item_id).first
+      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => sad.item_id)
       stock_mutation = StockMutation.where(
         :source_class => self.class.to_s, 
         :source_id => self.id,
@@ -169,7 +169,7 @@ class StockAdjustment < ActiveRecord::Base
 #   validate remaining amount in warehouse_item
     self.stock_adjustment_details.each do |sad|
       
-      item_in_warehouse = WarehouseItem.where(:warehouse_id => self.warehouse_id,:item_id => sad.item_id).first
+      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => sad.item_id)
       if not item_in_warehouse.nil?
         if sad.status == ADJUSTMENT_STATUS[:addition] and sad.amount > item_in_warehouse.amount 
           self.errors.add(:generic_errors, "Amount Item di warehouse kurang")

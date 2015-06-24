@@ -45,6 +45,11 @@ class Item < ActiveRecord::Base
     self.save
   end
   
+  def update_customer_amount(amount)
+    self.customer_amount += amount
+    self.save
+  end
+  
   def calculate_avg_price(params)
     original_amount = self.amount + self.virtual
     original_avg_price = self.avg_price
@@ -58,6 +63,23 @@ class Item < ActiveRecord::Base
         )
     end
     self.avg_price = avg_price
+    self.save  
+    return self
+  end
+  
+  def calculate_customer_avg_price(params)
+    original_amount = self.amount + self.virtual
+    original_avg_price = self.customer_avg_price
+    avg_price = 0 
+    if (original_amount + params[:added_amount]) > 0 
+      a = original_amount * original_avg_price
+      b = params[:added_amount] * params[:added_avg_price]
+      c = original_amount + params[:added_amount]
+      avg_price = (
+          (a+b)/c
+        )
+    end
+    self.customer_avg_price = avg_price
     self.save  
     return self
   end

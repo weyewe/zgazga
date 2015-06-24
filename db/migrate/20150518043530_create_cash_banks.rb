@@ -2,6 +2,7 @@ class CreateCashBanks < ActiveRecord::Migration
   def change
     create_table :cash_banks do |t|
       t.string :name
+      t.string :code
       t.integer :exchange_id
       t.text :description
       t.boolean :is_bank, :default => true  

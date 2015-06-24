@@ -26,6 +26,7 @@ class CashBank < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.is_bank = params[:is_bank]
     new_object.exchange_id = params[:exchange_id]
+    new_object.code = params[:code]
     if new_object.save
       new_object.account_id = Account.create_object_from_cash_bank(new_object).id
       new_object.save

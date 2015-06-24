@@ -87,7 +87,7 @@ describe VirtualDeliveryOrder do
       )
     
     @exc_1 = Exchange.create_object(
-      :name => "IDR",
+      :name => "IDR1",
       :description => "description_1",
       )
     

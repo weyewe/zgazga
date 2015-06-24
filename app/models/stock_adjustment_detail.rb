@@ -7,9 +7,9 @@ class StockAdjustmentDetail < ActiveRecord::Base
   validate :valid_price_and_amount
   validate :valid_adjustment_status
   belongs_to :stock_adjustment
-   belongs_to :item
+  belongs_to :item
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
     
   def valid_adjustment_status
@@ -74,7 +74,7 @@ class StockAdjustmentDetail < ActiveRecord::Base
   def calculateTotalAmount
     total = 0
     StockAdjustmentDetail.where(:stock_adjustment_id =>stock_adjustment_id).each do |sad|
-      total += sad.price
+      total += sad.price * sad.amount
     end
     StockAdjustment.find_by_id(stock_adjustment_id).update_total(total)
   end
