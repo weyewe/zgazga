@@ -141,6 +141,7 @@ namespace :migrate_zga do
   task :coa => :environment do  
     
     cash_bank_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:cash_bank] ) 
+    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] ) 
     # base migration
 
     
@@ -361,46 +362,12 @@ namespace :migrate_zga do
     puts "after additional cashbank"
     puts account_mapper_hash
     
+    puts "about to prune the coa based on exchange"
+    
     
 
 
-=begin
-    Create account from Exchange (4 accounts created): 
-    
-#     create ar
-    ar_account = Account.find_by_code(ACCOUNT_CODE[:piutang_usaha_level_2][:code])
-    new_ar_account = self.new
-    new_ar_account.code = ar_account.code + exchange.id.to_s
-    new_ar_account.name = "Account Receivable " + exchange.name.to_s
-    
-#     create ar_gbch
-    ar_gbch_account = Account.find_by_code(ACCOUNT_CODE[:piutang_gbch][:code])
-    new_ar_gbch_account = self.new
-    new_ar_gbch_account.code = ar_gbch_account.code + exchange.id.to_s
-    new_ar_gbch_account.name = "GBCH Receivable" + exchange.name.to_s
-    
-#     create ap
-    ap_account = Account.find_by_code(ACCOUNT_CODE[:hutang_usaha_level_2][:code])
-    new_ap_account = self.new
-    new_ap_account.code =  ap_account.code + exchange.id.to_s
-    new_ap_account.name = "Account Payable" + exchange.name.to_s
-    
-#     create gbch_payable
-    ap_gbch_payable_account = Account.find_by_code(ACCOUNT_CODE[:hutang_gbch][:code])
-    new_ap_gbch_payable_account = self.new
-    new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + exchange.id.to_s
-    new_ap_gbch_payable_account.name = "Account Payable" + exchange.name.to_s    
-    
-    
-    
-=end
-
-
-  
-    
-     
-    
-    # based on initial hash, create new data + 
+    # awesome_row_counter = - 1
     # CSV.open(original_location, 'r') do |csv| 
     #     csv.each do |row|
     #         awesome_row_counter = awesome_row_counter + 1  
@@ -412,62 +379,120 @@ namespace :migrate_zga do
     #         name = row[3]
     #         parent_id = row[6]
             
-            
-    #         is_legacy = row[7]
-    #         is_leaf = row[8]
-    #         is_cash_bank_account = row[9]
-    #         is_payable_receivable = row[10] 
-            
-             
-            
     #         is_deleted = false
     #         is_deleted = true if row[13] == "True" 
-    #         next if is_deleted  
             
-    #         is_legacy = false
-    #         is_legacy = true if row[7] == "True"
-            
-    #         is_leaf = false
-    #         is_leaf = true if row[8] == "True" 
-            
-    #         is_cash_bank_account = false
-    #         is_cash_bank_account = true if row[9] == "True" 
             
     #         is_payable_receivable = false
-    #         is_payable_receivable = true if row[10] == "True" 
+    #         is_payable_receivable = true if row[10] == "True"
             
-    #         next if is_legacy | is_cash_bank_account | is_payable_receivable
-            
-    #         actual_account_case = ACCOUNT_CASE[:ledger] 
-    #         actual_account_case = ACCOUNT_CASE[:group]  if not is_leaf
-              
-            
-  
-            # object = Account.create_object( 
-            #             :name                      => name , 
-            #             :code                      => code  ,
-            #             :parent_id                 => new_parent_id , 
-            #             :account_case              => actual_account_case 
-            #     )
-                
-    #         object.errors.messages.each {|x| puts "Error: #{x}" } 
-                
 
-    #         result_array << [ id , object.id , object.name, object.code, object.parent_id, object.account_case  ] 
+          
+    #         next if is_deleted 
+    #         next if    not is_payable_receivable 
+            
+            
+    #         next if  not  ( code.include?( ACCOUNT_CODE[:piutang_usaha_level_2][:code] ) or 
+    #             code.include?( ACCOUNT_CODE[:piutang_gbch][:code]) or 
+    #             code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code] ) or 
+    #             code.include?( ACCOUNT_CODE[:hutang_gbch][:code]) ) 
+            
+            
+            
+    #         if code.include?(  ACCOUNT_CODE[:piutang_usaha_level_2][:code] )
+    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_usaha_level_2][:code], ''  )
+              
+    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+            
+    #           if not  new_exchange_id.nil?
+    #             new_account_code = ACCOUNT_CODE[:kas_dan_setara_kas][:code].to_s +  new_exchange_id 
+    #             account = Account.find_by_code( new_account_code ) 
+                
+    #             if account.nil?
+    #               puts "Fucker.. the account is nil. code: #{code}"
+                  
+    #             else
+    #               account_mapper_hash[id] = account.id 
+    #             end
+    #           else
+    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+    #           end
+              
+    #         end
+            
+            
+    #         if code.include?(  ACCOUNT_CODE[:piutang_gbch][:code] )
+    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_gbch][:code], ''  )
+
+    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+            
+    #           if not  new_exchange_id.nil?
+    #             new_account_code = ACCOUNT_CODE[:piutang_gbch][:code].to_s +  new_exchange_id 
+    #             account = Account.find_by_code( new_account_code ) 
+                
+    #             if account.nil?
+    #               puts "Fucker.. the account is nil. code: #{code}"
+                  
+    #             else
+    #               account_mapper_hash[id] = account.id 
+    #             end
+    #           else
+    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+    #           end              
+              
+              
+    #         end
+            
+    #         if code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  )
+    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  , ''  )
+              
+              
+    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+            
+    #           if not  new_exchange_id.nil?
+    #             new_account_code = ACCOUNT_CODE[:hutang_usaha_level_2][:code].to_s +  new_exchange_id 
+    #             account = Account.find_by_code( new_account_code ) 
+                
+    #             if account.nil?
+    #               puts "Fucker.. the account is nil. code: #{code}"
+                  
+    #             else
+    #               account_mapper_hash[id] = account.id 
+    #             end
+    #           else
+    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+    #           end                    
+    #         end
+            
+    #         if code.include?(  ACCOUNT_CODE[:hutang_gbch][:code] )
+    #           old_exchange_id  = code.gsub(  ACCOUNT_CODE[:hutang_gbch][:code], ''  )
+            
+    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+            
+    #           if not  new_exchange_id.nil?
+    #             new_account_code = ACCOUNT_CODE[:hutang_gbch][:code].to_s +  new_exchange_id 
+    #             account = Account.find_by_code( new_account_code ) 
+                
+    #             if account.nil?
+    #               puts "Fucker.. the account is nil. code: #{code}"
+                  
+    #             else
+    #               account_mapper_hash[id] = account.id 
+    #             end
+    #           else
+    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+    #           end   
+    #         end
+    #         # puts "the old cb id: #{old_cash_bank_id}"
+            
+
+            
+
     #     end
     # end
-     
- 
-    # # write the new csv LOOKUP file ( with mapping for the ID )
-    # CSV.open(lookup_location, 'w') do |csv|
-    #   result_array.each do |el| 
-    #     csv <<  el 
-    #   end
-    # end
-    
-    # puts "Done migrating account. Total account: #{Account.count}"
-  end
-  
+
+
+   
 
   
 end
