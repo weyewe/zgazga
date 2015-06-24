@@ -273,6 +273,9 @@ namespace :migrate_zga do
     puts account_mapper_hash
     
     
+    puts "\n >>>>> now we are going to prune it using cashbank"
+    
+    
     
     
   
