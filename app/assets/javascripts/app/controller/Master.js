@@ -170,6 +170,45 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
+			
+			
+			{ 
+				text:'Core', 
+				viewClass:'AM.view.master.CoreBuilder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'core_builders',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Roller', 
+				viewClass:'AM.view.master.RollerBuilder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'roller_builders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Compound', 
+				viewClass:'AM.view.master.Compound', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'compounds',
+						action : 'index'
+					}
+				]
+			}, 
 			{ 
 				text:'Item', 
 				viewClass:'AM.view.master.Item', 
