@@ -367,134 +367,147 @@ namespace :migrate_zga do
     
 
 
-    # awesome_row_counter = - 1
-    # CSV.open(original_location, 'r') do |csv| 
-    #     csv.each do |row|
-    #         awesome_row_counter = awesome_row_counter + 1  
-    #         next if awesome_row_counter == 0 
+    awesome_row_counter = - 1
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row|
+            awesome_row_counter = awesome_row_counter + 1  
+            next if awesome_row_counter == 0 
             
-    #         id = row[0]
-    #         code = row[1]
+            id = row[0]
+            code = row[1]
             
-    #         name = row[3]
-    #         parent_id = row[6]
+            name = row[3]
+            parent_id = row[6]
             
-    #         is_deleted = false
-    #         is_deleted = true if row[13] == "True" 
+            is_deleted = false
+            is_deleted = true if row[13] == "True" 
             
             
-    #         is_payable_receivable = false
-    #         is_payable_receivable = true if row[10] == "True"
+            is_payable_receivable = false
+            is_payable_receivable = true if row[10] == "True"
             
 
           
-    #         next if is_deleted 
-    #         next if    not is_payable_receivable 
+            next if is_deleted 
+            next if    not is_payable_receivable 
             
             
-    #         next if  not  ( code.include?( ACCOUNT_CODE[:piutang_usaha_level_2][:code] ) or 
-    #             code.include?( ACCOUNT_CODE[:piutang_gbch][:code]) or 
-    #             code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code] ) or 
-    #             code.include?( ACCOUNT_CODE[:hutang_gbch][:code]) ) 
+            next if  not  ( code.include?( ACCOUNT_CODE[:piutang_usaha_level_2][:code] ) or 
+                code.include?( ACCOUNT_CODE[:piutang_gbch][:code]) or 
+                code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code] ) or 
+                code.include?( ACCOUNT_CODE[:hutang_gbch][:code]) ) 
             
             
             
-    #         if code.include?(  ACCOUNT_CODE[:piutang_usaha_level_2][:code] )
-    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_usaha_level_2][:code], ''  )
+            if code.include?(  ACCOUNT_CODE[:piutang_usaha_level_2][:code] )
+              old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_usaha_level_2][:code], ''  )
               
-    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+              new_exchange_id = exchange_mapping_hash[old_exchange_id] 
             
-    #           if not  new_exchange_id.nil?
-    #             new_account_code = ACCOUNT_CODE[:kas_dan_setara_kas][:code].to_s +  new_exchange_id 
-    #             account = Account.find_by_code( new_account_code ) 
+              if not  new_exchange_id.nil?
+                new_account_code = ACCOUNT_CODE[:kas_dan_setara_kas][:code].to_s +  new_exchange_id 
+                account = Account.find_by_code( new_account_code ) 
                 
-    #             if account.nil?
-    #               puts "Fucker.. the account is nil. code: #{code}"
+                if account.nil?
+                  puts "Fucker.. the account is nil. code: #{code}"
                   
-    #             else
-    #               account_mapper_hash[id] = account.id 
-    #             end
-    #           else
-    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
-    #           end
+                else
+                  account_mapper_hash[id] = account.id 
+                end
+              else
+                puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+              end
               
-    #         end
+            end
             
             
-    #         if code.include?(  ACCOUNT_CODE[:piutang_gbch][:code] )
-    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_gbch][:code], ''  )
+            if code.include?(  ACCOUNT_CODE[:piutang_gbch][:code] )
+              old_exchange_id  = code.gsub( ACCOUNT_CODE[:piutang_gbch][:code], ''  )
 
-    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+              new_exchange_id = exchange_mapping_hash[old_exchange_id] 
             
-    #           if not  new_exchange_id.nil?
-    #             new_account_code = ACCOUNT_CODE[:piutang_gbch][:code].to_s +  new_exchange_id 
-    #             account = Account.find_by_code( new_account_code ) 
+              if not  new_exchange_id.nil?
+                new_account_code = ACCOUNT_CODE[:piutang_gbch][:code].to_s +  new_exchange_id 
+                account = Account.find_by_code( new_account_code ) 
                 
-    #             if account.nil?
-    #               puts "Fucker.. the account is nil. code: #{code}"
+                if account.nil?
+                  puts "Fucker.. the account is nil. code: #{code}"
                   
-    #             else
-    #               account_mapper_hash[id] = account.id 
-    #             end
-    #           else
-    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
-    #           end              
+                else
+                  account_mapper_hash[id] = account.id 
+                end
+              else
+                puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+              end              
               
               
-    #         end
+            end
             
-    #         if code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  )
-    #           old_exchange_id  = code.gsub( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  , ''  )
+            if code.include?( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  )
+              old_exchange_id  = code.gsub( ACCOUNT_CODE[:hutang_usaha_level_2][:code]  , ''  )
               
               
-    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+              new_exchange_id = exchange_mapping_hash[old_exchange_id] 
             
-    #           if not  new_exchange_id.nil?
-    #             new_account_code = ACCOUNT_CODE[:hutang_usaha_level_2][:code].to_s +  new_exchange_id 
-    #             account = Account.find_by_code( new_account_code ) 
+              if not  new_exchange_id.nil?
+                new_account_code = ACCOUNT_CODE[:hutang_usaha_level_2][:code].to_s +  new_exchange_id 
+                account = Account.find_by_code( new_account_code ) 
                 
-    #             if account.nil?
-    #               puts "Fucker.. the account is nil. code: #{code}"
+                if account.nil?
+                  puts "Fucker.. the account is nil. code: #{code}"
                   
-    #             else
-    #               account_mapper_hash[id] = account.id 
-    #             end
-    #           else
-    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
-    #           end                    
-    #         end
+                else
+                  account_mapper_hash[id] = account.id 
+                end
+              else
+                puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+              end                    
+            end
             
-    #         if code.include?(  ACCOUNT_CODE[:hutang_gbch][:code] )
-    #           old_exchange_id  = code.gsub(  ACCOUNT_CODE[:hutang_gbch][:code], ''  )
+            if code.include?(  ACCOUNT_CODE[:hutang_gbch][:code] )
+              old_exchange_id  = code.gsub(  ACCOUNT_CODE[:hutang_gbch][:code], ''  )
             
-    #           new_exchange_id = exchange_mapping_hash[old_exchange_id] 
+              new_exchange_id = exchange_mapping_hash[old_exchange_id] 
             
-    #           if not  new_exchange_id.nil?
-    #             new_account_code = ACCOUNT_CODE[:hutang_gbch][:code].to_s +  new_exchange_id 
-    #             account = Account.find_by_code( new_account_code ) 
+              if not  new_exchange_id.nil?
+                new_account_code = ACCOUNT_CODE[:hutang_gbch][:code].to_s +  new_exchange_id 
+                account = Account.find_by_code( new_account_code ) 
                 
-    #             if account.nil?
-    #               puts "Fucker.. the account is nil. code: #{code}"
+                if account.nil?
+                  puts "Fucker.. the account is nil. code: #{code}"
                   
-    #             else
-    #               account_mapper_hash[id] = account.id 
-    #             end
-    #           else
-    #             puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
-    #           end   
-    #         end
-    #         # puts "the old cb id: #{old_cash_bank_id}"
-            
-
+                else
+                  account_mapper_hash[id] = account.id 
+                end
+              else
+                puts "fark, there is no new_exchange_id for old_exchange_id: #{old_exchange_id}"
+              end   
+            end
+            # puts "the old cb id: #{old_cash_bank_id}"
             
 
-    #     end
-    # end
+            
+
+        end
+        
+    end
+    
+    puts "after exchange_pruning"
+    puts account_mapper_hash
+    result_array = []
+    
+    account_mapper_hash.each do |key, value|
+      result_array << [key, value ]
+    end
+    
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+    puts "Done migrating coa. Total coa: #{Account.count}"
   end
-  end
 
 
-   
-
-  
 end
