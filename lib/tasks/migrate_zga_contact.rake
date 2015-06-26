@@ -192,7 +192,5 @@ namespace :migrate_zga do
     end
     
     puts "Done migrating contact. Total contact: #{Contact.count}"
-    
-    # for ContactType, the value is null, CUSTOMER, or Supplier
   end
 end
