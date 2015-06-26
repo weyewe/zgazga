@@ -10,8 +10,8 @@ namespace :migrate_zga do
   task :core_builder => :environment do
     
     uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
-    machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] ) 
-    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] ) 
+    machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
+    base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME ) 
     # puts "the contact group mapping hash"
     # puts "#{contact_group_mapping_hash}"
     
@@ -27,72 +27,69 @@ namespace :migrate_zga do
           next if awesome_row_counter == 0 
         
           id = row[0]
-          base_sku = row[1]
-          sku_used_core = row[2]
-          sku_new_core = row[3]
-          used_core_item_id = row[4]
-          new_core_item_id = row[5]
-          uo_m_id = row[6]
+          sku = row[1] 
+          uom_id = row[6]
           machine_id = row[7]
           core_builder_type_case = row[8]
           name = row[9]
           description = row[10]
-          c_d = row[11]
-          t_l = row[12]
-          is_deleted = row[13]
+          cd = row[11]
+          tl = row[12]
           
-          is_taxable = row[12]
-          is_taxable = false 
-          is_taxable  = true if row[12] == "True" 
-          
-          tax_code = row[13]
-          
-          contact_type = row[14]
-          # puts "The contact_type: #contact_type}"
-          if not contact_type.nil? and not contact_type.length == 0  and contact_type.downcase == "customer"
-            contact_type = CONTACT_TYPE[:customer].to_s
-          else
-            contact_type = CONTACT_TYPE[:supplier].to_s
-          end
+ 
           
           
-          default_payment_term = row[15]
-          
-          # puts "The row[16]: #{row[16]}"
           is_deleted = false 
-          is_deleted  = true if row[16] == "True" 
+          is_deleted  = true if row[13] == "True" 
           
           next if is_deleted 
           
-           
-    
-          # puts "contact_group_id : #{contact_group_id}"
-          new_contact_group_id =  contact_group_mapping_hash[contact_group_id]
-          # puts "new_contact_group_id: #{new_contact_group_id}"
+ 
+
+          if core_builder_type_case == "None"
+            core_builder_type_case = CORE_BUILDER_TYPE[:none]
+          end
           
-          if ContactGroup.find_by_id( new_contact_group_id.to_i ).nil?
-            puts "fucka.. id #{contact_group_id} has no corresponding new contact group "
+          if core_builder_type_case == "Shaft"
+            core_builder_type_case = CORE_BUILDER_TYPE[:shaft]
+          end
+          
+          if core_builder_type_case == "Hollow"
+            core_builder_type_case = CORE_BUILDER_TYPE[:hollow]
+          end
+          
+           
+          new_uom_id =  uom_mapping_hash[uom_id] 
+          
+          if Uom.find_by_id( new_uom_id.to_i ).nil?
+            puts "fucka.. id #{new_uom_id} has no corresponding new uom "
+          end
+          
+          new_machine_id =  machine_mapping_hash[machine_id] 
+          
+          if Machine.find_by_id( new_machine_id.to_i ).nil?
+            puts "fucka.. id #{new_machine_id} has no corresponding new machine_id "
           end
           
           
           
+          minimum_amount = '0'
+          selling_price  = '0'
+          price_list = '0'
           # puts "Before create object >>>>>>>>>> contact_type is :#{contact_type} "
-          object = Contact.create_object(
-              :name => name ,
-              :address => address,
-              :contact_no => contact_no,
-              :delivery_address => delivery_address,
-              :description => description,
-              :default_payment_term =>  default_payment_term , 
-              :npwp => npwp, 
-              :is_taxable => is_taxable,  
-              :tax_code => tax_code,
-              :nama_faktur_pajak => nama_faktur_pajak,
-              :pic => pic,
-              :pic_contact_no =>  pic_contact_no,
-              :email => email,
-              :contact_type => contact_type, 
-              :contact_group_id => new_contact_group_id
+          object = CoreBuilder.create_object(
+              :sku =>  sku , 
+              :name =>  name  ,
+              :description =>  description,  
+              :uom_id =>  new_uom_id , 
+              :minimum_amount =>  BigDecimal( minimum_amount  || '0')  , 
+              :selling_price =>  BigDecimal( selling_price || '0')  ,
+              :exchange_id => base_exchange.id , 
+              :price_list =>  BigDecimal( price_list || '0')  , 
+              :core_builder_type_case =>  core_builder_type_case , 
+              :machine_id => new_machine_id , 
+              :cd => BigDecimal( cd || '0') , 
+              :tl =>  BigDecimal(  tl  || '0') 
             
             )
             
@@ -101,22 +98,10 @@ namespace :migrate_zga do
 
             result_array << [ id , 
                     object.id , 
-                    object.name, 
-                    object.address,
-                    object.contact_no, 
-                    object.delivery_address,
-                    object.description, 
-                    object.default_payment_term,
-                    object.npwp,
-                    object.is_taxable, 
-                    object.tax_code,
-                    object.nama_faktur_pajak,
-                    object.pic,
-                    object.pic_contact_no,
-                    object.email,
-                    object.contact_type,
-                    object.contact_group_id  ]
+                    object.sku  ]
+
         end
+        
     end
     
     CSV.open(lookup_location, 'w') do |csv|

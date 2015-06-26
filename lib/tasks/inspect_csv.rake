@@ -79,5 +79,8 @@ task :see_single_column_data , :filename, :column  do | t, args |
      
      puts result_array 
      
+     puts ">>>>> the compacted version:"
+     puts result_array.uniq
+     
      
 end
