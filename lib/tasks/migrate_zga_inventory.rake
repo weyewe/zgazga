@@ -175,6 +175,69 @@ namespace :migrate_zga do
     puts "Done migrating item type. Total ItemType: #{ItemType.count}"
   end
   
+  
+  task :sub_type => :environment do
+    
+    item_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item_type] )  
+    
+    migration_filename = MIGRATION_FILENAME[:sub_type]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+          id = row[0]
+          name = row[1]
+          item_type_id = row[2] 
+          
+          is_deleted = false 
+          is_deleted  = true if row[3] == "True" 
+          
+          next if is_deleted 
+          
+           
+     
+          new_item_type_id =  item_type_mapping_hash[item_type_id] 
+          
+          if new_item_type_id.nil?
+            puts "fark, no data in the mapper. old item_type id #{item_type_id}. name : #{name}"
+          end
+          
+          
+  
+          
+           
+          object = SubType.create_object(
+              :name =>   name , 
+              :item_type_id =>  new_item_type_id 
+            )
+            
+          object.errors.each {|x| puts "error message: #{x}" }  
+            
+          
+           
+
+            result_array << [ id , 
+                    object.id , 
+                    object.name,  
+                    object.item_type_id   ]
+        end
+    end
+    
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+    puts "Done migrating SubType. Total SubType: #{SubType.count}"
+  end
+  
 
   
 end

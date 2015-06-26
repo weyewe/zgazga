@@ -16,11 +16,9 @@ rake migrate_zga:employee
 
 
 rake migrate_zga:uom
-
 rake migrate_zga:item_type
+rake  migrate_zga:sub_type
 
-
-pending: migrate_zga:sub_type
-pending: migrate_zga:core_builder
+migrate_zga:core_builder
 pending: migrate_zga:roller_builder
 pending: migrate_zga:item 
