@@ -15,6 +15,7 @@ rake migrate_zga:user
 rake migrate_zga:employee
 
 
+rake migrate_zga:machine 
 rake migrate_zga:uom
 rake migrate_zga:item_type
 rake  migrate_zga:sub_type

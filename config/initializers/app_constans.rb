@@ -240,6 +240,7 @@ MIGRATION_FILENAME = {
   :sub_type => 'SubTypes.csv',
   :core_builder => "CoreBuilders.csv",
   :roller_builder => "RollerBuilders.csv",
+  :machine => "Machines.csv",
   :uom => 'UoMs.csv',
   :warehouse => 'Warehouses.csv',
   :cash_bank => "CashBanks.csv",
