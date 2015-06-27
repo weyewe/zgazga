@@ -2,7 +2,7 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   belongs_to :roller_identification_form
   belongs_to :machine
   belongs_to :core_builder
-  belongs_to :roller_type
+  belongs_to :roller_type 
   has_many :roller_accessory_details
   validates_presence_of :roller_identification_form_id
   validates_presence_of :machine_id

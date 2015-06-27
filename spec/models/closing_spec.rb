@@ -66,7 +66,8 @@ describe Closing do
       :code => "1110ko",
       :name => "KAS",
       :account_case => ACCOUNT_CASE[:ledger],
-      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id,
+      :normal_balance => NORMAL_BALANCE[:credit]
       )
     
     @itp_1 = ItemType.create_object(
@@ -275,7 +276,11 @@ describe Closing do
     it "check all " do
       @rv_1.errors.size.should == 0
       @si_1.errors.size.should == 0
-      
+        
+    end
+    
+    it "should create detail" do
+      @cls.closing_details.count.should == 3
     end
     
     context "confirm Closing" do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150619114046) do
+ActiveRecord::Schema.define(version: 20150627021753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,14 @@ ActiveRecord::Schema.define(version: 20150619114046) do
     t.integer  "status",                                 default: 1
     t.datetime "mutation_date"
     t.integer  "cash_bank_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "closing_details", force: true do |t|
+    t.integer  "closing_id"
+    t.integer  "exchange_id"
+    t.decimal  "rate",        precision: 18, scale: 11, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -814,6 +822,28 @@ ActiveRecord::Schema.define(version: 20150619114046) do
   create_table "roller_types", force: true do |t|
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_warehouse_mutation_details", force: true do |t|
+    t.integer  "roller_warehouse_mutation_id"
+    t.integer  "recovery_order_detail_id"
+    t.string   "code"
+    t.integer  "item_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roller_warehouse_mutations", force: true do |t|
+    t.integer  "recovery_order_id"
+    t.string   "code"
+    t.integer  "warehouse_from_id"
+    t.integer  "warehouse_to_id"
+    t.datetime "mutation_date"
+    t.integer  "amount"
+    t.boolean  "is_confirmed",      default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

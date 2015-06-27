@@ -336,7 +336,7 @@ class Account < ActiveRecord::Base
     ap_gbch_payable_account = Account.find_by_code(ACCOUNT_CODE[:hutang_gbch][:code])
     new_ap_gbch_payable_account = self.new
     new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + exchange.id.to_s
-    new_ap_gbch_payable_account.name = "Account Payable" + exchange.name.to_s
+    new_ap_gbch_payable_account.name = "GBCH Payable" + exchange.name.to_s
     new_ap_gbch_payable_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_gbch_payable_account.parent_id = ap_gbch_payable_account.id
     new_ap_gbch_payable_account.normal_balance = ap_gbch_payable_account.normal_balance

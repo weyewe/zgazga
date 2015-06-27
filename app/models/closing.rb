@@ -1,5 +1,6 @@
 class Closing < ActiveRecord::Base
   has_many :valid_combs
+  has_many :closing_details
   validates_presence_of :period
   validates_presence_of :year_period
   validates_presence_of :beginning_period
@@ -47,6 +48,7 @@ class Closing < ActiveRecord::Base
     new_object.end_date_period = params[:end_date_period]
     new_object.is_year = params[:is_year]
     if new_object.save
+      new_object.generate_closing_detail(new_object.id)
     end
     return new_object
   end
@@ -62,6 +64,10 @@ class Closing < ActiveRecord::Base
     self.end_date_period = params[:end_date_period]
     self.is_year = params[:is_year]
     if self.save
+      self.closing_details.each do |clsd|
+        csld.delete_object
+      end
+      generate_closing_detail(self.id)
     end
     return self
   end
@@ -108,6 +114,14 @@ class Closing < ActiveRecord::Base
     
     self.destroy
     return self
+  end
+  
+  def generate_closing_detail(closing_id)
+    Exchange.all.each do |exc|
+      ClosingDetail.create_object(
+        :closing_id => closing_id,
+        :exchange_id => exc.id)
+    end
   end
   
   def previous_closing 
@@ -217,7 +231,7 @@ class Closing < ActiveRecord::Base
         end  
       
       end
-      # puts "#{leaf_account.name} total_debit = #{total_debit}  total_credit = #{total_credit}"
+      # puts "#{leaf_account.name} (#{leaf_account.code}) (#{leaf_account.normal_balance}) total_debit = #{total_debit}  total_credit = #{total_credit}"
       if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
         valid_comb_amount = total_debit - total_credit
         valid_comb_amount_non_idr = total_debit_non_idr - total_credit_non_idr
@@ -235,7 +249,7 @@ class Closing < ActiveRecord::Base
         entry_case = NORMAL_BALANCE[:credit] if leaf_account.normal_balance == NORMAL_BALANCE[:debit] 
       end
     
-      puts " #{leaf_account.name} (#{leaf_account.code}) :: #{valid_comb_amount} "
+      # puts " #{leaf_account.name} (#{leaf_account.code}) :: #{valid_comb_amount} "
       
       valid_comb = ValidComb.create_object(
         :account_id => leaf_account.id,
@@ -269,9 +283,12 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => cash_bank.exchange_id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => cash_bank.exchange_id).first
+    
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => cash_bank.exchange_id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -358,9 +375,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => account_payable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => account_payable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => account_payable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -447,9 +466,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => account_receivable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => account_receivable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => account_receivable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -536,9 +557,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => gbch_payable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => gbch_payable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => gbch_payable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -625,9 +648,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => gbch_receivable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => gbch_receivable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => gbch_receivable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
