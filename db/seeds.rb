@@ -69,9 +69,9 @@ data_entry = User.create_object(
   :password_confirmation => "jojo1234",
   :role_id => data_entry_role.id
   )
-
-Exchange.create_object_for_base_exchange
+  
 Account.create_base_objects
+Exchange.create_object_for_base_exchange
 ItemType.create_base_objects
 
 if Rails.env.development?

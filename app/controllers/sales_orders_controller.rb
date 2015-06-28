@@ -9,7 +9,8 @@ class SalesOrdersController < ApplicationController
       format.pdf do
         render :pdf => "sales_order_#{@object.nomor_surat}",
         :template => 'sales_orders/show.pdf.erb',
-        :layout => 'pdf.html.erb',
+        # :layout => 'pdf.html.erb',
+         :layout => 'balance_sheet_pdf.html.erb',
         :show_as_html => params[:debug].present?
       end
     end
