@@ -214,7 +214,7 @@ CORE_BUILDER_TYPE = {
   :none => 2
   }	
 
-<<<<<<< HEAD
+
 MATERIAL_CASE ={
   :new => 1,
   :used => 2
@@ -230,7 +230,7 @@ REPAIR_REQUEST_CASE ={
   :centre_drill_and_repair_corosive =>7,
   :all => 8,
   }
-=======
+
 
 
 BASE_JS_APP = "#{Dir.pwd}/app/assets/javascripts/app"
@@ -271,4 +271,4 @@ MIGRATION_FILENAME = {
 } 
 
 EXCHANGE_BASE_NAME = "Rupiah"
->>>>>>> willy_mod
+
