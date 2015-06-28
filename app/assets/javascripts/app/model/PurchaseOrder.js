@@ -2,8 +2,6 @@ Ext.define('AM.model.PurchaseOrder', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-
- 
 	 
     	    { name: 'id', type: 'int' },
     	    { name: 'purchase_date', type: 'string' },

@@ -8,6 +8,7 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
+		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Kode PRD', dataIndex: 'purchase_receival_detail_code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'purchase_receival_detail_purchase_order_detail_item_sku', flex: 1},
@@ -15,7 +16,6 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.List' ,{
 			{	header: 'Price x Qty', dataIndex: 'price', flex: 1 } ,
 			
 			
-			 
 		];
 		
 

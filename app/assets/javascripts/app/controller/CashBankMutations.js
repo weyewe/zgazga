@@ -5,15 +5,19 @@ Ext.define('AM.controller.CashBankMutations', {
   models: ['CashBankMutation'],
 
   views: [
-    'master.cashbankmutation.List',
-    'master.cashbankmutation.Form'
+    'operation.cashbankmutation.List',
+    'operation.cashbankmutation.Form' 
   ],
 
   	refs: [
 		{
 			ref: 'list',
 			selector: 'cashbankmutationlist'
-		} 
+		},
+		{
+			ref : 'searchField',
+			selector: 'cashbankmutationlist textfield[name=searchField]'
+		}
 	],
 
   init: function() {
@@ -34,24 +38,31 @@ Ext.define('AM.controller.CashBankMutations', {
       },
       'cashbankmutationlist button[action=deleteObject]': {
         click: this.deleteObject
+      },
+	  	'cashbankmutationlist textfield[name=searchField]': {
+        change: this.liveSearch
+      },
+			'cashbankmutationlist button[action=markasdeceasedObject]': {
+        click: this.markAsDeceasedObject
 			}	,
-      'cashbankmutationlist button[action=confirmObject]': {
-        click: this.confirmObject
-			}	,
-      'confirmcashbankmutationform button[action=confirm]' : {
-				click : this.executeConfirm
+			'markmemberasdeceasedform button[action=confirmDeceased]' : {
+				click : this.executeConfirmDeceased
 			},
-      'cashbankmutationlist button[action=unconfirmObject]': {
-        click: this.unconfirmObject
+
+			'cashbankmutationlist button[action=unmarkasdeceasedObject]': {
+        click: this.unmarkAsDeceasedObject
 			}	,
-      'unconfirmcashbankmutationform button[action=unconfirm]' : {
-				click : this.executeUnconfirm
+			'unmarkmemberasdeceasedform button[action=unconfirmDeceased]' : {
+				click : this.executeConfirmUndeceased
 			},
-			'cashbankmutationlist textfield[name=searchField]': {
-				change: this.liveSearch
-			} ,
-		 
-      
+			
+			'cashbankmutationlist button[action=markasrunawayObject]': {
+        click: this.markAsRunAwayObject
+			}	,
+			'markmemberasrunawayform button[action=confirmRunAway]' : {
+				click : this.executeConfirmRunAway
+			},
+		
     });
   },
 
@@ -64,10 +75,177 @@ Ext.define('AM.controller.CashBankMutations', {
 	 
 		me.getCashBankMutationsStore().load();
 	},
+	
+	markAsDeceasedObject: function(){
+		// console.log("mark as Deceased is clicked");
+		var view = Ext.widget('markmemberasdeceasedform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+		view.down('form').getForm().findField('deceased_at').setValue(record.get('deceased_at')); 
+    view.show();
+	},
+	
+	executeConfirmDeceased : function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getCashBankMutationsStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'deceased_at' , values['deceased_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					mark_as_deceased: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					list.fireEvent('confirmed', record);
+					
+					
+					store.load();
+					win.close();
+					
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+
+	unmarkAsDeceasedObject: function(){
+		// console.log("mark as Deceased is clicked");
+		var view = Ext.widget('unmarkmemberasdeceasedform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+    view.show();
+	},
+
+	executeConfirmUndeceased : function(button){
+		// console.log("unconfirm deceased");
+
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getCashBankMutationsStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unmark_as_deceased: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					list.fireEvent('confirmed', record);
+					
+					
+					store.load();
+					win.close();
+					
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	// RUN AWAY
+	
+	markAsRunAwayObject: function(){
+		// console.log("mark as Deceased is clicked");
+		var view = Ext.widget('markmemberasrunawayform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+		view.down('form').getForm().findField('run_away_at').setValue(record.get('run_away_at')); 
+    view.show();
+	},
+	
+	executeConfirmRunAway : function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getCashBankMutationsStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'run_away_at' , values['run_away_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					mark_as_run_away: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					list.fireEvent('confirmed', record);
+					
+					
+					store.load();
+					win.close();
+					
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
  
 
 	loadObjectList : function(me){
-		// console.log("************* IN THE USERS CONTROLLER: afterRENDER");
+		me.getStore().getProxy().extraParams = {}
 		me.getStore().load();
 	},
 
@@ -77,14 +255,18 @@ Ext.define('AM.controller.CashBankMutations', {
   },
 
   editObject: function() {
+		var me = this; 
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('cashbankmutationform');
 
+		
+
     view.down('form').loadRecord(record);
-		view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
   updateObject: function(button) {
+		var me = this; 
     var win = button.up('window');
     var form = win.down('form');
 
@@ -92,6 +274,18 @@ Ext.define('AM.controller.CashBankMutations', {
     var record = form.getRecord();
     var values = form.getValues();
 
+
+		// console.log("The values");
+		// console.log( values);
+		form.query('checkbox').forEach(function(checkbox){
+						// 
+						// record.set( checkbox['name']  ,checkbox['checked'] ) ;
+						// console.log("the checkbox name: " +  checkbox['name']   );
+						// console.log("the checkbox value: " + checkbox['checked']  );
+			values[checkbox['name']] = checkbox['checked'];
+		});
+		
+		
 		
 		if( record ){
 			record.set( values );
@@ -101,6 +295,11 @@ Ext.define('AM.controller.CashBankMutations', {
 				success : function(record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
+					
+					// store.getProxy().extraParams = {
+					//     livesearch: ''
+					// };
+	 
 					store.load();
 					win.close();
 				},
@@ -125,7 +324,7 @@ Ext.define('AM.controller.CashBankMutations', {
 			form.setLoading(true);
 			newObject.save({
 				success: function(record){
-					//  since the grid is backed by store, if store changes, it will be updated
+	
 					store.load();
 					form.setLoading(false);
 					win.close();
@@ -142,7 +341,6 @@ Ext.define('AM.controller.CashBankMutations', {
 		} 
   },
 
-  
   deleteObject: function() {
     var record = this.getList().getSelectedObject();
 
@@ -151,115 +349,11 @@ Ext.define('AM.controller.CashBankMutations', {
       store.remove(record);
       store.sync();
 // to do refresh programmatically
-		this.getList().query('pagingtoolbar')[0].doRefresh();
+			this.getList().query('pagingtoolbar')[0].doRefresh();
     }
 
   },
 
-  confirmObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('confirmcashbankmutationform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		// view.down('form').getForm().findField('c').setValue(record.get('deceased_at')); 
-    view.show();
-	},
-  
-  unconfirmObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('unconfirmcashbankmutationform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		// view.down('form').getForm().findField('c').setValue(record.get('deceased_at')); 
-    view.show();
-	},
-  
-  executeConfirm : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getCashBankMutationsStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			
-			record.set( 'confirmed_at' , values['confirmed_at'] );			 
-			
-			form.setLoading(true);
-			record.save({
-				params : {
-					confirm: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					// list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
-  
-  executeUnconfirm : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getCashBankMutationsStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			
-				 
-			
-			form.setLoading(true);
-			record.save({
-				params : {
-					unconfirm: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					// list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
-  
   selectionChange: function(selectionModel, selections) {
     var grid = this.getList();
 

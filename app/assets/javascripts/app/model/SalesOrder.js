@@ -2,9 +2,6 @@ Ext.define('AM.model.SalesOrder', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-
- 
-	 
     	    { name: 'id', type: 'int' },
     	    { name: 'sales_date', type: 'string' },
 			{ name: 'nomor_surat', type: 'string' } ,
@@ -21,8 +18,6 @@ Ext.define('AM.model.SalesOrder', {
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
-			
-	 
 			
 			
   	],

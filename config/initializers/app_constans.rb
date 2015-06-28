@@ -214,6 +214,7 @@ CORE_BUILDER_TYPE = {
   :none => 2
   }	
 
+<<<<<<< HEAD
 MATERIAL_CASE ={
   :new => 1,
   :used => 2
@@ -229,3 +230,45 @@ REPAIR_REQUEST_CASE ={
   :centre_drill_and_repair_corosive =>7,
   :all => 8,
   }
+=======
+
+
+BASE_JS_APP = "#{Dir.pwd}/app/assets/javascripts/app"
+ 
+
+BASE_CONTROLLER_FOLDER = "#{Dir.pwd}/app/controllers"
+
+BASE_MASTER_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/master"
+BASE_MASTER_DETAIL_TEMPLATE_FOLDER = "#{Dir.pwd}/lib/tasks/masterdetail"
+
+BASE_RESULT_FOLDER = "#{Dir.pwd}/lib/tasks/result"
+
+
+WickedPdf.config = {
+  exe_path: '/usr/local/bin/wkhtmltopdf'
+}
+
+BASE_MIGRATION_LOCATION = "#{Rails.root}/zga_migration"
+BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
+BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
+
+MIGRATION_FILENAME = {
+  :contact_group => 'ContactGroup.csv',
+  :contact =>  'Contact.csv',
+  :user => 'UserAccounts.csv',
+  :employee => 'Employees.csv',
+  :item_type => 'ItemTypes.csv',
+  :sub_type => 'SubTypes.csv',
+  :core_builder => "CoreBuilders.csv",
+  :roller_builder => "RollerBuilders.csv",
+  :machine => "Machines.csv",
+  :uom => 'UoMs.csv',
+  :warehouse => 'Warehouses.csv',
+  :cash_bank => "CashBanks.csv",
+  :exchange => "Currencies.csv",
+  :coa => 'Accounts.csv'
+  
+} 
+
+EXCHANGE_BASE_NAME = "Rupiah"
+>>>>>>> willy_mod

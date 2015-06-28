@@ -4,109 +4,111 @@ Ext.define('AM.view.master.employee.Form', {
 
   title : 'Add / Edit Employee',
   layout: 'fit',
-	width	: 960, 
+	width	: 500,
   autoShow: true,  // does it need to be called?
 	modal : true, 
-	height : 500,
 // win.show() 
 // if autoShow == true.. on instantiation, will automatically be called 
 	
-	employeeInfo : function(){
-				var entityInfo = {
-					xtype : 'fieldset',
-					title : "Info Pegawai",
-					flex : 1 , 
-					border : true, 
-					labelWidth: 60,
-					defaultType : 'field',
-					width : '90%',
-					defaults : {
-						anchor : '-10'
-					},
-					items : [
-						{
-							xtype: 'hidden',
-							fieldLabel: 'id',
-							name: 'id' 
-						},
-						{
-							xtype: 'textfield',
-							fieldLabel : 'Name Pegawai',
-							name : 'name'
-						},
-						{
-							xtype: 'textfield',
-							fieldLabel : 'Contact No',
-							name : 'contact_no' 
-						},
-						{
-							xtype: 'textfield',
-							fieldLabel : 'Email',
-							name : 'email' 
-						},
-						{
-							xtype: 'textarea',
-							fieldLabel : 'Alamat',
-							name : 'address' 
-						}, 
-						{
-							xtype: 'textarea',
-							fieldLabel : 'Deskripsi',
-							name : 'description' 
-						}, 
-						
-	
-					]
-				};
-				
-				
-				
-			 
-				
-				var container = {
-					xtype : 'container',
-					layoutConfig: {
-						align :'stretch'
-					},
-					flex: 1, 
-					width : 500,
-					layout : 'vbox',
-					items : [
-						entityInfo 
-					]
-				};
-				
-				return container; 
-	},
-	
-	
-	
   initComponent: function() {
 	
-	
-    			
-		var me = this; 
-    			
-	    this.items = [{
-	      xtype: 'form',
-				msgTarget	: 'side',
-				border: false,
-	      bodyPadding: 10,
-				fieldDefaults: {
-	          labelWidth: 100,
-						anchor: '100%'
-	      },
-				height : 350,
-				overflowY : 'auto', 
-				layout : 'hbox', 
-				// height : 400,
-				items : [
-					me.employeeInfo(), 
-				]
-	    }];
-    	
-	
-	  
+		var remoteJsonStore = Ext.create(Ext.data.JsonStore, {
+			storeId : 'role_search',
+			fields	: [
+	 				{
+						name : 'role_name',
+						mapping : "name"
+					},
+					{
+						name : 'role_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_role',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
+		
+    this.items = [{
+      xtype: 'form',
+			msgTarget	: 'side',
+			border: false,
+      bodyPadding: 10,
+			fieldDefaults: {
+          labelWidth: 165,
+					anchor: '100%'
+      },
+      items: [
+				{
+	        xtype: 'hidden',
+	        name : 'id',
+	        fieldLabel: 'id'
+	      },{
+	        xtype: 'textfield',
+	        name : 'name',
+	        fieldLabel: ' Name'
+	      },{
+					xtype: 'textfield',
+					name : 'id_number',
+					fieldLabel: 'Nomor ID'
+				},
+				{
+					xtype: 'textarea',
+					name : 'address',
+					fieldLabel: 'Alamat'
+				},
+				
+				{
+					xtype: 'numberfield',
+					name : 'rt',
+					fieldLabel: 'RT'
+				},
+				
+				{
+					xtype: 'numberfield',
+					name : 'rw',
+					fieldLabel: 'RW'
+				},
+				
+				{
+					xtype: 'textfield',
+					name : 'village',
+					fieldLabel: 'Kelurahan'
+				},
+				
+				
+				{
+					xtype: 'textfield',
+					name : 'id_card_number',
+					fieldLabel: 'KTP'
+				},
+				
+				
+				
+				{
+					xtype: 'datefield',
+					name : 'birthday_date',
+					fieldLabel: 'Ulang Tahun',
+					format: 'Y-m-d',
+				},
+				
+				
+				
+				
+				{
+					fieldLabel : 'Data Lengkap?',
+					name : 'is_data_complete',
+					xtype : 'checkbox'
+				},
+			]
+    }];
 
     this.buttons = [{
       text: 'Save',
@@ -120,15 +122,21 @@ Ext.define('AM.view.master.employee.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedContactGroup: function( contact_group_id ){
-		
-	},
-	
 	setComboBoxData : function( record){
-		var me = this; 
-		me.setLoading(true);
-		
-		// me.setSelectedContactGroup( record.get("contact_group_id")  ) ;
+		// console.log("Inside the Form.. edit.. setComboBox data");
+		// var role_id = record.get("role_id");
+		// var comboBox = this.down('form').getForm().findField('role_id'); 
+		// var me = this; 
+		// var store = comboBox.store; 
+		// store.load({
+		// 	params: {
+		// 		selected_id : role_id 
+		// 	},
+		// 	callback : function(records, options, success){
+		// 		me.setLoading(false);
+		// 		comboBox.setValue( role_id );
+		// 	}
+		// });
 	}
 });
 

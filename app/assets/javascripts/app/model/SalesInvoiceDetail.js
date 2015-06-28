@@ -1,11 +1,7 @@
 Ext.define('AM.model.SalesInvoiceDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
  
-	
-	
 	        { name: 'sales_invoice_id', type: 'int' }, 
 	 
     	    { name: 'id', type: 'int' },
@@ -25,7 +21,6 @@ Ext.define('AM.model.SalesInvoiceDetail', {
     	    
     	    { name: 'delivery_order_detail_sales_order_detail_price', type: 'string' }, 
     	    { name: 'delivery_order_detail_sales_order_detail_is_service', type: 'boolean' }, 
-			
 			
   	],
 

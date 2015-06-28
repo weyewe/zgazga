@@ -17,7 +17,7 @@ Ext.define('AM.controller.DeliveryOrders', {
 			selector: 'deliveryorderlist'
 		},
 		{
-			ref : 'childList',
+			ref : 'deliveryOrderDetailList',
 			selector : 'deliveryorderdetaillist'
 		},
 		
@@ -123,7 +123,7 @@ Ext.define('AM.controller.DeliveryOrders', {
     var view = Ext.widget('deliveryorderform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +345,20 @@ Ext.define('AM.controller.DeliveryOrders', {
   },
 
 	updateChildGrid: function(record){
-		var deliveryOrderDetailGrid = this.getChildList();
-		// deliveryOrderDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		deliveryOrderDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getDeliveryOrderDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		deliveryOrderDetailGrid.getStore().getProxy().extraParams.deliveryorder_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.delivery_order_id =  record.get('id') ;
 		 
-		deliveryOrderDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				delivery_order_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				deliveryOrderDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

@@ -9,12 +9,12 @@ Ext.define('AM.view.operation.deliveryorderdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Kode SOD', dataIndex: 'sales_order_detail_code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'sales_order_detail_item_sku', flex: 1},
+			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
     		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'sales_order_detail_pending_delivery_amount', flex: 2},
-      		{	header: 'Uom', dataIndex: 'sales_order_detail_item_uom_name', flex: 1 } ,
-			
+    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
+    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
+			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
+      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
 			
 			 
 		];

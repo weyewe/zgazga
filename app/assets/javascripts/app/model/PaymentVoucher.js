@@ -2,21 +2,22 @@ Ext.define('AM.model.PaymentVoucher', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-	 
-    	{ name: 'id', type: 'int' },
-      { name: 'vendor_id', type: 'int' },
-      { name: 'vendor_name', type: 'string' },
-      { name: 'cash_bank_id', type: 'int' },
-      { name: 'cash_bank_name', type: 'string' },
-      { name: 'amount', type: 'string' },
-    	{ name: 'payment_date', type: 'string' },
-			{ name: 'description', type: 'string' } ,
-			{ name: 'is_confirmed', type: 'boolean' } ,  // on start group loan
+    	    { name: 'id', type: 'int' },
+    	    { name: 'sales_date', type: 'string' },
+			{ name: 'nomor_surat', type: 'string' } ,
+			{ name: 'code', type: 'string' } ,
+			
+			{ name: 'contact_id', type: 'int' },
+    	    { name: 'contact_name', type: 'string' },
+    	    
+    	    { name: 'employee_id', type: 'int' },
+    	    { name: 'employee_name', type: 'string' },
+    	    
+    	    { name: 'exchange_id', type: 'int' },
+    	    { name: 'exchange_name', type: 'string' },
+			
+			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
-			{ name: 'code', type: 'string' }   ,
-			{ name: 'is_deleted', type: 'boolean' }   ,
-			{ name: 'deleted_at', type: 'string' }  ,
-      
 			
 			
   	],

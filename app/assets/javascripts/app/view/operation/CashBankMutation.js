@@ -6,8 +6,7 @@ Ext.define('AM.view.operation.CashBankMutation', {
 		items : [
 			{
 				xtype : 'cashbankmutationlist' ,
-				flex : 1 //,
-				// html : 'hahaha'
+				flex : 1 
 			} 
 		]
 });

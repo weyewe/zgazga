@@ -24,18 +24,18 @@ Ext.define('AM.view.master.employee.List' ,{
 		];
 
 		this.addObjectButton = new Ext.Button({
-			text: 'Add ',
+			text: 'Add',
 			action: 'addObject'
 		});
 
 		this.editObjectButton = new Ext.Button({
-			text: 'Edit ',
+			text: 'Edit',
 			action: 'editObject',
 			disabled: true
 		});
 
 		this.deleteObjectButton = new Ext.Button({
-			text: 'Delete ',
+			text: 'Delete',
 			action: 'deleteObject',
 			disabled: true
 		});
@@ -47,15 +47,42 @@ Ext.define('AM.view.master.employee.List' ,{
 			emptyText : "Search",
 			checkChangeBuffer: 300
 		});
+		
+		this.markAsDeceasedObjectButton = new Ext.Button({
+			text: 'Deceased',
+			action: 'markasdeceasedObject',
+			disabled: true
+		});
+
+		this.unmarkAsDeceasedObjectButton = new Ext.Button({
+			text: 'Cancel Deceased',
+			action: 'unmarkasdeceasedObject',
+			disabled: true,
+			hidden :true 
+		});
+		
+		this.markAsRunAwayObjectButton = new Ext.Button({
+			text: 'Run Away',
+			action: 'markasrunawayObject',
+			disabled: true
+		});
 
 
 
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton, this.searchField ];
+		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
+		 				'-',
+						this.searchField,
+						'->',
+						this.markAsDeceasedObjectButton,
+						this.unmarkAsDeceasedObjectButton,
+						this.markAsRunAwayObjectButton
+						
+		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
-			displayMsg: 'Displaying  {0} - {1} of {2}',
-			emptyMsg: "N/Ay" 
+			displayMsg: 'Displaying topics {0} - {1} of {2}',
+			emptyMsg: "No topics to display" 
 		});
 
 		this.callParent(arguments);
@@ -70,10 +97,43 @@ Ext.define('AM.view.master.employee.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
+		
+		
+		this.markAsRunAwayObjectButton.enable();
+
+		this.unmarkAsDeceasedObjectButton.enable();
+		this.markAsDeceasedObjectButton.enable();
+
+
+
+		selectedObject = this.getSelectedObject();
+
+		if( selectedObject && selectedObject.get("is_deceased") == true ){
+			this.unmarkAsDeceasedObjectButton.show();
+			this.markAsDeceasedObjectButton.hide();
+		}else{
+			this.unmarkAsDeceasedObjectButton.hide();
+			this.markAsDeceasedObjectButton.show();
+		}
+
+
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
+		this.markAsDeceasedObjectButton.disable();
+		this.unmarkAsDeceasedObjectButton.disable();
+		this.markAsRunAwayObjectButton.disable();
+
+		selectedObject = this.getSelectedObject();
+
+		if( selectedObject && selectedObject.get("is_deceased") == true ){
+			this.unmarkAsDeceasedObjectButton.show();
+			this.markAsDeceasedObjectButton.hide();
+		}else{
+			this.unmarkAsDeceasedObjectButton.hide();
+			this.markAsDeceasedObjectButton.show();
+		}
 	}
 });

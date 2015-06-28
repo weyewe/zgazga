@@ -1,11 +1,8 @@
 Ext.define('AM.model.WarehouseMutationDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
  
-	
-	
+
 	        { name: 'warehouse_mutation_id', type: 'int' }, 
 	 
     	    { name: 'id', type: 'int' },
@@ -18,8 +15,6 @@ Ext.define('AM.model.WarehouseMutationDetail', {
     	    
     	    { name: 'item_uom_id', type: 'int' },
     	    { name: 'item_uom_name', type: 'string' }, 
-			
-	 
 			
 			
   	],

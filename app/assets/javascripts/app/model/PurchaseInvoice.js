@@ -2,9 +2,6 @@ Ext.define('AM.model.PurchaseInvoice', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-
- 
-	 
     	    { name: 'id', type: 'int' },
     	    { name: 'invoice_date', type: 'string' },
     	    { name: 'due_date', type: 'string' },
@@ -28,8 +25,6 @@ Ext.define('AM.model.PurchaseInvoice', {
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
-			
-	 
 			
 			
   	],

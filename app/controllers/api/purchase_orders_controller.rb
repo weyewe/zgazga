@@ -14,12 +14,12 @@ class Api::PurchaseOrdersController < Api::BaseApiController
            ( exchange.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("purchase_orders.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
        @total = PurchaseOrder.active_objects.joins(:contact,:exchange).where{
          (
            ( description =~  livesearch ) | 
-           ( code =~ livesearch) | 
+           ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
            ( exchange.name =~  livesearch)
@@ -87,7 +87,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
                           :purchase_date => format_date_friendly(@object.purchase_date)  ,
                           :allow_edit_detail => @object.allow_edit_detail,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => PurchaseOrder.active_objects.count  }
@@ -107,7 +107,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:purchase_order][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:purchase_order][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -125,7 +125,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -144,14 +144,14 @@ class Api::PurchaseOrdersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :description => @object.description ,
-                            :purchase_date => format_date_friendly(@object.purchase_date),
-                            :allow_edit_detail => @object.allow_edit_detail,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :description => @object.description ,
+                          :purchase_date => format_date_friendly(@object.purchase_date)  ,
+                          :allow_edit_detail => @object.allow_edit_detail,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PurchaseOrder.active_objects.count  } 
     else
@@ -173,7 +173,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
     @object = PurchaseOrder.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => PurchaseOrder.active_objects.count }  
     else
       render :json => { :success => false, :total => PurchaseOrder.active_objects.count, 
@@ -199,26 +199,27 @@ class Api::PurchaseOrdersController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseOrder.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = PurchaseOrder.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseOrder.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     

@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.salesinvoicedetailform',
 
-  title : 'Add / Edit SalesInvoice Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,55 +13,54 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 	
   initComponent: function() {
 	
-		
-		
-		var remoteJsonStoreDeliveryOrderDetail = Ext.create(Ext.data.JsonStore, {
-			storeId : 'delivery_order_detail_search',
-			fields	: [
-					{
-						name : 'delivery_order_detail_id',
-						mapping : "id"
-					}, 
-					{
-						name : 'delivery_order_detail_code',
-						mapping : "code"
-					}, 
-					{
-						name : 'delivery_order_detail_amount',
-						mapping : "amount"
-					},
-					{
-						name : 'delivery_order_detail_sales_order_detail_price',
-						mapping : "sales_order_detail_price"
-					}, 
-			 		{
-						name : 'delivery_order_detail_sales_order_detail_item_sku',
-						mapping : "sales_order_detail_item_sku"
-					}, 
-					{
-						name : 'delivery_order_detail_sales_order_detail_item_name',
-						mapping : 'sales_order_detail_item_name'
-					},
-					{
-						name : 'delivery_order_detail_sales_order_detail_item_id',
-						mapping : "sales_order_detail_item_id"
-					}, 
-		 
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_delivery_order_details',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
-		
 	
+	var remoteJsonStoreDeliveryOrderDetail = Ext.create(Ext.data.JsonStore, {
+		storeId : 'delivery_order_detail_search',
+		fields	: [
+				{
+					name : 'delivery_order_detail_id',
+					mapping : "id"
+				}, 
+				{
+					name : 'delivery_order_detail_code',
+					mapping : "code"
+				}, 
+				{
+					name : 'delivery_order_detail_amount',
+					mapping : "amount"
+				},
+				{
+					name : 'delivery_order_detail_sales_order_detail_price',
+					mapping : "sales_order_detail_price"
+				}, 
+		 		{
+					name : 'delivery_order_detail_sales_order_detail_item_sku',
+					mapping : "sales_order_detail_item_sku"
+				}, 
+				{
+					name : 'delivery_order_detail_sales_order_detail_item_name',
+					mapping : 'sales_order_detail_item_name'
+				},
+				{
+					name : 'delivery_order_detail_sales_order_detail_item_id',
+					mapping : "sales_order_detail_item_id"
+				}, 
 	 
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_delivery_order_details',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+	
+
+ 
 		
     this.items = [{
       xtype: 'form',
@@ -130,7 +129,8 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 		
 	 
 			
-		]
+			
+			]
     }];
 
     this.buttons = [{
@@ -163,6 +163,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 	
 	
 	
+	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -170,6 +171,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 		
 		me.setSelectedDeliveryOrderDetail( record.get("delivery_order_detail_id")  ) ;  
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('sales_invoice_code').setValue(record.get('code')); 

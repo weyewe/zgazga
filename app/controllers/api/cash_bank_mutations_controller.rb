@@ -1,44 +1,49 @@
 class Api::CashBankMutationsController < Api::BaseApiController
   
   def index
+     
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-    @objects = CashBankMutation.where{ 
-        (
-          (code =~  livesearch ) |
-          (description =~  livesearch ) 
-           
-        )
         
-      }.page(params[:page]).per(params[:limit]).order("id DESC")
-      
-      @total = CashBankMutation.where{
-        (
-          (code =~  livesearch ) |
-          (description =~  livesearch ) 
-        )
         
-      }.count
+        @objects = CashBankMutation.where{
+          (
+            ( name =~  livesearch )  | 
+            ( address =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( contact_no =~ livesearch ) | 
+            ( email =~ livesearch )
+          )
+
+        }.page(params[:page]).per(params[:limit]).order("id DESC")
+
+        @total = CashBankMutation.where{
+          (
+            ( name =~  livesearch )  | 
+            ( address =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( contact_no =~ livesearch ) | 
+            ( email =~ livesearch )
+          )
+        }.count
+   
     else
-      @objects = CashBankMutation.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = CashBankMutation.active_objects.count
+      puts "In this shite"
+      @objects = CashBankMutation.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = CashBankMutation.count 
     end
     
     
-    
-    # render :json => { :cash_bank_mutations => @objects , :total => @total, :success => true }
+    # render :json => { :cash_bank_mutations => @objects , :total => @total , :success => true }
   end
 
   def create
-    @object = CashBankMutation.create_object( params[:cash_bank_mutation] )  
-    
-    
- 
+    @object = CashBankMutation.create_object( params[:cash_bank_mutation] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
                         :cash_bank_mutations => [@object] , 
-                        :total => CashBankMutation.active_objects.count }  
+                        :total => CashBankMutation.active_objects.count  }  
     else
       msg = {
         :success => false, 
@@ -52,28 +57,16 @@ class Api::CashBankMutationsController < Api::BaseApiController
   end
 
   def update
-    @object = CashBankMutation.find_by_id params[:id] 
-    if params[:confirm].present?
-      if not current_user.has_role?( :cash_bank_mutations, :confirm)
-          render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-          return
-        end
-      @object.confirm_object(params[:cash_bank_mutation]) 
-      
-      elsif params[:unconfirm].present?
-        if not current_user.has_role?( :cash_bank_mutations, :unconfirm)
-          render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-          return
-        end
-      @object.unconfirm_object
-      
-    else
-      @object.update_object( params[:cash_bank_mutation])
-    end
+    @object = CashBankMutation.find(params[:id]) 
+    
+
+    @object.update_object( params[:cash_bank_mutation] )
+    
+     
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :cash_bank_mutations => [@object],
-                        :total => CashBankMutation.active_objects.count  } 
+                        :total => CashBankMutation.active_objects.count } 
     else
       msg = {
         :success => false, 
@@ -82,15 +75,35 @@ class Api::CashBankMutationsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      
+      
     end
+  end
+  
+  def show
+    @object = CashBankMutation.find_by_id params[:id]
+    render :json => { :success => true, 
+                      :cash_bank_mutations => [@object] , 
+                      :total => CashBankMutation.count }
   end
 
   def destroy
     @object = CashBankMutation.find(params[:id])
-    @object.delete_object
+    
+    begin
+      ActiveRecord::Base.transaction do 
+        @object.delete_object 
+      end
+    rescue ActiveRecord::ActiveRecordError  
+    else
+    end
+    
+    
 
-    if not @object.is_deleted?
+    if not @object.persisted?  
+      render :json => { :success => true, :total => CashBankMutation.active_objects.count }  
+    else
       msg = {
         :success => false, 
         :message => {
@@ -98,14 +111,10 @@ class Api::CashBankMutationsController < Api::BaseApiController
         }
       }
       
-      
       render :json => msg
-    else
-      
-      
-      render :json => { :success => true, :total => CashBankMutation.active_objects.count }  
     end
   end
+  
   
   def search
     search_params = params[:query]
@@ -118,21 +127,24 @@ class Api::CashBankMutationsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = CashBankMutation.active_objects.where{
-                                (                                  
-                                  (code =~  query ) | 
-                                  (description =~  query ) 
-                                )
+      @objects = CashBankMutation.where{ 
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = CashBankMutation.active_objects.where{ 
-                                ( 
-                                  (code =~  query ) |
-                                  (description =~  query ) 
-                                )
+      @total = CashBankMutation.where{ 
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
+        
                               }.count
     else
       @objects = CashBankMutation.where{ (id.eq selected_id)  

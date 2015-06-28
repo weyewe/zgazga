@@ -3,11 +3,24 @@ Ext.define('AM.model.PaymentVoucherDetail', {
   	fields: [
  
 
-    	{ name: 'id', type: 'int' },
-    	{ name: 'amount', type: 'string' },
-			{ name: 'payment_voucher_id', type: 'int' } ,
-			{ name: 'payable_id', type: 'int' } ,  // on start group loan
-			{ name: 'payable_source_code', type: 'string' } 		
+	        { name: 'sales_order_id', type: 'int' }, 
+	 
+    	    { name: 'id', type: 'int' },
+    	    { name: 'amount', type: 'string' },
+    	    { name: 'pending_delivery_amount', type: 'string' },
+			{ name: 'price', type: 'string' } ,
+			{ name: 'code', type: 'string' } ,
+			
+			{ name: 'item_id', type: 'int' },
+    	    { name: 'item_sku', type: 'string' },
+    	    { name: 'item_name', type: 'string' },
+    	    
+    	    { name: 'item_uom_id', type: 'int' },
+    	    { name: 'item_uom_name', type: 'string' }, 
+    	    
+    	    { name: 'is_service', type: 'boolean' }, 
+			{ name: 'is_service_text', type: 'string' }, 
+			
   	],
 
 	 

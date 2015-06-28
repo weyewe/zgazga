@@ -11,65 +11,31 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	 
-   
+	
+		var remoteJsonStore = Ext.create(Ext.data.JsonStore, {
+			storeId : 'role_search',
+			fields	: [
+	 				{
+						name : 'role_name',
+						mapping : "name"
+					},
+					{
+						name : 'role_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_role',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
-    var remoteJsonStoreType = Ext.create(Ext.data.JsonStore, {
-			storeId : 'type_search',
-			fields	: [
-			 		{
-						name : 'cash_bank_name',
-						mapping : "name"
-					} ,
-					{
-						name : 'cash_bank_id',
-						mapping : "id"
-					}  ,
-          {
-						name : 'cash_bank_amount',
-						mapping : "amount"
-					}  
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_cash_bank',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
-    
-     var remoteJsonStoreType2 = Ext.create(Ext.data.JsonStore, {
-			storeId : 'type_search',
-			fields	: [
-			 		{
-						name : 'cash_bank_name',
-						mapping : "name"
-					} ,
-					{
-						name : 'cash_bank_id',
-						mapping : "id"
-					}  ,
-          {
-						name : 'cash_bank_amount',
-						mapping : "amount"
-					}  
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_cash_bank',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
-    
     this.items = [{
       xtype: 'form',
 			msgTarget	: 'side',
@@ -84,72 +50,62 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 	        xtype: 'hidden',
 	        name : 'id',
 	        fieldLabel: 'id'
-	      },
-        {
-	        xtype: 'displayfield',
-	        name : 'code',
-	        fieldLabel: 'Code'
-	      },
+	      },{
+	        xtype: 'textfield',
+	        name : 'name',
+	        fieldLabel: ' Name'
+	      },{
+					xtype: 'textfield',
+					name : 'id_number',
+					fieldLabel: 'Nomor ID'
+				},
 				{
-					fieldLabel: 'Source CashBank',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'cash_bank_name',
-					valueField : 'cash_bank_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType2 , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{cash_bank_name}">' + 
-													'<div class="combo-name">{cash_bank_name}</div>' + 
-                          '<div class="combo-name">{cash_bank_amount}</div>'
-							 					'</div>';
-						}
-					},
-					name : 'source_cash_bank_id' 
+					xtype: 'textarea',
+					name : 'address',
+					fieldLabel: 'Alamat'
 				},
-        {
-					fieldLabel: 'Target CashBank',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'cash_bank_name',
-					valueField : 'cash_bank_id',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : remoteJsonStoreType , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{cash_bank_name}">' + 
-													'<div class="combo-name">{cash_bank_name}</div>' + 
-                          '<div class="combo-name">{cash_bank_amount}</div>'
-							 					'</div>';
-						}
-					},
-					name : 'target_cash_bank_id' 
-				},,
-       
-        {
+				
+				{
 					xtype: 'numberfield',
-					name : 'amount',
-					fieldLabel: 'Amount'
+					name : 'rt',
+					fieldLabel: 'RT'
 				},
-        {
+				
+				{
+					xtype: 'numberfield',
+					name : 'rw',
+					fieldLabel: 'RW'
+				},
+				
+				{
+					xtype: 'textfield',
+					name : 'village',
+					fieldLabel: 'Kelurahan'
+				},
+				
+				
+				{
+					xtype: 'textfield',
+					name : 'id_card_number',
+					fieldLabel: 'KTP'
+				},
+				
+				
+				
+				{
 					xtype: 'datefield',
-					name : 'mutation_date',
-					fieldLabel: 'Tanggal Adjust',
+					name : 'birthday_date',
+					fieldLabel: 'Ulang Tahun',
 					format: 'Y-m-d',
 				},
-         {
-					xtype: 'textarea',
-					name : 'description',
-					fieldLabel: 'Deskripsi'
+				
+				
+				
+				
+				{
+					fieldLabel : 'Data Lengkap?',
+					name : 'is_data_complete',
+					xtype : 'checkbox'
 				},
 			]
     }];
@@ -166,44 +122,21 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
     this.callParent(arguments);
   },
 
-  setSelectedType: function( source_cash_bank_id ){
-      var comboBox = this.down('form').getForm().findField('source_cash_bank_id'); 
-      var me = this; 
-      var store = comboBox.store;  
-      store.load({
-        params: {
-          selected_id : source_cash_bank_id 
-        },
-        callback : function(records, options, success){
-          me.setLoading(false);
-          comboBox.setValue( source_cash_bank_id );
-        }
-      });
-    },
-
-   setSelectedStatus: function( target_cash_bank_id ){
-      var comboBox = this.down('form').getForm().findField('target_cash_bank_id'); 
-      var me = this; 
-      var store = comboBox.store;  
-      store.load({
-        params: {
-          selected_id : target_cash_bank_id 
-        },
-        callback : function(records, options, success){
-          me.setLoading(false);
-          comboBox.setValue( target_cash_bank_id );
-        }
-      });
-    },
-  
 	setComboBoxData : function( record){
-		
-		var me = this; 
-		me.setLoading(true);
-    
-    console.log( record.get("status"));
-		me.setSelectedStatus( record.get("target_cash_bank_id")  ) ; 
-		me.setSelectedType( record.get("source_cash_bank_id")  ) ; 
-  }
+		// console.log("Inside the Form.. edit.. setComboBox data");
+		// var role_id = record.get("role_id");
+		// var comboBox = this.down('form').getForm().findField('role_id'); 
+		// var me = this; 
+		// var store = comboBox.store; 
+		// store.load({
+		// 	params: {
+		// 		selected_id : role_id 
+		// 	},
+		// 	callback : function(records, options, success){
+		// 		me.setLoading(false);
+		// 		comboBox.setValue( role_id );
+		// 	}
+		// });
+	}
 });
 

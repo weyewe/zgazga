@@ -17,7 +17,7 @@ Ext.define('AM.controller.PurchaseInvoices', {
 			selector: 'purchaseinvoicelist'
 		},
 		{
-			ref : 'childList',
+			ref : 'purchaseInvoiceDetailList',
 			selector : 'purchaseinvoicedetaillist'
 		},
 		
@@ -123,7 +123,7 @@ Ext.define('AM.controller.PurchaseInvoices', {
     var view = Ext.widget('purchaseinvoiceform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +345,20 @@ Ext.define('AM.controller.PurchaseInvoices', {
   },
 
 	updateChildGrid: function(record){
-		var purchaseInvoiceDetailGrid = this.getChildList();
-		// purchaseInvoiceDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		purchaseInvoiceDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getPurchaseInvoiceDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		purchaseInvoiceDetailGrid.getStore().getProxy().extraParams.purchaseinvoice_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.purchase_invoice_id =  record.get('id') ;
 		 
-		purchaseInvoiceDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				purchase_invoice_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				purchaseInvoiceDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

@@ -20,7 +20,7 @@ Ext.define('AM.view.operation.SalesInvoice', {
 			},
 			{
 				xtype :'salesinvoicedetaillist',
-				// html : "This is gonna be the detail",
+				// html : "This is gonna be the price_rule",
 				flex : 1
 			} 
 		],

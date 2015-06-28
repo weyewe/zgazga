@@ -49,7 +49,7 @@ Ext.define('AM.controller.PurchaseOrderDetails', {
         click: this.deleteObject
       },
  
-			// monitor parent(purchase_order) update
+			// monitor parent(sales_order) update
 			'purchaseorderlist' : {
 				'updated' : this.reloadStore,
 				'confirmed' : this.reloadStore,

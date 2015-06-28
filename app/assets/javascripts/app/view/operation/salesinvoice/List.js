@@ -28,7 +28,6 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
 			},
 			
-			
 		];
 
 		this.addObjectButton = new Ext.Button({

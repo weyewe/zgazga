@@ -5,14 +5,13 @@ class Api::WarehouseMutationsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = WarehouseMutation.active_objects.where{
+       @objects = WarehouseMutation.active_objects. where{
          (
            ( code =~ livesearch)
          )
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       }.page(params[:page]).per(params[:limit]).order("warehouse_mutations.id DESC")
-
-       @total = WarehouseMutation.active_objects.where{
+       @total = WarehouseMutation.active_objects. where{
          (
            ( code =~ livesearch)
          )
@@ -38,10 +37,21 @@ class Api::WarehouseMutationsController < Api::BaseApiController
  
     if @object.errors.size == 0 
       
+      
+ 
+	
       render :json => { :success => true, 
                         :warehouse_mutations => [
                           :id => @object.id, 
                           :code => @object.code ,
+                          :description => @object.description , 
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
                           :mutation_date => format_date_friendly(@object.mutation_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
@@ -71,9 +81,17 @@ class Api::WarehouseMutationsController < Api::BaseApiController
                       :warehouse_mutations => [
                           :id => @object.id, 
                           :code => @object.code ,
+                          :description => @object.description , 
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
                           :mutation_date => format_date_friendly(@object.mutation_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => WarehouseMutation.active_objects.count  }
@@ -93,7 +111,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:warehouse_mutation][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:warehouse_mutation][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -111,7 +129,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -130,11 +148,19 @@ class Api::WarehouseMutationsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :warehouse_mutations => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :mutation_date => format_date_friendly(@object.mutation_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :description => @object.description , 
+                          
+                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
+                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
+                          	
+                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
+                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
+                          	
+                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => WarehouseMutation.active_objects.count  } 
     else
@@ -156,7 +182,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
     @object = WarehouseMutation.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => WarehouseMutation.active_objects.count }  
     else
       render :json => { :success => false, :total => WarehouseMutation.active_objects.count, 
@@ -182,26 +208,27 @@ class Api::WarehouseMutationsController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = WarehouseMutation.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = WarehouseMutation.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = WarehouseMutation.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     

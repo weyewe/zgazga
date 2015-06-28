@@ -1,8 +1,5 @@
-
 Ext.define('AM.model.Employee', {
   	extend: 'Ext.data.Model',
-  	 
-      
   	fields: [
     	{ name: 'id', type: 'int' },
 		{ name: 'name', type: 'string' },
@@ -10,14 +7,15 @@ Ext.define('AM.model.Employee', {
 		{ name: 'description', type: 'string' },
 		{ name: 'contact_no', type: 'string' },
 		{ name: 'email', type: 'string' },
-		
   	],
 
 	 
 
 
    
-  	idProperty: 'id' ,proxy: {
+  	idProperty: 'id' ,
+
+		proxy: {
 			url: 'api/employees',
 			type: 'rest',
 			format: 'json',

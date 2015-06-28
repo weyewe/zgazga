@@ -2,9 +2,6 @@ Ext.define('AM.model.WarehouseMutation', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-
- 
-	 
     	    { name: 'id', type: 'int' },
     	    { name: 'mutation_date', type: 'string' },
 			{ name: 'code', type: 'string' } ,
@@ -17,8 +14,6 @@ Ext.define('AM.model.WarehouseMutation', {
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
-			
-	 
 			
 			
   	],

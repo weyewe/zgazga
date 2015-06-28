@@ -67,11 +67,11 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }
-        }  
+      }  
     end
   end
- 
-  def search
+  
+    def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -83,34 +83,38 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
-            ( item.sku  =~ query ) | 
+          ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
-      @total = DeliveryOrderDetail.joins(:delivery_order,:item, :sales_order_detail).where{ 
-               ( item.sku  =~ query ) | 
+      @total = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
+          ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
+        ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-                              }.count
+      }.count
     else
-      @objects = DeliveryOrderDetail.where{ (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = DeliveryOrderDetail.where{ 
+              (id.eq selected_id)  
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
    
-      @total = DeliveryOrderDetail.where{ (id.eq selected_id)   
-                              }.count 
+      @total = DeliveryOrderDetail.where{ 
+              (id.eq selected_id)   
+      }.count 
     end
     
     
     # render :json => { :records => @objects , :total => @total, :success => true }
   end
+ 
+  
  
 end

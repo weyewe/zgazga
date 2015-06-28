@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.stockadjustmentdetailform',
 
-  title : 'Add / Edit StockAdjustment Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -12,6 +12,8 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
+	
+	
 	
 	    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
 			type : 'array',
@@ -26,35 +28,36 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 			] 
 		});
 		
-		
-		var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-			storeId : 'item_search',
-			fields	: [
-			 		{
-						name : 'item_sku',
-						mapping : "sku"
-					}, 
-					{
-						name : 'item_name',
-						mapping : 'name'
-					},
-					{
-						name : 'item_id',
-						mapping : "id"
-					}, 
-		 
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_items',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
+	
+	
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
+		fields	: [
+		 		{
+					name : 'item_sku',
+					mapping : "sku"
+				}, 
+				{
+					name : 'item_name',
+					mapping : 'name'
+				},
+				{
+					name : 'item_id',
+					mapping : "id"
+				}, 
+	 
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_items',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
 		
 	
 	 
@@ -142,8 +145,10 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
     	     },
 		
 	 
+	 
 			
-		]
+			
+			]
     }];
 
     this.buttons = [{
@@ -173,7 +178,7 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 			}
 		});
 	},
-	
+	 
 	
 	
 	setComboBoxData : function( record){
@@ -183,6 +188,7 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 		
 		me.setSelectedItem( record.get("item_id")  ) ;  
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('stock_adjustment_code').setValue(record.get('code')); 

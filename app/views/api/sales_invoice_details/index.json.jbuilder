@@ -18,12 +18,12 @@ json.sales_invoice_details @objects do |object|
 	json.delivery_order_detail_sales_order_detail_is_service	object.delivery_order_detail.sales_order_detail.is_service
 	json.delivery_order_detail_sales_order_detail_price	 object.delivery_order_detail.sales_order_detail.price
 	
-	json.delivery_order_detail_sales_order_detail_item_id                object.delivery_order_detail.sales_order_detail.item.id 
-	json.delivery_order_detail_sales_order_detail_item_sku 			 object.delivery_order_detail.sales_order_detail.item.sku 
-	json.delivery_order_detail_sales_order_detail_item_name 			 object.delivery_order_detail.sales_order_detail.item.name
+	json.delivery_order_detail_sales_order_detail_item_id                object.delivery_order_detail.item.id 
+	json.delivery_order_detail_sales_order_detail_item_sku 			 object.delivery_order_detail.item.sku 
+	json.delivery_order_detail_sales_order_detail_item_name 			 object.delivery_order_detail.item.name
 	
-	json.delivery_order_detail_sales_order_detail_item_uom_id 			object.delivery_order_detail.sales_order_detail.item.uom.id 
-	json.delivery_order_detail_sales_order_detail_item_uom_name 				object.delivery_order_detail.sales_order_detail.item.uom.name
+	json.delivery_order_detail_sales_order_detail_item_uom_id 			object.delivery_order_detail.item.uom.id 
+	json.delivery_order_detail_sales_order_detail_item_uom_name 				object.delivery_order_detail.item.uom.name
 	
  
 	

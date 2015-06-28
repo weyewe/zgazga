@@ -5,7 +5,7 @@ class Contact < ActiveRecord::Base
 
   def contact_type_must_be_valid
     return if contact_type.nil?
-    if not [1,2].include?( contact_type) 
+    if not [1,2].include?( contact_type.to_i ) 
       self.errors.add(:contact_type, "Contact type harus ada")
       return self 
     end

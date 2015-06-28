@@ -2,7 +2,7 @@ class Api::SalesInvoiceDetailsController < Api::BaseApiController
   
   def index
     @parent = SalesInvoice.find_by_id params[:sales_invoice_id]
-    @objects = @parent.active_children.joins(:sales_invoice).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:sales_invoice, :delivery_order_detail => [:item => [:uom]] ).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -67,10 +67,9 @@ class Api::SalesInvoiceDetailsController < Api::BaseApiController
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }
-        }  
+      }  
     end
   end
- 
-  
+   
  
 end

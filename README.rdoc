@@ -1,28 +1,25 @@
-== README
+migration_procedure:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+rake db:drop; rake db:create; rake db:migrate
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+rake migrate_zga:base_setup
+rake migrate_zga:exchange
+rake migrate_zga:cash_bank
+rake migrate_zga:coa 
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+rake migrate_zga:contact_group
+rake migrate_zga:contact
+
+rake migrate_zga:user 
+rake migrate_zga:employee
+
+
+rake migrate_zga:machine 
+rake migrate_zga:uom
+rake migrate_zga:item_type
+rake  migrate_zga:sub_type
+
+migrate_zga:core_builder
+pending: migrate_zga:roller_builder
+pending: migrate_zga:item 

@@ -14,7 +14,8 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
            ( purchase_receival.nomor_surat =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("purchase_invoices.id DESC")
+
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
        @total = PurchaseInvoice.active_objects.joins(:purchase_receival =>[:purchase_order =>[:contact,:exchange]]).where{
          (
@@ -87,7 +88,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
                           :invoice_date => format_date_friendly(@object.invoice_date)  ,
                           :due_date => format_date_friendly(@object.due_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => PurchaseInvoice.active_objects.count  }
@@ -107,7 +108,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:purchase_invoice][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:purchase_invoice][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -125,7 +126,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -144,13 +145,14 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_invoices => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :invoice_date => format_date_friendly(@object.invoice_date)  ,
-                            :due_date => format_date_friendly(@object.due_date)  ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :description => @object.description ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PurchaseInvoice.active_objects.count  } 
     else
@@ -172,7 +174,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
     @object = PurchaseInvoice.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => PurchaseInvoice.active_objects.count }  
     else
       render :json => { :success => false, :total => PurchaseInvoice.active_objects.count, 
@@ -198,26 +200,27 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseInvoice.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = PurchaseInvoice.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseInvoice.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     
