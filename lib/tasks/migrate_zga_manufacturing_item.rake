@@ -13,6 +13,10 @@ namespace :migrate_zga do
     roller_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:roller]
     blanket_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:blanket]
     
+    # puts "core_item_type: #{core_item_type.id}"
+    # puts "roller_item_type: #{roller_item_type.id}"
+    # puts "blanket_item_type: #{blanket_item_type.id}"
+    
     item_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item_type] ) 
     sub_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:sub_type] )  
     uom_mapping_hash  = get_mapping_hash( MIGRATION_FILENAME[:uom])
@@ -41,19 +45,10 @@ namespace :migrate_zga do
           description = row[5]
           is_tradeable = row[6]
           uom_id = row[7]
-          quantity = row[8]
-          pending_delivery = row[9]
-          pending_receival = row[10]
-          virtual = row[11]
           minimum_quantity = row[12]
-          customer_quantity = row[13]
-          customer_virtual = row[14]
           selling_price = row[15]
           price_list = row[16]
           exchange_id = row[17]
-          price_mutation_id = row[18]
-          avg_price = row[19]
-          customer_avg_price = row[20]
           is_deleted = row[21] 
  
  
@@ -63,14 +58,27 @@ namespace :migrate_zga do
           new_exchange_id = exchange_mapping_hash[exchange_id]
           
           
+          if selling_price.to_i == 0
+            selling_price = "100"
+          end
+          
+          if minimum_quantity.to_i == 0
+            minimum_quantity = "100"
+          end
+          
+          if price_list.to_i == 0
+            price_list = "100"
+          end
+          
+          
           
           if new_exchange_id.nil?
             new_exchange_id = base_exchange.id 
           end
           
-          next if new_item_type_id == core_item_type.id or 
-                  new_item_type_id == roller_item_type.id or 
-                  new_item_type_id == blanket_item_type.id
+          next if new_item_type_id.to_i == core_item_type.id or 
+                  new_item_type_id.to_i == roller_item_type.id or 
+                  new_item_type_id.to_i == blanket_item_type.id
             
           is_deleted = false 
           is_deleted  = true if row[21] == "True" 
@@ -95,7 +103,12 @@ namespace :migrate_zga do
               :price_list => price_list
             )
           
-          object.errors.messages.each {|x| puts "error: #{x}" } 
+          object.errors.messages.each do |x|
+            puts "error: #{x}. Old id: #{id}. #{row[21]}" 
+            puts "item_type_id : #{item_type_id}"
+            puts "new_item_type_id : #{new_item_type_id}"
+          end
+            
  
            
 

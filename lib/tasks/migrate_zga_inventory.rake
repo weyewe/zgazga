@@ -109,6 +109,15 @@ namespace :migrate_zga do
     
     account_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:coa] )  
     
+    base_item_type_name = []
+    
+    BASE_ITEM_TYPE.each do |key,value| 
+      base_item_type_name << value 
+    end
+    
+ 
+    
+    
     migration_filename = MIGRATION_FILENAME[:item_type]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
@@ -148,13 +157,24 @@ namespace :migrate_zga do
           end
           
            
-          object = ItemType.create_object(
-            :name =>  name   ,
-            :description => description  , 
-            :account_id =>  new_account_id.to_i , 
-            )
+          object = nil 
+          # puts "name : #{name}"
+          if not base_item_type_name.include?( name )
+            # puts "not found in the base item type"
+            object = ItemType.create_object(
+              :name =>  name   ,
+              :description => description  , 
+              :account_id =>  new_account_id.to_i , 
+              )
+          else
+            # puts "found item type : #{name}"
+            object = ItemType.find_by_name name 
+            # puts "the object"
+            # puts "#{object}"
             
-          object.errors.each {|x| puts "error message: #{x}" }  
+          end
+            
+          object.errors.messages.each {|x| puts "error message: #{x}" }  
             
           
            
