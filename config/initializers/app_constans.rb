@@ -268,7 +268,12 @@ MIGRATION_FILENAME = {
   :warehouse => 'Warehouses.csv',
   :cash_bank => "CashBanks.csv",
   :exchange => "Currencies.csv",
-  :coa => 'Accounts.csv'
+  :coa => 'Accounts.csv',
+  
+  :exchange_rate => "ExchangeRates.csv",
+  :stock_adjustment => "StockAdjustments.csv", 
+  :stock_adjustment_detail => "StockAdjustmentDetails.csv"
+  
   
 } 
 
