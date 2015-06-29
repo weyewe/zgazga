@@ -114,7 +114,7 @@ namespace :migrate_zga do
 
             result_array << [ id , 
                     object.id , 
-                    object.name  ]
+                    object.sku  ]
 
         end
         
@@ -133,6 +133,7 @@ namespace :migrate_zga do
     
     uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
     machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
+    item_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item_type] )  
     base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME ) 
     # puts "the contact group mapping hash"
     # puts "#{contact_group_mapping_hash}"
@@ -226,6 +227,67 @@ namespace :migrate_zga do
       end
     end
     
+    
+    # update the item lookup table to accomodate core 
+    
+    migration_filename = MIGRATION_FILENAME[:item] 
+    item_original_location  = original_file_location( migration_filename )
+    item_lookup_location =  lookup_file_location(  migration_filename ) 
+    
+  
+    
+    original_core_item_type_hash  = {} 
+    awesome_row_counter = - 1 
+    core_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:core]
+    
+    CSV.open(item_original_location, 'r') do |csv| 
+      csv.each do |row| 
+        awesome_row_counter = awesome_row_counter + 1  
+        next if awesome_row_counter == 0 
+         
+
+        id = row[0]
+        item_type_id = row[1] 
+        sku = row[3]
+ 
+        
+        
+        is_deleted = false 
+        is_deleted  = true if row[21] == "True" 
+        
+        next if is_deleted 
+        new_item_type_id =  item_type_mapping_hash[item_type_id] 
+        if  new_item_type_id.to_i == core_item_type.id
+          puts "Sku: #{sku}"
+          original_core_item_type_hash[sku] = id 
+        end 
+        
+      end
+    end
+    
+    puts "The content of original_core_item_type_hash: "
+    puts original_core_item_type_hash
+    
+    CSV.open(item_lookup_location, 'a') do |csv|
+      result_array.each do |el| 
+        core_builder = CoreBuilder.find_by_id el[1]
+        new_core_item = core_builder.new_core_item
+        used_core_item = core_builder.used_core_item 
+        
+        new_core_old_id = original_core_item_type_hash[new_core_item.sku]
+        used_core_old_id = original_core_item_type_hash[new_core_item.sku]
+        
+        if new_core_old_id.nil? or used_core_old_id.nil?
+          puts "there is no mapping for base_sku : #{core_builder.base_sku}"
+        end
+        
+        csv << [ new_core_old_id, new_core_item.id, new_core_item.sku ] 
+        csv << [ used_core_old_id, used_core_item.id, used_core_item.sku ] 
+      
+      end
+    end
+    
+    
     puts "Done migrating core builder. Total core builder : #{CoreBuilder.count}"
   end
   
@@ -281,161 +343,215 @@ namespace :migrate_zga do
   end
   
   
-  # task :roller_builder => :environment do
+  task :roller_builder => :environment do
+       
+       
+    uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
+    machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
+    roller_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:roller_type] ) 
+    item_mapping_hash = get_mapping_hash( MIGRATION_FILENAME[:item])
+    core_builder_mapping_hash = get_mapping_hash(MIGRATION_FILENAME[:core_builder])
+    item_type_mapping_hash = get_mapping_hash(MIGRATION_FILENAME[:item_type])
+    base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME )  
     
-  #   uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
-  #   machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
-  #   base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME ) 
-  #   # puts "the contact group mapping hash"
-  #   # puts "#{contact_group_mapping_hash}"
+    migration_filename = MIGRATION_FILENAME[:roller_builder]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
     
-  #   migration_filename = MIGRATION_FILENAME[:core_builder]
-  #   original_location =   original_file_location( migration_filename )
-  #   lookup_location =  lookup_file_location(  migration_filename ) 
-  #   result_array = [] 
-  #   awesome_row_counter = - 1 
-    
-  #   CSV.open(original_location, 'r') do |csv| 
-  #       csv.each do |row| 
-  #         awesome_row_counter = awesome_row_counter + 1  
-  #         next if awesome_row_counter == 0 
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
           
- 
-  #           :base_sku => @base_sku_1,
-  #           :name => @name_1,
-  #           :description => @description_1,
-  #           :uom_id => @uom_1.id,
-  #           :adhesive_id => @adhesive_1.id,
-  #           :compound_id => @compound_1.id,
-  #           :machine_id => @machine_1.id,
-  #           :roller_type_id => @roller_type_1.id,
-  #           :core_builder_id => @core_builder_1.id,
-  #           :is_grooving => @is_grooving_1,
-  #           :is_crowning => @is_crowning_1,
-  #           :is_chamfer => @is_chamfer_1,
-  #           :crowning_size => @crowning_size_1,
-  #           :grooving_width => @grooving_width_1,
-  #           :grooving_depth => @grooving_depth_1,
-  #           :grooving_position => @grooving_position_1,
-  #           :cd => @cd_1,
-  #           :rd => @rd_1,
-  #           :rl => @rl_1,
-  #           :wl => @wl_1,
-  #           :tl => @tl_1
-        
-  #         id = row[0]
-  #         machine_id = row[1]
-  #         roller_type_id = row[2]
-  #         compound_id = row[3]
-  #         core_builder_id = row[4]
-  #         base_sku = row[5]
-  #         sku_roller_used_core = row[6]
-  #         sku_roller_new_core = row[7]
-  #         roller_used_core_item_id = row[8]
-  #         roller_new_core_item_id = row[9]
-  #         adhesive_id = row[10]
-  #         uo_m_id = row[11]
-  #         name = row[12]
-  #         description = row[13]
-  #         r_d = row[14]
-  #         c_d = row[15]
-  #         r_l = row[16]
-  #         w_l = row[17]
-  #         t_l = row[18]
-  #         is_crowning = row[19]
-  #         crowning_size = row[20]
-  #         is_grooving = row[21]
-  #         grooving_width = row[22]
-  #         grooving_depth = row[23]
-  #         grooving_position = row[24]
-  #         is_chamfer = row[25]
-  #         is_deleted = row[26]
-  #         created_at = row[27]
-  #         updated_at = row[28]
-  #         deleted_at = row[29]
-          
- 
-          
-          
-  #         is_deleted = false 
-  #         is_deleted  = true if row[13] == "True" 
-          
-  #         next if is_deleted 
-          
- 
-
-  #         if core_builder_type_case == "None"
-  #           core_builder_type_case = CORE_BUILDER_TYPE[:none]
-  #         end
-          
-  #         if core_builder_type_case == "Shaft"
-  #           core_builder_type_case = CORE_BUILDER_TYPE[:shaft]
-  #         end
-          
-  #         if core_builder_type_case == "Hollow"
-  #           core_builder_type_case = CORE_BUILDER_TYPE[:hollow]
-  #         end
-          
+   
+          id = row[0]
+          machine_id = row[1]
+          roller_type_id = row[2]
+          compound_id = row[3]
+          core_builder_id = row[4]
+          base_sku = row[5] 
+          adhesive_id = row[10]
+          uom_id = row[11]
+          name = row[12]
+          description = row[13]
+          rd = row[14]
+          cd = row[15]
+          rl = row[16]
+          wl = row[17]
+          tl = row[18]
+          is_crowning = row[19]
+          crowning_size = row[20]
+          is_grooving = row[21]
+          grooving_width = row[22]
+          grooving_depth = row[23]
+          grooving_position = row[24]
+          is_chamfer = row[25]
            
-  #         new_uom_id =  uom_mapping_hash[uom_id] 
+           
+          is_deleted = false 
+          is_deleted  = true if row[26] == "True" 
           
-  #         if Uom.find_by_id( new_uom_id.to_i ).nil?
-  #           puts "fucka.. id #{new_uom_id} has no corresponding new uom "
-  #         end
+          next if is_deleted 
           
-  #         new_machine_id =  machine_mapping_hash[machine_id] 
+          is_chamfer = false 
+          is_chamfer  = true if row[25] == "True" 
           
-  #         if Machine.find_by_id( new_machine_id.to_i ).nil?
-  #           puts "fucka.. id #{new_machine_id} has no corresponding new machine_id "
-  #         end
+          is_grooving = false 
+          is_grooving  = true if row[21] == "True" 
           
-          
+          is_crowning = false 
+          is_crowning  = true if row[19] == "True" 
     
           
-  #         object = RollerBuilder.create_object(
-  #           :base_sku => @base_sku_1,
-  #           :name => @name_1,
-  #           :description => @description_1,
-  #           :uom_id => @uom_1.id,
-  #           :adhesive_id => @adhesive_1.id,
-  #           :compound_id => @compound_1.id,
-  #           :machine_id => @machine_1.id,
-  #           :roller_type_id => @roller_type_1.id,
-  #           :core_builder_id => @core_builder_1.id,
-  #           :is_grooving => @is_grooving_1,
-  #           :is_crowning => @is_crowning_1,
-  #           :is_chamfer => @is_chamfer_1,
-  #           :crowning_size => @crowning_size_1,
-  #           :grooving_width => @grooving_width_1,
-  #           :grooving_depth => @grooving_depth_1,
-  #           :grooving_position => @grooving_position_1,
-  #           :cd => @cd_1,
-  #           :rd => @rd_1,
-  #           :rl => @rl_1,
-  #           :wl => @wl_1,
-  #           :tl => @tl_1
-  #           )
+          new_machine_id = machine_mapping_hash[machine_id]
+          new_uom_id =  uom_mapping_hash[uom_id] 
+          new_roller_type_id = roller_type_mapping_hash[roller_type_id]
+          new_compound_id  = item_mapping_hash[compound_id]
+          new_core_builder_id = core_builder_mapping_hash[core_builder_id]
+          new_adhesive_id  = item_mapping_hash[adhesive_id]
+          
+          
+          if Uom.find_by_id( new_uom_id.to_i ).nil?
+            puts "fucka.. uom id #{uom_id} has no corresponding new uom "
+          end 
+          
+          if Machine.find_by_id( new_machine_id.to_i ).nil?
+            puts "fucka.. machine id #{machine_id} has no corresponding new machine "
+          end 
+          
+          if RollerType.find_by_id( new_roller_type_id.to_i ).nil?
+            puts "fucka.. roller type id #{roller_type_id} has no corresponding new roller type "
+          end 
+
+          if Item.find_by_id( new_compound_id.to_i ).nil?
+            puts "fucka.. compound id #{compound_id} has no corresponding new compound "
+          end 
+          
+          if CoreBuilder.find_by_id( new_core_builder_id.to_i ).nil?
+            puts "fucka.. corebuilder id #{core_builder_id} has no corresponding new core builder "
+          end 
+          
+          if Item.find_by_id( new_adhesive_id.to_i ).nil?
+            puts "fucka.. adhsive id #{adhesive_id} has no corresponding new adhesive "
+          end 
+          
+          
+   
+
+          
+          
+          object = RollerBuilder.create_object(
+            :base_sku => base_sku,
+            :name => name,
+            :description => description,
+            :uom_id => new_uom_id,
+            :adhesive_id => new_adhesive_id,
+            :compound_id => new_compound_id,
+            :machine_id => new_machine_id,
+            :roller_type_id => new_roller_type_id,
+            :core_builder_id => new_core_builder_id,
+            :is_grooving => is_grooving ,
+            :is_crowning =>  is_crowning,
+            :is_chamfer => is_chamfer,
+            :crowning_size =>  crowning_size,
+            :grooving_width => grooving_width,
+            :grooving_depth => grooving_depth,
+            :grooving_position => grooving_position,
+            :cd => cd,
+            :rd => rd,
+            :rl => rl,
+            :wl => wl,
+            :tl => tl
+            )
 
             
           
-           
+          object.errors.messages.each {|x| puts "err id #{id}: #{x}" }
 
-  #           result_array << [ id , 
-  #                   object.id , 
-  #                   object.base_sku  ]
+            result_array << [ id , 
+                    object.id , 
+                    object.base_sku  ]
 
-  #       end
+        end
         
-  #   end
+    end
     
-  #   CSV.open(lookup_location, 'w') do |csv|
-  #     result_array.each do |el| 
-  #       csv <<  el 
-  #     end
-  #   end
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
     
-  #   puts "Done migrating core builder. Total core builder : #{CoreBuilder.count}"
-  # end
+    
+    # update the item lookup table to accomodate roller 
+    
+    migration_filename = MIGRATION_FILENAME[:item] 
+    item_original_location  = original_file_location( migration_filename )
+    item_lookup_location =  lookup_file_location(  migration_filename ) 
+    
+  
+    
+    original_roller_item_type_hash  = {} 
+    awesome_row_counter = - 1 
+    roller_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:roller]
+    
+    CSV.open(item_original_location, 'r') do |csv| 
+      csv.each do |row| 
+        awesome_row_counter = awesome_row_counter + 1  
+        next if awesome_row_counter == 0 
+         
+
+        id = row[0]
+        item_type_id = row[1] 
+        sku = row[3]
+ 
+        
+        
+        # is_deleted = false 
+        # is_deleted  = true if row[21] == "True" 
+        
+        # next if is_deleted 
+        new_item_type_id =  item_type_mapping_hash[item_type_id] 
+        if  new_item_type_id.to_i == roller_item_type.id
+          puts "Sku: #{sku}"
+          original_roller_item_type_hash[sku] = id 
+        end 
+        
+      end
+    end
+    
+    puts "The content of original_roller_item_type_hash: "
+    puts original_roller_item_type_hash
+    
+    CSV.open(item_lookup_location, 'a') do |csv|
+      result_array.each do |el| 
+ 
+        roller_builder = RollerBuilder.find_by_id el[1]
+        
+        if roller_builder.nil?
+          puts "id: #{el[1]} is blank"
+          next
+        end
+        new_roller_item = roller_builder.roller_new_core_item
+        used_roller_item = roller_builder.roller_used_core_item 
+        
+        new_roller_old_id = original_roller_item_type_hash[new_roller_item.sku]
+        used_roller_old_id = original_roller_item_type_hash[used_roller_item.sku]
+        
+        if new_roller_old_id.nil? or used_roller_old_id.nil?
+          puts "there is no roller builder  mapping for base_sku : #{roller_builder.base_sku}"
+        end
+        
+        csv << [ new_roller_old_id, new_roller_item.id, new_roller_item.sku ] 
+        csv << [ used_roller_old_id, used_roller_item.id, used_roller_item.sku ] 
+      
+      end
+    end
+    
+    puts "Done migrating roller builder. Total core builder : #{RollerBuilder.count}"
+  end
  
   
 end

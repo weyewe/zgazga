@@ -26,6 +26,5 @@ rake migrate_zga:core_builder
 rake migrate_zga:roller_type
 
 
-pending: migrate_zga:roller_builder
-pending: migrate_zga:item 
 
+rake  migrate_zga:roller_builder 
