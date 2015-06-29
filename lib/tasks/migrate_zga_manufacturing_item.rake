@@ -7,6 +7,115 @@ require 'csv'
 namespace :migrate_zga do 
 
   
+  task :independent_item => :environment do
+    
+    core_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:core]
+    roller_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:roller]
+    blanket_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:blanket]
+    
+    item_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item_type] ) 
+    sub_type_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:sub_type] )  
+    uom_mapping_hash  = get_mapping_hash( MIGRATION_FILENAME[:uom])
+    exchange_mapping_hash = get_mapping_hash( MIGRATION_FILENAME[:exchange]) 
+    base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME ) 
+    
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:item]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+           
+
+          id = row[0]
+          item_type_id = row[1]
+          sub_type_id = row[2]
+          sku = row[3]
+          name = row[4]
+          description = row[5]
+          is_tradeable = row[6]
+          uom_id = row[7]
+          quantity = row[8]
+          pending_delivery = row[9]
+          pending_receival = row[10]
+          virtual = row[11]
+          minimum_quantity = row[12]
+          customer_quantity = row[13]
+          customer_virtual = row[14]
+          selling_price = row[15]
+          price_list = row[16]
+          exchange_id = row[17]
+          price_mutation_id = row[18]
+          avg_price = row[19]
+          customer_avg_price = row[20]
+          is_deleted = row[21] 
+ 
+ 
+          new_item_type_id =  item_type_mapping_hash[item_type_id] 
+          new_sub_type_id = sub_type_mapping_hash[sub_type_id]
+          new_uom_id = uom_mapping_hash[uom_id]
+          new_exchange_id = exchange_mapping_hash[exchange_id]
+          
+          
+          
+          if new_exchange_id.nil?
+            new_exchange_id = base_exchange.id 
+          end
+          
+          next if new_item_type_id == core_item_type.id or 
+                  new_item_type_id == roller_item_type.id or 
+                  new_item_type_id == blanket_item_type.id
+            
+          is_deleted = false 
+          is_deleted  = true if row[21] == "True" 
+          
+          next if is_deleted 
+          
+          is_tradeable = false 
+          is_tradeable  = true if row[6] == "True" 
+          
+ 
+          object = Item.create_object(
+              :item_type_id => new_item_type_id ,
+              :sub_type_id => new_sub_type_id,
+              :sku => sku,
+              :name => name,
+              :description => description,
+              :is_tradeable => is_tradeable,
+              :uom_id => new_uom_id,
+              :minimum_amount => minimum_quantity,
+              :selling_price => selling_price,
+              :exchange_id => new_exchange_id,
+              :price_list => price_list
+            )
+          
+          object.errors.messages.each {|x| puts "error: #{x}" } 
+ 
+           
+
+            result_array << [ id , 
+                    object.id , 
+                    object.name  ]
+
+        end
+        
+    end
+    
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+    puts "Done migrating  independent Item. Total independent item : #{Item.count}"
+  end
+  
   task :core_builder => :environment do
     
     uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
@@ -108,13 +217,7 @@ namespace :migrate_zga do
   end
   
   task :roller_type => :environment do
-    
-    uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
-    machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
-    base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME ) 
-    # puts "the contact group mapping hash"
-    # puts "#{contact_group_mapping_hash}"
-    
+ 
     migration_filename = MIGRATION_FILENAME[:roller_type]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 

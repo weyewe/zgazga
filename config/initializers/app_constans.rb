@@ -264,10 +264,26 @@ MIGRATION_FILENAME = {
   :roller_builder => "RollerBuilders.csv",
   :machine => "Machines.csv",
   :uom => 'UoMs.csv',
+  :item => "Items.csv",
   :warehouse => 'Warehouses.csv',
   :cash_bank => "CashBanks.csv",
   :exchange => "Currencies.csv",
   :coa => 'Accounts.csv'
+  
+} 
+
+BASE_ITEM_TYPE = {
+  :accessory => "Accessory",
+  :adhesive_blanket => "AdhesiveBlanket",
+  :adhesive_roller => "AdhesiveRoller",
+  :bar => "Bar",
+  :blanket => "Blanket",
+  :roll_blanket => "RollBlanket",
+  :chemical => "Chemical",
+  :compound => "Compound",
+  :core => "Core",
+  :underpacking => "Underpacking",
+  :roller => "Roller"
   
 } 
 
