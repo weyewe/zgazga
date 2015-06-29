@@ -2,7 +2,7 @@ class Api::PurchaseInvoiceDetailsController < Api::BaseApiController
   
   def index
     @parent = PurchaseInvoice.find_by_id params[:purchase_invoice_id]
-    @objects = @parent.active_children.joins(:purchase_invoice).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:purchase_invoice,  :purchase_receival_detail => [:item => [:uom]]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -67,8 +67,52 @@ class Api::PurchaseInvoiceDetailsController < Api::BaseApiController
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }
-        }  
+      }  
     end
+  end
+  
+    def search
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = PurchaseInvoiceDetail.joins(:purchase_invoice, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  | 
+        ( code  =~ query  )  
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+                        
+      @total = PurchaseInvoiceDetail.joins(:purchase_invoice, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  |
+        ( code  =~ query  )  
+      }.count
+    else
+      @objects = PurchaseInvoiceDetail.where{ 
+              (id.eq selected_id)  
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+   
+      @total = PurchaseInvoiceDetail.where{ 
+              (id.eq selected_id)   
+      }.count 
+    end
+    
+    
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
  
   

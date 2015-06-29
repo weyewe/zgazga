@@ -7,7 +7,6 @@ Ext.define('AM.view.operation.warehousemutation.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
 			{ header: 'Tanggal Mutasi', dataIndex: 'mutation_date', flex: 2 },
 		 	{ header: 'Warehouse From',  dataIndex: 'warehouse_from_name', flex: 1},

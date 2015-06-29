@@ -1,10 +1,8 @@
 Ext.define('AM.model.StockAdjustmentDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
  
-	
+
 	
 	        { name: 'stock_adjustment_id', type: 'int' }, 
 	 
@@ -21,9 +19,6 @@ Ext.define('AM.model.StockAdjustmentDetail', {
     	    { name: 'item_uom_name', type: 'string' }, 
     	    { name: 'status', type: 'int' }, 
     	    { name: 'status_text', type: 'string' }, 
-			
-	 
-			
 			
   	],
 

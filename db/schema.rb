@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150627021753) do
+=======
+ActiveRecord::Schema.define(version: 20150618045842) do
+>>>>>>> willy_mod
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,9 +266,12 @@ ActiveRecord::Schema.define(version: 20150627021753) do
   end
 
   create_table "core_builders", force: true do |t|
+<<<<<<< HEAD
     t.string   "name"
     t.text     "description"
     t.string   "base_sku"
+=======
+>>>>>>> willy_mod
     t.string   "sku_used_core"
     t.string   "sku_new_core"
     t.integer  "used_core_item_id"
@@ -283,6 +290,7 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+<<<<<<< HEAD
   create_table "customer_items", force: true do |t|
     t.integer  "contact_id"
     t.integer  "warehouse_item_id"
@@ -333,6 +341,8 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+=======
+>>>>>>> willy_mod
   create_table "delivery_order_details", force: true do |t|
     t.string   "code"
     t.integer  "order_type"
@@ -739,6 +749,7 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+<<<<<<< HEAD
   create_table "roller_accessory_details", force: true do |t|
     t.integer  "roller_identification_form_detail_id"
     t.integer  "item_id"
@@ -815,6 +826,9 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.boolean  "is_confirmed",     default: false
     t.datetime "confirmed_at"
     t.boolean  "is_completed",     default: false
+=======
+  create_table "roller_builders", force: true do |t|
+>>>>>>> willy_mod
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -826,6 +840,7 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+<<<<<<< HEAD
   create_table "roller_warehouse_mutation_details", force: true do |t|
     t.integer  "roller_warehouse_mutation_id"
     t.integer  "recovery_order_detail_id"
@@ -848,6 +863,8 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+=======
+>>>>>>> willy_mod
   create_table "rollers", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"

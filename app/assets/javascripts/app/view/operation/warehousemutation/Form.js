@@ -12,11 +12,42 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
+
+		var me = this; 
 	
-	var me = this; 
-	
-	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
+	var remoteJsonStoreWarehouseSource = Ext.create(Ext.data.JsonStore, {
 		storeId : 'warehouse_search',
+		fields	: [
+		 		{
+					name : 'warehouse_name',
+					mapping : "name"
+				} ,
+				{
+					name : 'warehouse_description',
+					mapping : "description"
+				} ,
+		 
+				{
+					name : 'warehouse_id',
+					mapping : 'id'
+				}  
+		],
+		
+	 
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_warehouses',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+	
+	var remoteJsonStoreWarehouseTarget = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search_target',
 		fields	: [
 		 		{
 					name : 'warehouse_name',
@@ -83,7 +114,7 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 	    				minChars : 1, 
 	    				allowBlank : false, 
 	    				triggerAction: 'all',
-	    				store : remoteJsonStoreWarehouse , 
+	    				store : remoteJsonStoreWarehouseSource , 
 	    				listConfig : {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{warehouse_name}">' + 
@@ -99,13 +130,13 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
-	    				displayField : 'warehouse_to_name',
-	    				valueField : 'warehouse_to_id',
+	    				displayField : 'warehouse_name',
+	    				valueField : 'warehouse_id',
 	    				pageSize : 5,
 	    				minChars : 1, 
 	    				allowBlank : false, 
 	    				triggerAction: 'all',
-	    				store : remoteJsonStoreWarehouse , 
+	    				store : remoteJsonStoreWarehouseTarget , 
 	    				listConfig : {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{warehouse_name}">' + 
@@ -132,10 +163,7 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
     this.callParent(arguments);
   },
   
-  
-  setSelectedWarehouseSource: function( warehouse_from_id ){
-  	console.log("inside warehouse source");
-  	// console.log(warehouse_id);
+  setSelectedWarehouseSource: function( warehouse_from_id ){ 
 		var comboBox = this.down('form').getForm().findField('warehouse_from_id'); 
 		var me = this; 
 		var store = comboBox.store; 
@@ -152,9 +180,7 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 		});
 	},
 	
-	setSelectedWarehouseTarget: function( warehouse_to_id ){
-  	console.log("inside warehouse target");
-  	console.log("The warehouse id : " + warehouse_to_id);
+	setSelectedWarehouseTarget: function( warehouse_to_id ){ 
   	// console.log(warehouse_id);
 		var comboBox = this.down('form').getForm().findField('warehouse_to_id'); 
 		var me = this; 
@@ -172,8 +198,8 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		// console.log("i am inside setCOmboBox data from form.js warehouse mutation");
+	setComboBoxData : function( record){ 
+
 		var me = this; 
 		me.setLoading(true);
 		
@@ -182,6 +208,7 @@ Ext.define('AM.view.operation.warehousemutation.Form', {
 	}
  
 });
+
 
 
 

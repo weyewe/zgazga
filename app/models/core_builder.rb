@@ -4,8 +4,11 @@ class CoreBuilder < ActiveRecord::Base
   
   validates_presence_of :uom_id
   validates_presence_of :machine_id
+  
+  
   validates_uniqueness_of :base_sku
   validates_presence_of :base_sku
+
   validate :valid_uom_id
   validate :valid_machine_id
   validate :valid_core_builder_type
@@ -22,7 +25,9 @@ class CoreBuilder < ActiveRecord::Base
   def valid_core_builder_type
     return if core_builder_type_case.nil?
     if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case) 
+
       self.errors.add(:contact_type, "CoreBuilder Type harus ada")
+
       return self 
     end
   end

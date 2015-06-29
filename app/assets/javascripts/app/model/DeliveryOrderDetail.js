@@ -1,10 +1,7 @@
 Ext.define('AM.model.DeliveryOrderDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
  
-	
 	
 	        { name: 'delivery_order_id', type: 'int' }, 
 	 
@@ -22,9 +19,6 @@ Ext.define('AM.model.DeliveryOrderDetail', {
     	    
     	    { name: 'sales_order_detail_item_uom_id', type: 'int' },
     	    { name: 'sales_order_detail_item_uom_name', type: 'string' }, 
-			
-	 
-			
 			
   	],
 

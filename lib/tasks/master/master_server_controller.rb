@@ -7,30 +7,30 @@ class Api::TemplatesController < Api::BaseApiController
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = Template.joins(:branch).where{
+        @objects = Template.where{
           (
-            (name =~  livesearch ) | 
-            (description =~ livesearch) | 
-            (code =~ livesearch) |
-            (branch.name =~ livesearch) | 
-            (branch.code =~ livesearch)
+            ( name =~  livesearch )  | 
+            ( address =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( contact_no =~ livesearch ) | 
+            ( email =~ livesearch )
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        @total = Template.joins(:branch).where{
+        @total = Template.where{
           (
-            (name =~  livesearch ) | 
-            (description =~ livesearch) |  
-            (code =~ livesearch) |
-            (branch.name =~ livesearch) | 
-            (branch.code =~ livesearch)
+            ( name =~  livesearch )  | 
+            ( address =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( contact_no =~ livesearch ) | 
+            ( email =~ livesearch )
           )
         }.count
    
     else
       puts "In this shite"
-      @objects = Template.joins(:branch).page(params[:page]).per(params[:limit]).order("id DESC")
+      @objects = Template.page(params[:page]).per(params[:limit]).order("id DESC")
       @total = Template.count 
     end
     
@@ -42,16 +42,8 @@ class Api::TemplatesController < Api::BaseApiController
     @object = Template.create_object( params[:template] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :templates => [
-                          
-                            :id               =>    @object.id                  ,
-                            :name       =>     @object.name   ,
-                            :branch_id       =>     @object.branch.id   ,
-                            :branch_code       =>     @object.branch.code   ,
-                            :description    =>    @object.description  ,
-                            :code        =>    @object.code     
-                          ] , 
-                        :total => Template.active_objects.count }  
+                        :templates => [@object] , 
+                        :total => Template.active_objects.count  }  
     else
       msg = {
         :success => false, 
@@ -73,18 +65,8 @@ class Api::TemplatesController < Api::BaseApiController
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :templates => [
-                          
-                          :id               =>    @object.id                  ,
-                          :name       =>     @object.name   ,
-                          :description    =>    @object.description  ,
-                          :branch_id       =>     @object.branch.id   ,
-                          :branch_code       =>     @object.branch.code   ,
-
-                          :code        =>    @object.code     
-                          
-                        ],
-                        :total => Template.active_objects.count  } 
+                        :templates => [@object],
+                        :total => Template.active_objects.count } 
     else
       msg = {
         :success => false, 
@@ -146,18 +128,23 @@ class Api::TemplatesController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = Template.where{ 
-
-                           (
-                              (name =~  livesearch ) | 
-                              (description =~ livesearch) | 
-                              (code =~ livesearch) 
-                            )
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Template.where{ (name =~ query)  
+      @total = Template.where{ 
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
+        
                               }.count
     else
       @objects = Template.where{ (id.eq selected_id)  

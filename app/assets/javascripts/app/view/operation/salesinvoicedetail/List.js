@@ -8,14 +8,13 @@ Ext.define('AM.view.operation.salesinvoicedetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
+		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Kode DOD', dataIndex: 'delivery_order_detail_code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'delivery_order_detail_sales_order_detail_item_sku', flex: 1},
     		 { header: 'Quantity',  dataIndex: 'amount', flex: 1},
 			{	header: 'Price x Qty', dataIndex: 'price', flex: 1 } ,
 			
-			
-			 
 		];
 		
 

@@ -1,6 +1,7 @@
 class PurchaseReceival < ActiveRecord::Base
   
   belongs_to :purchase_order
+  belongs_to :warehouse 
   has_many :purchase_receival_details
   validates_presence_of :purchase_order_id
   validates_presence_of :nomor_surat

@@ -17,7 +17,7 @@ Ext.define('AM.controller.WarehouseMutations', {
 			selector: 'warehousemutationlist'
 		},
 		{
-			ref : 'childList',
+			ref : 'warehouseMutationDetailList',
 			selector : 'warehousemutationdetaillist'
 		},
 		
@@ -123,7 +123,7 @@ Ext.define('AM.controller.WarehouseMutations', {
     var view = Ext.widget('warehousemutationform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +345,20 @@ Ext.define('AM.controller.WarehouseMutations', {
   },
 
 	updateChildGrid: function(record){
-		var warehouseMutationDetailGrid = this.getChildList();
-		// warehouseMutationDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		warehouseMutationDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getWarehouseMutationDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		warehouseMutationDetailGrid.getStore().getProxy().extraParams.warehousemutation_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.warehouse_mutation_id =  record.get('id') ;
 		 
-		warehouseMutationDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				warehouse_mutation_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				warehouseMutationDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

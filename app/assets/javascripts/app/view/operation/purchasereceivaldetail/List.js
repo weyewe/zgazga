@@ -15,8 +15,6 @@ Ext.define('AM.view.operation.purchasereceivaldetail.List' ,{
     		{ header: 'PendingDelivery Qty',  dataIndex: 'sales_order_detail_pending_delivery_amount', flex: 2},
       		{	header: 'Uom', dataIndex: 'sales_order_detail_item_uom_name', flex: 1 } ,
 			
-			
-			 
 		];
 		
 
@@ -78,6 +76,6 @@ Ext.define('AM.view.operation.purchasereceivaldetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("DeliveryOrder: " + record.get("code"));
+		this.setTitle("PurchaseReceival: " + record.get("code"));
 	}
 });

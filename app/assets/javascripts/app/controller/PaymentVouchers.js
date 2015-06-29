@@ -8,7 +8,7 @@ Ext.define('AM.controller.PaymentVouchers', {
     'operation.paymentvoucher.List',
     'operation.paymentvoucher.Form',
 		'operation.paymentvoucherdetail.List',
-		
+		'Viewport'
   ],
 
   	refs: [
@@ -17,7 +17,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 			selector: 'paymentvoucherlist'
 		},
 		{
-			ref : 'paymentvoucherDetailList',
+			ref : 'paymentVoucherDetailList',
 			selector : 'paymentvoucherdetaillist'
 		},
 		
@@ -66,7 +66,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 				click : this.executeConfirm
 			},
 			
-			'unconfirmpaymentvoucherform button[action=unconfirm]' : {
+			'unconfirmpaymentvoucherform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
 
@@ -123,7 +123,7 @@ Ext.define('AM.controller.PaymentVouchers', {
     var view = Ext.widget('paymentvoucherform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -276,7 +276,7 @@ Ext.define('AM.controller.PaymentVouchers', {
  
 		if(record){
 			var rec_id = record.get("id");
-      record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'confirmed_at' , values['confirmed_at'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -345,20 +345,20 @@ Ext.define('AM.controller.PaymentVouchers', {
   },
 
 	updateChildGrid: function(record){
-		var paymentvoucherDetailGrid = this.getPaymentvoucherDetailList();
-		// paymentvoucherDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		paymentvoucherDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getPaymentVoucherDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		paymentvoucherDetailGrid.getStore().getProxy().extraParams.payment_voucher_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.payment_voucher_id =  record.get('id') ;
 		 
-		paymentvoucherDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				payment_voucher_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				paymentvoucherDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		

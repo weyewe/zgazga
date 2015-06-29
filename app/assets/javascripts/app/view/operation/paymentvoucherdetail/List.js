@@ -8,8 +8,13 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-		{ header: 'Code',  dataIndex: 'payable_source_code', flex: 1},
-	  {	header: 'Amount', dataIndex: 'amount', flex: 1 },
+			{ header: 'Code', dataIndex: 'code', flex: 1},
+			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
+    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
+    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
+    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
+			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
+      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
 			
 			 
 		];

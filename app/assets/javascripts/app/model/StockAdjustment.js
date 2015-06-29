@@ -3,8 +3,6 @@ Ext.define('AM.model.StockAdjustment', {
   	fields: [
 
 
- 
-	 
     	    { name: 'id', type: 'int' },
     	    { name: 'adjustment_date', type: 'string' },
 			{ name: 'description', type: 'string' } ,
@@ -16,7 +14,7 @@ Ext.define('AM.model.StockAdjustment', {
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
 			
-	 
+ 
 			
 			
   	],

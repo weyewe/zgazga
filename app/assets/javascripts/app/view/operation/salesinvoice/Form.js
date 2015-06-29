@@ -12,8 +12,7 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	
-	var me = this; 
+			var me = this; 
 	
 	var remoteJsonStoreDeliveryOrder = Ext.create(Ext.data.JsonStore, {
 		storeId : 'delivery_order_search',
@@ -126,7 +125,6 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
     		        name : 'delivery_order_sales_order_exchange_name',
     		        fieldLabel: 'Currency'
     		 	},
-			
 			]
     }];
 
@@ -141,6 +139,7 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
 
     this.callParent(arguments);
   },
+  
   
   
   setSelectedDeliveryOrder: function( delivery_order_id ){
@@ -160,15 +159,18 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
+	setComboBoxData : function( record){ 
+
 		
 		var me = this; 
 		me.setLoading(true);
 		
 		me.setSelectedDeliveryOrder( record.get("delivery_order_id")  ) ;
+ 
 	}
  
 });
+
 
 
 

@@ -12,8 +12,7 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	
-	var me = this; 
+			var me = this; 
 	
 	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
 		storeId : 'warehouse_search',
@@ -87,7 +86,7 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
 					anchor: '100%'
       },
       items: [
-    			{
+   			{
         	        xtype: 'hidden',
         	        name : 'id',
         	        fieldLabel: 'id'
@@ -170,7 +169,6 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
     this.callParent(arguments);
   },
   
-  
   setSelectedWarehouse: function( warehouse_id ){
 		var comboBox = this.down('form').getForm().findField('warehouse_id'); 
 		var me = this; 
@@ -205,16 +203,17 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
 		});
 	},
 	
-	setComboBoxData : function( record){
-		
+	setComboBoxData : function( record){ 
 		var me = this; 
 		me.setLoading(true);
 		
 		me.setSelectedWarehouse( record.get("warehouse_id")  ) ;
 		me.setSelectedSalesOrder( record.get("sales_order_id")  ) ;
+ 
 	}
  
 });
+
 
 
 

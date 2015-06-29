@@ -113,39 +113,39 @@ class Api::CustomersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Contact.active_objects.customers.where{ 
-                        ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( delivery_address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( npwp =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( pic =~ livesearch ) | 
-          ( pic_contact_no =~ livesearch ) | 
-          ( email =~ livesearch ) | 
-          ( tax_code =~ livesearch ) | 
-          ( nama_faktur_pajak =~ livesearch ) | 
-          ( contact_group.name =~ livesearch ) | 
-          ( contact_group.description =~ livesearch )
+      @objects = Contact.active_objects.customers.joins(:contact_group).where{ 
+                        ( name =~  query )  | 
+          ( address =~ query ) | 
+          ( delivery_address =~ query ) | 
+          ( description =~ query ) | 
+          ( npwp =~ query ) | 
+          ( contact_no =~ query ) | 
+          ( pic =~ query ) | 
+          ( pic_contact_no =~ query ) | 
+          ( email =~ query ) | 
+          ( tax_code =~ query ) | 
+          ( nama_faktur_pajak =~ query ) | 
+          ( contact_group.name =~ query ) | 
+          ( contact_group.description =~ query )
                   }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Contact.active_objects.customers.where{ 
-                        ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( delivery_address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( npwp =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( pic =~ livesearch ) | 
-          ( pic_contact_no =~ livesearch ) | 
-          ( email =~ livesearch ) | 
-          ( tax_code =~ livesearch ) | 
-          ( nama_faktur_pajak =~ livesearch ) | 
-          ( contact_group.name =~ livesearch ) | 
-          ( contact_group.description =~ livesearch )
+      @total = Contact.active_objects.customers.joins(:contact_group).where{ 
+                        ( name =~  query )  | 
+          ( address =~ query ) | 
+          ( delivery_address =~ query ) | 
+          ( description =~ query ) | 
+          ( npwp =~ query ) | 
+          ( contact_no =~ query ) | 
+          ( pic =~ query ) | 
+          ( pic_contact_no =~ query ) | 
+          ( email =~ query ) | 
+          ( tax_code =~ query ) | 
+          ( nama_faktur_pajak =~ query ) | 
+          ( contact_group.name =~ query ) | 
+          ( contact_group.description =~ query )
                               }.count
     else
       @objects = Contact.active_objects.customers.where{ (id.eq selected_id)  

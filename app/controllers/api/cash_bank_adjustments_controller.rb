@@ -1,46 +1,49 @@
 class Api::CashBankAdjustmentsController < Api::BaseApiController
   
   def index
+     
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-    @objects = CashBankAdjustment.joins(:cash_bank).where{ 
+        
+        
+        @objects = CashBankAdjustment.joins(:cash_bank).where{
         (
           (cash_bank.name =~  livesearch ) | 
           (code =~  livesearch ) |
           (description =~  livesearch ) 
            
         )
-        
-      }.page(params[:page]).per(params[:limit]).order("id DESC")
-      
-      @total = CashBankAdjustment.joins(:cash_bank).where{
+
+        }.page(params[:page]).per(params[:limit]).order("id DESC")
+
+        @total = CashBankAdjustment.joins(:cash_bank).where{
         (
           (cash_bank.name =~  livesearch ) | 
           (code =~  livesearch ) |
           (description =~  livesearch ) 
+           
         )
-        
-      }.count
+        }.count
+   
     else
-      @objects = CashBankAdjustment.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = CashBankAdjustment.active_objects.count
+      puts "In this shite"
+      @objects = CashBankAdjustment.joins(:cash_bank).page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = CashBankAdjustment.count 
     end
     
     
-    
-    # render :json => { :cash_bank_adjustments => @objects , :total => @total, :success => true }
+    # render :json => { :cash_bank_adjustments => @objects , :total => @total , :success => true }
   end
 
   def create
-    @object = CashBankAdjustment.create_object( params[:cash_bank_adjustment] )  
-    
-    
- 
+    params[:cash_bank_adjustment][:adjustment_date] =  parse_date( params[:cash_bank_adjustment][:adjustment_date] )
+    params[:cash_bank_adjustment][:confirmed_at] =  parse_date( params[:cash_bank_adjustment][:confirmed_at] )
+    @object = CashBankAdjustment.create_object( params[:cash_bank_adjustment] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
                         :cash_bank_adjustments => [@object] , 
-                        :total => CashBankAdjustment.active_objects.count }  
+                        :total => CashBankAdjustment.active_objects.count  }  
     else
       msg = {
         :success => false, 
@@ -54,28 +57,54 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
   end
 
   def update
-    @object = CashBankAdjustment.find_by_id params[:id] 
-    if params[:confirm].present?
+    params[:cash_bank_adjustment][:adjustment_date] =  parse_date( params[:cash_bank_adjustment][:adjustment_date] )
+    params[:cash_bank_adjustment][:confirmed_at] =  parse_date( params[:cash_bank_adjustment][:confirmed_at] )
+    
+    @object = CashBankAdjustment.find(params[:id])
+    
+    if params[:confirm].present?  
       if not current_user.has_role?( :cash_bank_adjustments, :confirm)
-          render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-          return
-        end
-      @object.confirm_object(params[:cash_bank_adjustment]) 
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
       
-      elsif params[:unconfirm].present?
-        if not current_user.has_role?( :cash_bank_adjustments, :unconfirm)
-          render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-          return
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.confirm_object(:confirmed_at => params[:cash_bank_adjustment][:confirmed_at] ) 
         end
-      @object.unconfirm_object
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+      
+      
+      
+    elsif params[:unconfirm].present?    
+      
+      if not current_user.has_role?( :cash_bank_adjustments, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unconfirm_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
       
     else
-      @object.update_object( params[:cash_bank_adjustment])
+      @object.update_object(params[:cash_bank_adjustment])
     end
+    
+     
+     
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :cash_bank_adjustments => [@object],
-                        :total => CashBankAdjustment.active_objects.count  } 
+                        :total => CashBankAdjustment.active_objects.count } 
     else
       msg = {
         :success => false, 
@@ -84,15 +113,35 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      
+      
     end
+  end
+  
+  def show
+    @object = CashBankAdjustment.find_by_id params[:id]
+    render :json => { :success => true, 
+                      :cash_bank_adjustments => [@object] , 
+                      :total => CashBankAdjustment.count }
   end
 
   def destroy
     @object = CashBankAdjustment.find(params[:id])
-    @object.delete_object
+    
+    begin
+      ActiveRecord::Base.transaction do 
+        @object.delete_object 
+      end
+    rescue ActiveRecord::ActiveRecordError  
+    else
+    end
+    
+    
 
-    if not @object.is_deleted?
+    if not @object.persisted?  
+      render :json => { :success => true, :total => CashBankAdjustment.active_objects.count }  
+    else
       msg = {
         :success => false, 
         :message => {
@@ -100,14 +149,10 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
         }
       }
       
-      
       render :json => msg
-    else
-      
-      
-      render :json => { :success => true, :total => CashBankAdjustment.active_objects.count }  
     end
   end
+  
   
   def search
     search_params = params[:query]
@@ -120,7 +165,7 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = CashBankAdjustment.active_objects.joins(:cash_bank).where{
+      @objects = CashBankAdjustment.joins(:cash_bank).where{ 
                                 (
                                   (cash_bank.name =~  query ) | 
                                   (code =~  query ) | 
@@ -131,12 +176,13 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = CashBankAdjustment.active_objects.joins(:cash_bank).where{ 
+      @total = CashBankAdjustment.joins(:cash_bank).where{ 
                                 (
                                   (cash_bank.name =~  query ) | 
-                                  (code =~  query ) |
+                                  (code =~  query ) | 
                                   (description =~  query ) 
                                 )
+        
                               }.count
     else
       @objects = CashBankAdjustment.where{ (id.eq selected_id)  

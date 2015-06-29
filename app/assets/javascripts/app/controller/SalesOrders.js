@@ -17,7 +17,7 @@ Ext.define('AM.controller.SalesOrders', {
 			selector: 'salesorderlist'
 		},
 		{
-			ref : 'childList',
+			ref : 'salesOrderDetailList',
 			selector : 'salesorderdetaillist'
 		},
 		
@@ -58,6 +58,10 @@ Ext.define('AM.controller.SalesOrders', {
 			'salesorderProcess salesorderlist button[action=confirmObject]': {
         click: this.confirmObject
       },
+      
+      'salesorderProcess salesorderlist button[action=downloadObject]': {
+        click: this.downloadObject
+			}	,
 
 			'salesorderProcess salesorderlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
@@ -123,7 +127,7 @@ Ext.define('AM.controller.SalesOrders', {
     var view = Ext.widget('salesorderform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData(record); 
+    view.setComboBoxData( record ) ;
   },
 
 	confirmObject: function(){
@@ -345,20 +349,20 @@ Ext.define('AM.controller.SalesOrders', {
   },
 
 	updateChildGrid: function(record){
-		var salesOrderDetailGrid = this.getChildList();
-		// salesOrderDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		salesOrderDetailGrid.setObjectTitle( record ) ;
+		var templateDetailGrid = this.getSalesOrderDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		salesOrderDetailGrid.getStore().getProxy().extraParams.salesorder_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.sales_order_id =  record.get('id') ;
 		 
-		salesOrderDetailGrid.getStore().load({
+		templateDetailGrid.getStore().load({
 			params : {
 				sales_order_id : record.get('id')
 			},
 			callback : function(records, options, success){
-				salesOrderDetailGrid.enableAddButton(); 
+				templateDetailGrid.enableAddButton(); 
 			}
 		});
 		
@@ -389,6 +393,16 @@ Ext.define('AM.controller.SalesOrders', {
 		        //do something whether the load succeeded or failed
 		    }
 		});
+	},
+	
+	
+		downloadObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id")
+			if( record ){
+				window.open( 'sales_orders/' + id + '.pdf' );
+			}
+			
 	},
 
 	

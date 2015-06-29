@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.purchaseinvoicedetailform',
 
-  title : 'Add / Edit PurchaseInvoice Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,7 +13,6 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 	
   initComponent: function() {
 	
-		
 		
 		var remoteJsonStorePurchaseReceivalDetail = Ext.create(Ext.data.JsonStore, {
 			storeId : 'purchase_receival_detail_search',
@@ -130,7 +129,8 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 		
 	 
 			
-		]
+			
+			]
     }];
 
     this.buttons = [{
@@ -144,7 +144,8 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 
     this.callParent(arguments);
   },
-
+  
+  
 	setSelectedPurchaseReceivalDetail: function( purchase_receival_detail_id ){
 		// console.log("inside set selected original account id ");
 		var comboBox = this.down('form').getForm().findField('purchase_receival_detail_id'); 
@@ -162,7 +163,6 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 	},
 	
 	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -170,6 +170,7 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 		
 		me.setSelectedPurchaseReceivalDetail( record.get("purchase_receival_detail_id")  ) ;  
 	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('purchase_invoice_code').setValue(record.get('code')); 

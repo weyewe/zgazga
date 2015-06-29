@@ -5,26 +5,32 @@ class Api::TemplatesController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = Template.active_objects.where{
-         (is_deleted.eq false ) & 
+       @objects = Template.active_objects.joins(:contact,:employee,:exchange).where{
          (
-           (description =~  livesearch ) | 
-           ( code =~ livesearch)
+           
+           ( code =~ livesearch)  | 
+           ( nomor_surat =~ livesearch)  | 
+           ( contact.name =~  livesearch) | 
+           ( employee.name =~  livesearch) | 
+           ( exchange.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = Template.active_objects.where{
-         (is_deleted.eq false ) & 
+       @total = Template.active_objects.joins(:contact,:employee,:exchange).where{
          (
-           (description =~  livesearch ) | 
-            ( code =~ livesearch)
+            
+           ( code =~ livesearch)  | 
+           ( nomor_surat =~ livesearch)  | 
+           ( contact.name =~  livesearch) | 
+           ( employee.name =~  livesearch) | 
+           ( exchange.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = Template.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = Template.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = Template.active_objects.count
      end
      
@@ -46,8 +52,8 @@ class Api::TemplatesController < Api::BaseApiController
                         :templates => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :description => @object.description ,
-                          :transaction_datetime => format_date_friendly(@object.transaction_datetime)  ,
+                          :nomor_surat => @object.nomor_surat , 
+                          :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -76,10 +82,13 @@ class Api::TemplatesController < Api::BaseApiController
                       :templates => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :description => @object.description ,
-                          :transaction_datetime => format_date_friendly(@object.transaction_datetime)  ,
+                          :nomor_surat => @object.nomor_surat , 
+                          :sales_date => format_date_friendly(@object.sales_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at),
+                          :contact_id => @object.contact_id,
+                          :exchange_id => @object.exchange_id,
+                          :employee_id => @object.employee_id
                         
                         ],
                       :total => Template.active_objects.count  }
@@ -99,7 +108,7 @@ class Api::TemplatesController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:template][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:template][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -117,7 +126,7 @@ class Api::TemplatesController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -138,10 +147,13 @@ class Api::TemplatesController < Api::BaseApiController
                         :templates => [
                             :id => @object.id,
                             :code => @object.code ,
-                            :description => @object.description ,
-                            :transaction_datetime => format_date_friendly(@object.transaction_datetime),
+                            :nomor_surat => @object.nomor_surat , 
+                            :sales_date => format_date_friendly(@object.sales_date),
                             :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                            :confirmed_at => format_date_friendly(@object.confirmed_at),
+                            :contact_id => @object.contact_id,
+                            :exchange_id => @object.exchange_id,
+                            :employee_id => @object.employee_id
                           ],
                         :total => Template.active_objects.count  } 
     else
@@ -163,7 +175,7 @@ class Api::TemplatesController < Api::BaseApiController
     @object = Template.find(params[:id])
     @object.delete_object
 
-    if (( not @object.persisted? )   or @object.is_deleted ) and @object.errors.size == 0
+    if   not @object.persisted? 
       render :json => { :success => true, :total => Template.active_objects.count }  
     else
       render :json => { :success => false, :total => Template.active_objects.count, 
@@ -185,22 +197,34 @@ class Api::TemplatesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = Template.where{  (title =~ query)   & 
-                                (is_deleted.eq false )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = Template.where{  
+        ( 
+           ( code =~ query )  
+         )
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+                        
+      @total = Template.where{  
+        ( 
+           ( code =~ query )  
+         )
+      }.count 
     else
-      @objects = Template.where{ (id.eq selected_id)  & 
-                                (is_deleted.eq false )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = Template.where{ 
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
+                        
+      @total = Template.where{ 
+          (id.eq selected_id)  
+      }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @objects.count, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

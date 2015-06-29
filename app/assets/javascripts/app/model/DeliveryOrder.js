@@ -1,10 +1,6 @@
 Ext.define('AM.model.DeliveryOrder', {
   	extend: 'Ext.data.Model',
   	fields: [
-
-
- 
-	 
     	    { name: 'id', type: 'int' },
     	    { name: 'delivery_date', type: 'string' },
 			{ name: 'nomor_surat', type: 'string' } ,
@@ -18,8 +14,6 @@ Ext.define('AM.model.DeliveryOrder', {
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
-			
-	 
 			
 			
   	],

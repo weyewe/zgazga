@@ -133,6 +133,20 @@ Ext.define("AM.controller.Master", {
 		iconCls		: 'text-folder', 
 		expanded	: true,
 		children 	: [
+			
+			
+			{ 
+				text:'Warehouse', 
+				viewClass:'AM.view.master.Warehouse', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'warehouses',
+						action : 'index'
+					}
+				]
+			}, 
         	{ 
 				text:'Item Type', 
 				viewClass:'AM.view.master.ItemType', 
@@ -170,6 +184,7 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
+ 
 			{ 
 				text:'Item', 
 				viewClass:'AM.view.master.Item', 
@@ -183,17 +198,95 @@ Ext.define("AM.controller.Master", {
 				]
 			}, 
 			{ 
-				text:'Warehouse', 
-				viewClass:'AM.view.master.Warehouse', 
+				text:'Core', 
+				viewClass:'AM.view.master.Core', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'warehouses',
+						controller : 'cores',
 						action : 'index'
 					}
 				]
 			}, 
+			{ 
+				text:'Roller', 
+				viewClass:'AM.view.master.Roller', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'rollers',
+						action : 'index'
+					}
+				]
+			}, 
+
+    	]
+	},
+	
+	manufactringItemtemSetupFolder : {
+		text 			: "Manufacturing Item", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+        	{ 
+				text:'Machine', 
+				viewClass:'AM.view.master.Machine', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'machines',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Core Builder', 
+				viewClass:'AM.view.master.CoreBuilder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'core_builders',
+						action : 'index'
+					}
+				]
+			},
+		  
+			{ 
+				text:'Roller Builder', 
+				viewClass:'AM.view.master.RollerBuilder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sub_types',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Blanket', 
+				viewClass:'AM.view.master.Blanket', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blankets',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+ 
+	 
+ 
+ 
     	]
 	},
 	
@@ -290,6 +383,7 @@ Ext.define("AM.controller.Master", {
 			this.setupFolder,
 			this.customerSetupFolder,
 			this.itemSetupFolder,
+			this.manufactringItemtemSetupFolder,
 			this.financeSetupFolder,
 			// this.projectReportFolder
 		];

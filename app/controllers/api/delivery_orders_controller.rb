@@ -13,8 +13,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
            ( sales_order.code =~  livesearch) |
            ( sales_order.nomor_surat =~  livesearch)
          )
-
-       }.page(params[:page]).per(params[:limit]).order("delivery_orders.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
        @total = DeliveryOrder.active_objects.joins(:warehouse,:sales_order).where{
          (
@@ -36,6 +35,10 @@ class Api::DeliveryOrdersController < Api::BaseApiController
      
      
   end
+  
+  
+
+	
 
   def create
     
@@ -51,6 +54,10 @@ class Api::DeliveryOrdersController < Api::BaseApiController
                           :id => @object.id, 
                           :code => @object.code ,
                           :nomor_surat => @object.nomor_surat ,
+                          :warehouse_id => @object.warehouse_id,
+                          :warehouse_name => @object.warehouse.name, 
+                          :sales_order_code => @object.sales_order.code,
+                          :sales_order_id => @object.sales_order.id ,
                           :delivery_date => format_date_friendly(@object.delivery_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
@@ -81,9 +88,13 @@ class Api::DeliveryOrdersController < Api::BaseApiController
                           :id => @object.id, 
                           :code => @object.code ,
                           :nomor_surat => @object.nomor_surat ,
+                          :warehouse_id => @object.warehouse_id,
+                          :warehouse_name => @object.warehouse.name, 
+                          :sales_order_code => @object.sales_order.code,
+                          :sales_order_id => @object.sales_order.id ,
                           :delivery_date => format_date_friendly(@object.delivery_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => DeliveryOrder.active_objects.count  }
@@ -103,7 +114,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:delivery_order][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:delivery_order][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -121,7 +132,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -140,12 +151,16 @@ class Api::DeliveryOrdersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :delivery_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :delivery_date => format_date_friendly(@object.delivery_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :warehouse_id => @object.warehouse_id,
+                          :warehouse_name => @object.warehouse.name, 
+                          :sales_order_code => @object.sales_order.code,
+                          :sales_order_id => @object.sales_order.id ,
+                          :delivery_date => format_date_friendly(@object.delivery_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => DeliveryOrder.active_objects.count  } 
     else
@@ -167,7 +182,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
     @object = DeliveryOrder.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => DeliveryOrder.active_objects.count }  
     else
       render :json => { :success => false, :total => DeliveryOrder.active_objects.count, 
@@ -193,26 +208,27 @@ class Api::DeliveryOrdersController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = DeliveryOrder.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = DeliveryOrder.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = DeliveryOrder.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     

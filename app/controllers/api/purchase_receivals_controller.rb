@@ -14,7 +14,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
            ( purchase_order.nomor_surat =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("purchase_receivals.id DESC")
+       }.page(params[:page]).per(params[:limit]).order("id DESC")
 
        @total = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).where{
          (
@@ -103,7 +103,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm(:confirmed_at => params[:purchase_receival][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:purchase_receival][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -121,7 +121,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm
+          @object.unconfirm_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -140,12 +140,12 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :purchase_receivals => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :receival_date => format_date_friendly(@object.receival_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :nomor_surat => @object.nomor_surat ,
+                          :receival_date => format_date_friendly(@object.receival_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at)
                           ],
                         :total => PurchaseReceival.active_objects.count  } 
     else
@@ -167,7 +167,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     @object = PurchaseReceival.find(params[:id])
     @object.delete_object
 
-    if not @object.persisted? 
+    if   not @object.persisted? 
       render :json => { :success => true, :total => PurchaseReceival.active_objects.count }  
     else
       render :json => { :success => false, :total => PurchaseReceival.active_objects.count, 
@@ -193,26 +193,27 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
         ( 
            ( code =~ query )  
          )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseReceival.where{  
         ( 
            ( code =~ query )  
-         )}.count 
+         )
+      }.count 
     else
       @objects = PurchaseReceival.where{ 
-                (id.eq selected_id)  
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+          (id.eq selected_id)   
+      }.
+      page(params[:page]).
+      per(params[:limit]).
+      order("id DESC")
                         
       @total = PurchaseReceival.where{ 
-                              (id.eq selected_id)  
-                      }.count 
+          (id.eq selected_id)  
+      }.count 
     end
     
     
