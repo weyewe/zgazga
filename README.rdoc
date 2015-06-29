@@ -20,6 +20,9 @@ rake migrate_zga:uom
 rake migrate_zga:item_type
 rake  migrate_zga:sub_type
 
-migrate_zga:core_builder
+rake migrate_zga:core_builder
+rake migrate_zga:roller_type
 pending: migrate_zga:roller_builder
 pending: migrate_zga:item 
+
+
