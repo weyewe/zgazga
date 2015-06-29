@@ -24,7 +24,5 @@ rake  migrate_zga:sub_type
 rake migrate_zga:independent_item 
 rake migrate_zga:core_builder
 rake migrate_zga:roller_type
-
-
-
 rake  migrate_zga:roller_builder 
+rake migrate_zga:warehouse 
