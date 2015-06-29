@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.deliveryorderdetail.List' ,{
+Ext.define('AM.view.operation.purchasereceivaldetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.deliveryorderdetaillist',
+  	alias : 'widget.purchasereceivaldetaillist',
 
-  	store: 'DeliveryOrderDetails', 
+  	store: 'PurchaseReceivalDetails', 
  
 
 	initComponent: function() {
