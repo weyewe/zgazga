@@ -62,7 +62,9 @@ rake migrate_zga:sales_invoice
 rake migrate_zga:sales_invoice_detail  
 rake migrate_zga:confirm_sales_invoice
 
-  
-migrate blanket_order
-migrate blanket_order_detail
-confirm blanket_order
+
+migrate RIF + Detail + Confirm
+migrate RWO + detail + Confirm
+migrate RWOD Accessories + FINALIZE / REJECT
+
+migrate blanket_order + detail + confirm   
