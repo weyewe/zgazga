@@ -17,7 +17,7 @@ class Blanket < ActiveRecord::Base
   
   def valid_cropping_type
     return if cropping_type.nil?
-    if not [CROPPING_TYPE[:normal],CROPPING_TYPE[:special]].include?( cropping_type) 
+    if not [CROPPING_TYPE[:normal],CROPPING_TYPE[:special], CROPPING_TYPE[:none]].include?( cropping_type) 
       self.errors.add(:contact_type, "Cropping Type harus ada")
       return self 
     end
@@ -25,7 +25,7 @@ class Blanket < ActiveRecord::Base
   
   def valid_application_case
     return if application_case.nil?
-    if not [APPLICATION_CASE[:web],Application[:sheetfed],Application[:both]].include?( application_case) 
+    if not [APPLICATION_CASE[:web],APPLICATION_CASE[:sheetfed],APPLICATION_CASE[:both]].include?( application_case) 
       self.errors.add(:contact_type, "Application Type harus ada")
       return self 
     end
@@ -148,7 +148,7 @@ class Blanket < ActiveRecord::Base
     new_object.sku = params[:sku]
     new_object.name = params[:name]
     new_object.description = params[:description]
-    new_object.item_type_id = ItemType.find_by_name("Blanket").id
+    new_object.item_type_id = ItemType.find_by_name(ITEM_TYPE_CASE[:Blanket]).id
     new_object.uom_id = params[:uom_id]
     new_object.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
     new_object.selling_price =  BigDecimal( params[:selling_price] || '0') 

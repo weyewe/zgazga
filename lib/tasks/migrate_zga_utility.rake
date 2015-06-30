@@ -4,6 +4,45 @@ require 'active_record'
 require 'csv'
 require 'rake'
 
+def original_file_location(  migration_filename) 
+  BASE_MIGRATION_ORIGINAL_LOCATION + '/' + migration_filename
+end
+
+def lookup_file_location(  migration_filename) 
+  BASE_MIGRATION_LOOKUP_LOCATION + '/' + migration_filename
+end
+
+def get_mapping_hash( filename) 
+  file_location = lookup_file_location(  filename ) 
+  
+  hash =  {} 
+  
+  CSV.open(file_location, 'r') do |csv| 
+      csv.each do |row| 
+        hash[ row[0] ]  = row[1] 
+      end
+  end
+  
+  return hash 
+end
+
+def get_parsed_date( date_string )
+
+    date_array = date_string.split('-').map{|x| x.to_i } 
+
+    parsed_date = DateTime.new( 
+            date_array[0] ,
+            date_array[1],
+            date_array[2]
+        )
+        
+    return parsed_date
+
+end
+
+
+
+
 # call this using 
 # rake task_name['yhooooo',4]   => no spaces allowed in the argument 
 task :task_name, :display_value  do |t, args|

@@ -185,7 +185,8 @@ STATUS_PEMBULATAN = {
 
 CROPPING_TYPE = {
   :normal => 1,
-  :special => 2
+  :special => 2,
+  :none => 3 
 }
 
 APPLICATION_CASE = {
@@ -262,6 +263,7 @@ MIGRATION_FILENAME = {
   :core_builder => "CoreBuilders.csv",
   :roller_type => "RollerTypes.csv",
   :roller_builder => "RollerBuilders.csv",
+  :blanket => "Blankets.csv",
   :machine => "Machines.csv",
   :uom => 'UoMs.csv',
   :item => "Items.csv",
@@ -272,7 +274,8 @@ MIGRATION_FILENAME = {
   
   :exchange_rate => "ExchangeRates.csv",
   :stock_adjustment => "StockAdjustments.csv", 
-  :stock_adjustment_detail => "StockAdjustmentDetails.csv"
+  :stock_adjustment_detail => "StockAdjustmentDetails.csv",
+  :inventory_lookup => "InventoryConfirm.csv"
   
   
 } 

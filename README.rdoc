@@ -22,6 +22,7 @@ rake  migrate_zga:sub_type
 
 
 rake migrate_zga:independent_item 
+rake migrate_zga:blanket 
 rake migrate_zga:core_builder
 rake migrate_zga:roller_type
 rake  migrate_zga:roller_builder 
@@ -30,10 +31,10 @@ rake migrate_zga:warehouse
 
 rake migrate_zga:exchange_rate
  
-migrate stock_adjustment
-migrate cash_bank_adjustment
+rake migrate_zga:stock_adjustment
+rake migrate_zga:stock_adjustment_detail 
 
-migrate cash_bank_mutation
+
 
 migrate sales_order
 migrate sales_order_detail
@@ -41,3 +42,6 @@ migrate delivery_order
 migrate delivery_order_detail
 migrate sales_invoice
 migrate sales_invoice_detail 
+migrate cash_bank_adjustment
+
+migrate cash_bank_mutation

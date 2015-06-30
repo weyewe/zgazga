@@ -9,16 +9,17 @@ namespace :migrate_zga do
    
   task :stock_adjustment => :environment do  
 
-    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] ) 
-  # puts "exchange_mapping_hash: >>>>>>>>>>>>>>>>>\n\n"
-  # puts exchange_mapping_hash
+    warehouse_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:warehouse] )  
     
-    migration_filename = MIGRATION_FILENAME[:exchange_rate]
+    migration_filename = MIGRATION_FILENAME[:stock_adjustment]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     
-    result_array = [] 
+    result_array = []
+    confirm_result_array = [] 
     awesome_row_counter = - 1
+    
+    
     
     CSV.open(original_location, 'r') do |csv| 
         csv.each do |row|
@@ -26,39 +27,42 @@ namespace :migrate_zga do
             next if awesome_row_counter == 0 
             
             id = row[0]
-            exchange_id = row[1]
-            ex_rate_date = row[2]
-            rate = row[3]
-            is_deleted = row[4]
+            warehouse_id = row[1]
+            adjustment_date = row[2]
+            description = row[3]
+            code = row[4]
+            total = row[5]
+            is_confirmed = row[6]
+            confirmation_date = row[7]
+            is_deleted = row[8]
             
  
             
             is_deleted = false
-            is_deleted = true if row[4] == "True" 
+            is_deleted = true if row[8] == "True" 
             next if is_deleted  
+            
+            is_confirmed = false
+            is_confirmed = true if row[6] == "True" 
              
               
-            new_exchange_id =  exchange_mapping_hash[exchange_id]
-            
-            ex_rate_date_array = ex_rate_date.split('-').map{|x| x.to_i } 
-            # puts "the ex_rate_date_array"
-            # puts ex_rate_date_array
-            parsed_ex_rate_date = DateTime.new( 
-                    ex_rate_date_array[0] ,
-                    ex_rate_date_array[1],
-                    ex_rate_date_array[2]
-                )
-  
-            object = ExchangeRate.create_object( 
-                      :exchange_id => new_exchange_id,
-                      :ex_rate_date => parsed_ex_rate_date,
-                      :rate => rate  
-                )
+            new_warehouse_id =  warehouse_mapping_hash[warehouse_id]
+            parsed_adjustment_date = get_parsed_date(adjustment_date)
+ 
+            object = StockAdjustment.create_object(
+              :warehouse_id => new_warehouse_id,
+              :adjustment_date => parsed_adjustment_date,
+              :description => description 
+              )
                 
             object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
 
             result_array << [ id , object.id   ] 
+            if is_confirmed
+              confirm_result_array << [object.id, object.class.to_s, adjustment_date ]
+            end
+            
         end
     end
      
@@ -70,7 +74,107 @@ namespace :migrate_zga do
       end
     end
     
-    puts "Done migrating Exchange Rate. Total ExchangeRate: #{ExchangeRate.count}"
+    migration_filename = MIGRATION_FILENAME[:inventory_lookup] 
+    confirm_lookup_location =  lookup_file_location(  migration_filename ) 
+    
+    CSV.open(confirm_lookup_location, 'w') do |csv|
+      confirm_result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+    puts "Done migrating StockAdjustment. Total StockAdjustment: #{StockAdjustment.count}"
+  end
+  
+   
+  task :stock_adjustment_detail => :environment do  
+
+    item_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item] )  
+    stock_adjustment_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:stock_adjustment] )  
+    
+    migration_filename = MIGRATION_FILENAME[:stock_adjustment_detail]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    
+    result_array = []
+    confirm_result_array = [] 
+    awesome_row_counter = - 1
+    
+    
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row|
+            awesome_row_counter = awesome_row_counter + 1  
+            next if awesome_row_counter == 0 
+            
+            id = row[0]
+            stock_adjustment_id = row[1]
+            item_id = row[2]
+            code = row[3]
+            quantity = row[4]
+            price = row[5]
+            is_confirmed = row[6]
+            confirmation_date = row[7]
+            is_deleted = row[8]
+            
+ 
+            
+            is_deleted = false
+            is_deleted = true if row[8] == "True" 
+            next if is_deleted  
+            
+ 
+              
+            new_stock_adjustment_id =  stock_adjustment_mapping_hash[stock_adjustment_id]
+            new_item_id = item_mapping_hash[item_id]
+ 
+            if new_stock_adjustment_id.nil?
+              puts "the new stock adustment id is nil, from old value: #{stock_adjustment_id}"
+              next 
+            end
+            
+            if new_item_id.nil?
+              puts "the new item id is nil, from old value: #{item_id}"
+              next
+            end
+ 
+            adjustment_status = ADJUSTMENT_STATUS[:addition]
+            
+            if BigDecimal( quantity ) < BigDecimal("0")
+              adjustment_status = ADJUSTMENT_STATUS[:deduction]
+            end
+            
+            if BigDecimal( price ) == BigDecimal("0")
+              price = BigDecimal('1')
+            end
+            
+            object = StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => new_stock_adjustment_id ,
+              :item_id =>  new_item_id ,
+              :price => price ,
+              :amount => quantity.to_i.abs,
+              :status => adjustment_status
+              )
+                
+            object.errors.messages.each {|x| puts "Error: #{x}" } 
+                
+
+            result_array << [ id , object.id   ] 
+ 
+            
+        end
+    end
+     
+ 
+    # write the new csv LOOKUP file ( with mapping for the ID )
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+
+    puts "Done migrating StockAdjustmentDetail. Total StockAdjustmentDetail: #{StockAdjustmentDetail.count}"
   end
   
  

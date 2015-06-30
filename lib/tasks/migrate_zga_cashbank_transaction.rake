@@ -40,15 +40,8 @@ namespace :migrate_zga do
               
             new_exchange_id =  exchange_mapping_hash[exchange_id]
             
-            ex_rate_date_array = ex_rate_date.split('-').map{|x| x.to_i } 
-            # puts "the ex_rate_date_array"
-            # puts ex_rate_date_array
-            parsed_ex_rate_date = DateTime.new( 
-                    ex_rate_date_array[0] ,
-                    ex_rate_date_array[1],
-                    ex_rate_date_array[2]
-                )
-  
+
+            parsed_ex_rate_date = get_parsed_date( ex_rate_date )
             object = ExchangeRate.create_object( 
                       :exchange_id => new_exchange_id,
                       :ex_rate_date => parsed_ex_rate_date,

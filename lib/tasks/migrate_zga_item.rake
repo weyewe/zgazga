@@ -129,6 +129,258 @@ namespace :migrate_zga do
     puts "Done migrating  independent Item. Total independent item : #{Item.count}"
   end
   
+  
+  task :blanket => :environment do
+    
+    item_type_mapping_hash = get_mapping_hash(MIGRATION_FILENAME[:item_type])
+    uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
+    contact_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:contact] )  
+    machine_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:machine] )  
+    item_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item] )  
+    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] )  
+    base_exchange = Exchange.find_by_name( EXCHANGE_BASE_NAME )  
+    
+    migration_filename = MIGRATION_FILENAME[:blanket]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+           
+ 
+  
+    
+ 
+            roll_no = row[0]
+            contact_id = row[1]
+            machine_id = row[2]
+            adhesive_id = row[3]
+            adhesive2_id = row[4]
+            roll_blanket_item_id = row[5]  # can't be empty
+            left_bar_item_id = row[6] # can be empty
+            right_bar_item_id = row[7] # can be empty
+            ac = row[8]
+            ar = row[9]
+            thickness = row[10] 
+            is_bar_required = row[12]
+ 
+            cropping_type = row[15]  # Normal Special NO
+            left_over_ac = row[16]
+            left_over_ar = row[17]
+            special = row[18]  # string 
+            application_case = row[19]   # Sheetfed Web Both
+            
+          id = row[20]
+          
+      
+           sku = row[23]
+           name = row[24]
+            description = row[25] 
+          uom_id = row[27] 
+ 
+          minimum_quantity = row[32] 
+          selling_price = row[35]
+          price_list = row[36]
+          exchange_id = row[37] 
+          is_deleted = row[41]
+          
+          
+           
+          is_bar_required = false 
+          is_bar_required  = true if row[12] == "True" 
+          
+          is_deleted = false 
+          is_deleted  = true if row[41] == "True" 
+          
+          next if is_deleted 
+          
+          # edit the application_case and the cropping_type
+          application_case = APPLICATION_CASE[:sheetfed] if application_case == "Sheetfed"
+          application_case = APPLICATION_CASE[:web] if application_case == "Web"
+          application_case = APPLICATION_CASE[:both] if application_case == "Both"
+          
+          cropping_type = CROPPING_TYPE[:normal] if cropping_type == "Normal"
+          cropping_type = CROPPING_TYPE[:special] if cropping_type == "Special"
+          cropping_type = CROPPING_TYPE[:none] if cropping_type == "NO"
+          
+ 
+          new_uom_id =  uom_mapping_hash[uom_id] 
+          new_exchange_id =  uom_mapping_hash[exchange_id]
+          new_machine_id =  machine_mapping_hash[exchange_id] 
+          new_contact_id =  contact_mapping_hash[contact_id] 
+          
+     
+          new_adhesive_id =  item_mapping_hash[adhesive_id] if not adhesive_id.nil? 
+          if not adhesive_id.nil?  and new_adhesive_id.nil?
+            puts "damn, the new_adhesive_id is nil"
+            next
+          end
+          
+          new_adhesive2_id =  item_mapping_hash[adhesive2_id] if not adhesive2_id.nil? 
+          if not adhesive2_id.nil?  and new_adhesive2_id.nil?
+            puts "damn, the new_adhesive_id is nil"
+            next
+          end
+          
+          new_roll_blanket_item_id =  item_mapping_hash[roll_blanket_item_id] 
+          new_left_bar_item_id =  item_mapping_hash[left_bar_item_id]  if not left_bar_item_id.nil? 
+          if not left_bar_item_id.nil?  and new_left_bar_item_id.nil?
+            puts "damn, the new_left_bar_item_id is nil"
+            next
+          end
+          
+          new_right_bar_item_id =  item_mapping_hash[right_bar_item_id]  if not right_bar_item_id.nil? 
+          if not right_bar_item_id.nil?  and new_right_bar_item_id.nil?
+            puts "damn, the new_right_bar_item_id is nil"
+            next 
+          end
+          
+          
+          error  = false 
+          if Uom.find_by_id( new_uom_id.to_i ).nil?
+            puts "fucka.. id #{new_uom_id} has no corresponding new uom "
+            error = true 
+          end
+          
+
+          
+          if Machine.find_by_id( new_machine_id.to_i ).nil?
+            puts "fucka.. id #{new_machine_id} has no corresponding new machine_id "
+            error = true 
+          end
+          
+          
+          if Exchange.find_by_id( new_exchange_id.to_i ).nil?
+            puts "fucka.. id #{new_exchange_id} has no corresponding new exchange_id "
+            error = true 
+          end
+          
+          if Contact.find_by_id( new_contact_id.to_i ).nil?
+            puts "fucka.. id #{new_contact_id} has no corresponding new contact_id "
+            error = true 
+          end
+          
+          if Item.find_by_id( new_roll_blanket_item_id.to_i ).nil?
+            puts "fucka.. id #{new_roll_blanket_item_id} has no corresponding new item_id "
+            error = true 
+          end
+          
+    
+          next if error 
+          
+          
+    
+          
+          object = Blanket.create_object(
+            :sku => sku,
+            :name => name,
+            :description => description,
+            :uom_id => new_uom_id,
+            :roll_no => roll_no ,
+            :contact_id => new_contact_id,
+            :machine_id =>  new_machine_id,
+            :adhesive_id => new_adhesive_id,
+            :adhesive2_id => new_adhesive2_id,
+            :roll_blanket_item_id =>  new_roll_blanket_item_id,
+            :left_bar_item_id => new_left_bar_item_id,
+            :right_bar_item_id => new_right_bar_item_id,
+            :ac => ac,
+            :ar => ar,
+            :thickness => thickness,
+            :is_bar_required => is_bar_required,
+            :cropping_type => cropping_type,
+            :special => special,
+            :application_case => application_case,
+            :left_over_ac => left_over_ac,
+            :left_over_ar => left_over_ar,
+            :minimum_amount => BigDecimal("1"),
+            :selling_price => BigDecimal("2000"),
+            :price_list => BigDecimal("500"),
+            :exchange_id =>  new_exchange_id,
+          )
+
+            object.errors.messages.each {|x| puts "blanket migration error. old id : #{id}. message: #{x}"}
+          
+           
+
+            result_array << [ id , 
+                    object.id   ]
+
+        end
+        
+    end
+    
+    CSV.open(lookup_location, 'w') do |csv|
+      result_array.each do |el| 
+        csv <<  el 
+      end
+    end
+    
+    
+    # update the item lookup table to accomodate core 
+    
+    migration_filename = MIGRATION_FILENAME[:item] 
+    item_original_location  = original_file_location( migration_filename )
+    item_lookup_location =  lookup_file_location(  migration_filename ) 
+    
+  
+    
+    original_blanket_item_type_hash  = {} 
+    awesome_row_counter = - 1 
+    blanket_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:blanket]
+    
+    CSV.open(item_original_location, 'r') do |csv| 
+      csv.each do |row| 
+        awesome_row_counter = awesome_row_counter + 1  
+        next if awesome_row_counter == 0 
+         
+
+        id = row[0]
+        item_type_id = row[1] 
+        sku = row[3]
+ 
+        
+        
+        is_deleted = false 
+        is_deleted  = true if row[21] == "True" 
+        
+        next if is_deleted 
+        new_item_type_id =  item_type_mapping_hash[item_type_id] 
+        if  new_item_type_id.to_i == blanket_item_type.id
+          puts "Sku: #{sku}"
+          original_blanket_item_type_hash[sku] = id 
+        end 
+        
+      end
+    end
+    
+    puts "The content of original_blanket_item_type_hash: "
+    puts original_blanket_item_type_hash
+    
+    CSV.open(item_lookup_location, 'a') do |csv|
+      result_array.each do |el| 
+        blanket = Blanket.find_by_id el[1]
+        next if blanket.nil? 
+        
+ 
+        
+        blanket_old_id = original_blanket_item_type_hash[blanket.sku] 
+        
+   
+        
+        csv << [ blanket_old_id, blanket.id, blanket.sku ]  
+      
+      end
+    end
+    
+    
+    puts "Done migrating Blanket. Total Blanket : #{Blanket.count}"
+  end
+  
   task :core_builder => :environment do
     
     uom_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:uom] ) 
