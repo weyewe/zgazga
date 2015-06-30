@@ -56,6 +56,10 @@ task :task_name, :display_value  do |t, args|
 #     puts args.display_value
 #   end
 end
+
+task :flush_lookup_folder  do |t, args|
+ FileUtils.rm_rf Dir.glob("#{Rails.root.to_s}/zga_migration/lookup/*")
+end
  
 
 #  rake inspect_csv['ContactGroup.csv']

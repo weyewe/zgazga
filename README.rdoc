@@ -2,6 +2,7 @@ migration_procedure:
 
 rake db:drop; rake db:create; rake db:migrate
 
+rake flush_lookup_folder
 rake migrate_zga:base_setup
 rake migrate_zga:exchange
 rake migrate_zga:cash_bank
@@ -53,15 +54,12 @@ rake migrate_zga:confirm_purchase_invoice
 rake migrate_zga:sales_order
 rake migrate_zga:sales_order_detail  
 rake migrate_zga:confirm_sales_order
-
 rake migrate_zga:delivery_order
 rake migrate_zga:delivery_order_detail  
 rake migrate_zga:confirm_delivery_order
 
- 
-migrate sales_invoice
-migrate sales_invoice_detail 
-migrate cash_bank_adjustment
+rake migrate_zga:sales_invoice
+rake migrate_zga:sales_invoice_detail  
+rake migrate_zga:confirm_sales_invoice
 
-migrate cash_bank_mutation
-
+  

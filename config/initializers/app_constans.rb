@@ -285,6 +285,10 @@ MIGRATION_FILENAME = {
   :delivery_order_detail => "DeliveryOrderDetails.csv",
   :delivery_order_confirm => "DeliveryOrderConfirm.csv",
   
+  :sales_invoice => "SalesInvoices.csv",
+  :sales_invoice_detail => "SalesInvoiceDetails.csv",
+  :sales_invoice_confirm => "SalesInvoiceConfirm.csv",
+  
   :purchase_order => "PurchaseOrders.csv",
   :purchase_order_detail => "PurchaseOrderDetails.csv",
   :purchase_order_confirm => "PurchaseOrderConfirm.csv",
