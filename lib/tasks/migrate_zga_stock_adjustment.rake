@@ -193,6 +193,7 @@ namespace :migrate_zga do
         object.confirm_object( :confirmed_at => parsed_confirmation_date  )  
         
         object.errors.messages.each {|x| puts "id: #{object.id}. Error: #{x}" } 
+        puts "Total confirmed StockAdjustment: #{StockAdjustment.where(:is_confirmed => true).count}"
       end
     end
           

@@ -63,3 +63,6 @@ rake migrate_zga:sales_invoice_detail
 rake migrate_zga:confirm_sales_invoice
 
   
+migrate blanket_order
+migrate blanket_order_detail
+confirm blanket_order
