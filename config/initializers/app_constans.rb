@@ -285,6 +285,18 @@ MIGRATION_FILENAME = {
   :delivery_order_detail => "DeliveryOrderDetails.csv",
   :delivery_order_confirm => "DeliveryOrderConfirm.csv",
   
+  :purchase_order => "PurchaseOrders.csv",
+  :purchase_order_detail => "PurchaseOrderDetails.csv",
+  :purchase_order_confirm => "PurchaseOrderConfirm.csv",
+  
+  :purchase_receival => "PurchaseReceivals.csv",
+  :purchase_receival_detail => "PurchaseReceivalDetails.csv",
+  :purchase_receival_confirm => "PurchaseReceivalConfirm.csv",
+  
+  :purchase_invoice => "PurchaseInvoices.csv",
+  :purchase_invoice_detail => "PurchaseInvoiceDetails.csv",
+  :purchase_invoice_confirm => "PurchaseInvoiceConfirm.csv",
+  
   
 } 
 

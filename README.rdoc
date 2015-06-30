@@ -35,6 +35,21 @@ rake migrate_zga:stock_adjustment
 rake migrate_zga:stock_adjustment_detail  
 rake migrate_zga:confirm_stock_adjustment
 
+
+
+
+rake migrate_zga:purchase_order
+rake migrate_zga:purchase_order_detail  
+rake migrate_zga:confirm_purchase_order
+
+rake migrate_zga:purchase_receival
+rake migrate_zga:purchase_receival_detail  
+rake migrate_zga:confirm_purchase_receival
+
+rake migrate_zga:purchase_invoice
+rake migrate_zga:purchase_invoice_detail  
+rake migrate_zga:confirm_purchase_invoice
+
 rake migrate_zga:sales_order
 rake migrate_zga:sales_order_detail  
 rake migrate_zga:confirm_sales_order
@@ -42,7 +57,6 @@ rake migrate_zga:confirm_sales_order
 rake migrate_zga:delivery_order
 rake migrate_zga:delivery_order_detail  
 rake migrate_zga:confirm_delivery_order
-
 
  
 migrate sales_invoice
