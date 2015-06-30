@@ -27,13 +27,18 @@ def get_mapping_hash( filename)
 end
 
 def get_parsed_date( date_string )
+    
+    return nil if not date_string.present? 
 
     date_array = date_string.split('-').map{|x| x.to_i } 
 
+    
     parsed_date = DateTime.new( 
             date_array[0] ,
             date_array[1],
-            date_array[2]
+            date_array[2],
+            0,0,0
+            
         )
         
     return parsed_date

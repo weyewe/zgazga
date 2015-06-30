@@ -275,7 +275,15 @@ MIGRATION_FILENAME = {
   :exchange_rate => "ExchangeRates.csv",
   :stock_adjustment => "StockAdjustments.csv", 
   :stock_adjustment_detail => "StockAdjustmentDetails.csv",
-  :inventory_lookup => "InventoryConfirm.csv"
+  :stock_adjustment_confirm => "StockAdjustmentConfirm.csv",
+  
+  :sales_order => "SalesOrders.csv",
+  :sales_order_detail => "SalesOrderDetails.csv",
+  :sales_order_confirm => "SalesOrderConfirm.csv",
+  
+  :delivery_order => "DeliveryOrders.csv",
+  :delivery_order_detail => "DeliveryOrderDetails.csv",
+  :delivery_order_confirm => "DeliveryOrderConfirm.csv",
   
   
 } 

@@ -32,16 +32,22 @@ rake migrate_zga:warehouse
 rake migrate_zga:exchange_rate
  
 rake migrate_zga:stock_adjustment
-rake migrate_zga:stock_adjustment_detail 
+rake migrate_zga:stock_adjustment_detail  
+rake migrate_zga:confirm_stock_adjustment
+
+rake migrate_zga:sales_order
+rake migrate_zga:sales_order_detail  
+rake migrate_zga:confirm_sales_order
+
+rake migrate_zga:delivery_order
+rake migrate_zga:delivery_order_detail  
+rake migrate_zga:confirm_delivery_order
 
 
-
-migrate sales_order
-migrate sales_order_detail
-migrate delivery_order
-migrate delivery_order_detail
+ 
 migrate sales_invoice
 migrate sales_invoice_detail 
 migrate cash_bank_adjustment
 
 migrate cash_bank_mutation
+

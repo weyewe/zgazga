@@ -48,6 +48,7 @@ namespace :migrate_zga do
               
             new_warehouse_id =  warehouse_mapping_hash[warehouse_id]
             parsed_adjustment_date = get_parsed_date(adjustment_date)
+          
  
             object = StockAdjustment.create_object(
               :warehouse_id => new_warehouse_id,
@@ -60,7 +61,7 @@ namespace :migrate_zga do
 
             result_array << [ id , object.id   ] 
             if is_confirmed
-              confirm_result_array << [object.id, object.class.to_s, adjustment_date ]
+              confirm_result_array << [object.id, object.class.to_s, confirmation_date ]
             end
             
         end
@@ -74,7 +75,7 @@ namespace :migrate_zga do
       end
     end
     
-    migration_filename = MIGRATION_FILENAME[:inventory_lookup] 
+    migration_filename = MIGRATION_FILENAME[:stock_adjustment_confirm] 
     confirm_lookup_location =  lookup_file_location(  migration_filename ) 
     
     CSV.open(confirm_lookup_location, 'w') do |csv|
@@ -175,6 +176,26 @@ namespace :migrate_zga do
     
 
     puts "Done migrating StockAdjustmentDetail. Total StockAdjustmentDetail: #{StockAdjustmentDetail.count}"
+  end
+  
+  task :confirm_stock_adjustment => :environment do 
+    migration_filename = MIGRATION_FILENAME[:stock_adjustment_confirm]  
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    
+    CSV.open(lookup_location, 'r') do |csv| 
+      csv.each do |row|
+        id = row[0]
+        confirmation_date_string = row[2] 
+        parsed_confirmation_date = get_parsed_date(confirmation_date_string)
+        
+        object  = StockAdjustment.find_by_id( id )
+        
+        object.confirm_object( :confirmed_at => parsed_confirmation_date  )  
+        
+        object.errors.messages.each {|x| puts "id: #{object.id}. Error: #{x}" } 
+      end
+    end
+          
   end
   
  
