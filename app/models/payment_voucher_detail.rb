@@ -84,7 +84,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
     new_object.payment_voucher_id = params[:payment_voucher_id]
     new_object.payable_id = params[:payable_id]
     new_object.amount_paid = params[:amount_paid]
-    new_object.amount = params[:amount_paid] / params[:rate]
+    new_object.amount = BigDecimal( params[:amount_paid] ) / BigDecimal( params[:rate] ) 
     new_object.pph_21 = params[:pph_21]
     new_object.pph_23 = params[:pph_23]
     new_object.rate = BigDecimal( params[:rate] || '0')
@@ -101,7 +101,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
     end
     self.payable_id = params[:payable_id]
     self.amount_paid = params[:amount_paid]
-    self.amount = params[:amount_paid] / params[:rate]
+    self.amount =  BigDecimal( params[:amount_paid] ) / BigDecimal( params[:rate] ) 
     self.pph_21 = params[:pph_21]
     self.pph_23 = params[:pph_23]
     self.rate = BigDecimal( params[:rate] || '0')

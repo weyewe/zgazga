@@ -29,27 +29,28 @@ namespace :migrate_zga do
         csv.each do |row|
             awesome_row_counter = awesome_row_counter + 1  
             next if awesome_row_counter == 0 
-                                    
+                                                
             id = row[0]
             contact_id = row[1]
             cash_bank_id = row[2]
             code = row[3]
             no_bukti = row[4]
             payment_date = row[5]
-            rate_to_idr = row[6]
-            is_gbch = row[7]
-            gbch_no = row[8]
-            due_date = row[9]
-            is_reconciled = row[10]
-            reconciliation_date = row[11]
+            is_gbch = row[6]
+            gbch_no = row[7]
+            due_date = row[8]
+            is_reconciled = row[9]
+            reconciliation_date = row[10]
+            rate_to_idr = row[11]
             total_amount = row[12]
             total_pph23 = row[13]
-            biaya_bank = row[14]
-            pembulatan = row[15]
-            status_pembulatan = row[16]  # 1 atau 2 NORMAL_BALANCE[:credit] or debet
-            is_confirmed = row[17]
-            confirmation_date = row[18]
-            is_deleted = row[19]
+            total_pph21 = row[14]
+            biaya_bank = row[15]
+            pembulatan = row[16]
+            status_pembulatan = row[17]
+            is_confirmed = row[18]
+            confirmation_date = row[19]
+            is_deleted = row[20]
   
             is_deleted = get_truth_value( is_deleted ) 
             next if is_deleted  
@@ -78,18 +79,20 @@ namespace :migrate_zga do
             parsed_payment_date = get_parsed_date(payment_date) 
  
             object =  PaymentVoucher.create_object(
-              :no_bukti => no_bukti ,
+              :no_bukti => no_bukti,
               :is_gbch => is_gbch,
               :gbch_no => gbch_no,
               :due_date => parsed_due_date,
               :pembulatan => pembulatan,
               :status_pembulatan => status_pembulatan,
-              :biaya_bank => biaya_bank ,
+              :biaya_bank => biaya_bank,
               :rate_to_idr => rate_to_idr,
               :payment_date => parsed_payment_date,
               :contact_id =>  new_contact_id,
               :cash_bank_id => new_cash_bank_id
               )
+              
+              
             object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
 
@@ -125,7 +128,7 @@ namespace :migrate_zga do
   task :payment_voucher_detail => :environment do  
 
     payment_voucher_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:payment_voucher] )  
-    receivable_mapping_hash =  get_mapping_hash(  MIGRATION_FILENAME[:receivable] )  
+    payable_mapping_hash =  get_mapping_hash(  MIGRATION_FILENAME[:payable] )  
     
     
     
@@ -143,48 +146,48 @@ namespace :migrate_zga do
         csv.each do |row|
             awesome_row_counter = awesome_row_counter + 1  
             next if awesome_row_counter == 0 
-                                     
+                                                 
             id = row[0]
             payment_voucher_id = row[1]
-            receivable_id = row[2]
+            payable_id = row[2]
             code = row[3]
             rate = row[4]
             amount = row[5]
             amount_paid = row[6]
-            pph_23 = row[7]
-            description = row[8]
-            is_confirmed = row[9]
-            confirmation_date = row[10]
-            is_deleted = row[11]
-            
-            is_deleted = false
-            is_deleted = true if row[10] == "True" 
+            pph_21 = row[7]
+            pph_23 = row[8]
+            description = row[9]
+            is_confirmed = row[10]
+            confirmation_date = row[11]
+            is_deleted = row[12]
+         
+            is_deleted = get_truth_value( is_deleted ) 
             next if is_deleted  
             
    
               
             new_payment_voucher_id =  payment_voucher_mapping_hash[payment_voucher_id]
-            new_receivable_id = receivable_mapping_hash[receivable_id ]
+            new_payable_id = payable_mapping_hash[payable_id ]
             
             if new_payment_voucher_id.nil?
               puts "the new new_payment_voucher_id is nil, from old value: #{payment_voucher_id}"
               next 
             end
             
-            if new_receivable_id.nil?
-              puts "the new_receivable_id  is nil, from old value: #{receivable_id}"
+            if new_payable_id.nil?
+              puts "the new_payable_id  is nil, from old value: #{payable_id}"
               next
             end
    
             object =   PaymentVoucherDetail.create_object(
-                  :payment_voucher_id =>  new_payment_voucher_id,
-                  :receivable_id =>  new_receivable_id,
-                  :amount =>  amount ,
-                  :amount_paid =>  amount_paid,
-                  :pph_23 =>  pph_23,
-                  :rate => rate
-                  )
-               
+                :payment_voucher_id =>  new_payment_voucher_id,
+                :payable_id =>  new_payable_id,
+                :amount =>  amount,
+                :amount_paid => amount_paid,
+                :pph_21 =>  pph_21,
+                :pph_23 => pph_23,
+                :rate =>  rate
+                )
             object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
 
