@@ -11,8 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+ 
 ActiveRecord::Schema.define(version: 20150627021753) do
-
+ 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -550,6 +551,19 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.datetime "updated_at"
   end
 
+  create_table "purchase_invoice_migrations", force: true do |t|
+    t.string   "nomor_surat"
+    t.integer  "contact_id"
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.decimal  "amount_payable",       precision: 14, scale: 2,  default: 0.0
+    t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
+    t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
+    t.datetime "invoice_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "purchase_invoices", force: true do |t|
     t.integer  "purchase_receival_id"
     t.string   "description"
@@ -860,6 +874,19 @@ ActiveRecord::Schema.define(version: 20150627021753) do
     t.decimal  "amount",                   precision: 14, scale: 2, default: 0.0
     t.decimal  "price",                    precision: 14, scale: 2, default: 0.0
     t.decimal  "cos",                      precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_invoice_migrations", force: true do |t|
+    t.string   "nomor_surat"
+    t.integer  "contact_id"
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.decimal  "amount_receivable",    precision: 14, scale: 2,  default: 0.0
+    t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
+    t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
+    t.datetime "invoice_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

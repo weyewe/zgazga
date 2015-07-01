@@ -1,7 +1,7 @@
 class CoreBuilder < ActiveRecord::Base
  
   belongs_to :machine
-  
+  belongs_to :uom
   validates_presence_of :uom_id
   validates_presence_of :machine_id
   
@@ -26,7 +26,7 @@ class CoreBuilder < ActiveRecord::Base
     return if core_builder_type_case.nil?
     if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case) 
 
-      self.errors.add(:contact_type, "CoreBuilder Type harus ada")
+      self.errors.add(:core_builder_type_case, "CoreBuilder Type harus ada")
 
       return self 
     end
