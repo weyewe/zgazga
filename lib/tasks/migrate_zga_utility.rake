@@ -46,6 +46,14 @@ def get_parsed_date( date_string )
 end
 
 
+def get_truth_value(truth_string )
+    return false if not truth_string.present?
+    
+    return true  if truth_string == "True" 
+    
+    return false 
+        
+end
 
 
 # call this using 

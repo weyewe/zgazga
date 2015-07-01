@@ -62,8 +62,17 @@ rake migrate_zga:sales_invoice
 rake migrate_zga:sales_invoice_detail  
 rake migrate_zga:confirm_sales_invoice
 
+ 
+rake migrate_zga:roller_identification_form
+rake migrate_zga:roller_identification_form_detail
+rake migrate_zga:confirm_roller_identification_form
 
-migrate RIF + Detail + Confirm
+rake migrate_zga:recovery_work_order
+rake migrate_zga:recovery_work_order_detail
+rake migrate_zga:confirm_roller_work_order
+
+rake migrate_zga:r
+
 migrate RWO + detail + Confirm
 migrate RWOD Accessories + FINALIZE / REJECT
 

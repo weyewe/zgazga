@@ -301,6 +301,10 @@ MIGRATION_FILENAME = {
   :purchase_invoice_detail => "PurchaseInvoiceDetails.csv",
   :purchase_invoice_confirm => "PurchaseInvoiceConfirm.csv",
   
+  :roller_identification_form => "CoreIdentifications.csv",
+  :roller_identification_form_detail => "CoreIdentificationDetails.csv",
+  :roller_identification_form_confirm => "CoreIdentificationConfirm.csv",
+  
   
 } 
 
