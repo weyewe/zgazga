@@ -38,6 +38,7 @@ Ticketie::Application.routes.draw do
     get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
+    get 'search_machines' => 'machines#search', :as => :search_machine
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -55,6 +56,7 @@ Ticketie::Application.routes.draw do
     resources :customers 
     resources :suppliers 
     resources :employees
+    resources :machines
     
     
     
@@ -107,7 +109,7 @@ Ticketie::Application.routes.draw do
     resources :purchase_invoice_details
     
     resources :roller_builders
-    
+    resources :core_builders
   end
   
   

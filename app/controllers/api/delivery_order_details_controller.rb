@@ -55,7 +55,7 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
     end
   end
 
-  def destroy
+  def destroys
     @object = DeliveryOrderDetail.find(params[:id])
     @parent = @object.delivery_order 
     @object.delete_object 
