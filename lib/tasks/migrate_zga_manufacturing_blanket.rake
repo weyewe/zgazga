@@ -7,16 +7,15 @@ require 'csv'
 namespace :migrate_zga do 
   
    
-  task :recovery_order => :environment do  
+  task :blanket_order => :environment do  
 
     warehouse_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:warehouse] )
     
-    roller_identification_form_mapping_hash =  get_mapping_hash(  MIGRATION_FILENAME[:roller_identification_form] )  
+    contact_mapping_hash =  get_mapping_hash(  MIGRATION_FILENAME[:contact] )  
+     
     
-      
     
-    
-    migration_filename = MIGRATION_FILENAME[:recovery_order]
+    migration_filename = MIGRATION_FILENAME[:blanket_order]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     
@@ -30,30 +29,33 @@ namespace :migrate_zga do
         csv.each do |row|
             awesome_row_counter = awesome_row_counter + 1  
             next if awesome_row_counter == 0 
-            
+                        
             id = row[0]
-            roller_identification_form_id = row[1]
+            contact_id = row[1]
             warehouse_id = row[2]
             code = row[3]
-            quantity_received = row[4]
-            quantity_rejected = row[5]
-            quantity_final = row[6]
-            is_confirmed = row[7]
-            has_due_date = row[8]
-            due_date = row[9]
-            confirmation_date = row[10]
-            is_completed = row[11]
-            is_deleted = row[12]
+            production_no = row[4]
+            order_date = row[5]
+            notes = row[6]
+            quantity_received = row[7]
+            quantity_rejected = row[8]
+            quantity_final = row[9]
+            is_confirmed = row[10]
+            has_due_date = row[11]
+            due_date = row[12]
+            confirmation_date = row[13]
+            is_completed = row[14]
+            is_deleted = row[15]
        
-            is_deleted = get_truth_value( row[12] )
+            is_deleted = get_truth_value( row[15] )
             next if is_deleted  
             
           
-            is_confirmed = get_truth_value( row[7] )
-            has_due_date =  get_truth_value( row[8] )
+            is_confirmed = get_truth_value( row[10] )
+            has_due_date =  get_truth_value( row[11] )
              
-            new_warehouse_id =  warehouse_mapping_hash[warehouse_id]
-            new_roller_identification_form_id =  roller_identification_form_mapping_hash[roller_identification_form_id] 
+            new_contact_id =  contact_mapping_hash[contact_id]
+            new_warehouse_id =  warehouse_mapping_hash[warehouse_id] 
             
             if new_warehouse_id.nil?
               puts "the  new_warehouse_id is nil, from old value: #{warehouse_id}"
@@ -61,27 +63,30 @@ namespace :migrate_zga do
             end
             
             
-            if new_roller_identification_form_id.nil?
-              puts "the  new_roller_identification_form_id is nil, from old value: #{roller_identification_form_id}"
+            if new_contact_id.nil?
+              puts "the  new_contact_id is nil, from old value: #{contact_id}"
               next 
             end
             
      
             parsed_due_date = get_parsed_date(due_date) 
+            parsed_order_date = get_parsed_date(order_date)
  
-            object =   RecoveryOrder.create_object(
-              :roller_identification_form_id =>  new_roller_identification_form_id,
+            object =  BlanketOrder.create_object(
+              :contact_id => new_contact_id,
               :warehouse_id => new_warehouse_id,
-              :code => code,
+              :order_date => parsed_order_date,
+              :production_no => production_no,
               :has_due_date => has_due_date,
               :due_date => parsed_due_date,
               )
                 
             object.errors.messages.each {|x| puts "Error: #{x}" } 
                 
-
+            next if object.errors.size != 0 
+            
             result_array << [ id , object.id   ] 
-            if is_confirmed
+            if object.errors.size == 0 and is_confirmed
               confirm_result_array << [object.id, object.class.to_s, confirmation_date ]
             end
             
@@ -96,7 +101,7 @@ namespace :migrate_zga do
       end
     end
     
-    migration_filename = MIGRATION_FILENAME[:recovery_order_confirm] 
+    migration_filename = MIGRATION_FILENAME[:blanket_order_confirm] 
     confirm_lookup_location =  lookup_file_location(  migration_filename ) 
     
     CSV.open(confirm_lookup_location, 'w') do |csv|
@@ -105,19 +110,18 @@ namespace :migrate_zga do
       end
     end
     
-    puts "Done migrating RecoveryOrder. Total RecoveryOrder: #{RecoveryOrder.count}"
+    puts "Done migrating BlanketOrder. Total BlanketOrder: #{BlanketOrder.count}"
   end
   
    
-  task :recovery_order_detail => :environment do  
+  task :blanket_order_detail => :environment do  
 
-    recovery_order_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:recovery_order] )  
-    roller_identification_form_detail_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:roller_identification_form] )  
-    roller_builder_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:roller_builder] )   
+    blanket_order_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:blanket_order] )  
+    blanket_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:blanket] )   
   
-     
  
-    migration_filename = MIGRATION_FILENAME[:recovery_order_detail]
+ 
+    migration_filename = MIGRATION_FILENAME[:blanket_order_detail]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     
@@ -133,83 +137,56 @@ namespace :migrate_zga do
             next if awesome_row_counter == 0 
                         
             id = row[0]
-            recovery_order_id = row[1]
-            roller_identification_form_detail_id = row[2]
-            roller_builder_id = row[3]
-            compound_under_layer_id = row[4]
+            blanket_order_id = row[1]
+            blanket_id = row[2]
+            roll_blanket_usage = row[3]
+            roll_blanket_defect = row[4]
             total_cost = row[5]
-            accessories_cost = row[6]
-            core_cost = row[7]
-            compound_cost = row[8]
-            compound_usage = row[9]
-            compound_under_layer_usage = row[10]
-            core_type_case = row[11]
-            is_disassembled = row[12]
-            is_stripped_and_glued = row[13]
-            is_wrapped = row[14]
-            is_vulcanized = row[15]
-            is_faced_off = row[16]
-            is_conventional_grinded = row[17]
-            is_c_n_c_grinded = row[18]
-            is_polished_and_q_c = row[19]
-            is_packaged = row[20]
-            is_rejected = row[21]
-            rejected_date = row[22]
-            is_finished = row[23]
-            finished_date = row[24]
-            is_deleted = row[25]
+            bar_cost = row[6]
+            adhesive_cost = row[7]
+            roll_blanket_cost = row[8]
+            is_cut = row[9]
+            is_side_sealed = row[10]
+            is_bar_prepared = row[11]
+            is_adhesive_tape_applied = row[12]
+            is_bar_mounted = row[13]
+            is_bar_heat_pressed = row[14]
+            is_bar_pull_off_tested = row[15]
+            is_q_c_and_marked = row[16]
+            is_packaged = row[17]
+            is_rejected = row[18]
+            rejected_date = row[19]
+            is_job_scheduled = row[20]
+            is_finished = row[21]
+            finished_date = row[22]
+            is_deleted = row[23]
                       
-            is_deleted = get_truth_value( row[25] )
+            is_deleted = get_truth_value( row[23] )
             next if is_deleted  
             
-            is_service = false
-            is_service = true if row[9] == "True" 
-            
+ 
  
   
-            
- 
-            if not core_type_case.present?
-              puts "Fuck bro.. core_type_case is not present. Find some way. old_id: #{id}"
-              next
-            end
-            
-            old_core_type_case = core_type_case.dup
-            core_type_case  = CORE_TYPE_CASE[:r] if old_core_type_case ==  "R"
-            core_type_case  = CORE_TYPE_CASE[:z] if old_core_type_case ==  "Z"
-            
- 
-    
-     
-            new_recovery_order_id =  recovery_order_mapping_hash[recovery_order_id]
-            new_roller_identification_form_detail_id =  roller_identification_form_detail_mapping_hash[ roller_identification_form_detail_id]
-            new_roller_builder_id = roller_builder_mapping_hash[roller_builder_id] 
              
-  
+            new_blanket_order_id =  blanket_order_mapping_hash[blanket_order_id]
+            new_blanket_id =  blanket_mapping_hash[ blanket_id] 
             
-            if new_recovery_order_id.nil?
-              puts "the  new_recovery_order_id is nil, from old value: #{recovery_order_id}"
+            if new_blanket_order_id.nil?
+              puts "the  new_blanket_order_id is nil, from old value: #{blanket_order_id}"
               next 
             end
             
-            if new_roller_identification_form_detail_id.nil?
-              puts "the  new_roller_identification_form_detail_id is nil, from old value: #{roller_identification_form_detail_id}"
+            if new_blanket_id.nil?
+              puts "the  new_blanket_id is nil, from old value: #{blanket_id}"
               next 
             end
-            
-            if new_roller_builder_id.nil?
-              puts "the  new_roller_builder_id is nil, from old value: #{roller_builder_id}"
-              next 
-            end
-      
+ 
    
    
-            object = RecoveryOrderDetail.create_object(
-                :recovery_order_id =>  new_recovery_order_id,
-                :roller_identification_form_detail_id =>  new_roller_identification_form_detail_id,
-                :roller_builder_id => new_roller_builder_id,
-                :core_type_case => core_type_case
-                ) 
+            object =  BlanketOrderDetail.create_object(
+              :blanket_order_id =>  new_blanket_order_id,
+              :blanket_id =>  new_blanket_id
+              )
                 
             object.errors.messages.each {|x| puts "Error: #{x}" } 
             
@@ -230,11 +207,11 @@ namespace :migrate_zga do
     end
     
 
-    puts "Done migrating RecoveryOrderDetail. Total RecoveryOrderDetail: #{RecoveryOrderDetail.count}"
+    puts "Done migrating BlanketOrderDetail. Total BlanketOrderDetail: #{BlanketOrderDetail.count}"
   end
   
-  task :confirm_recovery_order => :environment do 
-    migration_filename = MIGRATION_FILENAME[:recovery_order_confirm]  
+  task :confirm_blanket_order => :environment do 
+    migration_filename = MIGRATION_FILENAME[:blanket_order_confirm]  
     lookup_location =  lookup_file_location(  migration_filename ) 
     
     CSV.open(lookup_location, 'r') do |csv| 
@@ -243,7 +220,11 @@ namespace :migrate_zga do
         confirmation_date_string = row[2] 
         parsed_confirmation_date = get_parsed_date(confirmation_date_string)
         
-        object  = RecoveryOrder.find_by_id( id )
+        object  = BlanketOrder.find_by_id( id )
+        if object.nil? 
+          puts "fark the object with id : #{id} is nil"
+          next
+        end
         
         object.confirm_object( :confirmed_at => parsed_confirmation_date  )  
         
@@ -253,19 +234,19 @@ namespace :migrate_zga do
       end
     end
           
-    puts "Total confirmed RecoveryOrder: #{RecoveryOrder.where(:is_confirmed => true).count}"
+    puts "Total confirmed BlanketOrder: #{BlanketOrder.where(:is_confirmed => true).count}"
   end
   
    
-  task :process_recovery_order_detail => :environment do  
+  task :process_blanket_order_detail => :environment do  
     
     processed_counter = 0 
  
     item_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:item] )   
-    recovery_order_detail_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:recovery_order_detail] )   
+    blanket_order_detail_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:blanket_order_detail] )   
      
  
-    migration_filename = MIGRATION_FILENAME[:recovery_order_detail]
+    migration_filename = MIGRATION_FILENAME[:blanket_order_detail]
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     
@@ -281,7 +262,7 @@ namespace :migrate_zga do
             next if awesome_row_counter == 0 
                         
             id = row[0]
-            recovery_order_id = row[1]
+            blanket_order_id = row[1]
             roller_identification_form_detail_id = row[2]
             roller_builder_id = row[3]
             compound_under_layer_id = row[4]
@@ -314,10 +295,10 @@ namespace :migrate_zga do
             is_service = true if row[9] == "True" 
             
             
-            new_recovery_order_detail_id = recovery_order_detail_mapping_hash[ id ] 
+            new_blanket_order_detail_id = blanket_order_detail_mapping_hash[ id ] 
             
-            if new_recovery_order_detail_id.nil?
-              puts "Howdy, no new_recovery_order_detail_id for old id: #{id}"
+            if new_blanket_order_detail_id.nil?
+              puts "Howdy, no new_blanket_order_detail_id for old id: #{id}"
               next
             end
  
@@ -334,7 +315,7 @@ namespace :migrate_zga do
               next 
             end
             
-            object = RecoveryOrderDetail.find_by_id new_recovery_order_detail_id 
+            object = BlanketOrderDetail.find_by_id new_blanket_order_detail_id 
           
             is_deleted = get_truth_value( row[25] )
             
@@ -394,7 +375,7 @@ namespace :migrate_zga do
   
   
     processed_counter = 0 
-    migration_filename = MIGRATION_FILENAME[:recovery_detail_finish_reject] 
+    migration_filename = MIGRATION_FILENAME[:blanket_detail_finish_reject] 
     confirm_lookup_location =  lookup_file_location(  migration_filename ) 
     
     CSV.open(confirm_lookup_location, 'w') do |csv|
@@ -405,7 +386,7 @@ namespace :migrate_zga do
     end
     
 
-    puts "Done processing RecoveryOrderDetail. Total processed RecoveryOrderDetail: #{processed_counter}"
+    puts "Done processing BlanketOrderDetail. Total processed BlanketOrderDetail: #{processed_counter}"
   end
  
 

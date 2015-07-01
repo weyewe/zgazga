@@ -308,6 +308,13 @@ MIGRATION_FILENAME = {
   :recovery_order  => "RecoveryOrders.csv",
   :recovery_order_detail => "RecoveryOrderDetails.csv",
   :recovery_order_confirm => "RecoveryOrderConfirm.csv",
+  :recovery_accessory_detail => "RecoveryAccessoryDetails.csv",
+  :recovery_detail_finish_reject => "RecoveryDetailFinishReject.csv",
+  
+  :blanket_order  => "BlanketOrders.csv",
+  :blanket_order_detail => "BlanketOrderDetails.csv",
+  :blanket_order_confirm => "BlanketOrderConfirm.csv",
+  :blanket_detail_finish_reject => "BlanketDetailFinishReject.csv",
   
   
 } 

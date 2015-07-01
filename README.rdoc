@@ -69,13 +69,11 @@ rake migrate_zga:confirm_roller_identification_form
 
 rake migrate_zga:recovery_order
 rake migrate_zga:recovery_order_detail
-rake migrate_zga:confirm_recovery_order
+rake migrate_zga:confirm_recovery_order 
 
-rake migrate_zga:roller_warehouse_mutation
-rake migrate_zga:roller_warehouse_mutation_detail
-rake migrate_zga:confirm_recovery_order_roller_warehouse_mutation
-
-migrate RWO + detail + Confirm
-migrate RWOD Accessories + FINALIZE / REJECT
-
-migrate blanket_order + detail + confirm   
+ 
+ 
+ 
+rake migrate_zga:blanket_order
+rake migrate_zga:blanket_order_detail 
+rake migrate_zga:confirm_blanket_order 
