@@ -75,10 +75,23 @@ Ext.define('AM.controller.DeliveryOrders', {
 			},
 			'deliveryorderform button[action=save]': {
         click: this.updateObject
-      }
+      },
+      
+      'deliveryorderProcess deliveryorderlist button[action=downloadObject]': {
+        click: this.downloadObject
+			}	,
 		
     });
   },
+  
+	downloadObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id")
+			if( record ){
+				window.open( 'delivery_orders/' + id + '.pdf' );
+			}
+			
+	},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

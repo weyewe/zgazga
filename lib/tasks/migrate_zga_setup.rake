@@ -61,6 +61,10 @@ namespace :migrate_zga do
                 )
                 
             object.errors.messages.each {|x| puts "Error: #{x}" } 
+            
+            object.password = 'willy1234'
+            object.password_confirmation = 'willy1234'
+            object.save 
                 
 
             result_array << [ id , object.id , object.name, object.email ] 

@@ -7,11 +7,11 @@
         </div>
         <div class="col-xs-6 text-right">
           <% if @object.is_confirmed %> 
-            <h1>ORDER CONFIRMATION</h1>
+            <h1>DELIVERY ORDER</h1>
             <h2><small>No: <%= @object.nomor_surat %> </small></h2>
             <h3><small>Date: <%= @object.confirmed_at.strftime("%d-%m-%Y") %> </small></h3>
           <% else %> 
-            <h1>DRAFT ORDER CONFIRMATION</h1>
+            <h1>DRAFT DELIVERY ORDER</h1>
             <h2><small>No: <%= @object.nomor_surat %> </small></h2>
             <h3><small>Date: N/A </small></h3>
           <% end %> 
@@ -57,12 +57,12 @@ www.zengra.com
         <div class="col-xs-5 col-xs-offset-2 text-right">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>To : <a href="#"><%= @object.contact.name %></a></h4>
+              <h4>To : <a href="#"><%= @object.sales_order.contact.name %></a></h4>
             </div>
             <div class="panel-body">
               <p>
           
-                <%= @object.contact.address %> 
+                <%= @object.sales_order.contact.address %> 
               </p>
             </div>
           </div>
@@ -84,42 +84,29 @@ www.zengra.com
             <th>
               <h4>Qty</h4>
             </th>
-            <th>
-              <h4>Unit Price</h4>
-            </th>
-            <th>
-              <h4>Total Price <b>(<%= @object.exchange.name %>)</b></h4>
-            </th>
+      
           </tr>
         </thead>
         <tbody>
           
           <% counter  = 1 %>
           <% total = BigDecimal("0") %>
-          <% @object.sales_order_details.each do |detail| %>
+          <% @object.delivery_order_details.each do |detail| %>
             <tr>
               <td><%= counter %></td>
               <td> <%= detail.item.sku %></td>
               <td> <%= detail.item.name %></td>
               <td><%= detail.amount  %> x <%= detail.item.uom.name %></td>
-              <td>
  
-                <%= number_to_currency  detail.price  , 
-                        unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
-              </td>
-              <td class="text-right">
-                <%= number_to_currency  detail.price * detail.amount , 
-                        unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
-          
-              </td>
             </tr>
             <% counter = counter + 1 %> 
-            <% total = total + detail.price * detail.amount  %>
+     
             
           <% end %>
  
         </tbody>
       </table>
+      <!-- 
       <div class="row text-right">
         <div class="col-xs-2 col-xs-offset-8">
           <p>
@@ -131,11 +118,11 @@ www.zengra.com
         </div>
         <div class="col-xs-2">
           <strong> 
-          <%= number_to_currency total, unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
+          <%#= number_to_currency total, unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
           <br>
           </strong>
         </div>
-      </div>
+      </div> -->
       
       
       <div class="row" style="margin-top:10px;">
@@ -148,21 +135,7 @@ www.zengra.com
               </div>
               <div class="panel-body" style='border:none;'>
                 <p>
-                  1. Prices quoted in
 
- Harga dalam mata uang
-
-2. Prices exclude 10% VAT 
-
- Harga belum termasuk PPN 10% 
-
-3. Please sign & fax / email to us upon acceptance. 
-
- Mohon di tanda tangani & di fax / email ke kami setelah disetujui
-
-: Rupiah at USD exchange rate of Rp.1.00 - Rp.1.00
-
-pada kurs USD
                 </p>
               </div>
             </div>
@@ -173,10 +146,10 @@ pada kurs USD
    
    
    <div class="row">
-        <div class="col-xs-5 text-center">
+        <div class="col-xs-4 text-center">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>PT. Zentrum Graphics Asia</h4>
+              <h4>Authorized Signature</h4>
             </div>
             <div class="panel-body">
               <p>
@@ -190,10 +163,25 @@ pada kurs USD
 
 
 
-        <div class="col-xs-5 col-xs-offset-2 text-center">
+        <div class="col-xs-4  text-center">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4><%= @object.contact.name %></h4>
+              <h4>Checked By</h4>
+            </div>
+            <div class="panel-body">
+              <p>
+                  <br /><br /><br />
+               <%= "..................."*3 %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        
+        <div class="col-xs-4  text-center">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Signature, name and stamp</h4>
             </div>
             <div class="panel-body">
               <p>
