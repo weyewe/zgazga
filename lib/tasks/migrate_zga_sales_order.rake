@@ -202,10 +202,11 @@ namespace :migrate_zga do
         
         object.errors.messages.each {|x| puts "id: #{object.id}. Error: #{x}" } 
         
-        puts "Total confirmed SalesOrder: #{SalesOrder.where(:is_confirmed => true).count}"
+        
       end
     end
           
+    puts "Total confirmed SalesOrder: #{SalesOrder.where(:is_confirmed => true).count}"
   end
  
 

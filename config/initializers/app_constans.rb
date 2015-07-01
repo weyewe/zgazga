@@ -305,6 +305,10 @@ MIGRATION_FILENAME = {
   :roller_identification_form_detail => "CoreIdentificationDetails.csv",
   :roller_identification_form_confirm => "CoreIdentificationConfirm.csv",
   
+  :recovery_order  => "RecoveryOrders.csv",
+  :recovery_order_detail => "RecoveryOrderDetails.csv",
+  :recovery_order_confirm => "RecoveryOrderConfirm.csv",
+  
   
 } 
 
