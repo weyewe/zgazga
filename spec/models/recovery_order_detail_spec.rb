@@ -336,6 +336,7 @@ describe RecoveryOrderDetail do
             @rod.is_rejected.should == false
           end
           
+          
         end
       end
       

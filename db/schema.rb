@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701035059) do
+ActiveRecord::Schema.define(version: 20150701140322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,33 @@ ActiveRecord::Schema.define(version: 20150701035059) do
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
     t.string   "code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bank_administration_details", force: true do |t|
+    t.integer  "bank_administration_id"
+    t.integer  "account_id"
+    t.string   "code"
+    t.string   "description"
+    t.integer  "status"
+    t.decimal  "amount",                 precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_legacy",                                       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bank_administrations", force: true do |t|
+    t.integer  "cash_bank_id"
+    t.datetime "administration_date"
+    t.string   "code"
+    t.string   "no_bukti"
+    t.decimal  "amount",               precision: 14, scale: 2,  default: 0.0
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.integer  "exchange_rate_id"
+    t.string   "description"
+    t.boolean  "is_confirmed",                                   default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -455,6 +482,27 @@ ActiveRecord::Schema.define(version: 20150701035059) do
     t.string   "code"
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "memorial_details", force: true do |t|
+    t.integer  "memorial_id"
+    t.integer  "account_id"
+    t.string   "code"
+    t.integer  "status"
+    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "memorials", force: true do |t|
+    t.string   "code"
+    t.string   "no_bukti"
+    t.decimal  "amount",       precision: 14, scale: 2, default: 0.0
+    t.string   "description"
+    t.boolean  "is_confirmed",                          default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
