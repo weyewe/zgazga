@@ -163,7 +163,7 @@ namespace :migrate_zga do
             
             object   = Receivable.where(
                 :source_class => "SalesInvoiceMigration",
-                :source_id => new_sales_invoice_id
+                :source_id => new_sales_invoice_migration_id
               ).first 
               
             

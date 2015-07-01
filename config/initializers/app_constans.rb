@@ -326,6 +326,9 @@ MIGRATION_FILENAME = {
   :payment_request_detail => "PaymentRequestDetails.csv",
   :payment_request_confirm => "PaymentRequestConfirm.csv",
   
+  :receipt_voucher => "ReceiptVouchers.csv",
+  :receipt_voucher_detail => "ReceiptVoucherDetails.csv",
+  :receipt_voucher_confirm => "ReceiptVoucherConfirm.csv",
   
   
 } 
