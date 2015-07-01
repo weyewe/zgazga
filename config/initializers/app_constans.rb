@@ -316,6 +316,13 @@ MIGRATION_FILENAME = {
   :blanket_order_confirm => "BlanketOrderConfirm.csv",
   :blanket_detail_finish_reject => "BlanketDetailFinishReject.csv",
   
+  :payable => "Payables.csv",
+  :receivable => "Receivables.csv",
+  
+  :outstanding_sales_invoice  => "SalesInvoiceMigrations.csv",
+  :outstanding_purchase_invoice  => "PurchaseInvoiceMigrations.csv" 
+  
+  
   
 } 
 

@@ -9,6 +9,7 @@ rake migrate_zga:cash_bank
 rake migrate_zga:coa 
 
 
+
 rake migrate_zga:contact_group
 rake migrate_zga:contact
 
@@ -61,6 +62,8 @@ rake migrate_zga:confirm_delivery_order
 rake migrate_zga:sales_invoice
 rake migrate_zga:sales_invoice_detail  
 rake migrate_zga:confirm_sales_invoice
+rake migrate_zga:outstanding_sales_invoice 
+rake migrate_zga:receivable 
 
  
 rake migrate_zga:roller_identification_form
