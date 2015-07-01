@@ -65,6 +65,10 @@ rake migrate_zga:confirm_sales_invoice
 rake migrate_zga:outstanding_sales_invoice 
 rake migrate_zga:receivable 
 
+rake migrate_zga:payment_request
+rake migrate_zga:payment_request_detail
+rake migrate_zga:confirm_payment_request
+
  
 rake migrate_zga:roller_identification_form
 rake migrate_zga:roller_identification_form_detail

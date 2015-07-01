@@ -41,7 +41,7 @@ class PaymentRequestDetail < ActiveRecord::Base
     
     if self.persisted?
        if itemcount > 1
-         self.errors.add(:item_id, "Account sudah terpakai")
+         self.errors.add(:account_id, "Account sudah terpakai")
       return self 
        end
     else

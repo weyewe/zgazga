@@ -320,7 +320,11 @@ MIGRATION_FILENAME = {
   :receivable => "Receivables.csv",
   
   :outstanding_sales_invoice  => "SalesInvoiceMigrations.csv",
-  :outstanding_purchase_invoice  => "PurchaseInvoiceMigrations.csv" 
+  :outstanding_purchase_invoice  => "PurchaseInvoiceMigrations.csv" ,
+  
+  :payment_request => "PaymentRequests.csv",
+  :payment_request_detail => "PaymentRequestDetails.csv",
+  :payment_request_confirm => "PaymentRequestConfirm.csv",
   
   
   
