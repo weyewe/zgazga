@@ -7,11 +7,11 @@
         </div>
         <div class="col-xs-6 text-right">
           <% if @object.is_confirmed %> 
-            <h1>DELIVERY ORDER</h1>
+            <h1><%= @document_title %></h1>
             <h2><small>No: <%= @object.nomor_surat %> </small></h2>
             <h3><small>Date: <%= @object.confirmed_at.strftime("%d-%m-%Y") %> </small></h3>
           <% else %> 
-            <h1>DRAFT DELIVERY ORDER</h1>
+            <h1>DRAFT <%= @document_title %></h1>
             <h2><small>No: <%= @object.nomor_surat %> </small></h2>
             <h3><small>Date: N/A </small></h3>
           <% end %> 

@@ -62,6 +62,12 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 			hidden : true
 		});
 		
+		this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+			disabled: true
+		});
+		
 		this.searchField = new Ext.form.field.Text({
 			name: 'searchField',
 			hideLabel: true,
@@ -74,6 +80,7 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.downloadButton, 
 					'->',
 					this.searchField ];
 	 
@@ -98,7 +105,8 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
-		this.deleteObjectButton.enable(); 
+		this.deleteObjectButton.enable();
+		this.downloadButton.enable();
 		
 		selectedObject = this.getSelectedObject();
 		
@@ -117,5 +125,6 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
 		this.confirmObjectButton.disable(); 
+		this.downloadButton.disable();
 	}
 });

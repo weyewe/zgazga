@@ -4,6 +4,7 @@ class SalesOrdersController < ApplicationController
   def show
     @object = SalesOrder.find(params[:id])
     
+    @document_title = "ORDER CONFIRMATION"
     respond_to do |format|
       format.html
       format.pdf do

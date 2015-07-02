@@ -120,6 +120,6 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
 		this.confirmObjectButton.disable(); 
-		this.downloadButton.enable();
+		this.downloadButton.disable();
 	}
 });

@@ -68,10 +68,17 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 			checkChangeBuffer: 300
 		});
 		
+		this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+			disabled: true
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.downloadButton, 
 					'->',
 					this.searchField ];
 	 
@@ -97,6 +104,7 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable(); 
+		this.downloadButton.enable();
 		
 		selectedObject = this.getSelectedObject();
 		
@@ -115,5 +123,6 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
 		this.confirmObjectButton.disable(); 
+		this.downloadButton.disable();
 	}
 });
