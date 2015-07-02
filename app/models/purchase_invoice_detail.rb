@@ -11,6 +11,12 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     self.where(:is_deleted => false)
   end
   
+  
+  def item
+    self.purchase_receival_detail.item 
+  end
+  
+  
   def valid_amount
     if amount <= BigDecimal("0")
       self.errors.add(:amount, "Harus lebih besar dari 0")

@@ -62,12 +62,12 @@ www.zengra.com
         <div class="col-xs-5 col-xs-offset-2 text-right">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>To : <a href="#"><%= @object.contact.name %></a></h4>
+              <h4>To : <a href="#"><%= @contact.name %></a></h4>
             </div>
             <div class="panel-body">
               <p>
           
-                <%= @object.contact.address %> 
+                <%= @contact.address %> 
               </p>
             </div>
           </div>
@@ -101,7 +101,7 @@ www.zengra.com
           
           <% counter  = 1 %>
           <% total = BigDecimal("0") %>
-          <% @object.sales_order_details.each do |detail| %>
+          <% @object.sales_invoice_details.each do |detail| %>
             <tr>
               <td><%= counter %></td>
               <td> <%= detail.item.sku %></td>
@@ -195,10 +195,11 @@ pada kurs USD
 
 
 
+
         <div class="col-xs-5 col-xs-offset-2 text-center">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4><%= @object.contact.name %></h4>
+              <h4><%= @contact.name %></h4>
             </div>
             <div class="panel-body">
               <p>

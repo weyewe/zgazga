@@ -91,7 +91,7 @@ www.zengra.com
           
           <% counter  = 1 %>
           <% total = BigDecimal("0") %>
-          <% @object.delivery_order_details.each do |detail| %>
+          <% @object.purchase_receival_details.each do |detail| %>
             <tr>
               <td><%= counter %></td>
               <td> <%= detail.item.sku %></td>

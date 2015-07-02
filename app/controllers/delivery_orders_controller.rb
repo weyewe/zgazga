@@ -3,6 +3,7 @@ class DeliveryOrdersController < ApplicationController
  
   def show
     @object = DeliveryOrder.find(params[:id])
+    @contact = @object.sales_order.contact 
     
     @document_title = "DELIVERY ORDER"
     respond_to do |format|
