@@ -11,6 +11,7 @@ Ext.define('AM.model.DeliveryOrder', {
     	    
     	    { name: 'sales_order_id', type: 'int' },
     	    { name: 'sales_order_code', type: 'string' },
+    	    { name: 'sales_order_nomor_surat', type: 'string' },
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,

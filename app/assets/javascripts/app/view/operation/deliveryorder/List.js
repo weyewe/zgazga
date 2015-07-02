@@ -10,10 +10,17 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
 			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			{ header: 'Tanggal Delivery', dataIndex: 'delivery_date', flex: 2 },
-		 	{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
-			{ header: 'SalesOrder',  dataIndex: 'sales_order_code', flex: 1},
 			
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Tanggal Delivery: <br />  <b>{delivery_date}</b>'  + '<br />' + '<br />' +
+							'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+							'SalesOrder: <br /><b>{sales_order_nomor_surat}</b>'
+			},
+			
+		
 			
 			
  
@@ -21,8 +28,8 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
 			
 			

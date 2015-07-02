@@ -14,6 +14,7 @@ json.delivery_orders @objects do |object|
 	
 	json.sales_order_code 			object.sales_order.code 
 	json.sales_order_id 				object.sales_order.id 
+	json.sales_order_nomor_surat 				object.sales_order.nomor_surat
 	
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 
 	

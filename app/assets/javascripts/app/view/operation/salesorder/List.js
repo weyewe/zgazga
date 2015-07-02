@@ -29,7 +29,7 @@ Ext.define('AM.view.operation.salesorder.List' ,{
  
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Konfirmasi",
 				flex : 3,
 				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
 							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
