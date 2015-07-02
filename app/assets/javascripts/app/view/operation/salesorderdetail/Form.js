@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.salesorderdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Sales Order Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -136,15 +136,11 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
+   
     	     {
     	        xtype: 'textfield',
     	        name : 'price',
-    	        fieldLabel: 'Value per item'
+    	        fieldLabel: 'Selling Price'
     	     },
 		
 	 

@@ -946,6 +946,7 @@ ActiveRecord::Schema.define(version: 20150701140322) do
     t.integer  "exchange_id"
     t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
     t.decimal  "total_cos",            precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_receivable",    precision: 14, scale: 2,  default: 0.0
     t.decimal  "discount",             precision: 14, scale: 2,  default: 0.0
     t.decimal  "dpp",                  precision: 14, scale: 2,  default: 0.0
     t.decimal  "tax",                  precision: 14, scale: 2,  default: 0.0
