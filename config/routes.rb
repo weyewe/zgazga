@@ -62,6 +62,8 @@ Ticketie::Application.routes.draw do
     get 'search_roller_types' => 'roller_types#search', :as => :search_roller_type
     get 'search_payment_requests' => 'payment_requests#search', :as => :search_payment_request
     get 'search_payment_request_details' => 'payment_request_details#search', :as => :search_payment_request_detail
+    get 'search_memorials' => 'memorials#search', :as => :search_memorial
+    get 'search_memorial_details' => 'memorial_details#search', :as => :search_memorial_detail
   
     # master data 
     resources :app_users
@@ -81,7 +83,9 @@ Ticketie::Application.routes.draw do
     #   warehousing
     resources :warehouses
   
-    
+    # accounting
+    resources :memorials
+    resources :memorial_details
     
     # finance
     resources :accounts
