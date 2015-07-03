@@ -282,7 +282,19 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
- 
+ 			
+ 			{ 
+				text:'Blending Recipe', 
+				viewClass:'AM.view.master.BlendingRecipe', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blending_recipes',
+						action : 'index'
+					}
+				]
+			}, 
  
 	 
  

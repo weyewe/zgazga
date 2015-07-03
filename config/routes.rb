@@ -44,6 +44,8 @@ Ticketie::Application.routes.draw do
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
+    get 'search_blending_recipes' => 'blending_recipes#search', :as => :search_blending_recipe
+    get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -115,6 +117,10 @@ Ticketie::Application.routes.draw do
     resources :roller_builders
     resources :core_builders
     resources :blankets
+    
+    resources :blending_recipes
+    resources :blending_recipe_details
+    
   end
   
   
