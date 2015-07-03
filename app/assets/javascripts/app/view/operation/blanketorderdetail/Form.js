@@ -1,7 +1,7 @@
 
-Ext.define('AM.view.operation.blanketworkorderdetail.Form', {
+Ext.define('AM.view.operation.blanketorderdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.blanketworkorderdetailform',
+  alias : 'widget.blanketorderdetailform',
 
   title : 'Add / Edit Memorial Detail',
   layout: 'fit',

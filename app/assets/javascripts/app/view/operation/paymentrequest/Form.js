@@ -14,20 +14,20 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
   initComponent: function() {
 			var me = this; 
 	
-	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
-		storeId : 'contact_search',
+	var remoteJsonStoreVendor = Ext.create(Ext.data.JsonStore, {
+		storeId : 'vendor_search',
 		fields	: [
 		 		{
-					name : 'contact_name',
+					name : 'vendor_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'contact_description',
+					name : 'vendor_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'contact_id',
+					name : 'vendor_id',
 					mapping : 'id'
 				}  
 		],
@@ -35,7 +35,7 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_customers',
+			url : 'api/search_suppliers',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
-		storeId : 'employee_search',
+	var remoteJsonStoreAccountPayable = Ext.create(Ext.data.JsonStore, {
+		storeId : 'account_payable_search',
 		fields	: [
 		 		{
-					name : 'employee_name',
+					name : 'account_payable_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'employee_description',
-					mapping : "description"
+					name : 'account_payable_code',
+					mapping : "code"
 				} ,
 		 
 				{
-					name : 'employee_id',
+					name : 'account_payable_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,7 +66,7 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_employees',
+			url : 'api/search_ledger_account_payables',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -118,101 +118,87 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 					anchor: '100%'
       },
       items: [
-   					{
-        	        xtype: 'hidden',
-        	        name : 'id',
-        	        fieldLabel: 'id'
-    	        },
-    	        {
-    		        xtype: 'displayfield',
-    		        name : 'code',
-    		        fieldLabel: 'Kode'
-    		  	  },
-    		  	{
+ 				{
+	        xtype: 'hidden',
+	        name : 'id',
+	        fieldLabel: 'id'
+        },
+        {
+	        xtype: 'displayfield',
+	        name : 'code',
+	        fieldLabel: 'Kode'
+	  	  },
+		  	{
 					xtype: 'textfield',
-					fieldLabel : 'Nomor Surat',
-					name : 'nomor_surat'
+					fieldLabel : 'No Bukti',
+					name : 'no_bukti'
 				},
-    		    {
-    					xtype: 'datefield',
-    					name : 'sales_date',
-    					fieldLabel: 'Tanggal Penjualan',
-    					format: 'Y-m-d',
-    				},
-    				{
-        	        xtype: 'textarea',
-        	        name : 'description',
-        	        fieldLabel: 'Deskripsi'
-    	      },
-    	        
-    	      {
-	    				fieldLabel: 'Contact',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
-    				
-    				{
-	    				fieldLabel: 'Marketing',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'employee_name',
-	    				valueField : 'employee_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreEmployee , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{employee_name}">' + 
-	    												'<div class="combo-name">{employee_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'employee_id' 
-    				},
-    				
-    				{
-	    				fieldLabel: 'Currency',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'exchange_name',
-	    				valueField : 'exchange_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreExchange , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{exchange_name}">' + 
-	    												'<div class="combo-name">{exchange_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'exchange_id' 
-    				},
+	      {
+  				fieldLabel: 'Contact',
+  				xtype: 'combo',
+  				queryMode: 'remote',
+  				forceSelection: true, 
+  				displayField : 'vendor_name',
+  				valueField : 'vendor_id',
+  				pageSize : 5,
+  				minChars : 1, 
+  				allowBlank : false, 
+  				triggerAction: 'all',
+  				store : remoteJsonStoreVendor, 
+  				listConfig : {
+  					getInnerTpl: function(){
+  						return  	'<div data-qtip="{vendor_name}">' + 
+  												'<div class="combo-name">{vendor_name}</div>' + 
+  												'<div class="combo-name">Deskripsi: {vendor_description}</div>' + 
+  						 					'</div>';
+  					}
+					},
+					name : 'contact_id' 
+	      },
+				{
+	        xtype: 'textarea',
+	        name : 'description',
+	        fieldLabel: 'Description'
+	      },
+	      {
+					xtype: 'datefield',
+					name : 'request_date',
+					fieldLabel: 'Requested Date',
+					format: 'Y-m-d',
+				},
+				{
+					xtype: 'datefield',
+					name : 'due_date',
+					fieldLabel: 'Due Date',
+					format: 'Y-m-d',
+				},
+				{
+  				fieldLabel: 'Account Payable',
+  				xtype: 'combo',
+  				queryMode: 'remote',
+  				forceSelection: true, 
+  				displayField : 'account_payable_name',
+  				valueField : 'account_payable_id',
+  				pageSize : 5,
+  				minChars : 1, 
+  				allowBlank : false, 
+  				triggerAction: 'all',
+  				store : remoteJsonStoreAccountPayable , 
+  				listConfig : {
+  					getInnerTpl: function(){
+  						return  	'<div data-qtip="{account_payable_name}">' + 
+  												'<div class="combo-name">Code : {account_payable_code}</div>' + 
+  												'<div class="combo-name">Name: {account_payable_name}</div>' + 
+  						 					'</div>';
+  					}
+					},
+					name : 'account_id' 
+				},
+				{
+	        xtype: 'displayfield',
+	        name : 'amount',
+	        fieldLabel: 'Amount'
+	  	  },
 			]
     }];
 
@@ -228,7 +214,7 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
     this.callParent(arguments);
   },
   
-    setSelectedCustomer: function( contact_id ){
+    setSelectedVendor: function( contact_id ){
 		var comboBox = this.down('form').getForm().findField('contact_id'); 
 		var me = this; 
 		var store = comboBox.store; 
@@ -245,49 +231,29 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 		});
 	},
 	
-	setSelectedEmployee: function( employee_id ){
-		var comboBox = this.down('form').getForm().findField('employee_id'); 
+	setSelectedAccountPayable: function( account_id ){
+		var comboBox = this.down('form').getForm().findField('account_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : employee_id 
+				selected_id : account_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( employee_id );
-			}
-		});
-	},
-	
-	setSelectedExchange: function( exchange_id ){
-		var comboBox = this.down('form').getForm().findField('exchange_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : exchange_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( exchange_id );
+				comboBox.setValue( account_id );
 			}
 		});
 	},
 	
 	setComboBoxData : function( record){ 
 
-		// var me = this; 
-		// me.setLoading(true);
-		
-		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
-		// me.setSelectedEmployee( record.get("employee_id")  ) ;
-		// me.setSelectedExchange( record.get("exchange_id")  ) ;
-		// me.setSelectedCustomer( record.get("contact_id")  ) ;
+		var me = this; 
+		me.setLoading(true);
+		me.setSelectedAccountPayable( record.get("account_id")  ) ;
+		me.setSelectedVendor( record.get("contact_id")  ) ;
  
 	}
  

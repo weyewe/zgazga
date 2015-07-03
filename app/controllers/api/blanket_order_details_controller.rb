@@ -1,22 +1,22 @@
-class Api::BlanketWorkOrderDetailsController < Api::BaseApiController
+class Api::BlanketOrderDetailsController < Api::BaseApiController
   
   def index
-    @parent = BlanketWorkOrder.find_by_id params[:blanket_work_order_id]
-    @objects = @parent.active_children.joins(:blanket_work_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
+    @objects = @parent.active_children.joins(:blanket_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = BlanketWorkOrder.find_by_id params[:blanket_work_order_id]
+    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
     
   
-    @object = BlanketWorkOrderDetail.create_object(params[:blanket_work_order_detail])
+    @object = BlanketOrderDetail.create_object(params[:blanket_order_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :blanket_work_order_details => [@object] , 
+                        :blanket_order_details => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::BlanketWorkOrderDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = BlanketWorkOrderDetail.find_by_id params[:id] 
-    @parent = @object.blanket_work_order 
+    @object = BlanketOrderDetail.find_by_id params[:id] 
+    @parent = @object.blanket_order 
     
     
-    params[:blanket_work_order_detail][:blanket_work_order_id] = @parent.id  
+    params[:blanket_order_detail][:blanket_order_id] = @parent.id  
     
-    @object.update_object( params[:blanket_work_order_detail])
+    @object.update_object( params[:blanket_order_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :blanket_work_order_details => [@object],
+                        :blanket_order_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::BlanketWorkOrderDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = BlanketWorkOrderDetail.find(params[:id])
-    @parent = @object.blanket_work_order 
+    @object = BlanketOrderDetail.find(params[:id])
+    @parent = @object.blanket_order 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -82,31 +82,31 @@ class Api::BlanketWorkOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BlanketWorkOrderDetail.joins(:blanket_work_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
+      @objects = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
+        ( blanket.contact.name  =~ query ) | 
+        ( blanket.machine.name =~ query ) | 
+        ( blanket.sku  =~ query  )  | 
+        ( blanket.name  =~ query  )  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = BlanketWorkOrderDetail.joins(:blanket_work_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
+      @total = BlanketOrderDetail.joins(:blanket_order, :item => [:uom]).where{ 
+        ( blanket.contact.name  =~ query ) | 
+        ( blanket.machine.name =~ query ) | 
+        ( blanket.sku  =~ query  )  | 
+        ( blanket.name  =~ query  )  
       }.count
     else
-      @objects = BlanketWorkOrderDetail.where{ 
+      @objects = BlanketOrderDetail.where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = BlanketWorkOrderDetail.where{ 
+      @total = BlanketOrderDetail.where{ 
               (id.eq selected_id)   
       }.count 
     end

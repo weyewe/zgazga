@@ -1,56 +1,56 @@
-Ext.define('AM.controller.BlanketWorkOrderDetails', {
+Ext.define('AM.controller.BlanketOrderDetails', {
   extend: 'Ext.app.Controller',
 
-  stores: ['BlanketWorkOrderDetails', 'BlanketWorkOrders'],
-  models: ['BlanketWorkOrderDetail'],
+  stores: ['BlanketOrderDetails', 'BlanketOrders'],
+  models: ['BlanketOrderDetail'],
 
   views: [
-    'operation.blanketworkorderdetail.List',
-    'operation.blanketworkorderdetail.Form',
-		'operation.blanketworkorder.List'
+    'operation.blanketorderdetail.List',
+    'operation.blanketorderdetail.Form',
+		'operation.blanketorder.List'
   ],
 
   refs: [
 		{
 			ref: 'list',
-			selector: 'blanketworkorderdetaillist'
+			selector: 'blanketorderdetaillist'
 		},
 		{
 			ref : 'parentList',
-			selector : 'blanketworkorderlist'
+			selector : 'blanketorderlist'
 		}
 	],
 
   init: function() {
     this.control({
-      'blanketworkorderdetaillist': {
+      'blanketorderdetaillist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange ,
 				afterrender : this.loadObjectList
       },
-      'blanketworkorderdetailform button[action=save]': {
+      'blanketorderdetailform button[action=save]': {
         click: this.updateObject
       },
 
 	 
-      'blanketworkorderdetaillist button[action=addObject]': {
+      'blanketorderdetaillist button[action=addObject]': {
         click: this.addObject
       },
 
-			'blanketworkorderdetaillist button[action=repeatObject]': {
+			'blanketorderdetaillist button[action=repeatObject]': {
         click: this.addObject
       },
 
 
-      'blanketworkorderdetaillist button[action=editObject]': {
+      'blanketorderdetaillist button[action=editObject]': {
         click: this.editObject
       },
-      'blanketworkorderdetaillist button[action=deleteObject]': {
+      'blanketorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
  
 			// monitor parent(sales_order) update
-			'blanketworkorderlist' : {
+			'blanketorderlist' : {
 				'updated' : this.reloadStore,
 				'confirmed' : this.reloadStore,
 				'deleted' : this.cleanList
@@ -65,11 +65,11 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 
 	reloadStore : function(record){
 		var list = this.getList();
-		var store = this.getBlanketWorkOrderDetailsStore();
+		var store = this.getBlanketOrderDetailsStore();
 		
 		store.load({
 			params : {
-				blanket_work_order_id : record.get('id')
+				blanket_order_id : record.get('id')
 			}
 		});
 		
@@ -78,7 +78,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 	
 	cleanList : function(){
 		var list = this.getList();
-		var store = this.getBlanketWorkOrderDetailsStore();
+		var store = this.getBlanketOrderDetailsStore();
 		
 		list.setTitle('');
 		// store.removeAll(); 
@@ -94,7 +94,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 			return; 
 		}
 		 
-		var widgetName = 'blanketworkorderdetailform'; 
+		var widgetName = 'blanketorderdetailform'; 
 		
     var view = Ext.widget(widgetName , {
 			parentRecord : record 
@@ -113,7 +113,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 		}
 
 
-		var widgetName = 'blanketworkorderdetailform';
+		var widgetName = 'blanketorderdetailform';
 		 
     var view = Ext.widget(widgetName, {
 			parentRecord : parentRecord
@@ -132,7 +132,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 
 		var parentRecord = this.getParentList().getSelectedObject();
 	
-    var store = this.getBlanketWorkOrderDetailsStore();
+    var store = this.getBlanketOrderDetailsStore();
     var record = form.getRecord();
     var values = form.getValues();
 		console.log("The values: " );
@@ -148,7 +148,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 			form.setLoading(true);
 			record.save({
 				params : {
-					blanket_work_order_id : parentRecord.get('id')
+					blanket_order_id : parentRecord.get('id')
 				},
 				success : function(record){
 					form.setLoading(false);
@@ -156,7 +156,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 					// form.fireEvent('item_quantity_changed');
 					store.load({
 						params: {
-							blanket_work_order_id : parentRecord.get('id')
+							blanket_order_id : parentRecord.get('id')
 						}
 					});
 					
@@ -177,7 +177,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
 		
-			var newObject = new AM.model.BlanketWorkOrderDetail( values ) ;
+			var newObject = new AM.model.BlanketOrderDetail( values ) ;
 			
 		 
 			
@@ -193,13 +193,13 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 			form.setLoading(true);
 			newObject.save({
 				params : {
-					blanket_work_order_id : parentRecord.get('id')
+					blanket_order_id : parentRecord.get('id')
 				},
 				success: function(record){
 					//  since the grid is backed by store, if store changes, it will be updated
 					store.load({
 						params: {
-							blanket_work_order_id : parentRecord.get('id')
+							blanket_order_id : parentRecord.get('id')
 						}
 					});
 					// form.fireEvent('item_quantity_changed');
@@ -222,7 +222,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 	deleteObject: function() {
     var record = this.getList().getSelectedObject();
 		if(!record){return;}
-		var parent_id = record.get('blanket_work_order_id');
+		var parent_id = record.get('blanket_order_id');
 		var list  = this.getList();
 		list.setLoading(true); 
 		
@@ -236,7 +236,7 @@ Ext.define('AM.controller.BlanketWorkOrderDetails', {
 					// this.getPurchaseOrdersStore.load();
 					list.getStore().load({
 						params : {
-							blanket_work_order_id : parent_id
+							blanket_order_id : parent_id
 						}
 					});
 				},

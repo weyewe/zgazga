@@ -35,7 +35,7 @@ Ext.define('AM.view.operation.purchaseorder.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_vendor',
+			url : 'api/search_suppliers',
 			reader : {
 				type : 'json',
 				root : 'records', 

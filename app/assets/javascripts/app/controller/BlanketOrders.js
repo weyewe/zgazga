@@ -1,29 +1,29 @@
-Ext.define('AM.controller.BlanketWorkOrders', {
+Ext.define('AM.controller.BlanketOrders', {
   extend: 'Ext.app.Controller',
 
-  stores: ['BlanketWorkOrders'],
-  models: ['BlanketWorkOrder'],
+  stores: ['BlanketOrders'],
+  models: ['BlanketOrder'],
 
   views: [
-    'operation.blanketworkorder.List',
-    'operation.blanketworkorder.Form',
-		'operation.blanketworkorderdetail.List',
+    'operation.blanketorder.List',
+    'operation.blanketorder.Form',
+		'operation.blanketorderdetail.List',
 		'Viewport'
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'blanketworkorderlist'
+			selector: 'blanketorderlist'
 		},
 		{
-			ref : 'blanketWorkOrderDetailList',
-			selector : 'blanketworkorderdetaillist'
+			ref : 'blanketOrderDetailList',
+			selector : 'blanketorderdetaillist'
 		},
 		
 		{
 			ref : 'form',
-			selector : 'blanketworkorderform'
+			selector : 'blanketorderform'
 		},
 		{
 			ref: 'viewport',
@@ -33,47 +33,47 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 
   init: function() {
     this.control({
-      'blanketworkorderProcess blanketworkorderlist': {
+      'blanketorderProcess blanketorderlist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'blanketworkorderProcess blanketworkorderform button[action=save]': {
+      'blanketorderProcess blanketorderform button[action=save]': {
         click: this.updateObject
       },
-			'blanketworkorderProcess blanketworkorderform customcolorpicker' : {
+			'blanketorderProcess blanketorderform customcolorpicker' : {
 				'colorSelected' : this.onColorPickerSelect
 			},
 
-      'blanketworkorderProcess blanketworkorderlist button[action=addObject]': {
+      'blanketorderProcess blanketorderlist button[action=addObject]': {
         click: this.addObject
       },
-      'blanketworkorderProcess blanketworkorderlist button[action=editObject]': {
+      'blanketorderProcess blanketorderlist button[action=editObject]': {
         click: this.editObject
       },
-      'blanketworkorderProcess blanketworkorderlist button[action=deleteObject]': {
+      'blanketorderProcess blanketorderlist button[action=deleteObject]': {
         click: this.deleteObject
 			}	,
 			
-			'blanketworkorderProcess blanketworkorderlist button[action=confirmObject]': {
+			'blanketorderProcess blanketorderlist button[action=confirmObject]': {
         click: this.confirmObject
       },
 
-			'blanketworkorderProcess blanketworkorderlist button[action=unconfirmObject]': {
+			'blanketorderProcess blanketorderlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
       },
-			'confirmblanketworkorderform button[action=confirm]' : {
+			'confirmblanketorderform button[action=confirm]' : {
 				click : this.executeConfirm
 			},
 			
-			'unconfirmblanketworkorderform button[action=confirm]' : {
+			'unconfirmblanketorderform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
 
-			'blanketworkorderProcess blanketworkorderlist textfield[name=searchField]': {
+			'blanketorderProcess blanketorderlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
-			'blanketworkorderform button[action=save]': {
+			'blanketorderform button[action=save]': {
         click: this.updateObject
       }
 		
@@ -98,11 +98,11 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getBlanketWorkOrdersStore().getProxy().extraParams = {
+		me.getBlanketOrdersStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getBlanketWorkOrdersStore().load();
+		me.getBlanketOrdersStore().load();
 	},
  
 
@@ -112,7 +112,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 	},
 
   addObject: function() {
-	var view = Ext.widget('blanketworkorderform');
+	var view = Ext.widget('blanketorderform');
   view.show();
 
 	 
@@ -120,7 +120,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 
   editObject: function() {
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('blanketworkorderform');
+    var view = Ext.widget('blanketorderform');
 
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
@@ -130,7 +130,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 		// console.log("the startObject callback function");
 		var record = this.getList().getSelectedObject();
 		if(record){
-			var view = Ext.widget('confirmblanketworkorderform');
+			var view = Ext.widget('confirmblanketorderform');
 
 			view.setParentData( record );
 	    view.show();
@@ -145,7 +145,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
     var form = win.down('form');
 		var me = this; 
 
-    var store = this.getBlanketWorkOrdersStore();
+    var store = this.getBlanketOrdersStore();
     var record = form.getRecord();
     var values = form.getValues();
  
@@ -176,7 +176,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 			//  no record at all  => gonna create the new one 
 			console.log("This is the new record")
 			var me  = this; 
-			var newObject = new AM.model.BlanketWorkOrder( values ) ; 
+			var newObject = new AM.model.BlanketOrder( values ) ; 
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -209,7 +209,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 
 	unconfirmObject: function(){
 		// console.log("the startObject callback function");
-		var view = Ext.widget('unconfirmblanketworkorderform');
+		var view = Ext.widget('unconfirmblanketorderform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
     view.show();
@@ -222,7 +222,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getBlanketWorkOrdersStore();
+    var store = this.getBlanketOrdersStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -270,7 +270,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getBlanketWorkOrdersStore();
+    var store = this.getBlanketOrdersStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -314,7 +314,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getBlanketWorkOrdersStore();
+      var store = this.getBlanketOrdersStore();
 			store.remove(record);
 			store.sync( );
  
@@ -345,17 +345,17 @@ Ext.define('AM.controller.BlanketWorkOrders', {
   },
 
 	updateChildGrid: function(record){
-		var templateDetailGrid = this.getBlanketWorkOrderDetailList();
+		var templateDetailGrid = this.getBlanketOrderDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		templateDetailGrid.getStore().getProxy().extraParams.blanket_work_order_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.blanket_order_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
 			params : {
-				blanket_work_order_id : record.get('id')
+				blanket_order_id : record.get('id')
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
@@ -372,7 +372,7 @@ Ext.define('AM.controller.BlanketWorkOrders', {
 		
 		// console.log("modifiedId:  " + modifiedId);
 		 
-		AM.model.BlanketWorkOrder.load( modifiedId , {
+		AM.model.BlanketOrder.load( modifiedId , {
 		    scope: list,
 		    failure: function(record, operation) {
 		        //do something if the load failed

@@ -1,4 +1,3 @@
-
 Ext.define('AM.view.operation.purchaseorderdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.purchaseorderdetailform',
@@ -162,7 +161,3 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 	}
  
 });
-
-
-
-

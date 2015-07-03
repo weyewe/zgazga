@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.blanketworkorder.List' ,{
+Ext.define('AM.view.operation.blanketorder.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.blanketworkorderlist',
+  	alias : 'widget.blanketorderlist',
 
-  	store: 'BlanketWorkOrders',  
+  	store: 'BlanketOrders',  
  
 
 	initComponent: function() {

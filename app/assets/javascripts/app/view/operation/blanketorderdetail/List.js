@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.blanketworkorderdetail.List' ,{
+Ext.define('AM.view.operation.blanketorderdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.blanketworkorderdetaillist',
+  	alias : 'widget.blanketorderdetaillist',
 
-  	store: 'BlanketWorkOrderDetails', 
+  	store: 'BlanketOrderDetails', 
  
 
 	initComponent: function() {
@@ -78,6 +78,6 @@ Ext.define('AM.view.operation.blanketworkorderdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("BlanketWorkOrder: " + record.get("code"));
+		this.setTitle("BlanketOrder: " + record.get("code"));
 	}
 });

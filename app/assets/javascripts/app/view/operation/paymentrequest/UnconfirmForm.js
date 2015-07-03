@@ -31,7 +31,7 @@ Ext.define('AM.view.operation.paymentrequest.UnconfirmForm', {
 				{
 					xtype: 'displayfield',
 					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
+					name: 'request_date' 
 				}
 			]
     }];
@@ -52,6 +52,6 @@ Ext.define('AM.view.operation.paymentrequest.UnconfirmForm', {
 		// console.log("Inside set Parent Data");
 // d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
+		this.down('form').getForm().findField('request_date').setValue(record.get('request_date')); 
 	}
 });

@@ -161,4 +161,54 @@ class Api::AccountsController < Api::BaseApiController
     
     render :json => { :records => @objects , :total => @total, :success => true }
   end
+  
+  def search_ledger_payable
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      account_payable = Account.find_by_code(ACCOUNT_CODE[:passiva][:code]) 
+      @objects = account_payable.descendants.where{ 
+        (account_case.eq ACCOUNT_CASE[:ledger]) & 
+        (
+            (name =~ query)  | 
+            (code =~ query )
+        )
+                      
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total =  account_payable.descendants.where{ 
+        
+          (account_case.eq ACCOUNT_CASE[:ledger]) & 
+          (
+              (name =~ query)  | 
+              ( code =~ query )
+          )
+        
+      }.count
+    else
+      @objects = Account.active_accounts.where{ (id.eq selected_id)  & 
+                                  (account_case.eq ACCOUNT_CASE[:ledger])
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+      @total =  Account.active_accounts.where{ (id.eq selected_id)                   & 
+                        (account_case.eq ACCOUNT_CASE[:ledger])  }.count
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
+  
 end

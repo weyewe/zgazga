@@ -2,6 +2,7 @@ class PaymentRequest < ActiveRecord::Base
   has_many :payment_request_details
   belongs_to :account
   belongs_to :exchange
+  belongs_to :contact
   validates_presence_of :contact_id
   validates_presence_of :request_date
   validates_presence_of :due_date
@@ -11,6 +12,10 @@ class PaymentRequest < ActiveRecord::Base
   
   def self.active_objects
     return self
+  end
+  
+  def active_children
+    return self.payment_request_details
   end
   
   def valid_contact
@@ -35,11 +40,12 @@ class PaymentRequest < ActiveRecord::Base
     new_object = self.new
     new_object.contact_id = params[:contact_id]
     new_object.request_date = params[:request_date]
+    new_object.no_bukti = params[:no_bukti]
     new_object.due_date = params[:due_date]
-    new_object.exchange_id = params[:exchange_id]
     new_object.account_id = params[:account_id]
     if new_object.save
-      new_object.code = "Pr-" + new_object.id.to_s  
+      new_object.code = "Pr-" + new_object.id.to_s
+      new_object.exchange_id = new_object.account.exchange.id
       new_object.save
     end
     return new_object
@@ -60,9 +66,12 @@ class PaymentRequest < ActiveRecord::Base
     self.contact_id = params[:contact_id]
     self.request_date = params[:request_date]
     self.due_date = params[:due_date]
-    self.exchange_id = params[:exchange_id]
+    self.no_bukti = params[:no_bukti]
     self.account_id = params[:account_id]
-    self.save
+    if self.save
+      self.exchange_id = self.account.exchange.id
+      self.save
+    end
     return self
   end
    

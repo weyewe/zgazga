@@ -1,6 +1,6 @@
-Ext.define('AM.view.operation.BlanketWorkOrder', {
+Ext.define('AM.view.operation.BlanketOrder', {
     extend: 'AM.view.Worksheet',
-    alias: 'widget.blanketworkorderProcess',
+    alias: 'widget.blanketorderProcess',
 	 
 		layout : {
 			type : 'hbox',
@@ -14,12 +14,12 @@ Ext.define('AM.view.operation.BlanketWorkOrder', {
 		
 		items : [
 			{
-				xtype : 'blanketworkorderlist' ,
+				xtype : 'blanketorderlist' ,
 				flex : 1 //,
 				// html : 'hahaha'
 			},
 			{
-				xtype :'blanketworkorderdetaillist',
+				xtype :'blanketorderdetaillist',
 				// html : "This is gonna be the price_rule",
 				flex : 1
 			} 

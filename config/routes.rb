@@ -37,6 +37,7 @@ Ticketie::Application.routes.draw do
     
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
     get 'search_ledger_accounts' => 'accounts#search_ledger', :as => :search_ledger_account
+    get 'search_ledger_account_payables' => 'accounts#search_ledger_payable', :as => :search_ledger_account_payable
     get 'search_item_types' => 'item_types#search', :as => :search_item_type
     get 'search_sub_types' => 'sub_types#search', :as => :search_sub_type
     get 'search_uoms' => 'uoms#search', :as => :search_uom
@@ -46,6 +47,8 @@ Ticketie::Application.routes.draw do
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     get 'search_blending_recipes' => 'blending_recipes#search', :as => :search_blending_recipe
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
+    get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
+    get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -56,7 +59,9 @@ Ticketie::Application.routes.draw do
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
     get 'search_purchase_receivals' => 'purchase_receivals#search', :as => :search_purchase_receival
     get 'search_purchase_receival_details' => 'purchase_receival_details#search', :as => :search_purchase_receival_detail
-    get 'search_roller_types' => 'roller_types#search', :as => :search_roller_types
+    get 'search_roller_types' => 'roller_types#search', :as => :search_roller_type
+    get 'search_payment_requests' => 'payment_requests#search', :as => :search_payment_request
+    get 'search_payment_request_details' => 'payment_request_details#search', :as => :search_payment_request_detail
   
     # master data 
     resources :app_users
@@ -83,7 +88,7 @@ Ticketie::Application.routes.draw do
     resources :cash_banks
     resources :exchanges  
     resources :exchange_rates 
-    
+  
      
     # operation
     
@@ -118,8 +123,15 @@ Ticketie::Application.routes.draw do
     resources :core_builders
     resources :blankets
     
+    resources :payment_requests
+    resources :payment_request_details
+    
     resources :blending_recipes
     resources :blending_recipe_details
+    
+    resources :blanket_orders
+    resources :blanket_order_details
+    
     
   end
   

@@ -1,7 +1,7 @@
-Ext.define('AM.store.BlanketWorkOrders', {
+Ext.define('AM.store.BlanketOrderDetails', {
   	extend: 'Ext.data.Store',
-		require : ['AM.model.BlanketWorkOrder'],
-  	model: 'AM.model.BlanketWorkOrder',
+		require : ['AM.model.BlanketOrderDetail'],
+  	model: 'AM.model.BlanketOrderDetail',
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,

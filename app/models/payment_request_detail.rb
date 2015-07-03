@@ -53,22 +53,23 @@ class PaymentRequestDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    new_object = self.new
     payment_request = PaymentRequest.find_by_id(params[:payment_request_id])
     if not payment_request.nil?
       if payment_request.is_confirmed?
-        self.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return self 
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
       end
     end
     
-    new_object = self.new
+    
     new_object.payment_request_id = params[:payment_request_id]
     new_object.account_id = params[:account_id]
-    new_object.status = params[:status]
+    new_object.status = STATUS_ACCOUNT[:debet]
     new_object.amount = BigDecimal( params[:amount] || '0')
     
     if new_object.save
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "PRD-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
     end
@@ -80,8 +81,7 @@ class PaymentRequestDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.account_id = params[:item_id]
-    self.status = params[:status]
+    self.account_id = params[:account_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
       self.calculateTotalAmount

@@ -54,7 +54,7 @@ class BlendingRecipe < ActiveRecord::Base
   
   def delete_object
     if self.blending_recipe_details.count > 0 
-      self.errors.add(:generic_errors,"Sudah memiliki detail")
+      self.errors.add(:generic_errorsB,"Sudah memiliki detail")
       return self
     end
     self.destroy

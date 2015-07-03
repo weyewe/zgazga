@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.blanketworkorder.Form', {
+Ext.define('AM.view.operation.blanketorder.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.blanketworkorderform',
+  alias : 'widget.blanketorderform',
 
-  title : 'Add / Edit BlanketWorkOrder',
+  title : 'Add / Edit BlanketOrder',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

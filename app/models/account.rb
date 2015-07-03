@@ -25,6 +25,19 @@ class Account < ActiveRecord::Base
     self 
   end
   
+  def exchange
+    account_exchange = Exchange.where{
+      ( account_payable_id.eq self.id  ) | 
+      ( account_receivable_id.eq self.id  ) |  
+      ( gbch_payable_id.eq self.id  ) |  
+      ( gbch_receivable_id.eq self.id  )  
+    }.first
+    if account_exchange.nil?  
+      return Exchange.where(:is_base => true).first
+    end
+    return account_exchange
+  end
+  
   def all_base_fields_present? 
     name.present? and
     account_case.present?  and 
@@ -314,7 +327,7 @@ class Account < ActiveRecord::Base
     ar_gbch_account = Account.find_by_code(ACCOUNT_CODE[:piutang_gbch][:code])
     new_ar_gbch_account = self.new
     new_ar_gbch_account.code = ar_gbch_account.code + exchange.id.to_s
-    new_ar_gbch_account.name = "GBCH Receivable" + exchange.name.to_s
+    new_ar_gbch_account.name = "GBCH Receivable " + exchange.name.to_s
     new_ar_gbch_account.account_case = ACCOUNT_CASE[:ledger]
     new_ar_gbch_account.parent_id = ar_gbch_account.id
     new_ar_gbch_account.normal_balance = ar_gbch_account.normal_balance
@@ -325,7 +338,7 @@ class Account < ActiveRecord::Base
     ap_account = Account.find_by_code(ACCOUNT_CODE[:hutang_usaha_level_2][:code])
     new_ap_account = self.new
     new_ap_account.code =  ap_account.code + exchange.id.to_s
-    new_ap_account.name = "Account Payable" + exchange.name.to_s
+    new_ap_account.name = "Account Payable " + exchange.name.to_s
     new_ap_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_account.parent_id = ap_account.id
     new_ap_account.normal_balance = ap_account.normal_balance
@@ -336,7 +349,7 @@ class Account < ActiveRecord::Base
     ap_gbch_payable_account = Account.find_by_code(ACCOUNT_CODE[:hutang_gbch][:code])
     new_ap_gbch_payable_account = self.new
     new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + exchange.id.to_s
-    new_ap_gbch_payable_account.name = "GBCH Payable" + exchange.name.to_s
+    new_ap_gbch_payable_account.name = "GBCH Payable " + exchange.name.to_s
     new_ap_gbch_payable_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_gbch_payable_account.parent_id = ap_gbch_payable_account.id
     new_ap_gbch_payable_account.normal_balance = ap_gbch_payable_account.normal_balance
