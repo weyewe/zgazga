@@ -1,76 +1,74 @@
-Ext.define('AM.controller.RollerBuilders', {
+Ext.define('AM.controller.Blankets', {
   extend: 'Ext.app.Controller',
 
-  stores: ['RollerBuilders'],
-  models: ['RollerBuilder'],
+  stores: ['Blankets'],
+  models: ['Blanket'],
 
   views: [
-    'master.rollerbuilder.List',
-    'master.rollerbuilder.Form' 
+    'master.blanket.List',
+    'master.blanket.Form' 
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'rollerbuilderlist'
+			selector: 'blanketlist'
 		},
 		{
 			ref : 'searchField',
-			selector: 'rollerbuilderlist textfield[name=searchField]'
+			selector: 'blanketlist textfield[name=searchField]'
 		}
 	],
 
   init: function() {
     this.control({
-      'rollerbuilderlist': {
+      'blanketlist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'rollerbuilderform button[action=save]': {
+      'blanketform button[action=save]': {
         click: this.updateObject
       },
-      'rollerbuilderlist button[action=addObject]': {
+      'blanketlist button[action=addObject]': {
         click: this.addObject
       },
-      'rollerbuilderlist button[action=editObject]': {
+      'blanketlist button[action=editObject]': {
         click: this.editObject
       },
-      'rollerbuilderlist button[action=deleteObject]': {
+      'blanketlist button[action=deleteObject]': {
         click: this.deleteObject
       },
-	  	'rollerbuilderlist textfield[name=searchField]': {
+	  	'blanketlist textfield[name=searchField]': {
         change: this.liveSearch
       },
-		
     });
   },
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getRollerBuildersStore().getProxy().extraParams = {
+		me.getBlanketsStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getRollerBuildersStore().load();
+		me.getBlanketsStore().load();
 	},
 	
-
 	loadObjectList : function(me){
 		me.getStore().getProxy().extraParams = {}
 		me.getStore().load();
 	},
 
   addObject: function() {
-    var view = Ext.widget('rollerbuilderform');
+    var view = Ext.widget('blanketform');
     view.show();
   },
 
   editObject: function() {
 		var me = this; 
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('rollerbuilderform');
+    var view = Ext.widget('blanketform');
 
 		
 
@@ -83,7 +81,7 @@ Ext.define('AM.controller.RollerBuilders', {
     var win = button.up('window');
     var form = win.down('form');
 
-    var store = this.getRollerBuildersStore();
+    var store = this.getBlanketsStore();
     var record = form.getRecord();
     var values = form.getValues();
 
@@ -129,7 +127,7 @@ Ext.define('AM.controller.RollerBuilders', {
 		}else{
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
-			var newObject = new AM.model.RollerBuilder( values ) ;
+			var newObject = new AM.model.Blanket( values ) ;
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -158,7 +156,7 @@ Ext.define('AM.controller.RollerBuilders', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getRollerBuildersStore();
+      var store = this.getBlanketsStore();
       store.remove(record);
       store.sync();
 // to do refresh programmatically

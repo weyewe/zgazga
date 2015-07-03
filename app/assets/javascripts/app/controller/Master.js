@@ -210,13 +210,13 @@ Ext.define("AM.controller.Master", {
 				]
 			}, 
 			{ 
-				text:'Roller', 
-				viewClass:'AM.view.master.Roller', 
+				text:'Roller Type', 
+				viewClass:'AM.view.master.RollerType', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'rollers',
+						controller : 'roller_types',
 						action : 'index'
 					}
 				]

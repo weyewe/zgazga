@@ -1,39 +1,16 @@
-Ext.define('AM.view.master.rollerbuilder.List' ,{
+Ext.define('AM.view.master.rollertype.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.rollerbuilderlist',
+  	alias : 'widget.rollertypelist',
 
-  	store: 'RollerBuilders', 
+  	store: 'RollerTypes', 
  
 
 	initComponent: function() {
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Base sku', dataIndex: 'base_sku'},
 			{ header: 'Name', dataIndex: 'name'},
 			{ header: 'Description', dataIndex: 'description'},
-			{ header: 'RollerType', dataIndex: 'roller_type_name'},
-			{ header: 'RD', dataIndex: 'rd'},
-			{ header: 'CD', dataIndex: 'cd'},
-			{ header: 'RL', dataIndex: 'rl'},
-			{ header: 'WL', dataIndex: 'wl'},
-			{ header: 'TL', dataIndex: 'tl'},
-			{ header: 'Used Sku', dataIndex: 'sku_roller_used_core'},
-			{ header: 'QTY', dataIndex: 'roller_used_core_item_amount'},
-			{ header: 'UoM', dataIndex: 'uom_name'},
-			{ header: 'New Sku', dataIndex: 'sku_roller_new_core'},
-			{ header: 'QTY', dataIndex: 'roller_new_core_item_amount'},
-			{ header: 'UoM', dataIndex: 'uom_name'},
-			{ header: 'Machine', dataIndex: 'machine_name'},
-			{ header: 'Compound', dataIndex: 'compound_name'},
-			{ header: 'Adhesive', dataIndex: 'adhesive_name'},
-			{ header: 'Core Sku', dataIndex: 'core_builder_sku'},
-			{ header: 'Crown', dataIndex: 'is_crowning'},
-			{ header: 'Size', dataIndex: 'crowning_size'},
-			{ header: 'Groove', dataIndex: 'is_grooving'},
-			{ header: 'W', dataIndex: 'grooving_width'},
-			{ header: 'D', dataIndex: 'grooving_depth'},
-			{ header: 'P', dataIndex: 'grooving_position'},
-			{ header: 'Chamfer', dataIndex: 'is_chamfer'},
+			
 		];
 
 		this.addObjectButton = new Ext.Button({
@@ -66,8 +43,8 @@ Ext.define('AM.view.master.rollerbuilder.List' ,{
 
 		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
 		 				'-',
-						this.searchField,
-						'->',
+						this.searchField
+						
 		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
@@ -88,10 +65,43 @@ Ext.define('AM.view.master.rollerbuilder.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
+		
+		
+		this.markAsRunAwayObjectButton.enable();
+
+		this.unmarkAsDeceasedObjectButton.enable();
+		this.markAsDeceasedObjectButton.enable();
+
+
+
+		selectedObject = this.getSelectedObject();
+
+		if( selectedObject && selectedObject.get("is_deceased") == true ){
+			this.unmarkAsDeceasedObjectButton.show();
+			this.markAsDeceasedObjectButton.hide();
+		}else{
+			this.unmarkAsDeceasedObjectButton.hide();
+			this.markAsDeceasedObjectButton.show();
+		}
+
+
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
+		this.markAsDeceasedObjectButton.disable();
+		this.unmarkAsDeceasedObjectButton.disable();
+		this.markAsRunAwayObjectButton.disable();
+
+		selectedObject = this.getSelectedObject();
+
+		if( selectedObject && selectedObject.get("is_deceased") == true ){
+			this.unmarkAsDeceasedObjectButton.show();
+			this.markAsDeceasedObjectButton.hide();
+		}else{
+			this.unmarkAsDeceasedObjectButton.hide();
+			this.markAsDeceasedObjectButton.show();
+		}
 	}
 });

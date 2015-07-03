@@ -25,6 +25,27 @@ class Item < ActiveRecord::Base
     end
   end
   
+  def self.compounds
+    self.joins(:item_type).where{(item_type.name.eq "Compound")}
+    
+  end
+  
+  def self.adhesive_rollers
+    self.joins(:item_type).where{(item_type.name.eq "AdhesiveRoller")}
+  end
+  
+  def self.adhesive_blankets
+    self.joins(:item_type).where{(item_type.name.eq "AdhesiveBlanket")}
+  end
+  
+  def self.bars
+    self.joins(:item_type).where{(item_type.name.eq "Bar")}
+  end
+  
+  def self.roll_blankets
+    self.joins(:item_type).where{(item_type.name.eq "RollBlanket")}
+  end
+  
   def update_amount(amount)
     self.amount += amount
     self.save

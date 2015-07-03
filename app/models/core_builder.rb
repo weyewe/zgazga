@@ -24,8 +24,8 @@ class CoreBuilder < ActiveRecord::Base
   
   def valid_core_builder_type
     return if core_builder_type_case.nil?
-    if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case) 
-
+    if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case.to_s) 
+    
       self.errors.add(:core_builder_type_case, "CoreBuilder Type harus ada")
 
       return self 

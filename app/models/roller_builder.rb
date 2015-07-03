@@ -3,6 +3,7 @@ class RollerBuilder < ActiveRecord::Base
   belongs_to :machine
   belongs_to :roller_type
   belongs_to :core_builder
+  belongs_to :uom
   validates_presence_of :uom_id
   validates_presence_of :machine_id
   validates_presence_of :adhesive_id

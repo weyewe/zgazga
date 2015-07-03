@@ -7,24 +7,58 @@ class Api::RollerBuildersController < Api::BaseApiController
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = RollerBuilder.where{
+        @objects = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
+        :uom,:core_builder).where{
           (
             ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( roller_type.name =~ livesearch ) | 
+            ( rd =~ livesearch ) | 
+            ( cd =~ livesearch ) | 
+            ( rl =~ livesearch ) | 
+            ( wl =~ livesearch ) | 
+            ( tl =~ livesearch ) | 
+            ( sku_roller_new_core =~ livesearch ) | 
+            ( sku_roller_used_core =~ livesearch ) | 
+            ( roller_new_core_item.amount =~ livesearch ) | 
+            ( roller_used_core_item.amount =~ livesearch ) | 
+            ( uom.name =~ livesearch ) | 
+            ( machine.name =~ livesearch ) | 
+            ( adhesive.name =~ livesearch ) | 
+            ( core_builder.base_sku =~ livesearch ) | 
+            ( core_builder.name =~ livesearch ) | 
+            ( core_builder.name =~ livesearch ) | 
+            ( crowning_size =~ livesearch ) |   
+            ( grooving_depth =~ livesearch ) | 
+            ( grooving_position =~ livesearch ) | 
+            ( grooving_width =~ livesearch ) 
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        @total = RollerBuilder.where{
+        @total = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
+        :uom,:core_builder).where{
           (
             ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( roller_type.name =~ livesearch ) | 
+            ( rd =~ livesearch ) | 
+            ( cd =~ livesearch ) | 
+            ( rl =~ livesearch ) | 
+            ( wl =~ livesearch ) | 
+            ( tl =~ livesearch ) | 
+            ( sku_roller_new_core =~ livesearch ) | 
+            ( sku_roller_used_core =~ livesearch ) | 
+            ( roller_new_core_item.amount =~ livesearch ) | 
+            ( roller_used_core_item.amount =~ livesearch ) | 
+            ( uom.name =~ livesearch ) | 
+            ( machine.name =~ livesearch ) | 
+            ( adhesive.name =~ livesearch ) | 
+            ( core_builder.base_sku =~ livesearch ) | 
+            ( core_builder.name =~ livesearch ) | 
+            ( core_builder.name =~ livesearch ) | 
+            ( crowning_size =~ livesearch ) |   
+            ( grooving_depth =~ livesearch ) | 
+            ( grooving_position =~ livesearch ) | 
+            ( grooving_width =~ livesearch ) 
           )
         }.count
    
@@ -127,27 +161,62 @@ class Api::RollerBuildersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = RollerBuilder.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+      @objects = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
+        :uom,:core_builder).where{ 
+          ( name =~  query )  | 
+          ( roller_type.name =~ query ) | 
+          ( rd =~ query ) | 
+          ( cd =~ query ) | 
+          ( rl =~ query ) | 
+          ( wl =~ query ) | 
+          ( tl =~ query ) | 
+          ( sku_roller_new_core =~ query ) | 
+          ( sku_roller_used_core =~ query ) | 
+          ( roller_new_core_item.amount =~ query ) | 
+          ( roller_used_core_item.amount =~ query ) | 
+          ( uom.name =~ query ) | 
+          ( machine.name =~ query ) | 
+          ( adhesive.name =~ query ) | 
+          ( core_builder.base_sku =~ query ) | 
+          ( core_builder.name =~ query ) | 
+          ( core_builder.name =~ query ) | 
+          ( crowning_size =~ query ) |   
+          ( grooving_depth =~ query ) | 
+          ( grooving_position =~ query ) | 
+          ( grooving_width =~ query ) 
+                            }.
+                      page(params[:page]).
+                      per(params[:limit]).
+                      order("id DESC")
                         
-      @total = RollerBuilder.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
+      @total = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
+        :uom,:core_builder).where{ 
+            ( name =~  query )  | 
+            ( roller_type.name =~ query ) | 
+            ( rd =~ query ) | 
+            ( cd =~ query ) | 
+            ( rl =~ query ) | 
+            ( wl =~ query ) | 
+            ( tl =~ query ) | 
+            ( sku_roller_new_core =~ query ) | 
+            ( sku_roller_used_core =~ query ) | 
+            ( roller_new_core_item.amount =~ query ) | 
+            ( roller_used_core_item.amount =~ query ) | 
+            ( uom.name =~ query ) | 
+            ( machine.name =~ query ) | 
+            ( adhesive.name =~ query ) | 
+            ( core_builder.base_sku =~ query ) | 
+            ( core_builder.name =~ query ) | 
+            ( core_builder.name =~ query ) | 
+            ( crowning_size =~ query ) |   
+            ( grooving_depth =~ query ) | 
+            ( grooving_position =~ query ) | 
+            ( grooving_width =~ query ) 
         
                               }.count
     else
-      @objects = RollerBuilder.where{ (id.eq selected_id)  
+      @objects = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
+        :uom,:core_builder).where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).

@@ -210,9 +210,9 @@ CORE_TYPE_CASE = {
 }
 
 CORE_BUILDER_TYPE = {		
-  :hollow => 0,	
-  :shaft => 1,
-  :none => 2
+  :hollow => "Hollow",	
+  :shaft => "Shaft",
+  :none => "None"
   }	
 
 
