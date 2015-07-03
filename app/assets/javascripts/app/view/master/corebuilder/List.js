@@ -7,8 +7,7 @@ Ext.define('AM.view.master.corebuilder.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID', dataIndex: 'id_number'},
-			// { header: 'Nama',  dataIndex: 'name', flex: 1},
+			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Base Sku', dataIndex: 'base_sku'},
 			{ header: 'Name', dataIndex: 'name'},
 			{ header: 'Description', dataIndex: 'description'},

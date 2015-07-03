@@ -14,19 +14,20 @@ class Blanket < ActiveRecord::Base
   validate :valid_adhesive
   validate :valid_left_bar_and_right_bar
   validate :valid_cropping_type
+  validate :valid_application_case
   
   def valid_cropping_type
     return if cropping_type.nil?
     if not [CROPPING_TYPE[:normal],CROPPING_TYPE[:special]].include?( cropping_type) 
-      self.errors.add(:contact_type, "Cropping Type harus ada")
+      self.errors.add(:cropping_type, "Cropping Type harus ada")
       return self 
     end
   end
   
   def valid_application_case
     return if application_case.nil?
-    if not [APPLICATION_CASE[:web],Application[:sheetfed],Application[:both]].include?( application_case) 
-      self.errors.add(:contact_type, "Application Type harus ada")
+    if not [APPLICATION_CASE[:web],APPLICATION_CASE[:sheetfed],APPLICATION_CASE[:both]].include?( application_case.to_i) 
+      self.errors.add(:application_case, "Application Type harus ada")
       return self 
     end
   end
@@ -70,7 +71,7 @@ class Blanket < ActiveRecord::Base
   end
   
   def valid_adhesive
-    if not adhesive_id.nil?  
+    if not adhesive_id == 0  
       adhesive = Item.find_by_id(adhesive_id)
       if adhesive.nil?
         self.errors.add(:adhesive_id, "Adhesive tidak valid")
@@ -82,7 +83,7 @@ class Blanket < ActiveRecord::Base
         end
       end
     end
-    if not adhesive2_id.nil? 
+    if not adhesive2_id == 0  
       adhesive2 = Item.find_by_id(adhesive2_id)
       if adhesive2.nil?
         self.errors.add(:adhesive2_id, "Adhesive tidak valid")
@@ -150,10 +151,10 @@ class Blanket < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.item_type_id = ItemType.find_by_name("Blanket").id
     new_object.uom_id = params[:uom_id]
-    new_object.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
-    new_object.selling_price =  BigDecimal( params[:selling_price] || '0') 
-    new_object.exchange_id = params[:exchange_id]
-    new_object.price_list =  BigDecimal( params[:price_list] || '0') 
+    # new_object.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
+    # new_object.selling_price =  BigDecimal( params[:selling_price] || '0') 
+    # new_object.exchange_id = params[:exchange_id]
+    # new_object.price_list =  BigDecimal( params[:price_list] || '0') 
     new_object.roll_no = params[:roll_no]
     new_object.contact_id = params[:contact_id]
     new_object.machine_id = params[:machine_id]
@@ -185,6 +186,10 @@ class Blanket < ActiveRecord::Base
     new_object.application_case = params[:application_case]
     new_object.left_over_ac = BigDecimal(params[:left_over_ac] || '0')
     new_object.left_over_ar = BigDecimal(params[:left_over_ar] || '0')
+    new_object.minimum_amount = BigDecimal('1')  
+    new_object.selling_price = BigDecimal('1')  
+    new_object.price_list = BigDecimal('1')  
+    new_object.exchange_id = Exchange.where(:is_base => true).first.id
     if new_object.save
     
     end
@@ -195,10 +200,10 @@ class Blanket < ActiveRecord::Base
     self.sku = params[:sku]
     self.name = params[:name]
     self.description = params[:description]
-    self.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
-    self.selling_price =  BigDecimal( params[:selling_price] || '0') 
-    self.exchange_id = params[:exchange_id]
-    self.price_list =  BigDecimal( params[:price_list] || '0') 
+    # self.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
+    # self.selling_price =  BigDecimal( params[:selling_price] || '0') 
+    # self.exchange_id = params[:exchange_id]
+    # self.price_list =  BigDecimal( params[:price_list] || '0') 
     self.uom_id = params[:uom_id]
     self.roll_no = params[:roll_no]
     self.contact_id = params[:contact_id]

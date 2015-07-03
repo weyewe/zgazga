@@ -361,7 +361,6 @@ Ext.define('AM.view.master.item.Form', {
   initComponent: function() {
   	
   	var me = this; 
-		var me = this; 
     			
 	    this.items = [{
 	      xtype: 'form',

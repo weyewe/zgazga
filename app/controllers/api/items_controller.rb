@@ -131,4 +131,205 @@ class Api::ItemsController < Api::BaseApiController
     
     render :json => { :records => @objects , :total => @total, :success => true }
   end
+  
+  def search_compound
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = Item.compounds.joins(:exchange, :item_type, :uom).where{ 
+            ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total = Item.compounds.joins(:exchange, :item_type, :uom).where{ 
+               ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.count
+    else
+      @objects = Item.compounds.where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Item.compounds.where{ (id.eq selected_id)   
+                              }.count 
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
+  def search_adhesive_roller
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+            ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+               ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.count
+    else
+      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+                              }.count 
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
+  def search_adhesive_blanket
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+            ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+               ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.count
+    else
+      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+                              }.count 
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
+  def search_roll_blanket
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = Item.roll_blankets.joins(:exchange, :item_type, :uom).where{ 
+            ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+               ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.count
+    else
+      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+                              }.count 
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
+  def search_bar
+    search_params = params[:query]
+    selected_id = params[:selected_id]
+    if params[:selected_id].nil?  or params[:selected_id].length == 0 
+      selected_id = nil
+    end
+    
+    query = "%#{search_params}%"
+    # on PostGre SQL, it is ignoring lower case or upper case 
+    
+    if  selected_id.nil?
+      @objects = Item.bars.joins(:exchange, :item_type, :uom).where{ 
+            ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+                        
+      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+               ( sku  =~ query ) | 
+        ( name =~ query ) | 
+        ( description  =~ query  )  
+                              }.count
+    else
+      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+                              }.count 
+    end
+    
+    
+    render :json => { :records => @objects , :total => @total, :success => true }
+  end
+  
 end

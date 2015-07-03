@@ -21,8 +21,12 @@ Ticketie::Application.routes.draw do
     get 'search_home' => 'homes#search', :as => :search_home, :method => :get 
     get 'search_home_type' => 'home_types#search', :as => :search_home_type, :method => :get
     get 'search_items' => 'items#search', :as => :search_item, :method => :get
-
-
+    get 'search_item_compounds' => 'items#search_compound', :as => :search_item_compound, :method => :get
+    get 'search_item_adhesive_rollers' => 'items#search_adhesive_roller', :as => :search_item_adhesive_roller, :method => :get
+    get 'search_item_adhesive_blankets' => 'items#search_adhesive_blanket', :as => :search_item_adhesive_blanket, :method => :get
+    get 'search_item_bars' => 'items#search_bar', :as => :search_item_bar, :method => :get
+    get 'search_item_roll_blankets' => 'items#search_roll_blanket', :as => :search_item_roll_blanket, :method => :get
+    get 'search_blankets' => 'blankets#search', :as => :search_blanket, :method => :get 
     get 'search_employees' => 'employees#search', :as => :search_employee, :method => :get
     get 'search_customers' => 'customers#search', :as => :search_customer, :method => :get
     get 'search_suppliers' => 'suppliers#search', :as => :search_supplier, :method => :get
@@ -39,6 +43,7 @@ Ticketie::Application.routes.draw do
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
     get 'search_machines' => 'machines#search', :as => :search_machine
+    get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -49,7 +54,8 @@ Ticketie::Application.routes.draw do
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
     get 'search_purchase_receivals' => 'purchase_receivals#search', :as => :search_purchase_receival
     get 'search_purchase_receival_details' => 'purchase_receival_details#search', :as => :search_purchase_receival_detail
-    
+    get 'search_roller_types' => 'roller_types#search', :as => :search_roller_types
+  
     # master data 
     resources :app_users
     resources :contact_groups 
@@ -57,9 +63,7 @@ Ticketie::Application.routes.draw do
     resources :suppliers 
     resources :employees
     resources :machines
-    
-    
-    
+    resources :roller_types
     # ITEM DB
     resources :item_types  
     resources :sub_types
@@ -110,6 +114,7 @@ Ticketie::Application.routes.draw do
     
     resources :roller_builders
     resources :core_builders
+    resources :blankets
   end
   
   

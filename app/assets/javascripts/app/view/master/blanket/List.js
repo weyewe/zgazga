@@ -1,39 +1,30 @@
-Ext.define('AM.view.master.rollerbuilder.List' ,{
+Ext.define('AM.view.master.blanket.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.rollerbuilderlist',
+  	alias : 'widget.blanketlist',
 
-  	store: 'RollerBuilders', 
+  	store: 'Blankets', 
  
 
 	initComponent: function() {
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Base sku', dataIndex: 'base_sku'},
+			{ header: 'Sku', dataIndex: 'sku'},
 			{ header: 'Name', dataIndex: 'name'},
-			{ header: 'Description', dataIndex: 'description'},
-			{ header: 'RollerType', dataIndex: 'roller_type_name'},
-			{ header: 'RD', dataIndex: 'rd'},
-			{ header: 'CD', dataIndex: 'cd'},
-			{ header: 'RL', dataIndex: 'rl'},
-			{ header: 'WL', dataIndex: 'wl'},
-			{ header: 'TL', dataIndex: 'tl'},
-			{ header: 'Used Sku', dataIndex: 'sku_roller_used_core'},
-			{ header: 'QTY', dataIndex: 'roller_used_core_item_amount'},
-			{ header: 'UoM', dataIndex: 'uom_name'},
-			{ header: 'New Sku', dataIndex: 'sku_roller_new_core'},
-			{ header: 'QTY', dataIndex: 'roller_new_core_item_amount'},
-			{ header: 'UoM', dataIndex: 'uom_name'},
+			{ header: 'QTY', dataIndex: 'amount'},
+			{ header: 'AC', dataIndex: 'ac'},	
+			{ header: 'AR', dataIndex: 'ar'},
+			{ header: 'Thickness', dataIndex: 'thickness'},
 			{ header: 'Machine', dataIndex: 'machine_name'},
-			{ header: 'Compound', dataIndex: 'compound_name'},
-			{ header: 'Adhesive', dataIndex: 'adhesive_name'},
-			{ header: 'Core Sku', dataIndex: 'core_builder_sku'},
-			{ header: 'Crown', dataIndex: 'is_crowning'},
-			{ header: 'Size', dataIndex: 'crowning_size'},
-			{ header: 'Groove', dataIndex: 'is_grooving'},
-			{ header: 'W', dataIndex: 'grooving_width'},
-			{ header: 'D', dataIndex: 'grooving_depth'},
-			{ header: 'P', dataIndex: 'grooving_position'},
-			{ header: 'Chamfer', dataIndex: 'is_chamfer'},
+			{ header: 'Adhesive1', dataIndex: 'adhesive_name'},
+			{ header: 'Adhesive2', dataIndex: 'adhesive2_name'},
+			{ header: 'Roll Blanket', dataIndex: 'roll_blanket_item_name'},
+			{ header: 'Bar1', dataIndex: 'left_bar_item_name'},
+			{ header: 'Bar2', dataIndex: 'right_bar_item_name'},
+			{ header: 'Customer', dataIndex: 'contact_name'},
+			{ header: 'Application', dataIndex: 'application_case'},
+			{ header: 'Cropping', dataIndex: 'cropping_type'},
+			{ header: 'AC', dataIndex: 'ac'},
+			{ header: 'AR', dataIndex: 'ar'},
 		];
 
 		this.addObjectButton = new Ext.Button({
@@ -60,14 +51,11 @@ Ext.define('AM.view.master.rollerbuilder.List' ,{
 			emptyText : "Search",
 			checkChangeBuffer: 300
 		});
-		
-
-
 
 		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
 		 				'-',
 						this.searchField,
-						'->',
+						
 		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 

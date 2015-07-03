@@ -20,9 +20,9 @@ Ext.define('AM.view.master.corebuilder.Form', {
 				{ name : "core_builder_type_case_text"}  
 			], 
 			data : [
-				{ core_builder_type_case : 0, core_builder_type_case_text : "Hollow"},
-				{ core_builder_type_case : 1, core_builder_type_case_text : "Shaft"},
-				{ core_builder_type_case : 2, core_builder_type_case_text : "None"}
+				{ core_builder_type_case : "Hollow", core_builder_type_case_text : "Hollow"},
+				{ core_builder_type_case : "Shaft", core_builder_type_case_text : "Shaft"},
+				{ core_builder_type_case : "None", core_builder_type_case_text : "None"}
 			] 
 		});
 		
@@ -248,6 +248,21 @@ Ext.define('AM.view.master.corebuilder.Form', {
 		});
 	},
 	
+	setSelectedCoreType: function( core_builder_type_case ){ 
+		var comboBox = this.down('form').getForm().findField('core_builder_type_case'); 
+		var me = this; 
+		var store = comboBox.store; 
+		store.load({
+			params: {
+				selected_id : core_builder_type_case 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( core_builder_type_case );
+			}
+		});
+	},
+	
 	
 	setComboBoxData : function( record){
 		var me = this; 
@@ -255,6 +270,7 @@ Ext.define('AM.view.master.corebuilder.Form', {
 		
 		me.setSelectedMachine( record.get("machine_id")  ) ;
 		me.setSelectedUom( record.get("uom_id")  ) ;
+		me.setSelectedCoreType( record.get("core_builder_type_case")  ) ;
 		
 	}
 });
