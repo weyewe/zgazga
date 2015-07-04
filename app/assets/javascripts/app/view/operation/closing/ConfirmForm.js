@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.closing.ConfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.confirmclosingform',
 
-  title : 'Confirm Closing',
+  title : 'Closing',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -24,24 +24,13 @@ Ext.define('AM.view.operation.closing.ConfirmForm', {
 
 				{
 					xtype: 'displayfield',
-					fieldLabel: 'Kode',
-					name: 'code' 
-				},
-			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
+					fieldLabel: 'Id',
+					name: 'id' 
 				},
 				{
 					xtype: 'datefield',
-					fieldLabel: 'Tanggal Konfirmasi',
-					name: 'confirmed_at' ,
+					fieldLabel: 'Tanggal Closing',
+					name: 'closed_at' ,
 					format: 'Y-m-d',
 				},  
 		 
@@ -49,7 +38,7 @@ Ext.define('AM.view.operation.closing.ConfirmForm', {
     }];
 
     this.buttons = [{
-      text: 'Confirm',
+      text: 'Closing',
       action: 'confirm'
     }, {
       text: 'Cancel',
@@ -61,8 +50,6 @@ Ext.define('AM.view.operation.closing.ConfirmForm', {
   },
 
 	setParentData: function( record ) {
-		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
-		this.down('form').getForm().findField('description').setValue(record.get('description')); 
+		this.down('form').getForm().findField('id').setValue(record.get('id')); 
 	}
 });

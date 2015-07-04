@@ -2,7 +2,7 @@ class Api::ClosingDetailsController < Api::BaseApiController
   
   def index
     @parent = Closing.find_by_id params[:closing_id]
-    @objects = @parent.active_children.joins(:closing, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:closing, :exchange).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -82,31 +82,25 @@ class Api::ClosingDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = ClosingDetail.joins(:closing, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
+      @objects = ClosingDetail.joins(:closing, :exchange).where{ 
+        ( exchange.name  =~ query ) 
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = ClosingDetail.joins(:closing, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
+      @total = ClosingDetail.joins(:closing, :exchange ).where{ 
+        ( exchange.name =~ query )  
       }.count
     else
-      @objects = ClosingDetail.where{ 
+      @objects = ClosingDetail.joins(:closing, :exchange ).where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = ClosingDetail.where{ 
+      @total = ClosingDetail.joins(:closing, :exchange ).where{ 
               (id.eq selected_id)   
       }.count 
     end

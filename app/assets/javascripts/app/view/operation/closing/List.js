@@ -8,28 +8,19 @@ Ext.define('AM.view.operation.closing.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
- 
+			{ 	header: 'Period',  dataIndex: 'period', flex: 1},
+			{ 	header: 'Year',  dataIndex: 'year_period', flex: 1},
+			{	header: 'Beginning', dataIndex: 'beginning_period', flex: 2 },
+			{	header: 'End Date', dataIndex: 'end_date_period', flex: 2 },
+			{	header: 'AR/AP inclusive', dataIndex: 'is_year_closing', flex: 2 },
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Closing",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 	'Status Closing:  <b>{is_closed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{closed_at}</b>' 
 			},
-			
-			
+		 
 		];
 
 		this.addObjectButton = new Ext.Button({
@@ -50,13 +41,13 @@ Ext.define('AM.view.operation.closing.List' ,{
 		});
 		
 		this.confirmObjectButton = new Ext.Button({
-			text: 'Confirm',
+			text: 'Close',
 			action: 'confirmObject',
 			disabled: true
 		});
 	
 		this.unconfirmObjectButton = new Ext.Button({
-			text: 'Unconfirm',
+			text: 'Reopen',
 			action: 'unconfirmObject',
 			disabled: true,
 			hidden : true
@@ -102,7 +93,7 @@ Ext.define('AM.view.operation.closing.List' ,{
 		
 		selectedObject = this.getSelectedObject();
 		
-		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+		if( selectedObject && selectedObject.get("is_closed") == true ){
 			this.confirmObjectButton.hide();
 			this.unconfirmObjectButton.show();
 			this.unconfirmObjectButton.enable();
@@ -116,6 +107,18 @@ Ext.define('AM.view.operation.closing.List' ,{
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
+		this.unconfirmObjectButton.disable();
 		this.confirmObjectButton.disable(); 
+		
+		selectedObject = this.getSelectedObject();
+		
+		if( selectedObject && selectedObject.get("is_closed") == true ){
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show(); 
+		}else{
+			
+			this.confirmObjectButton.show();
+			this.unconfirmObjectButton.hide();
+		}
 	}
 });

@@ -228,7 +228,7 @@ Ext.define('AM.controller.Closings', {
  
 		if(record){
 			var rec_id = record.get("id");
-			record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'closed_at' , values['closed_at'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -276,7 +276,7 @@ Ext.define('AM.controller.Closings', {
  
 		if(record){
 			var rec_id = record.get("id");
-			record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'closed_at' , values['closed_at'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;

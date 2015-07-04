@@ -56,15 +56,14 @@ class DeliveryOrderDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    new_object = self.new
     delivery_order = DeliveryOrder.find_by_id(params[:delivery_order_id])
     if not delivery_order.nil?
       if delivery_order.is_confirmed?
-        self.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return self 
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
       end
     end
-    
-    new_object = self.new
     new_object.delivery_order_id = params[:delivery_order_id]
     new_object.sales_order_detail_id = params[:sales_order_detail_id]
     new_object.order_type = params[:order_type]

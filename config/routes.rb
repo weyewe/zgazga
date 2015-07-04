@@ -64,7 +64,8 @@ Ticketie::Application.routes.draw do
     get 'search_payment_request_details' => 'payment_request_details#search', :as => :search_payment_request_detail
     get 'search_memorials' => 'memorials#search', :as => :search_memorial
     get 'search_memorial_details' => 'memorial_details#search', :as => :search_memorial_detail
-  
+    get 'search_closings' => 'closings#search', :as => :serch_closing
+    get 'search_closing_details' => 'closing_details#search', :as => :serch_closing_detail
     # master data 
     resources :app_users
     resources :contact_groups 
@@ -136,6 +137,8 @@ Ticketie::Application.routes.draw do
     resources :blanket_orders
     resources :blanket_order_details
     
+    resources :closings
+    resources :closing_details
     
   end
   

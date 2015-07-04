@@ -68,6 +68,13 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    receipt_voucher = ReceiptVoucher.find_by_id(params[:receipt_voucher_id])
+    if not receipt_voucher.nil?
+      if receipt_voucher.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.receipt_voucher_id = params[:receipt_voucher_id]
     new_object.receivable_id = params[:receivable_id]
     new_object.amount_paid = params[:amount_paid]

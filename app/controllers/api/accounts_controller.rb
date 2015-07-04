@@ -5,7 +5,7 @@ class Api::AccountsController < Api::BaseApiController
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
       @objects = Account.where{
-        (is_deleted.eq false) & 
+        # (is_deleted.eq false) & 
         (
           (name =~  livesearch ) | 
           (code =~ livesearch)
@@ -14,7 +14,7 @@ class Api::AccountsController < Api::BaseApiController
       }.page(params[:page]).per(params[:limit]).order("id ASC")
       
       @total = Account.where{
-        (is_deleted.eq false) & 
+        # (is_deleted.eq false) & 
         (
           (name =~  livesearch ) | 
           (code =~ livesearch)

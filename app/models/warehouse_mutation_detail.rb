@@ -59,6 +59,13 @@ class WarehouseMutationDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    warehouse_mutation = WarehouseMutation.find_by_id(params[:warehouse_mutation_id])
+    if not warehouse_mutation.nil?
+      if warehouse_mutation.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.warehouse_mutation_id = params[:warehouse_mutation_id]
     new_object.item_id = params[:item_id]
     new_object.amount = params[:amount]
