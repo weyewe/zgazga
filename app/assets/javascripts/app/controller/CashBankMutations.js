@@ -42,25 +42,19 @@ Ext.define('AM.controller.CashBankMutations', {
 	  	'cashbankmutationlist textfield[name=searchField]': {
         change: this.liveSearch
       },
-			'cashbankmutationlist button[action=markasdeceasedObject]': {
-        click: this.markAsDeceasedObject
-			}	,
-			'markmemberasdeceasedform button[action=confirmDeceased]' : {
-				click : this.executeConfirmDeceased
-			},
+			'cashbankmutationProcess cashbankmutationlist button[action=confirmObject]': {
+        click: this.confirmObject
+      },
 
-			'cashbankmutationlist button[action=unmarkasdeceasedObject]': {
-        click: this.unmarkAsDeceasedObject
-			}	,
-			'unmarkmemberasdeceasedform button[action=unconfirmDeceased]' : {
-				click : this.executeConfirmUndeceased
+			'cashbankmutationtProcess cashbankmutationlist button[action=unconfirmObject]': {
+        click: this.unconfirmObject
+      },
+			'confirmcashbankmutationform button[action=confirm]' : {
+				click : this.executeConfirm
 			},
 			
-			'cashbankmutationlist button[action=markasrunawayObject]': {
-        click: this.markAsRunAwayObject
-			}	,
-			'markmemberasrunawayform button[action=confirmRunAway]' : {
-				click : this.executeConfirmRunAway
+			'unconfirmcashbankmutationform button[action=confirm]' : {
+				click : this.executeUnconfirm
 			},
 		
     });
@@ -76,16 +70,26 @@ Ext.define('AM.controller.CashBankMutations', {
 		me.getCashBankMutationsStore().load();
 	},
 	
-	markAsDeceasedObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('markmemberasdeceasedform');
+	confirmObject: function(){
+		console.log("the  confirmObject ");
+		var view = Ext.widget('confirmcashbankmutationform');
+		console.log( view ) ;
+		var record = this.getList().getSelectedObject(); 
+		console.log( record ) ;
+		view.down('form').loadRecord(record);
+ 
+	},
+  
+  unconfirmObject: function(){
+ 
+		
+		var view = Ext.widget('unconfirmcashbankmutationform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
-		view.down('form').getForm().findField('deceased_at').setValue(record.get('deceased_at')); 
     view.show();
 	},
-	
-	executeConfirmDeceased : function(button){
+  
+	executeConfirm : function(button){
 		var me = this; 
 		var win = button.up('window');
     var form = win.down('form');
@@ -97,20 +101,20 @@ Ext.define('AM.controller.CashBankMutations', {
  
 		if(record){
 			var rec_id = record.get("id");
-			record.set( 'deceased_at' , values['deceased_at'] );
+			record.set( 'confirmed_at' , values['confirmed_at'] );
 			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
 			form.setLoading(true);
 			record.save({
 				params : {
-					mark_as_deceased: true 
+					confirm: true 
 				},
 				success : function(record){
 					form.setLoading(false);
-					
+					// list.disableRecordButtons(record);
 					list.fireEvent('confirmed', record);
 					
 					
@@ -130,16 +134,11 @@ Ext.define('AM.controller.CashBankMutations', {
 			});
 		}
 	},
-
-	unmarkAsDeceasedObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('unmarkmemberasdeceasedform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-    view.show();
-	},
-
-	executeConfirmUndeceased : function(button){
+	
+	
+	
+	
+	executeUnconfirm : function(button){
 		// console.log("unconfirm deceased");
 
 		var me = this; 
@@ -161,11 +160,11 @@ Ext.define('AM.controller.CashBankMutations', {
 			form.setLoading(true);
 			record.save({
 				params : {
-					unmark_as_deceased: true 
+					unconfirm: true 
 				},
 				success : function(record){
 					form.setLoading(false);
-					
+					// list.disableRecordButtons(record);
 					list.fireEvent('confirmed', record);
 					
 					
@@ -184,65 +183,7 @@ Ext.define('AM.controller.CashBankMutations', {
 				}
 			});
 		}
-	},
-	
-	// RUN AWAY
-	
-	markAsRunAwayObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('markmemberasrunawayform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		view.down('form').getForm().findField('run_away_at').setValue(record.get('run_away_at')); 
-    view.show();
-	},
-	
-	executeConfirmRunAway : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getCashBankMutationsStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			record.set( 'run_away_at' , values['run_away_at'] );
-			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			form.setLoading(true);
-			record.save({
-				params : {
-					mark_as_run_away: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
- 
+	}, 
 
 	loadObjectList : function(me){
 		me.getStore().getProxy().extraParams = {}

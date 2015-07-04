@@ -33,7 +33,7 @@ class ClosingDetail < ActiveRecord::Base
     new_object = self.new
     closing = Closing.find_by_id(params[:closing_id])
     if not closing.nil?
-      if closing.is_confirmed?
+      if closing.is_closed?
         new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
         return new_object 
       end
@@ -47,7 +47,7 @@ class ClosingDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.closing.is_confirmed?
+    if self.closing.is_closed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
@@ -58,7 +58,7 @@ class ClosingDetail < ActiveRecord::Base
   end
   
   def delete_object
-    if self.closing.is_confirmed?
+    if self.closing.is_closed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end

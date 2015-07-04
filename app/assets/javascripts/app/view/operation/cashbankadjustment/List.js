@@ -13,8 +13,13 @@ Ext.define('AM.view.operation.cashbankadjustment.List' ,{
 			{ header: 'Amount',  dataIndex: 'amount', flex: 1},
 			{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
-			{	header: 'Konfirmasi', dataIndex: 'is_confirmed', flex: 1 } ,
-			{	header: 'Tanggal Konfirmasi', dataIndex: 'confirmed_at', flex: 1 } ,
+			{
+				xtype : 'templatecolumn',
+				text : "Konfirmasi",
+				flex : 3,
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+			},
 		];
 
 		this.addObjectButton = new Ext.Button({

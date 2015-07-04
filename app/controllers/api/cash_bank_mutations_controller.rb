@@ -9,22 +9,18 @@ class Api::CashBankMutationsController < Api::BaseApiController
         
         @objects = CashBankMutation.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( no_bukti =~  livesearch )  | 
+            ( source_cash_bank.name =~ livesearch ) | 
+            ( target_cash_bank.name =~ livesearch ) 
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
         @total = CashBankMutation.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( no_bukti =~  livesearch )  | 
+            ( source_cash_bank.name =~ livesearch ) | 
+            ( target_cash_bank.name =~ livesearch )
           )
         }.count
    
@@ -39,6 +35,8 @@ class Api::CashBankMutationsController < Api::BaseApiController
   end
 
   def create
+    params[:cash_bank_mutation][:mutation_date] =  parse_date( params[:cash_bank_mutation][:mutation_date] )
+    params[:cash_bank_mutation][:confirmed_at] =  parse_date( params[:cash_bank_mutation][:confirmed_at] )
     @object = CashBankMutation.create_object( params[:cash_bank_mutation] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
@@ -57,15 +55,53 @@ class Api::CashBankMutationsController < Api::BaseApiController
   end
 
   def update
-    @object = CashBankMutation.find(params[:id]) 
+    params[:cash_bank_mutation][:mutation_date] =  parse_date( params[:cash_bank_mutation][:mutation_date] )
+    params[:cash_bank_mutation][:confirmed_at] =  parse_date( params[:cash_bank_mutation][:confirmed_at] )
     
-
-    @object.update_object( params[:cash_bank_mutation] )
+    @object = CashBankMutation.find(params[:id])
     
+    if params[:confirm].present?  
+      if not current_user.has_role?( :cash_bank_mutations, :confirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.confirm_object(:confirmed_at => params[:cash_bank_mutation][:confirmed_at] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+      
+      
+      
+    elsif params[:unconfirm].present?    
+      
+      if not current_user.has_role?( :cash_bank_mutations, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unconfirm_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+      
+    else
+      @object.update_object(params[:cash_bank_mutation])
+    end
+    
+     
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :cash_bank_mutations => [@object],
+                        :cash_bank_adjustments => [@object],
                         :total => CashBankMutation.active_objects.count } 
     else
       msg = {
@@ -128,22 +164,18 @@ class Api::CashBankMutationsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = CashBankMutation.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
+          ( no_bukti =~  query )  | 
+          ( source_cash_bank.name =~ query ) | 
+          ( target_cash_bank.name =~ query ) 
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
       @total = CashBankMutation.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
+          ( no_bukti =~  query )  | 
+          ( source_cash_bank.name =~ query ) | 
+          ( target_cash_bank.name =~ query ) 
         
                               }.count
     else

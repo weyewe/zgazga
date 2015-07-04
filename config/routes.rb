@@ -31,6 +31,7 @@ Ticketie::Application.routes.draw do
     get 'search_customers' => 'customers#search', :as => :search_customer, :method => :get
     get 'search_suppliers' => 'suppliers#search', :as => :search_supplier, :method => :get
     get 'search_cash_bank' => 'cash_banks#search', :as => :search_cash_bank, :method => :get
+    get 'search_cash_bank_mutations' => 'cash_bank_mutations#search', :as => :search_cash_bank_mutations, :method => :get
     get 'search_payable' => 'payables#search', :as => :search_payable, :method => :get
     get 'search_receivable' => 'receivables#search', :as => :search_receivable, :method => :get
     get 'work_customer_reports' => 'maintenances#customer_reports', :as => :work_customer_reports

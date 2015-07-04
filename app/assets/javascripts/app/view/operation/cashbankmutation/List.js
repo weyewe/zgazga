@@ -7,57 +7,21 @@ Ext.define('AM.view.operation.cashbankmutation.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID_NUMBER', dataIndex: 'id_number'},
-			// { header: 'Nama',  dataIndex: 'name', flex: 1},
-			
+			{ header: 'ID', dataIndex: 'id'},
+			{ header: 'Code', dataIndex: 'code'},
+			{ header: 'No Bukti', dataIndex: 'no_bukti'},
+			{ header: 'Source CashBank', dataIndex: 'source_cash_bank_name'},
+			{ header: 'Target CashBank', dataIndex: 'target_cash_bank_name'},
+			{ header: 'Tanggal Mutasi', dataIndex: 'mutation_date'},
+			{ header: 'Amount', dataIndex: 'amount'},
 			{
 				xtype : 'templatecolumn',
-				text : "Details",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Nama</b>: <br />{name}' + '<br /><br />' + 
-							'<b>KTP</b>: <br />{id_card_number}' + '<br /><br />' + 
-							'<b>Ultah</b>: <br />{birthday_date}'  
+				text : "Konfirmasi",
+				flex : 3,
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
 			},
 			
-			
-			{	header: 'Address', dataIndex: 'address', flex: 1 }, 
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Status",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Kabur</b>: <br />{is_run_away}' + '<br /><br />' + 
-							'<b>Meninggal</b>: <br />{is_deceased}' + '<br /><br />' + 
-							'<b>Ultah</b>: <br />{birthday_date}'  
-			},
-			
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Tabungan",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Latihan</b>: <br />{total_locked_savings_account}' + '<br /><br />' + 
-							'<b>Keanggotaan</b>: <br />{total_membership_savings}' + '<br /><br />' + 
-							'<b>Masa Depan</b>: <br />{total_savings_account}'  
-			},
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Address",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>RT</b>: <br />{rt}' + '<br /><br />' + 
-							'<b>RW</b>: <br />{rw}' + '<br /><br />' + 
-							'<b>Kelurahan</b>: <br />{village}'  
-			},
-			
-			
-			{	header: 'Complete?', dataIndex: 'is_data_complete', flex: 1 }  , 
-			
-			{	header: 'Active Group Loan', dataIndex: 'active_group_loan_name', flex: 1 }  , 
 			
 			
 		];
@@ -87,34 +51,29 @@ Ext.define('AM.view.operation.cashbankmutation.List' ,{
 			checkChangeBuffer: 300
 		});
 		
-		this.markAsDeceasedObjectButton = new Ext.Button({
-			text: 'Deceased',
-			action: 'markasdeceasedObject',
+		this.confirmObjectButton = new Ext.Button({
+			text: 'Confirm',
+			action: 'confirmObject',
 			disabled: true
 		});
 
-		this.unmarkAsDeceasedObjectButton = new Ext.Button({
-			text: 'Cancel Deceased',
-			action: 'unmarkasdeceasedObject',
+		this.unconfirmObjectButton = new Ext.Button({
+			text: 'Unconfirm',
+			action: 'unconfirmObject',
 			disabled: true,
 			hidden :true 
 		});
 		
-		this.markAsRunAwayObjectButton = new Ext.Button({
-			text: 'Run Away',
-			action: 'markasrunawayObject',
-			disabled: true
-		});
-
-
-
+		
 		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
+		
+							
+		 				'-',
+		 				this.confirmObjectButton, 
+		 				this.unconfirmObjectButton,
 		 				'-',
 						this.searchField,
 						'->',
-						this.markAsDeceasedObjectButton,
-						this.unmarkAsDeceasedObjectButton,
-						this.markAsRunAwayObjectButton
 						
 		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
@@ -136,43 +95,40 @@ Ext.define('AM.view.operation.cashbankmutation.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
-		
-		
-		this.markAsRunAwayObjectButton.enable();
-
-		this.unmarkAsDeceasedObjectButton.enable();
-		this.markAsDeceasedObjectButton.enable();
+		this.confirmObjectButton.enable(); 
+		this.unconfirmObjectButton.enable(); 
 
 
 
 		selectedObject = this.getSelectedObject();
 
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
+		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+			this.unconfirmObjectButton.show();
+			this.confirmObjectButton.hide();
 		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
+			this.unconfirmObjectButton.hide();
+			this.confirmObjectButton.show();
 		}
 
 
 	},
 
 	disableRecordButtons: function() {
+		
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.markAsDeceasedObjectButton.disable();
-		this.unmarkAsDeceasedObjectButton.disable();
-		this.markAsRunAwayObjectButton.disable();
-
+		this.confirmObjectButton.disable(); 
+		this.unconfirmObjectButton.disable(); 
+		
 		selectedObject = this.getSelectedObject();
 
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
+		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+			this.unconfirmObjectButton.show();
+			this.confirmObjectButton.hide();
 		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
+			this.unconfirmObjectButton.hide();
+			this.confirmObjectButton.show();
 		}
+
 	}
 });
