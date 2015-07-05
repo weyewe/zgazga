@@ -1,6 +1,7 @@
 class TemporaryDeliveryOrderDetail < ActiveRecord::Base
   
   belongs_to :temporary_delivery_order
+  belongs_to :item
   belongs_to :sales_order_detail
   validate :valid_sales_order_detail
   

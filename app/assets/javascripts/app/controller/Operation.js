@@ -77,6 +77,54 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
+				text:'Temporary DeliveryOrder', 
+				viewClass:'AM.view.operation.TemporaryDeliveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'temporary_delivery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'VirtualOrder', 
+				viewClass:'AM.view.operation.VirtualOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Delivery VirtualOrder', 
+				viewClass:'AM.view.operation.VirtuaDeliverylOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_delivery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'VirtualOrderClearance', 
+				viewClass:'AM.view.operation.VirtualOrderClearance', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_order_clearances',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
 				text:'Sales Invoice', 
 				viewClass:'AM.view.operation.SalesInvoice', 
 				leaf:true, 

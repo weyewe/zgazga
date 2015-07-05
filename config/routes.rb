@@ -53,6 +53,8 @@ Ticketie::Application.routes.draw do
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
     get 'search_delivery_orders' => 'delivery_orders#search', :as => :search_delivery_order
     get 'search_delivery_order_details' => 'delivery_order_details#search', :as => :search_delivery_order_detail
+    get 'search_temporary_delivery_orders' => 'temporary_delivery_orders#search', :as => :search_temporary_delivery_order
+    get 'search_temporary_delivery_order_details' => 'temporary_delivery_order_details#search', :as => :search_temporary_delivery_order_detail
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
@@ -121,6 +123,9 @@ Ticketie::Application.routes.draw do
     
     resources :delivery_orders
     resources :delivery_order_details
+    
+    resources :temporary_delivery_orders
+    resources :temporary_delivery_order_details
     
     resources :sales_invoices
     resources :sales_invoice_details
