@@ -1240,8 +1240,9 @@ ActiveRecord::Schema.define(version: 20150701140322) do
   create_table "virtual_orders", force: true do |t|
     t.string   "code"
     t.integer  "contact_id"
-    t.integer  "order_type"
+    t.integer  "employee_id"
     t.datetime "order_date"
+    t.text     "description"
     t.string   "nomor_surat"
     t.integer  "exchange_id"
     t.boolean  "is_confirmed",          default: false

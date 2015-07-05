@@ -579,9 +579,11 @@ if Rails.env.development?
   virtual_order_array = []
   (1.upto 10).each do |x|
     selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
     selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
     virtual_order = VirtualOrder.create_object(
       :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
       :exchange_id => selected_exchange.id,
       :order_date => DateTime.now,
       :nomor_surat => "Nomor surat #{x}"

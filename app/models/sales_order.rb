@@ -5,6 +5,7 @@ class SalesOrder < ActiveRecord::Base
   belongs_to :employee
   has_many :sales_order_details
   validates_presence_of :contact_id
+  validates_presence_of :employee_id
   validates_presence_of :exchange_id
   validates_presence_of :nomor_surat
   validates_presence_of :sales_date

@@ -4,6 +4,7 @@ class VirtualOrder < ActiveRecord::Base
   belongs_to :employee
   has_many :virtual_order_details
   validates_presence_of :contact_id
+  validates_presence_of :employee_id
   validates_presence_of :exchange_id
   validates_presence_of :nomor_surat
   validates_presence_of :order_date
@@ -11,10 +12,14 @@ class VirtualOrder < ActiveRecord::Base
   
   validate :valid_contact_id
   validate :valid_exchange_id
-  
+  validate :valid_employee_id
   
   def self.active_objects
     self
+  end
+  
+   def active_children
+    self.virtual_order_details 
   end
   
   def valid_contact_id
@@ -27,7 +32,16 @@ class VirtualOrder < ActiveRecord::Base
       return self 
     end
   end
-
+  
+  def valid_employee_id
+    return if  employee_id.nil?
+    ep = Employee.find_by_id employee_id
+    if ep.nil? 
+      self.errors.add(:employee_id, "Harus ada Employee Id")
+      return self 
+    end
+  end
+  
   def valid_exchange_id
     return if  exchange_id.nil?
     ec = Exchange.find_by_id exchange_id
@@ -40,11 +54,13 @@ class VirtualOrder < ActiveRecord::Base
   def self.create_object( params )
     new_object = self.new
     new_object.contact_id = params[:contact_id]
+    new_object.employee_id = params[:employee_id]
     new_object.order_date = params[:order_date]
+    new_object.description = params[:description]
     new_object.nomor_surat = params[:nomor_surat]
     new_object.exchange_id = params[:exchange_id]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "Vo-" + new_object.id.to_s  
     new_object.save
     
     return new_object
@@ -60,6 +76,8 @@ class VirtualOrder < ActiveRecord::Base
       return self 
     end
     self.contact_id = params[:contact_id]
+    self.employee_id = params[:employee_id]
+    self.description = params[:description]
     self.order_date = params[:order_date]
     self.nomor_surat = params[:nomor_surat]
     self.exchange_id = params[:exchange_id]
