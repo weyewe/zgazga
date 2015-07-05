@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.paymentvoucherdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit PaymentVoucher Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -14,40 +14,55 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
   initComponent: function() {
 	
 	
-    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-		type : 'array',
-		storeId : 'sales_status_search',
-		fields	: [ 
-			{ name : "is_service"}, 
-			{ name : "is_service_text"}  
-		], 
-		data : [
-			{ is_service : false, is_service_text : "Trading"},
-			{ is_service : true, is_service_text : "Service"}
-		] 
-	});
 	
-	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
+	var remoteJsonStorePayable = Ext.create(Ext.data.JsonStore, {
+		storeId : 'payable_search',
 		fields	: [
 		 		{
-					name : 'item_sku',
-					mapping : "sku"
+					name : 'payable_source_code',
+					mapping : "source_code"
 				}, 
 				{
-					name : 'item_name',
-					mapping : 'name'
+					name : 'payable_source_class',
+					mapping : "source_class"
+				}, 
+				{
+					name : 'payable_due_date',
+					mapping : 'due_date'
 				},
 				{
-					name : 'item_id',
+					name : 'payable_amount',
+					mapping : "amount"
+				}, 
+				{
+					name : 'payable_remaining_amount',
+					mapping : "remaining_amount"
+				}, 
+				{
+					name : 'payable_contact_name',
+					mapping : "contact_name"
+				}, 
+				{
+					name : 'payable_remaining_amount',
+					mapping : "remaining_amount"
+				}, 
+				{
+					name : 'payable_exchange_name',
+					mapping : "exchange_name"
+				}, 
+				{
+					name : 'payable_exchange_rate_amount',
+					mapping : "exchange_rate_amount"
+				}, 
+				{
+					name : 'payable_id',
 					mapping : "id"
 				}, 
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_items',
+			url : 'api/search_payables',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -57,8 +72,6 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 		autoLoad : false 
 	});
 		
-	
-	 
 		
     this.items = [{
       xtype: 'form',
@@ -75,81 +88,65 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-			{
+				{
 	        xtype: 'hidden',
-	        name : 'sales_order_id',
-	        fieldLabel: 'sales_order_id'
+	        name : 'payment_voucher_id',
+	        fieldLabel: 'payment_voucher_id'
+	      },
+				{
+					fieldLabel: 'Payable',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'payable_source_code',
+					valueField : 'payable_id',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : remoteJsonStorePayable , 
+					listConfig : {
+						getInnerTpl: function(){
+							return  	'<div data-qtip="{payable_source_code}">' +  
+													'<div class="combo-name">Code : {payable_source_code}</div>' +  
+													'<div class="combo-name">Contact : {payable_contact_name}</div>' +   
+													'<div class="combo-name">Amount : {payable_amount}</div>' +   
+													'<div class="combo-name">Remaining Amount : {payable_remaining_amount}</div>' +   
+							 					'</div>';
+						}
+					},
+					name : 'payable_id' 
+				},
+				{
+	        xtype: 'numberfield',
+	        name : 'rate',
+	        fieldLabel: 'Rate'
 	      },
 	      {
-            xtype: 'displayfield',
-            name : 'sales_order_code',
-            fieldLabel: 'Kode SalesOrder'
-        },
-			{
-				fieldLabel: 'Status',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'is_service_text',
-				valueField : 'is_service',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : localJsonStoreStatus , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{is_service_text}">' +  
-												'<div class="combo-name">{is_service_text}</div>' +  
-						 					'</div>';
-					}
-				},
-				name : 'is_service' 
-			},
-			{
-				fieldLabel: 'Item',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'item_name',
-				valueField : 'item_id',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : remoteJsonStoreItem , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{item_name}">' +  
-												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
-												 "</div>" +  
-						 					'</div>';
-					}
-				},
-				name : 'item_id' 
-			},
-				
-			{
-    	        xtype: 'textfield',
-    	        name : 'amount',
-    	        fieldLabel: 'Quantity'
-    	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
-    	        xtype: 'textfield',
-    	        name : 'price',
-    	        fieldLabel: 'Value per item'
-    	     },
-		
-	 
-			
-			
+	        xtype: 'numberfield',
+	        name : 'amount_paid',
+	        fieldLabel: 'Amount Paid'
+	      },
+	      {
+	        xtype: 'displayfield',
+	        name : 'amount',
+	        fieldLabel: 'Amount'
+	      },
+	      {
+	        xtype: 'numberfield',
+	        name : 'pph_23',
+	        fieldLabel: 'PPh 23'
+	      },
+	      {
+	        xtype: 'numberfield',
+	        name : 'pph_21',
+	        fieldLabel: 'PPh 21'
+	      },
+				{
+	        xtype: 'textarea',
+	        name : 'description',
+	        fieldLabel: 'Description'
+	      },
 			]
     }];
 
@@ -165,34 +162,17 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedItem: function( item_id ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
+	setSelectedPayable: function( payable_id ){
+		var comboBox = this.down('form').getForm().findField('payable_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : item_id 
+				selected_id : payable_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( item_id );
-			}
-		});
-	},
-	
-	setSelectedStatus: function( is_service ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('is_service'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : is_service 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( is_service );
+				comboBox.setValue( payable_id );
 			}
 		});
 	},
@@ -201,16 +181,13 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
-		
-		
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedPayable( record.get("payable_id")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		// this.down('form').getForm().findField('payment_voucher_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('payment_voucher_id').setValue(record.get('id'));
 	}
  
 });

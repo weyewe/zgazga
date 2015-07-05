@@ -9,7 +9,7 @@ class ReceiptVoucher < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def active_receipt_voucher_details

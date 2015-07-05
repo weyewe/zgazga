@@ -422,6 +422,7 @@ Ext.define('AM.view.master.rollerbuilder.Form', {
 				return container; 
 				
 	},
+	
 	picInfo: function(){
 		
 		var me = this; 

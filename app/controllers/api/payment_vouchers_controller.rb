@@ -5,32 +5,32 @@ class Api::PaymentVouchersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PaymentVoucher.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = PaymentVoucher.active_objects.joins(:contact,:cash_bank).where{
          (
-           
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( gbch_no =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( cash_bank.name =~  livesearch) | 
+           ( cash_bank.exchange.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = PaymentVoucher.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = PaymentVoucher.active_objects.joins(:contact,:cash_bank).where{
          (
-            
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( gbch_no =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( cash_bank.name =~  livesearch) | 
+           ( cash_bank.exchange.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = PaymentVoucher.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = PaymentVoucher.active_objects.joins(:contact,:cash_bank).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = PaymentVoucher.active_objects.count
      end
      
@@ -41,7 +41,8 @@ class Api::PaymentVouchersController < Api::BaseApiController
 
   def create
     
-    params[:payment_voucher][:transaction_datetime] =  parse_date( params[:payment_voucher][:transaction_datetime] )
+    params[:payment_voucher][:payment_date] =  parse_date( params[:payment_voucher][:payment_date] )
+    params[:payment_voucher][:due_date] =  parse_date( params[:payment_voucher][:due_date] )
     
     
     @object = PaymentVoucher.create_object( params[:payment_voucher])
@@ -52,8 +53,22 @@ class Api::PaymentVouchersController < Api::BaseApiController
                         :payment_vouchers => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :contact_id => @object.contact_id , 
+                          :contact_name => @object.contact.name , 
+                          :cash_bank_id => @object.cash_bank_id,
+                          :cash_bank_name => @object.cash_bank.name,
+                          :status_pembulatan => @object.status_pembulatan,
+                          :payment_date => format_date_friendly(@object.payment_date)  ,
+                          :amount => @object.amount ,
+                          :rate_to_idr => @object.rate_to_idr,
+                          :total_pph_23 => @object.total_pph_23,
+                          :total_pph_21 => @object.total_pph_21,
+                          :biaya_bank => @object.biaya_bank,
+                          :pembulatan => @object.pembulatan,
+                          :no_bukti => @object.no_bukti , 
+                          :gbch_no => @object.gbch_no,
+                          :is_gbch => @object.is_gbch,
+                          :due_date => format_date_friendly(@object.due_date) ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -82,20 +97,31 @@ class Api::PaymentVouchersController < Api::BaseApiController
                       :payment_vouchers => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :contact_id => @object.contact_id , 
+                          :contact_name => @object.contact.name , 
+                          :cash_bank_id => @object.cash_bank_id,
+                          :cash_bank_name => @object.cash_bank.name,
+                          :status_pembulatan => @object.status_pembulatan,
+                          :payment_date => format_date_friendly(@object.payment_date)  ,
+                          :amount => @object.amount ,
+                          :rate_to_idr => @object.rate_to_idr,
+                          :total_pph_23 => @object.total_pph_23,
+                          :total_pph_21 => @object.total_pph_21,
+                          :biaya_bank => @object.biaya_bank,
+                          :pembulatan => @object.pembulatan,
+                          :no_bukti => @object.no_bukti , 
+                          :gbch_no => @object.gbch_no,
+                          :is_gbch => @object.is_gbch,
+                          :due_date => format_date_friendly(@object.due_date) ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => PaymentVoucher.active_objects.count  }
   end
 
   def update
-    params[:payment_voucher][:transaction_datetime] =  parse_date( params[:payment_voucher][:transaction_datetime] )
+    params[:payment_voucher][:payment_date] =  parse_date( params[:payment_voucher][:payment_date] )
     params[:payment_voucher][:confirmed_at] =  parse_date( params[:payment_voucher][:confirmed_at] )
     
     @object = PaymentVoucher.find(params[:id])
@@ -145,15 +171,26 @@ class Api::PaymentVouchersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :payment_vouchers => [
-                            :id => @object.id,
+                            :id => @object.id, 
                             :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
+                            :contact_id => @object.contact_id , 
+                            :contact_name => @object.contact.name , 
+                            :cash_bank_id => @object.cash_bank_id,
+                            :cash_bank_name => @object.cash_bank.name,
+                            :status_pembulatan => @object.status_pembulatan,
+                            :payment_date => format_date_friendly(@object.payment_date)  ,
+                            :amount => @object.amount ,
+                            :rate_to_idr => @object.rate_to_idr,
+                            :total_pph_23 => @object.total_pph_23,
+                            :total_pph_21 => @object.total_pph_21,
+                            :biaya_bank => @object.biaya_bank,
+                            :pembulatan => @object.pembulatan,
+                            :no_bukti => @object.no_bukti , 
+                            :gbch_no => @object.gbch_no,
+                            :is_gbch => @object.is_gbch,
+                            :due_date => format_date_friendly(@object.due_date) ,
                             :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PaymentVoucher.active_objects.count  } 
     else
@@ -197,18 +234,28 @@ class Api::PaymentVouchersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = PaymentVoucher.where{  
+      @objects = PaymentVoucher..joins(:contact,:cash_bank).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( no_bukti =~ query)  | 
+           ( gbch_no =~ query)  | 
+           ( contact.name =~  query) | 
+           ( cash_bank.name =~  query) | 
+           ( cash_bank.exchange.name =~  query)
          )
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = PaymentVoucher.where{  
+      @total = PaymentVoucher..joins(:contact,:cash_bank).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( no_bukti =~ query)  | 
+           ( gbch_no =~ query)  | 
+           ( contact.name =~  query) | 
+           ( cash_bank.name =~  query) | 
+           ( cash_bank.exchange.name =~  query)
          )
       }.count 
     else

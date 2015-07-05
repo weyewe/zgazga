@@ -7,7 +7,7 @@ class VirtualOrderDetail < ActiveRecord::Base
   belongs_to :virtual_order
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount

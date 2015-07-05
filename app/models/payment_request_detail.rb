@@ -7,7 +7,7 @@ class PaymentRequestDetail < ActiveRecord::Base
   belongs_to :payment_request
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount

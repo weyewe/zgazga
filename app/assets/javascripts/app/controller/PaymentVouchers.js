@@ -139,7 +139,21 @@ Ext.define('AM.controller.PaymentVouchers', {
 		
 		// this.reloadRecordView( record, view ) ; 
 	},
+	
+	reconcileObject: function(){
+		// console.log("the startObject callback function");
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('reconcilepaymentvoucherform');
 
+			view.setParentData( record );
+	    view.show();
+		}
+		
+		
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
   updateObject: function(button) {
     var win = button.up('window');
     var form = win.down('form');
@@ -210,6 +224,15 @@ Ext.define('AM.controller.PaymentVouchers', {
 	unconfirmObject: function(){
 		// console.log("the startObject callback function");
 		var view = Ext.widget('unconfirmpaymentvoucherform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+    view.show();
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
+	unreconcileObject: function(){
+		// console.log("the startObject callback function");
+		var view = Ext.widget('unreconcilepaymentvoucherform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
     view.show();
@@ -308,6 +331,97 @@ Ext.define('AM.controller.PaymentVouchers', {
 		}
 	},
 	
+	executeReconcile: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getPaymentVouchersStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'reconciliation_date' , values['reconciliation_date'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					reconcile: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					me.reloadRecord( record ) ; 
+					
+					list.enableRecordButtons(); 
+					
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	
+	
+	executeUnreconcile: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getPaymentVouchersStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'reconciliation_date' , values['reconciliation_date'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unreconcile : true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					me.reloadRecord( record ) ; 
+					list.enableRecordButtons(); 
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
 
 
   deleteObject: function() {

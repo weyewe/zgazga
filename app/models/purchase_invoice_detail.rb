@@ -8,7 +8,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
   belongs_to :purchase_invoice
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount

@@ -32,8 +32,6 @@ Ticketie::Application.routes.draw do
     get 'search_suppliers' => 'suppliers#search', :as => :search_supplier, :method => :get
     get 'search_cash_bank' => 'cash_banks#search', :as => :search_cash_bank, :method => :get
     get 'search_cash_bank_mutations' => 'cash_bank_mutations#search', :as => :search_cash_bank_mutations, :method => :get
-    get 'search_payable' => 'payables#search', :as => :search_payable, :method => :get
-    get 'search_receivable' => 'receivables#search', :as => :search_receivable, :method => :get
     get 'work_customer_reports' => 'maintenances#customer_reports', :as => :work_customer_reports
     
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
@@ -65,8 +63,12 @@ Ticketie::Application.routes.draw do
     get 'search_payment_request_details' => 'payment_request_details#search', :as => :search_payment_request_detail
     get 'search_memorials' => 'memorials#search', :as => :search_memorial
     get 'search_memorial_details' => 'memorial_details#search', :as => :search_memorial_detail
-    get 'search_closings' => 'closings#search', :as => :serch_closing
-    get 'search_closing_details' => 'closing_details#search', :as => :serch_closing_detail
+    get 'search_closings' => 'closings#search', :as => :search_closing
+    get 'search_closing_details' => 'closing_details#search', :as => :search_closing_detail
+    get 'search_payables' => 'payables#search', :as => :search_payable
+    get 'search_receivables' => 'receivables#search', :as => :search_receivable
+    get 'search_payment_vouchers' => 'payment_voucher_details#search', :as => :search_payment_voucher
+    get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
     # master data 
     resources :app_users
     resources :contact_groups 
@@ -98,6 +100,8 @@ Ticketie::Application.routes.draw do
      
     # operation
     
+    resources :payables
+    resources :receivables
     resources :stock_adjustments
     resources :stock_adjustment_details
     
@@ -131,6 +135,9 @@ Ticketie::Application.routes.draw do
     
     resources :payment_requests
     resources :payment_request_details
+    
+    resources :payment_vouchers
+    resources :payment_voucher_details
     
     resources :blending_recipes
     resources :blending_recipe_details

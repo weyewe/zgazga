@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.paymentvoucher.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmpaymentvoucherform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Unconfirm PaymentVoucher',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -27,12 +27,7 @@ Ext.define('AM.view.operation.paymentvoucher.UnconfirmForm', {
 					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				}
+			    
 			]
     }];
 
@@ -49,9 +44,6 @@ Ext.define('AM.view.operation.paymentvoucher.UnconfirmForm', {
   },
 
 	setParentData: function( record ) {
-		// console.log("Inside set Parent Data");
-// d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
 	}
 });

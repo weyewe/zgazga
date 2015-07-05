@@ -9,7 +9,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
   belongs_to :purchase_order_detail
   belongs_to :item
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount

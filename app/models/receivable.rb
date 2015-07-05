@@ -1,6 +1,7 @@
 class Receivable < ActiveRecord::Base
   belongs_to :receipt_voucher
   belongs_to :exchange
+  belongs_to :contact
   
   def self.active_objects
     return self
@@ -10,6 +11,7 @@ class Receivable < ActiveRecord::Base
     new_object = self.new
     new_object.source_class = params[:source_class]
     new_object.source_id = params[:source_id]
+    new_object.contact_id = params[:contact_id]
     new_object.source_code = params[:source_code]
     new_object.amount =  BigDecimal( params[:amount] || '0')
     new_object.remaining_amount = BigDecimal( params[:amount] || '0')

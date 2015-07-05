@@ -14,7 +14,7 @@ class VirtualOrder < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_contact_id
