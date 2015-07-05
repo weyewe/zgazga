@@ -123,7 +123,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
   def update
     params[:payment_voucher][:payment_date] =  parse_date( params[:payment_voucher][:payment_date] )
     params[:payment_voucher][:confirmed_at] =  parse_date( params[:payment_voucher][:confirmed_at] )
-    
+    params[:payment_voucher][:reconciliation_date] =  parse_date( params[:payment_voucher][:reconciliation_date] )
     @object = PaymentVoucher.find(params[:id])
     
     if params[:confirm].present?  
@@ -153,6 +153,36 @@ class Api::PaymentVouchersController < Api::BaseApiController
       begin
         ActiveRecord::Base.transaction do 
           @object.unconfirm_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+    
+    elsif params[:reconcile].present?    
+      
+      if not current_user.has_role?( :payment_vouchers, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.reconcile_object(:reconciliation_date => params[:payment_voucher][:reconciliation_date] )
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+    elsif params[:unreconcile].present?    
+      
+      if not current_user.has_role?( :payment_vouchers, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unreconcile_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -234,7 +264,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = PaymentVoucher..joins(:contact,:cash_bank).where{  
+      @objects = PaymentVoucher.joins(:contact,:cash_bank).where{  
         ( 
            ( code =~ query)  | 
            ( no_bukti =~ query)  | 
@@ -248,7 +278,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = PaymentVoucher..joins(:contact,:cash_bank).where{  
+      @total = PaymentVoucher.joins(:contact,:cash_bank).where{  
         ( 
            ( code =~ query)  | 
            ( no_bukti =~ query)  | 
@@ -259,14 +289,14 @@ class Api::PaymentVouchersController < Api::BaseApiController
          )
       }.count 
     else
-      @objects = PaymentVoucher.where{ 
+      @objects = PaymentVoucher.joins(:contact,:cash_bank).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = PaymentVoucher.where{ 
+      @total = PaymentVoucher.joins(:contact,:cash_bank).where{ 
           (id.eq selected_id)  
       }.count 
     end

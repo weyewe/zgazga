@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.receiptvoucherdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit ReceiptVoucher Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -14,40 +14,54 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
   initComponent: function() {
 	
 	
-    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-		type : 'array',
-		storeId : 'sales_status_search',
-		fields	: [ 
-			{ name : "is_service"}, 
-			{ name : "is_service_text"}  
-		], 
-		data : [
-			{ is_service : false, is_service_text : "Trading"},
-			{ is_service : true, is_service_text : "Service"}
-		] 
-	});
-	
-	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
+    var remoteJsonStorePayable = Ext.create(Ext.data.JsonStore, {
+		storeId : 'receivable_search',
 		fields	: [
 		 		{
-					name : 'item_sku',
-					mapping : "sku"
+					name : 'receivable_source_code',
+					mapping : "source_code"
 				}, 
 				{
-					name : 'item_name',
-					mapping : 'name'
+					name : 'receivable_source_class',
+					mapping : "source_class"
+				}, 
+				{
+					name : 'receivable_due_date',
+					mapping : 'due_date'
 				},
 				{
-					name : 'item_id',
+					name : 'receivable_amount',
+					mapping : "amount"
+				}, 
+				{
+					name : 'receivable_remaining_amount',
+					mapping : "remaining_amount"
+				}, 
+				{
+					name : 'receivable_contact_name',
+					mapping : "contact_name"
+				}, 
+				{
+					name : 'receivable_remaining_amount',
+					mapping : "remaining_amount"
+				}, 
+				{
+					name : 'receivable_exchange_name',
+					mapping : "exchange_name"
+				}, 
+				{
+					name : 'receivable_exchange_rate_amount',
+					mapping : "exchange_rate_amount"
+				}, 
+				{
+					name : 'receivable_id',
 					mapping : "id"
 				}, 
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_items',
+			url : 'api/search_receivables',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -57,8 +71,6 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 		autoLoad : false 
 	});
 		
-	
-	 
 		
     this.items = [{
       xtype: 'form',
@@ -75,77 +87,60 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-			{
+				{
 	        xtype: 'hidden',
-	        name : 'sales_order_id',
-	        fieldLabel: 'sales_order_id'
+	        name : 'receipt_voucher_id',
+	        fieldLabel: 'receipt_voucher_id'
+	      },
+				{
+					fieldLabel: 'Receivable',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'receivable_source_code',
+					valueField : 'receivable_id',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : remoteJsonStorePayable , 
+					listConfig : {
+						getInnerTpl: function(){
+							return  	'<div data-qtip="{receivable_source_code}">' +  
+													'<div class="combo-name">Code : {receivable_source_code}</div>' +  
+													'<div class="combo-name">Contact : {receivable_contact_name}</div>' +   
+													'<div class="combo-name">Amount : {receivable_amount}</div>' +   
+													'<div class="combo-name">Remaining Amount : {receivable_remaining_amount}</div>' +   
+							 					'</div>';
+						}
+					},
+					name : 'receivable_id' 
+				},
+				{
+	        xtype: 'numberfield',
+	        name : 'rate',
+	        fieldLabel: 'Rate'
 	      },
 	      {
-            xtype: 'displayfield',
-            name : 'sales_order_code',
-            fieldLabel: 'Kode SalesOrder'
-        },
-			{
-				fieldLabel: 'Status',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'is_service_text',
-				valueField : 'is_service',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : localJsonStoreStatus , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{is_service_text}">' +  
-												'<div class="combo-name">{is_service_text}</div>' +  
-						 					'</div>';
-					}
-				},
-				name : 'is_service' 
-			},
-			{
-				fieldLabel: 'Item',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'item_name',
-				valueField : 'item_id',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : remoteJsonStoreItem , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{item_name}">' +  
-												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
-												 "</div>" +  
-						 					'</div>';
-					}
-				},
-				name : 'item_id' 
-			},
-				
-			{
-    	        xtype: 'textfield',
-    	        name : 'amount',
-    	        fieldLabel: 'Quantity'
-    	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
-    	        xtype: 'textfield',
-    	        name : 'price',
-    	        fieldLabel: 'Value per item'
-    	     },
+	        xtype: 'numberfield',
+	        name : 'amount_paid',
+	        fieldLabel: 'Amount Paid'
+	      },
+	      {
+	        xtype: 'displayfield',
+	        name : 'amount',
+	        fieldLabel: 'Amount'
+	      },
+	      {
+	        xtype: 'numberfield',
+	        name : 'pph_23',
+	        fieldLabel: 'PPh 23'
+	      },
+				{
+	        xtype: 'textarea',
+	        name : 'description',
+	        fieldLabel: 'Description'
+	      },
 		
 	 
 			
@@ -209,8 +204,8 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		// this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('receipt_voucher_id').setValue(record.get('id'));
 	}
  
 });

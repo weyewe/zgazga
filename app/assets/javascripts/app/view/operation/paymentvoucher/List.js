@@ -133,7 +133,9 @@ Ext.define('AM.view.operation.paymentvoucher.List' ,{
 			this.confirmObjectButton.show();
 			this.unconfirmObjectButton.hide();
 		}
-		if( selectedObject && selectedObject.get("is_reconciled") == true ){
+		if( selectedObject && selectedObject.get("is_confirmed") == true &&
+		    selectedObject.get("is_gbch") == true && selectedObject.get("is_reconciled") == false)  
+		{
 			this.confirmObjectButton.hide();
 			this.unreconcileObjectButton.show();
 			this.unreconcileObjectButton.enable();

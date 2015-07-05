@@ -12,7 +12,7 @@ class ReceiptVoucher < ActiveRecord::Base
     self
   end
   
-  def active_receipt_voucher_details
+  def active_children
     self.receipt_voucher_details
   end
   
@@ -56,7 +56,7 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.amount = BigDecimal("0")
     new_object.save
     if new_object.save
-      new_object.code = "Pv-" + new_object.id.to_s
+      new_object.code = "Rv-" + new_object.id.to_s
       new_object.save
     end
     return new_object

@@ -62,6 +62,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 			'paymentvoucherProcess paymentvoucherlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
       },
+      
 			'confirmpaymentvoucherform button[action=confirm]' : {
 				click : this.executeConfirm
 			},
@@ -69,7 +70,23 @@ Ext.define('AM.controller.PaymentVouchers', {
 			'unconfirmpaymentvoucherform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
+			
+			'paymentvoucherProcess paymentvoucherlist button[action=reconcileObject]': {
+        click: this.reconcileObject
+      },
 
+			'paymentvoucherProcess paymentvoucherlist button[action=unreconcileObject]': {
+        click: this.unreconcileObject
+      },
+      
+			'reconcilepaymentvoucherform button[action=confirm]' : {
+				click : this.executeReconcile
+			},
+			
+			'unreconcilepaymentvoucherform button[action=confirm]' : {
+				click : this.executeUnreconcile
+			},
+			
 			'paymentvoucherProcess paymentvoucherlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},

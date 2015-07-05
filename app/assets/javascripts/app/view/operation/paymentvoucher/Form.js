@@ -5,7 +5,8 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 
   title : 'Add / Edit PaymentVoucher',
   layout: 'fit',
-	width	: 500,
+	width	: 960,
+	// height : 500,
   autoShow: true,  // does it need to be called?
 	modal : true, 
 // win.show() 
@@ -146,7 +147,7 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 	    						return  	'<div data-qtip="{cash_bank_name}">' + 
 	    												'<div class="combo-name">{cash_bank_name}</div>' + 
 	    												'<div class="combo-name">Deskripsi: {cash_bank_description}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {cash_bank_exchange_name}</div>' + 
+	    												'<div class="combo-name">Currency: {cash_bank_exchange_name}</div>' + 
 	    						 					'</div>';
 	    					}
     					},
@@ -309,9 +310,12 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 			border: false,
       bodyPadding: 10,
 			fieldDefaults: {
-          labelWidth: 165,
+          labelWidth: 100,
 					anchor: '100%'
       },
+			height : 350,
+			overflowY : 'auto', 
+			layout : 'hbox', 
       items: [
    				me.companyInfo(), 
 					me.picInfo()

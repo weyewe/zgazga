@@ -5,32 +5,32 @@ class Api::ReceiptVouchersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = ReceiptVoucher.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = ReceiptVoucher.active_objects.joins(:contact,:cash_bank).where{
          (
-           
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( gbch_no =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( cash_bank.name =~  livesearch) | 
+           ( cash_bank.exchange.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = ReceiptVoucher.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = ReceiptVoucher.active_objects.joins(:contact,:cash_bank).where{
          (
-            
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( gbch_no =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( cash_bank.name =~  livesearch) | 
+           ( cash_bank.exchange.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = ReceiptVoucher.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = ReceiptVoucher.active_objects.joins(:contact,:cash_bank).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = ReceiptVoucher.active_objects.count
      end
      
@@ -41,7 +41,8 @@ class Api::ReceiptVouchersController < Api::BaseApiController
 
   def create
     
-    params[:receipt_voucher][:transaction_datetime] =  parse_date( params[:receipt_voucher][:transaction_datetime] )
+    params[:receipt_voucher][:receipt_date] =  parse_date( params[:receipt_voucher][:receipt_date] )
+    params[:receipt_voucher][:due_date] =  parse_date( params[:receipt_voucher][:due_date] )
     
     
     @object = ReceiptVoucher.create_object( params[:receipt_voucher])
@@ -52,10 +53,23 @@ class Api::ReceiptVouchersController < Api::BaseApiController
                         :receipt_vouchers => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :contact_id => @object.contact_id , 
+                          :contact_name => @object.contact.name , 
+                          :cash_bank_id => @object.cash_bank_id,
+                          :cash_bank_name => @object.cash_bank.name,
+                          :status_pembulatan => @object.status_pembulatan,
+                          :receipt_date => format_date_friendly(@object.receipt_date)  ,
+                          :amount => @object.amount ,
+                          :rate_to_idr => @object.rate_to_idr,
+                          :total_pph_23 => @object.total_pph_23,
+                          :biaya_bank => @object.biaya_bank,
+                          :pembulatan => @object.pembulatan,
+                          :no_bukti => @object.no_bukti , 
+                          :gbch_no => @object.gbch_no,
+                          :is_gbch => @object.is_gbch,
+                          :due_date => format_date_friendly(@object.due_date) ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                          :confirmed_at => format_date_friendly(@object.confirmed_at)  
                           ] , 
                         :total => ReceiptVoucher.active_objects.count }  
     else
@@ -82,13 +96,23 @@ class Api::ReceiptVouchersController < Api::BaseApiController
                       :receipt_vouchers => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :contact_id => @object.contact_id , 
+                          :contact_name => @object.contact.name , 
+                          :cash_bank_id => @object.cash_bank_id,
+                          :cash_bank_name => @object.cash_bank.name,
+                          :status_pembulatan => @object.status_pembulatan,
+                          :receipt_date => format_date_friendly(@object.receipt_date)  ,
+                          :amount => @object.amount ,
+                          :rate_to_idr => @object.rate_to_idr,
+                          :total_pph_23 => @object.total_pph_23,
+                          :biaya_bank => @object.biaya_bank,
+                          :pembulatan => @object.pembulatan,
+                          :no_bukti => @object.no_bukti , 
+                          :gbch_no => @object.gbch_no,
+                          :is_gbch => @object.is_gbch,
+                          :due_date => format_date_friendly(@object.due_date) ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => ReceiptVoucher.active_objects.count  }
@@ -97,6 +121,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
   def update
     params[:receipt_voucher][:transaction_datetime] =  parse_date( params[:receipt_voucher][:transaction_datetime] )
     params[:receipt_voucher][:confirmed_at] =  parse_date( params[:receipt_voucher][:confirmed_at] )
+    params[:receipt_voucher][:reconciliation_date] =  parse_date( params[:receipt_voucher][:reconciliation_date] )
     
     @object = ReceiptVoucher.find(params[:id])
     
@@ -132,7 +157,36 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       else
       end
       
+    elsif params[:reconcile].present?    
       
+      if not current_user.has_role?( :receipt_vouchers, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.reconcile_object(:reconciliation_date => params[:receipt_voucher][:reconciliation_date] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+    
+    elsif params[:unreconcile].present?    
+      
+      if not current_user.has_role?( :receipt_vouchers, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unreconcileObject
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+    
     else
       @object.update_object(params[:receipt_voucher])
     end
@@ -145,15 +199,25 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :receipt_vouchers => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :contact_id => @object.contact_id , 
+                          :contact_name => @object.contact.name , 
+                          :cash_bank_id => @object.cash_bank_id,
+                          :cash_bank_name => @object.cash_bank.name,
+                          :status_pembulatan => @object.status_pembulatan,
+                          :receipt_date => format_date_friendly(@object.receipt_date)  ,
+                          :amount => @object.amount ,
+                          :rate_to_idr => @object.rate_to_idr,
+                          :total_pph_23 => @object.total_pph_23,
+                          :biaya_bank => @object.biaya_bank,
+                          :pembulatan => @object.pembulatan,
+                          :no_bukti => @object.no_bukti , 
+                          :gbch_no => @object.gbch_no,
+                          :is_gbch => @object.is_gbch,
+                          :due_date => format_date_friendly(@object.due_date) ,
+                          :is_confirmed => @object.is_confirmed,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => ReceiptVoucher.active_objects.count  } 
     else
@@ -197,29 +261,39 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = ReceiptVoucher.where{  
+      @objects = ReceiptVoucher.joins(:contact,:cash_bank).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( no_bukti =~ query)  | 
+           ( gbch_no =~ query)  | 
+           ( contact.name =~  query) | 
+           ( cash_bank.name =~  query) | 
+           ( cash_bank.exchange.name =~  query)
          )
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = ReceiptVoucher.where{  
+      @total = ReceiptVoucher.joins(:contact,:cash_bank).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( no_bukti =~ query)  | 
+           ( gbch_no =~ query)  | 
+           ( contact.name =~  query) | 
+           ( cash_bank.name =~  query) | 
+           ( cash_bank.exchange.name =~  query)
          )
       }.count 
     else
-      @objects = ReceiptVoucher.where{ 
+      @objects = ReceiptVoucher.joins(:contact,:cash_bank).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = ReceiptVoucher.where{ 
+      @total = ReceiptVoucher.joins(:contact,:cash_bank).where{ 
           (id.eq selected_id)  
       }.count 
     end

@@ -69,6 +69,10 @@ Ticketie::Application.routes.draw do
     get 'search_receivables' => 'receivables#search', :as => :search_receivable
     get 'search_payment_vouchers' => 'payment_voucher_details#search', :as => :search_payment_voucher
     get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
+    get 'search_receipt_vouchers' => 'receipt_voucher_details#search', :as => :search_receipt_voucher
+    get 'search_receipt_voucher_details' => 'receipt_voucher_details#search', :as => :search_receipt_voucher_detail
+   
+   
     # master data 
     resources :app_users
     resources :contact_groups 
@@ -77,6 +81,7 @@ Ticketie::Application.routes.draw do
     resources :employees
     resources :machines
     resources :roller_types
+    
     # ITEM DB
     resources :item_types  
     resources :sub_types
@@ -138,6 +143,9 @@ Ticketie::Application.routes.draw do
     
     resources :payment_vouchers
     resources :payment_voucher_details
+    
+    resources :receipt_vouchers
+    resources :receipt_voucher_details
     
     resources :blending_recipes
     resources :blending_recipe_details
