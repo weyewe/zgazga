@@ -102,7 +102,7 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Delivery VirtualOrder', 
-				viewClass:'AM.view.operation.VirtuaDeliverylOrder', 
+				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [

@@ -14,7 +14,7 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
     new_object.virtual_order_detail_id = params[:virtual_order_detail_id]
     new_object.amount = params[:amount]
     if new_object.save  
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "Vdo-d" + new_object.id.to_s  
     new_object.item_id = new_object.virtual_order_detail.item_id
     new_object.save
     end

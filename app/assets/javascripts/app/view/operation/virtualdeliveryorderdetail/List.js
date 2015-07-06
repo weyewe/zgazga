@@ -1,19 +1,20 @@
-Ext.define('AM.view.operation.virtualorderdetail.List' ,{
+Ext.define('AM.view.operation.virtualdeliveryorderdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.virtualorderdetaillist',
+  	alias : 'widget.virtualdeliveryorderdetaillist',
 
-  	store: 'VirtualOrderDetails', 
+  	store: 'VirtualDeliveryOrderDetails', 
  
 
 	initComponent: function() {
 		this.columns = [
+		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
+			{ header: 'Item Sku',  dataIndex: 'virtual_order_detail_item_sku', flex: 1},
+			{ header: 'Name',  dataIndex: 'virtual_order_detail_item_name', flex: 1},
     		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
-      		
+    		{ header: 'PendingDelivery Qty',  dataIndex: 'virtual_order_detail_pending_delivery_amount', flex: 2},
+			 
+			 
 		];
 		
 
@@ -75,6 +76,6 @@ Ext.define('AM.view.operation.virtualorderdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("VirtualOrder: " + record.get("code"));
+		this.setTitle("Delivery VirtualOrder: " + record.get("code"));
 	}
 });

@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.deliveryorderdetail.Form', {
+Ext.define('AM.view.operation.virtualdeliveryorderdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.deliveryorderdetailform',
+  alias : 'widget.virtualdeliveryorderdetailform',
 
-  title : 'Add / Edit DeliveryOrderDetail',
+  title : 'Add / Edit DeliveryVirtualOrder Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,39 +13,39 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 	
   initComponent: function() {
 	
-		
-		var remoteJsonStoreSalesOrderDetail = Ext.create(Ext.data.JsonStore, {
-			storeId : 'sales_order_detail_search',
+	
+    var remoteJsonStoreVirtualOrderDetail = Ext.create(Ext.data.JsonStore, {
+			storeId : 'virtual_order_detail_search',
 			fields	: [
 					{
-						name : 'sales_order_detail_id',
+						name : 'virtual_order_detail_id',
 						mapping : "id"
 					}, 
 					{
-						name : 'sales_order_detail_code',
+						name : 'virtual_order_detail_code',
 						mapping : "code"
 					}, 
 					{
-						name : 'sales_order_detail_pending_delivery_amount',
+						name : 'virtual_order_detail_pending_delivery_amount',
 						mapping : "pending_delivery_amount"
 					}, 
 					{
-						name : 'sales_order_detail_item_sku',
+						name : 'virtual_order_detail_item_sku',
 						mapping : "item_sku"
 					}, 
 					{
-						name : 'sales_order_detail_item_name',
+						name : 'virtual_order_detail_item_name',
 						mapping : 'item_name'
 					},
 					{
-						name : 'sales_order_detail_item_id',
+						name : 'virtual_order_detail_item_id',
 						mapping : "item_id"
 					}, 
 		 
 			],
 			proxy  	: {
 				type : 'ajax',
-				url : 'api/search_sales_order_details',
+				url : 'api/search_virtual_order_details',
 				reader : {
 					type : 'json',
 					root : 'records', 
@@ -75,12 +75,12 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 	      },
 			{
 	        xtype: 'hidden',
-	        name : 'delivery_order_id',
-	        fieldLabel: 'delivery_order_id'
+	        name : 'virtual_delivery_order_id',
+	        fieldLabel: 'virtual_delivery_order_id'
 	      },
 	      {
             xtype: 'displayfield',
-            name : 'delivery_order_code',
+            name : 'virtual_delivery_order_code',
             fieldLabel: 'Kode DeliveryOrder'
         },
 			
@@ -89,26 +89,26 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'sales_order_detail_item_name',
-				valueField : 'sales_order_detail_id',
+				displayField : 'virtual_order_detail_item_name',
+				valueField : 'virtual_order_detail_id',
 				pageSize : 5,
 				minChars : 1, 
 				allowBlank : false, 
 				triggerAction: 'all',
-				store : remoteJsonStoreSalesOrderDetail , 
+				store : remoteJsonStoreVirtualOrderDetail , 
 				listConfig : {
 					getInnerTpl: function(){
-						return  	'<div data-qtip="{sales_order_detail_item_name}">' +  
+						return  	'<div data-qtip="{virtual_order_detail_item_name}">' +  
 												'<div class="combo-name">'  +
-															" {sales_order_detail_code} " 		+ "<br />" 	 + 
-															" ({sales_order_detail_item_name}) " 		+ "<br />" 	 + 
-															'{sales_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{sales_order_detail_pending_delivery_amount}' 	+
+															" {virtual_order_detail_code} " 		+ "<br />" 	 + 
+															" ({virtual_order_detail_item_name}) " 		+ "<br />" 	 + 
+															'{virtual_order_detail_item_sku}' 			+ "<br />" 	 +
+															'{virtual_order_detail_pending_delivery_amount}' 	+
 												 "</div>" +  
 						 					'</div>';
 					}
 				},
-				name : 'sales_order_detail_id' 
+				name : 'virtual_order_detail_id' 
 			},
 			
 				
@@ -117,9 +117,6 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
-		
-	 
-			
 			]
     }];
 
@@ -135,36 +132,34 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedSalesOrderDetail: function( sales_order_detail_id ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('sales_order_detail_id'); 
+	setSelectedItem: function( virtual_order_detail_id ){
+		var comboBox = this.down('form').getForm().findField('virtual_order_detail_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : sales_order_detail_id 
+				selected_id : virtual_order_detail_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( sales_order_detail_id );
+				comboBox.setValue( virtual_order_detail_id );
 			}
 		});
 	},
-	
-	
 	
 	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
 		
-		me.setSelectedSalesOrderDetail( record.get("sales_order_detail_id")  ) ;  
+		
+		me.setSelectedItem( record.get("virtual_order_detail_id")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('delivery_order_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('delivery_order_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('virtual_delivery_order_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('virtual_delivery_order_id').setValue(record.get('id'));
 	}
  
 });

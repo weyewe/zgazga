@@ -1,19 +1,17 @@
-Ext.define('AM.view.operation.virtualorder.List' ,{
+Ext.define('AM.view.operation.virtualdeliveryorder.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.virtualorderlist',
+  	alias : 'widget.virtualdeliveryorderlist',
 
-  	store: 'VirtualOrders',  
+  	store: 'VirtualDeliveryOrders',  
  
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			{	header: 'Order Type', dataIndex: 'order_type_text', flex: 2 },
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
+			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
+			{ header: 'Tanggal Delivery', dataIndex: 'delivery_date', flex: 2 },
+		 	{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
+			{ header: 'VirtualOrder',  dataIndex: 'virtual_order_code', flex: 1},
 			
 			
 			
