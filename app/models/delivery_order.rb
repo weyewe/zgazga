@@ -241,15 +241,17 @@ class DeliveryOrder < ActiveRecord::Base
       total_cogs += dod.cogs
       
       
-      
-      BatchSource.create_object( 
-        :item_id  => dod.item_id,
-        :status   =>  ADJUSTMENT_STATUS[:deduction], 
-        :source_class => dod.class.to_s, 
-        :source_id => dod.id , 
-        :generated_date => self.confirmed_at , 
-        :amount => dod.amount 
-      )
+      if dod.item.is_batched?
+        BatchSource.create_object( 
+          :item_id  => dod.item_id,
+          :status   =>  ADJUSTMENT_STATUS[:deduction], 
+          :source_class => dod.class.to_s, 
+          :source_id => dod.id , 
+          :generated_date => self.confirmed_at , 
+          :amount => dod.amount 
+        )
+      end
+
     end
     
     self.total_cogs = total_cogs
@@ -287,10 +289,13 @@ class DeliveryOrder < ActiveRecord::Base
       dod.save
       
       
-      BatchSource.where( 
-        :source_class => dod.class.to_s, 
-        :source_id => dod.id 
-      ).each {|x| x.delete_object } 
+      
+      if dod.item.is_batched?
+        BatchSource.where( 
+          :source_class => dod.class.to_s, 
+          :source_id => dod.id 
+        ).each {|x| x.delete_object } 
+      end
       
       
     end

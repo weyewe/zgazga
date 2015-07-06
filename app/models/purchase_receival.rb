@@ -112,6 +112,14 @@ class PurchaseReceival < ActiveRecord::Base
       return self 
     end
     
+    item_id_list = self.purchase_order_details.map{|x| x.item_id  } 
+    if BatchSourceAllocation.joins(:batch_sources).where{
+      batch_sources.item_id.in item_id_list
+    }.count != 0 
+      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+      return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
@@ -187,6 +195,18 @@ class PurchaseReceival < ActiveRecord::Base
       prd.save    
       total_cogs += prd.cogs
       total_amount += (prd.purchase_order_detail.price * prd.purchase_order_detail.amount)
+      
+        
+        if prd.item.is_batched?
+          BatchSource.create_object( 
+            :item_id  => prd.item_id,
+            :status   =>  ADJUSTMENT_STATUS[:addition], 
+            :source_class => prd.class.to_s, 
+            :source_id => prd.id , 
+            :generated_date => self.confirmed_at , 
+            :amount => prd.amount 
+          )
+        end
     end
     
     self.total_cogs = total_cogs
@@ -217,6 +237,15 @@ class PurchaseReceival < ActiveRecord::Base
       prd.purchase_order_detail.is_all_received == false
       prd.purchase_order_detail.save
       prd.save
+      
+      
+      if prd.item.is_batched?
+        BatchSource.where( 
+          :source_class => prd.class.to_s, 
+          :source_id => prd.id 
+        ).each {|x| x.delete_object } 
+      end
+      
     end
     self.total_cogs = 0
     self.total_amount = 0
