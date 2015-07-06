@@ -29,7 +29,7 @@ class Item < ActiveRecord::Base
     end
   end
   
-  def is_batched
+  def is_batched?
     self.item_type.is_batched? 
   end
   

@@ -1,6 +1,6 @@
 class BatchSource < ActiveRecord::Base
     has_many :batch_source_allocations
-    has_many :batch_instances, :through => :batch_source_allocations
+    has_many :batch_instances, :through => :batch_source_allocation
     
     
     def self.create_object( params ) 
@@ -23,6 +23,7 @@ class BatchSource < ActiveRecord::Base
     
     def update_unallocated_amount(  new_amount  )
         self.unallocated_amount =  self.unallocated_amount + new_amount 
+        self.save 
     end
     
     def delete_object 

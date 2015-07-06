@@ -5,11 +5,27 @@ class BatchInstance < ActiveRecord::Base
     validates_uniqueness_of :name
     
     has_many :batch_source_allocations 
-    has_many :batch_sources, :through => :batch_source_allocations
+    has_many :batch_sources, :through => :batch_source_allocation
     belongs_to :item 
     
     
-
+    validate :item_type_must_be_batch
+    
+    def item_type_must_be_batch
+        return if not item_id.present?
+        
+        object = Item.find_by_id item_id
+        
+        if object.nil?
+            self.errors.add(:item_id, "Harus ada Item")
+            return self 
+        end
+        
+        if not object.is_batched?
+            self.errors.add(:item_id, "Item harus memiliki tipe Batched")
+            return self 
+        end
+    end
       
     def self.create_object( params ) 
         new_object = self.new

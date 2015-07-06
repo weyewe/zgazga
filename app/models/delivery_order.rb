@@ -121,8 +121,8 @@ class DeliveryOrder < ActiveRecord::Base
     end
     
     item_id_list = self.delivery_order_details.map{|x| x.item_id  } 
-    if BatchSourceAllocation.joins(:batch_sources).where{
-      batch_sources.item_id.in item_id_list
+    if BatchSourceAllocation.joins(:batch_source).where{
+      batch_source.item_id.in item_id_list
     }.count != 0 
       self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
       return self 

@@ -3,6 +3,10 @@ class BatchSourceAllocation < ActiveRecord::Base
     belongs_to :batch_instance 
     
     validate :valid_final_batch_instance_amount 
+    
+    validate :valid_final_batch_source_amount
+    
+    
   
     def valid_final_batch_instance_amount
       if status == ADJUSTMENT_STATUS[:deduction]
@@ -10,6 +14,16 @@ class BatchSourceAllocation < ActiveRecord::Base
           self.errors.add(:generic_errors, "Gagal. Jumlah akhir di batch #{batch_instance.name} menjadi negative")
           return self 
         end
+      end
+    end
+    
+    def valid_final_batch_source_amount
+      return if amount == BigDecimal("0")
+      return if batch_source.nil? 
+      
+      if batch_source.amount - amount < BigDecimal("0")
+        self.errors.add(:amount, "Hasil akhir di batch Source tidak boleh negative")
+        return self 
       end
     end
     
@@ -32,6 +46,7 @@ class BatchSourceAllocation < ActiveRecord::Base
           :status => new_object.status ,  
           :mutation_date => new_object.batch_source.generated_date   ,  
           :item_id =>  new_object.batch_source.item_id  ,
+          :batch_instance_id => new_object.batch_instance_id,
           :description => "Base Allocation"
           )  
  
@@ -41,7 +56,7 @@ class BatchSourceAllocation < ActiveRecord::Base
             multiplier * new_object.amount 
            ) 
       
-        new_object.batch_source.update_unallocated_amount(  -1*multiplier *amount )
+        new_object.batch_source.update_unallocated_amount(   -1*new_object.amount )
           
           
       end
@@ -53,7 +68,7 @@ class BatchSourceAllocation < ActiveRecord::Base
     
     def delete_object
       if self.status == ADJUSTMENT_STATUS[:addition]
-        if batch_instance.amount - self.amount <= BigDecimal("0")
+        if batch_instance.amount - self.amount <  BigDecimal("0")
           self.errors.add(:generic_errors, "Gagal. Jumlah akhir di batch #{batch_instance.name} menjadi negative")
           return self 
         end
@@ -61,7 +76,8 @@ class BatchSourceAllocation < ActiveRecord::Base
       
       BatchStockMutation.where(
           :source_class => self.class.to_s, 
-          :source_id => self.id  
+          :source_id => self.id  ,
+          :batch_instance_id => self.batch_instance_id
           ) .each do |x|
       
         x.delete_object 
@@ -71,7 +87,8 @@ class BatchSourceAllocation < ActiveRecord::Base
       multiplier = -1 if self.status == ADJUSTMENT_STATUS[:addition]
       
       batch_instance.update_amount( multiplier*self.amount )
-      batch_source.update_unallocated_amount(  -1*multiplier *amount )
+      
+      batch_source.update_unallocated_amount(   amount )
       
       
       self.destroy 

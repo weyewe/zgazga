@@ -1,4 +1,5 @@
 class BatchStockMutation < ActiveRecord::Base
+  belongs_to :batch_instance
     
     def self.create_object( params ) 
         new_object = self.new
@@ -10,6 +11,7 @@ class BatchStockMutation < ActiveRecord::Base
         new_object.mutation_date    =   params[:mutation_date]      
         new_object.item_id          =   params[:item_id]    
         new_object.description      =   params[:description]     
+        new_object.batch_instance_id = params[:batch_instance_id]
         new_object.save
         
         return new_object 

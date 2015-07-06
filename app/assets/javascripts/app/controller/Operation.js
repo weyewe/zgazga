@@ -223,6 +223,42 @@ Ext.define("AM.controller.Operation", {
 			 
 		]
 	},
+	
+	batchFolder : {
+		text 			: "Batch", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Pendaftaran Batch', 
+				viewClass:'AM.view.operation.BatchInstance', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'batch_instances',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Pengalokasian Batch', 
+				viewClass:'AM.view.operation.BatchAllocation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'batch_allocations',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+ 
+			 
+		]
+	},
  
   
   financeFolder : {
@@ -347,6 +383,7 @@ Ext.define("AM.controller.Operation", {
 		
 		me.folderList = [
 			this.logisticFolder,
+			this.batchFolder, 
 			this.salesFolder,
 			this.purchaseFolder,
  			this.financeFolder,

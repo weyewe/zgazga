@@ -11,6 +11,8 @@ class CreateBatchStockMutations < ActiveRecord::Migration
       t.datetime :mutation_date
       
       t.text :description 
+      
+      t.integer :batch_instance_id
        
       
       

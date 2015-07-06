@@ -63,7 +63,8 @@ ActiveRecord::Schema.define(version: 20150706035325) do
     t.integer  "item_id"
     t.string   "name"
     t.text     "description"
-    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
+    t.datetime "manufactured_at"
+    t.decimal  "amount",          precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -72,28 +73,32 @@ ActiveRecord::Schema.define(version: 20150706035325) do
     t.integer  "batch_source_id"
     t.integer  "batch_instance_id"
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.integer  "status",                                     default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "batch_sources", force: true do |t|
     t.integer  "item_id"
-    t.integer  "status",                                  default: 1
+    t.integer  "status",                                      default: 1
     t.string   "source_class"
     t.integer  "source_id"
     t.datetime "generated_date"
-    t.decimal  "amount",         precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.decimal  "unallocated_amount", precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "batch_stock_mutations", force: true do |t|
     t.integer  "item_id"
-    t.integer  "status",                                 default: 1
+    t.integer  "status",                                     default: 1
     t.string   "source_class"
     t.integer  "source_id"
     t.datetime "mutation_date"
-    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
+    t.text     "description"
+    t.integer  "batch_instance_id"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
