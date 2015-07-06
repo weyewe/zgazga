@@ -26,7 +26,57 @@ Ext.define('AM.view.master.corebuilder.Form', {
 			] 
 		});
 		
+		var remoteJsonStoreUom = Ext.create(Ext.data.JsonStore, {
+			storeId : 'uom_search',
+			fields	: [
+	 				{
+						name : 'uom_name',
+						mapping : "name"
+					},
+					{
+						name : 'uom_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_uoms',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
+		var remoteJsonStoreMachine = Ext.create(Ext.data.JsonStore, {
+			storeId : 'machine_search',
+			fields	: [
+	 				{
+						name : 'machine_name',
+						mapping : "name"
+					},
+					{
+						name : 'machine_code',
+						mapping : "code"
+					},
+					{
+						name : 'machine_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_machines',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
 		
     this.items = [{
@@ -223,5 +273,4 @@ Ext.define('AM.view.master.corebuilder.Form', {
 		me.setSelectedCoreType( record.get("core_builder_type_case")  ) ;
 		
 	}
-});
-
+})
