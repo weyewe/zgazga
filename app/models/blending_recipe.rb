@@ -18,6 +18,10 @@ class BlendingRecipe < ActiveRecord::Base
     self
   end
   
+  def active_children
+    self.blending_recipe_details
+  end
+  
   def target_item
     Item.find_by_id(self.target_item_id)
   end
@@ -36,7 +40,7 @@ class BlendingRecipe < ActiveRecord::Base
   
   def update_object(params)
     if self.blending_recipe_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
     self.name = params[:name]
@@ -50,7 +54,7 @@ class BlendingRecipe < ActiveRecord::Base
   
   def delete_object
     if self.blending_recipe_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errorsB,"Sudah memiliki detail")
       return self
     end
     self.destroy

@@ -34,6 +34,11 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
     self
   end
   
+  def active_children
+    self.temporary_delivery_order_details
+  end
+  
+  
   def self.create_object(params)
     new_object = self.new
     new_object.nomor_surat = params[:nomor_surat]
@@ -42,7 +47,7 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
     new_object.warehouse_id = params[:warehouse_id]
     new_object.delivery_date = params[:delivery_date]
     if new_object.save  
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "Tdo-" + new_object.id.to_s  
     new_object.save
     end
     return new_object

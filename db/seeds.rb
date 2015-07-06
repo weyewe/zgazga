@@ -70,12 +70,13 @@ data_entry = User.create_object(
   :role_id => data_entry_role.id
   )
   
-Account.create_base_objects
-Exchange.create_object_for_base_exchange
-ItemType.create_base_objects
-Exchange.create_object_for_base_exchange
+  
+  Account.create_base_objects
+  Exchange.create_object_for_base_exchange
+  ItemType.create_base_objects
 
 if Rails.env.development?
+
 # if Rails.env.production?
 # if Rails.env.test?
   # creating contact group  
@@ -223,7 +224,7 @@ if Rails.env.development?
       selected_multiplier = multiplier[  rand( 0..(multiplier.length - 1 ))]
       ExchangeRate.create_object(
               :exchange_id => ea.id , 
-              :rate => BigDecimal("10000") * selected_multiplier,
+              :rate => BigDecimal("1") * selected_multiplier,
               :ex_rate_date => DateTime.now 
           )
   end
@@ -456,7 +457,7 @@ if Rails.env.development?
       :due_date => DateTime.now,
       :pembulatan => BigDecimal("0"),
       :biaya_bank => BigDecimal("0"),
-      :rate_to_idr => BigDecimal("10"),
+      :rate_to_idr => BigDecimal("1"),
       :payment_date => DateTime.now,
       :contact_id => selected_contact.id,
       :cash_bank_id => selected_cashbank.id,
@@ -469,7 +470,7 @@ if Rails.env.development?
         :amount_paid => BigDecimal("100"),
         :pph_21 => BigDecimal("0"),
         :pph_23 => BigDecimal("0"),
-        :rate => BigDecimal("10")
+        :rate => BigDecimal("1")
         )
     end
     if payment_voucher.errors.size == 0 
@@ -578,9 +579,11 @@ if Rails.env.development?
   virtual_order_array = []
   (1.upto 10).each do |x|
     selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
     selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
     virtual_order = VirtualOrder.create_object(
       :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
       :exchange_id => selected_exchange.id,
       :order_date => DateTime.now,
       :nomor_surat => "Nomor surat #{x}"

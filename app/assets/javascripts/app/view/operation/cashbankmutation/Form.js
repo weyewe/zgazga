@@ -12,21 +12,45 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 	
   initComponent: function() {
 	
-		var remoteJsonStore = Ext.create(Ext.data.JsonStore, {
-			storeId : 'role_search',
+		var remoteJsonStoreSourceCashBank = Ext.create(Ext.data.JsonStore, {
+			storeId : 'cash_bank_search',
 			fields	: [
 	 				{
-						name : 'role_name',
+						name : 'cash_bank_name',
 						mapping : "name"
 					},
 					{
-						name : 'role_id',
+						name : 'cash_bank_id',
 						mapping : 'id'
 					}
 			],
 			proxy  	: {
 				type : 'ajax',
-				url : 'api/search_role',
+				url : 'api/search_cash_bank',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
+		
+		var remoteJsonStoreTargetCashBank = Ext.create(Ext.data.JsonStore, {
+			storeId : 'cash_bank_search',
+			fields	: [
+	 				{
+						name : 'cash_bank_name',
+						mapping : "name"
+					},
+					{
+						name : 'cash_bank_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_cash_bank',
 				reader : {
 					type : 'json',
 					root : 'records', 
@@ -50,62 +74,75 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
 	        xtype: 'hidden',
 	        name : 'id',
 	        fieldLabel: 'id'
-	      },{
-	        xtype: 'textfield',
-	        name : 'name',
-	        fieldLabel: ' Name'
-	      },{
+	      },
+	      {
+	        xtype: 'displayfield',
+	        name : 'id',
+	        fieldLabel: 'ID'
+	      },
+	      {
+	        xtype: 'displayfield',
+	        name : 'code',
+	        fieldLabel: 'Code'
+	      },
+	      {
 					xtype: 'textfield',
-					name : 'id_number',
-					fieldLabel: 'Nomor ID'
+					name : 'no_bukti',
+					fieldLabel: 'No Bukti'
 				},
 				{
-					xtype: 'textarea',
-					name : 'address',
-					fieldLabel: 'Alamat'
+					fieldLabel: 'Source Cashbank',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'cash_bank_name',
+					valueField : 'cash_bank_id',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : remoteJsonStoreSourceCashBank , 
+					listConfig : {
+						getInnerTpl: function(){
+								return  	'<div data-qtip="{cash_bank_name}">' + 
+		  											'<div class="combo-name">{cash_bank_name}</div>' + 
+		  					 					'</div>';
+							}
+						},
+					name : 'source_cash_bank_id' 
 				},
-				
 				{
-					xtype: 'numberfield',
-					name : 'rt',
-					fieldLabel: 'RT'
+					fieldLabel: 'Target CashBank',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'cash_bank_name',
+					valueField : 'cash_bank_id',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : remoteJsonStoreTargetCashBank , 
+					listConfig : {
+						getInnerTpl: function(){
+								return  	'<div data-qtip="{cash_bank_name}">' + 
+		  											'<div class="combo-name">{cash_bank_name}</div>' + 
+		  					 					'</div>';
+							}
+						},
+					name : 'target_cash_bank_id' 
 				},
-				
-				{
-					xtype: 'numberfield',
-					name : 'rw',
-					fieldLabel: 'RW'
-				},
-				
-				{
-					xtype: 'textfield',
-					name : 'village',
-					fieldLabel: 'Kelurahan'
-				},
-				
-				
-				{
-					xtype: 'textfield',
-					name : 'id_card_number',
-					fieldLabel: 'KTP'
-				},
-				
-				
 				
 				{
 					xtype: 'datefield',
-					name : 'birthday_date',
-					fieldLabel: 'Ulang Tahun',
+					name : 'mutation_date',
+					fieldLabel: 'Tanggal Mutasi',
 					format: 'Y-m-d',
 				},
-				
-				
-				
-				
 				{
-					fieldLabel : 'Data Lengkap?',
-					name : 'is_data_complete',
-					xtype : 'checkbox'
+					xtype: 'numberfield',
+					name : 'amount',
+					fieldLabel: 'Amount'
 				},
 			]
     }];
@@ -122,21 +159,44 @@ Ext.define('AM.view.operation.cashbankmutation.Form', {
     this.callParent(arguments);
   },
 
+
+	setSelectedSourceCashBank: function( source_cash_bank_id ){
+		// console.log("inside set selected original account id ");
+		var comboBox = this.down('form').getForm().findField('source_cash_bank_id'); 
+		var me = this; 
+		var store = comboBox.store;  
+		store.load({
+			params: {
+				selected_id : source_cash_bank_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( source_cash_bank_id );
+			}
+		});
+	},
+	
+	setSelectedTargetCashBank: function( target_cash_bank_id ){
+		// console.log("inside set selected original account id ");
+		var comboBox = this.down('form').getForm().findField('target_cash_bank_id'); 
+		var me = this; 
+		var store = comboBox.store;  
+		store.load({
+			params: {
+				selected_id : target_cash_bank_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( target_cash_bank_id );
+			}
+		});
+	},
+	
 	setComboBoxData : function( record){
-		// console.log("Inside the Form.. edit.. setComboBox data");
-		// var role_id = record.get("role_id");
-		// var comboBox = this.down('form').getForm().findField('role_id'); 
-		// var me = this; 
-		// var store = comboBox.store; 
-		// store.load({
-		// 	params: {
-		// 		selected_id : role_id 
-		// 	},
-		// 	callback : function(records, options, success){
-		// 		me.setLoading(false);
-		// 		comboBox.setValue( role_id );
-		// 	}
-		// });
+		var me = this; 
+		me.setLoading(true);
+		me.setSelectedSourceCashBank( record.get("source_cash_bank_id")  ) ; 
+		me.setSelectedTargetCashBank( record.get("target_cash_bank_id")  ) ; 
 	}
 });
 

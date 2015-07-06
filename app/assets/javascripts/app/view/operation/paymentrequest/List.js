@@ -8,25 +8,18 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
- 
+			{ header: 'No Bukti', dataIndex: 'nomor_surat', flex: 2 },
+			{ header: 'Code',  dataIndex: 'code', flex: 1},
+		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
+		 	{ header: 'Description',  dataIndex: 'description', flex: 2},
+		 	{ header: 'Amount',  dataIndex: 'amount', flex: 2},
+			{ header: 'Request Date', dataIndex: 'request_date', flex: 2 },
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
 			},
 			
 			
@@ -104,18 +97,21 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 	},
 
 	enableRecordButtons: function() {
-		this.editObjectButton.enable();
-		this.deleteObjectButton.enable();
+		this.editObjectButton.enable(); 
 		this.downloadButton.enable();
+ 
+		this.deleteObjectButton.enable(); 
+		this.unconfirmObjectButton.enable();
+		this.confirmObjectButton.enable();
+ 
 		
 		selectedObject = this.getSelectedObject();
 		
 		if( selectedObject && selectedObject.get("is_confirmed") == true ){
 			this.confirmObjectButton.hide();
-			this.unconfirmObjectButton.show();
-			this.unconfirmObjectButton.enable();
+			this.unconfirmObjectButton.show(); 
 		}else{
-			this.confirmObjectButton.enable();
+			
 			this.confirmObjectButton.show();
 			this.unconfirmObjectButton.hide();
 		}
@@ -124,7 +120,20 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
+		this.unconfirmObjectButton.disable();
 		this.confirmObjectButton.disable(); 
 		this.downloadButton.disable();
+		 
+		
+		selectedObject = this.getSelectedObject();
+		
+		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show(); 
+		}else{
+			
+			this.confirmObjectButton.show();
+			this.unconfirmObjectButton.hide();
+		} 
 	}
 });

@@ -31,12 +31,7 @@ Ext.define('AM.view.operation.paymentvoucher.ConfirmForm', {
 				{
 					xtype: 'displayfield',
 					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
+					name: 'payment_date' 
 				},
 				{
 					xtype: 'datefield',
@@ -62,7 +57,6 @@ Ext.define('AM.view.operation.paymentvoucher.ConfirmForm', {
 
 	setParentData: function( record ) {
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
-		this.down('form').getForm().findField('description').setValue(record.get('description')); 
+		this.down('form').getForm().findField('payment_date').setValue(record.get('payment_date')); 
 	}
 });

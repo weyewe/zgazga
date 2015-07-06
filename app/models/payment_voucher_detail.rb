@@ -7,7 +7,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_payment_voucher
@@ -71,20 +71,20 @@ class PaymentVoucherDetail < ActiveRecord::Base
   end
   
   def self.create_object(params)
-    
+    new_object = self.new
     payment_voucher = PaymentVoucher.find_by_id(params[:payment_voucher_id])
     if not payment_voucher.nil?
       if payment_voucher.is_confirmed?
-        self.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return self 
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
       end
     end
-    
-    new_object = self.new
     new_object.payment_voucher_id = params[:payment_voucher_id]
     new_object.payable_id = params[:payable_id]
     new_object.amount_paid = params[:amount_paid]
-    new_object.amount = BigDecimal( params[:amount_paid] ) / BigDecimal( params[:rate] ) 
+ 
+    new_object.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
+ 
     new_object.pph_21 = params[:pph_21]
     new_object.pph_23 = params[:pph_23]
     new_object.rate = BigDecimal( params[:rate] || '0')
@@ -101,7 +101,9 @@ class PaymentVoucherDetail < ActiveRecord::Base
     end
     self.payable_id = params[:payable_id]
     self.amount_paid = params[:amount_paid]
-    self.amount =  BigDecimal( params[:amount_paid] ) / BigDecimal( params[:rate] ) 
+ 
+    self.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
+ 
     self.pph_21 = params[:pph_21]
     self.pph_23 = params[:pph_23]
     self.rate = BigDecimal( params[:rate] || '0')

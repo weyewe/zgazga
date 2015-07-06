@@ -1,25 +1,14 @@
 Ext.define('AM.model.Closing', {
   	extend: 'Ext.data.Model',
   	fields: [
-
     	    { name: 'id', type: 'int' },
-    	    { name: 'sales_date', type: 'string' },
-			{ name: 'nomor_surat', type: 'string' } ,
-			{ name: 'code', type: 'string' } ,
-			
-			{ name: 'contact_id', type: 'int' },
-    	    { name: 'contact_name', type: 'string' },
-    	    
-    	    { name: 'employee_id', type: 'int' },
-    	    { name: 'employee_name', type: 'string' },
-    	    
-    	    { name: 'exchange_id', type: 'int' },
-    	    { name: 'exchange_name', type: 'string' },
-			
-			{ name: 'is_confirmed', type: 'boolean' } , 
-			{ name: 'confirmed_at', type: 'string' }   ,
-			
-			
+    	    { name: 'period', type: 'int' },
+			{ name: 'beginning_period', type: 'string' } ,
+			{ name: 'end_date_period', type: 'string' } ,
+			{ name: 'year_period', type: 'int' } ,
+			{ name: 'is_year_closing', type: 'boolean' },
+    	    { name: 'is_closed', type: 'boolean' },
+    	    { name: 'closed_at', type: 'string' },
   	],
 
 	 

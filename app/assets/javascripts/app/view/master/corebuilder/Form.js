@@ -273,5 +273,4 @@ Ext.define('AM.view.master.corebuilder.Form', {
 		me.setSelectedCoreType( record.get("core_builder_type_case")  ) ;
 		
 	}
-});
-
+})

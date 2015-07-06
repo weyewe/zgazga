@@ -7,7 +7,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_receipt_voucher
@@ -68,10 +68,19 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    receipt_voucher = ReceiptVoucher.find_by_id(params[:receipt_voucher_id])
+    if not receipt_voucher.nil?
+      if receipt_voucher.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.receipt_voucher_id = params[:receipt_voucher_id]
     new_object.receivable_id = params[:receivable_id]
     new_object.amount_paid = params[:amount_paid]
-    new_object.amount =  BigDecimal( params[:amount_paid] )  / BigDecimal( params[:rate] ) 
+ 
+    new_object.amount =  (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
+ 
     new_object.pph_23 = params[:pph_23]
     new_object.rate = params[:rate]
     if new_object.save
@@ -87,7 +96,9 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     end
     self.receivable_id = params[:receivable_id]
     self.amount_paid = params[:amount_paid]
-    self.amount = BigDecimal( params[:amount_paid] )  / BigDecimal( params[:rate] ) 
+ 
+    self.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
+ 
     self.pph_23 = params[:pph_23]
     self.rate = params[:rate]
     if self.save

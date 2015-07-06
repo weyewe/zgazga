@@ -1,13 +1,13 @@
 class VirtualOrderDetail < ActiveRecord::Base
   validates_presence_of :item_id
- 
+  belongs_to :item
   validate :valid_virtual_order
   validate :valid_item
   validate :valid_amount
   belongs_to :virtual_order
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount
@@ -53,23 +53,24 @@ class VirtualOrderDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
-    
+    new_object = self.new
     virtual_order = VirtualOrder.find_by_id(params[:virtual_order_id])
     if not virtual_order.nil?
       if virtual_order.is_confirmed?
-        self.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return self 
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
       end
     end
     
-    new_object = self.new
+   
     new_object.virtual_order_id = params[:virtual_order_id]
     new_object.item_id = params[:item_id]
     new_object.amount = BigDecimal( params[:amount] || '0')
     new_object.pending_delivery_amount = BigDecimal( params[:amount] || '0')
     new_object.price = BigDecimal( params[:price] || '0')
     if new_object.save
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "Vo-D" + new_object.id.to_s  
+      new_object.save
     end
     return new_object
   end

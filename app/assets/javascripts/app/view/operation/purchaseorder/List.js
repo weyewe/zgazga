@@ -7,22 +7,11 @@ Ext.define('AM.view.operation.purchaseorder.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
 			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
 			{ header: 'Tanggal Pembelian', dataIndex: 'purchase_date', flex: 2 },
 		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
 			{ header: 'Currency',  dataIndex: 'exchange_name', flex: 2},
-			
-			
- 
-			{
-				xtype : 'templatecolumn',
-				text : "Konfirmasi",
-				flex : 3,
-				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
-			},
 			
 			
 		];

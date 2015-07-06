@@ -41,7 +41,14 @@ class MemorialDetail < ActiveRecord::Base
   end 
     
   def self.create_object(params)
-    new_object = self.new 
+    new_object = self.new
+    memorial = Memorial.find_by_id(params[:memorial_id])
+    if not memorial.nil?
+      if memorial.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.memorial_id = params[:memorial_id]
     new_object.account_id = params[:account_id]
     new_object.status = params[:status]
@@ -52,6 +59,10 @@ class MemorialDetail < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.memorial.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.memorial_id = params[:memorial_id]
     self.account_id = params[:account_id]
     self.status = params[:status]
@@ -62,6 +73,10 @@ class MemorialDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.memorial.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
     return self
   end

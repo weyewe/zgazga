@@ -3,23 +3,12 @@ Ext.define('AM.model.ClosingDetail', {
   	fields: [
  
 
-	        { name: 'sales_order_id', type: 'int' }, 
+	        { name: 'closing_id', type: 'int' }, 
 	 
     	    { name: 'id', type: 'int' },
-    	    { name: 'amount', type: 'string' },
-    	    { name: 'pending_delivery_amount', type: 'string' },
-			{ name: 'price', type: 'string' } ,
-			{ name: 'code', type: 'string' } ,
-			
-			{ name: 'item_id', type: 'int' },
-    	    { name: 'item_sku', type: 'string' },
-    	    { name: 'item_name', type: 'string' },
-    	    
-    	    { name: 'item_uom_id', type: 'int' },
-    	    { name: 'item_uom_name', type: 'string' }, 
-    	    
-    	    { name: 'is_service', type: 'boolean' }, 
-			{ name: 'is_service_text', type: 'string' }, 
+    	    { name: 'exchange_id', type: 'int' },
+    	    { name: 'exchange_name', type: 'string' },
+    	    { name: 'rate', type: 'string' },
 			
   	],
 

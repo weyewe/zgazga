@@ -3,8 +3,10 @@ class CreateVirtualOrders < ActiveRecord::Migration
     create_table :virtual_orders do |t|
       t.string :code
       t.integer :contact_id
-      t.integer :order_type
+      t.integer :employee_id
       t.datetime :order_date
+      t.integer :order_type
+      t.text :description
       t.string  :nomor_surat
       t.integer :exchange_id
       t.boolean :is_confirmed , :default => false

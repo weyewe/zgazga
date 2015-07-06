@@ -5,32 +5,24 @@ class Api::ClosingsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = Closing.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = Closing.active_objects.where{
          (
-           
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( period =~ livesearch)  | 
+           ( year_period =~ livesearch) 
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = Closing.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = Closing.active_objects.where{
          (
-            
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( period =~ livesearch)  | 
+           ( year_period =~ livesearch) 
          )
        }.count
  
 
      else
-       @objects = Closing.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = Closing.active_objects.page(params[:page]).per(params[:limit]).order("id DESC")
        @total = Closing.active_objects.count
      end
      
@@ -41,7 +33,7 @@ class Api::ClosingsController < Api::BaseApiController
 
   def create
     
-    params[:closing][:transaction_datetime] =  parse_date( params[:closing][:transaction_datetime] )
+    # params[:closing][:transaction_datetime] =  parse_date( params[:closing][:transaction_datetime] )
     
     
     @object = Closing.create_object( params[:closing])
@@ -51,11 +43,13 @@ class Api::ClosingsController < Api::BaseApiController
       render :json => { :success => true, 
                         :closings => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                          :period => @object.period ,
+                          :year_period => @object.year_period , 
+                          :beginning_period => format_date_friendly(@object.beginning_period)  ,
+                          :end_date_period => format_date_friendly(@object.end_date_period)  ,
+                          :is_year_closing => @object.is_year_closing ,
+                          :is_closed => @object.is_closed , 
+                          :closed_at => format_date_friendly(@object.closed_at) 
                           ] , 
                         :total => Closing.active_objects.count }  
     else
@@ -81,22 +75,20 @@ class Api::ClosingsController < Api::BaseApiController
     render :json => { :success => true,   
                       :closings => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
+                          :period => @object.period ,
+                          :year_period => @object.year_period , 
+                          :beginning_period => format_date_friendly(@object.beginning_period)  ,
+                          :end_date_period => format_date_friendly(@object.end_date_period)  ,
+                          :is_year_closing => @object.is_year_closing ,
+                          :is_closed => @object.is_closed , 
+                          :closed_at => format_date_friendly(@object.closed_at) 
                         ],
                       :total => Closing.active_objects.count  }
   end
 
   def update
-    params[:closing][:transaction_datetime] =  parse_date( params[:closing][:transaction_datetime] )
-    params[:closing][:confirmed_at] =  parse_date( params[:closing][:confirmed_at] )
+    # params[:closing][:transaction_datetime] =  parse_date( params[:closing][:transaction_datetime] )
+    params[:closing][:closed_at] =  parse_date( params[:closing][:closed_at] )
     
     @object = Closing.find(params[:id])
     
@@ -108,7 +100,7 @@ class Api::ClosingsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm_object(:confirmed_at => params[:closing][:confirmed_at] ) 
+          @object.close_object(:closed_at => params[:closing][:closed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -126,7 +118,7 @@ class Api::ClosingsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unconfirm_object
+          @object.open_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -145,15 +137,14 @@ class Api::ClosingsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :closings => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                            :id => @object.id, 
+                            :period => @object.period ,
+                            :year_period => @object.year_period , 
+                            :beginning_period => format_date_friendly(@object.beginning_period)  ,
+                            :end_date_period => format_date_friendly(@object.end_date_period)  ,
+                            :is_year_closing => @object.is_year_closing ,
+                            :is_closed => @object.is_closed , 
+                            :closed_at => format_date_friendly(@object.closed_at)
                           ],
                         :total => Closing.active_objects.count  } 
     else
@@ -199,7 +190,8 @@ class Api::ClosingsController < Api::BaseApiController
     if  selected_id.nil?  
       @objects = Closing.where{  
         ( 
-           ( code =~ query )  
+           ( period =~ query)  | 
+           ( year_period =~ query) 
          )
       }.
       page(params[:page]).
@@ -208,7 +200,8 @@ class Api::ClosingsController < Api::BaseApiController
                         
       @total = Closing.where{  
         ( 
-           ( code =~ query )  
+           ( period =~ query)  | 
+           ( year_period =~ query)  
          )
       }.count 
     else

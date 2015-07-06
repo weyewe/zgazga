@@ -31,6 +31,13 @@ class ClosingDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    closing = Closing.find_by_id(params[:closing_id])
+    if not closing.nil?
+      if closing.is_closed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.closing_id = params[:closing_id]
     new_object.exchange_id = params[:exchange_id]
     new_object.rate = BigDecimal("1")
@@ -40,6 +47,10 @@ class ClosingDetail < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.closing.is_closed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.rate = BigDecimal( params[:rate] || '0')
     if self.save
     end
@@ -47,6 +58,11 @@ class ClosingDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.closing.is_closed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
+    return self
   end
 end

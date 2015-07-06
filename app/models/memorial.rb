@@ -1,6 +1,14 @@
 class Memorial < ActiveRecord::Base
   has_many :memorial_details
  
+  def self.active_objects
+    return self
+  end
+  
+  def active_children
+    return self.memorial_details
+  end
+  
   def self.create_object(params)
     new_object = self.new
     new_object.description = params[:description]

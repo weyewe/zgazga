@@ -1,4 +1,4 @@
-Ext.define('AM.model.SalesOrderDetail', {
+	Ext.define('AM.model.SalesOrderDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
  

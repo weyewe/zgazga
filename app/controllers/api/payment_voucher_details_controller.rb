@@ -2,7 +2,7 @@ class Api::PaymentVoucherDetailsController < Api::BaseApiController
   
   def index
     @parent = PaymentVoucher.find_by_id params[:payment_voucher_id]
-    @objects = @parent.active_children.joins(:payment_voucher, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:payment_voucher, :payable).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -82,21 +82,15 @@ class Api::PaymentVoucherDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = PaymentVoucherDetail.joins(:payment_voucher, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
+      @objects = PaymentVoucherDetail.joins(:payment_voucher, :payable).where{ 
+        ( payable.payable_source_code  =~ query  )   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = PaymentVoucherDetail.joins(:payment_voucher, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
+      @total = PaymentVoucherDetail.joins(:payment_voucher, :payable).where{ 
+       ( payable.payable_source_code  =~ query  )  
       }.count
     else
       @objects = PaymentVoucherDetail.where{ 

@@ -8,14 +8,9 @@ Ext.define('AM.view.operation.closingdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
-			
+			{ header: 'ID', dataIndex: 'id', flex: 1},
+			{ header: 'Currency',  dataIndex: 'exchange_name', flex: 1},
+    		{ header: 'Rate',  dataIndex: 'rate', flex: 1}
 			 
 		];
 		
@@ -41,7 +36,7 @@ Ext.define('AM.view.operation.closingdetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [this.editObjectButton]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -78,6 +73,6 @@ Ext.define('AM.view.operation.closingdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("Closing: " + record.get("code"));
+		this.setTitle("Closing: " + record.get("id"));
 	}
 });

@@ -5,16 +5,22 @@ class Closing < ActiveRecord::Base
   validates_presence_of :year_period
   validates_presence_of :beginning_period
   validates_presence_of :end_date_period
-  validates_presence_of :is_year
+  # validates_presence_of :is_year
   
   validate :end_period_must_be_later_than_any_start_period
   
+  
+  def self.active_objects
+    return self
+  end
+  
+  def active_children
+    return self.closing_details
+  end
+  
   def end_period_must_be_later_than_any_start_period
     return if not end_date_period.present? 
-    
     current_end_period = self.end_date_period 
-    
-    
     if self.persisted?
       current_closing_id = self.id 
       if Closing.where{
@@ -23,7 +29,7 @@ class Closing < ActiveRecord::Base
           ( end_date_period.gte current_end_period )
         )
         
-      }.count != 0 
+      }.count > 1
         self.errors.add(:end_period, "Sudah ada closing yang tanggal mulai lebih akhir daripada tanggal end_period anda")
         return self 
       end
@@ -32,7 +38,7 @@ class Closing < ActiveRecord::Base
       if Closing.where{
         ( beginning_period.gte  current_end_period ) | 
         ( end_date_period.gte current_end_period )
-      }.count != 0 
+      }.count > 0 
         self.errors.add(:end_period, "Sudah ada closing yang tanggal mulai lebih akhir daripada tanggal end_period anda")
         return self 
       end
@@ -46,7 +52,7 @@ class Closing < ActiveRecord::Base
     new_object.year_period = params[:year_period]
     new_object.beginning_period = params[:beginning_period]
     new_object.end_date_period = params[:end_date_period]
-    new_object.is_year = params[:is_year]
+    new_object.is_year_closing = params[:is_year_closing]
     if new_object.save
       new_object.generate_closing_detail(new_object.id)
     end
@@ -54,32 +60,32 @@ class Closing < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.is_confirmed? 
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+    if self.is_closed? 
+      self.errors.add(:generic_errors, "Sudah di close")
       return self
     end
     self.period = params[:period]
     self.year_period = params[:year_period]
     self.beginning_period = params[:beginning_period]
     self.end_date_period = params[:end_date_period]
-    self.is_year = params[:is_year]
+    self.is_year_closing = params[:is_year_closing]
     if self.save
       self.closing_details.each do |clsd|
-        csld.delete_object
+        clsd.delete_object
       end
       generate_closing_detail(self.id)
     end
     return self
   end
   
-  def confirm_object(params)
-    if self.is_confirmed? 
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+  def close_object(params)
+    if self.is_closed? 
+      self.errors.add(:generic_errors, "Sudah di close")
       return self
     end
     
-    self.is_confirmed = true
-    self.confirmed_at = params[:confirmed_at]
+    self.is_closed = true
+    self.closed_at = params[:closed_at]
     if self.save
       self.generate_valid_combs
       self.generate_valid_combs_for_non_children
@@ -87,13 +93,13 @@ class Closing < ActiveRecord::Base
     return self
   end
   
-  def unconfirm_object
-    if not self.is_confirmed?
-      self.errors.add(:generic_errors, "belum di konfirmasi")
+  def open_object
+    if not self.is_closed?
+      self.errors.add(:generic_errors, "belum di close")
       return self 
     end
-    self.is_confirmed =false
-    self.confirmed_at = nil
+    self.is_closed =false
+    self.closed_at = nil
     if self.save
       AccountingService::CreateExchangeGainLossJournal.undo_create_exchange_gain_loss_journal(self)
       ValidComb.where(:closing_id => self.id).each do |valid_comb|

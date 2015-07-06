@@ -5,32 +5,28 @@ class Api::PaymentRequestsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PaymentRequest.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = PaymentRequest.active_objects.joins(:contact,:exchange).where{
          (
-           
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( description =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( contact.name =~  livesearch) 
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = PaymentRequest.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = PaymentRequest.active_objects.joins(:contact,:exchange).where{
          (
-            
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( description =~ livesearch)  | 
+           ( no_bukti =~ livesearch)  | 
+           ( contact.name =~  livesearch) 
          )
        }.count
  
 
      else
-       @objects = PaymentRequest.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = PaymentRequest.active_objects.joins(:contact,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = PaymentRequest.active_objects.count
      end
      
@@ -41,7 +37,8 @@ class Api::PaymentRequestsController < Api::BaseApiController
 
   def create
     
-    params[:payment_request][:transaction_datetime] =  parse_date( params[:payment_request][:transaction_datetime] )
+    params[:payment_request][:request_date] =  parse_date( params[:payment_request][:request_date] )
+    params[:payment_request][:due_date] =  parse_date( params[:payment_request][:due_date] )
     
     
     @object = PaymentRequest.create_object( params[:payment_request])
@@ -52,8 +49,13 @@ class Api::PaymentRequestsController < Api::BaseApiController
                         :payment_requests => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :account_id => @object.account_id ,
+                          :no_bukti => @object.no_bukti , 
+                          :description => @object.description , 
+                          :amount => @object.amount , 
+                          :contact_name => @object.contact.name,
+                          :request_date => format_date_friendly(@object.request_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
@@ -82,14 +84,15 @@ class Api::PaymentRequestsController < Api::BaseApiController
                       :payment_requests => [
                           :id => @object.id, 
                           :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :account_id => @object.account_id ,
+                          :no_bukti => @object.no_bukti , 
+                          :description => @object.description , 
+                          :amount => @object.amount , 
+                          :contact_name => @object.contact.name,
+                          :request_date => format_date_friendly(@object.request_date)  ,
+                          :due_date => format_date_friendly(@object.due_date)  ,
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         ],
                       :total => PaymentRequest.active_objects.count  }
   end
@@ -145,15 +148,17 @@ class Api::PaymentRequestsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :payment_requests => [
-                            :id => @object.id,
+                            :id => @object.id, 
                             :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
+                            :account_id => @object.account_id ,
+                            :no_bukti => @object.no_bukti , 
+                            :description => @object.description , 
+                            :amount => @object.amount , 
+                            :contact_name => @object.contact.name,
+                            :request_date => format_date_friendly(@object.request_date)  ,
+                            :due_date => format_date_friendly(@object.due_date)  ,
                             :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => PaymentRequest.active_objects.count  } 
     else

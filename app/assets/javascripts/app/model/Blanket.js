@@ -32,6 +32,11 @@ Ext.define('AM.model.Blanket', {
 		{ name: 'left_over_ac', type: 'string' }     ,
 		{ name: 'special', type: 'string' }     ,
 		{ name: 'application_case', type: 'int' }     ,
+		
+		
+		
+		
+		
   	],
 
 	 

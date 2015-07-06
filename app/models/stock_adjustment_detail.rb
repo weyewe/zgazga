@@ -81,6 +81,14 @@ class StockAdjustmentDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    stock_adjustment = StockAdjustment.find_by_id(params[:stock_adjustment_id])
+    if not stock_adjustment.nil?
+      if stock_adjustment.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
+    
     new_object.stock_adjustment_id = params[:stock_adjustment_id]
     new_object.item_id = params[:item_id]
     new_object.price = params[:price]

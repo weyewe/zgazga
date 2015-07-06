@@ -22,7 +22,7 @@ Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
       },
       items: [
 
-				{
+					{
 					xtype: 'displayfield',
 					fieldLabel: 'Kode',
 					name: 'code' 
@@ -31,12 +31,7 @@ Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
 				{
 					xtype: 'displayfield',
 					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
+					name: 'receipt_date' 
 				},
 				{
 					xtype: 'datefield',
@@ -44,6 +39,7 @@ Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
 					name: 'confirmed_at' ,
 					format: 'Y-m-d',
 				},  
+		 
 		 
 			]
     }];
@@ -61,8 +57,7 @@ Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
   },
 
 	setParentData: function( record ) {
-		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
-		this.down('form').getForm().findField('description').setValue(record.get('description')); 
+			this.down('form').getForm().findField('code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('receipt_date').setValue(record.get('receipt_date')); 
 	}
 });

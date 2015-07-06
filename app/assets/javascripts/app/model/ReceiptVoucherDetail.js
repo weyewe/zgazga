@@ -1,26 +1,24 @@
 Ext.define('AM.model.ReceiptVoucherDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
- 
-
-	        { name: 'sales_order_id', type: 'int' }, 
-	 
-    	    { name: 'id', type: 'int' },
-    	    { name: 'amount', type: 'string' },
-    	    { name: 'pending_delivery_amount', type: 'string' },
-			{ name: 'price', type: 'string' } ,
-			{ name: 'code', type: 'string' } ,
-			
-			{ name: 'item_id', type: 'int' },
-    	    { name: 'item_sku', type: 'string' },
-    	    { name: 'item_name', type: 'string' },
-    	    
-    	    { name: 'item_uom_id', type: 'int' },
-    	    { name: 'item_uom_name', type: 'string' }, 
-    	    
-    	    { name: 'is_service', type: 'boolean' }, 
-			{ name: 'is_service_text', type: 'string' }, 
-			
+      { name: 'id', type: 'int' },
+      { name: 'receipt_voucher_id', type: 'int' }, 
+      { name: 'code', type: 'string' }, 
+      { name: 'amount', type: 'string' }, 
+      { name: 'amount_paid', type: 'string' }, 
+      { name: 'pph_21', type: 'string' }, 
+      { name: 'pph_23', type: 'string' }, 
+      { name: 'receivable_id', type: 'int' }, 
+      { name: 'receivable_source_class', type: 'string' }, 
+      { name: 'receivable_source_code', type: 'string' }, 
+      { name: 'receivable_amount', type: 'string' }, 
+      { name: 'receivable_remaining_amount', type: 'string' }, 
+      { name: 'receivable_exchange_name', type: 'string' }, 
+      { name: 'receivable_exchange_rate_amount', type: 'string' }, 
+      { name: 'receivable_due_date', type: 'string' }, 
+      { name: 'receivable_pending_clearence_amount', type: 'string' }, 
+      { name: 'rate', type: 'string' }, 
+      { name: 'description', type: 'string' }, 
   	],
 
 	 

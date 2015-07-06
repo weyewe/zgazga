@@ -69,7 +69,23 @@ Ext.define('AM.controller.ReceiptVouchers', {
 			'unconfirmreceiptvoucherform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
+			
+			'receiptvoucherProcess receiptvoucherlist button[action=reconcileObject]': {
+        click: this.reconcileObject
+      },
 
+			'receiptvoucherProcess receiptvoucherlist button[action=unreconcileObject]': {
+        click: this.unreconcileObject
+      },
+      
+			'reconcilereceiptvoucherform button[action=confirm]' : {
+				click : this.executeReconcile
+			},
+			
+			'unreconcilereceiptvoucherform button[action=confirm]' : {
+				click : this.executeUnreconcile
+			},
+			
 			'receiptvoucherProcess receiptvoucherlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
@@ -139,7 +155,21 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		
 		// this.reloadRecordView( record, view ) ; 
 	},
+	
+	reconcileObject: function(){
+		// console.log("the startObject callback function");
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('reconcilereceiptvoucherform');
 
+			view.setParentData( record );
+	    view.show();
+		}
+		
+		
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
   updateObject: function(button) {
     var win = button.up('window');
     var form = win.down('form');
@@ -216,6 +246,15 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		// this.reloadRecordView( record, view ) ; 
 	},
 	
+	unreconcileObject: function(){
+		// console.log("the startObject callback function");
+		var view = Ext.widget('unreconcilereceiptvoucherform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+    view.show();
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
 	executeConfirm: function(button){
 		var me = this; 
 		var win = button.up('window');
@@ -262,8 +301,6 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		}
 	},
 	
-	
-	
 	executeUnconfirm: function(button){
 		var me = this; 
 		var win = button.up('window');
@@ -308,7 +345,97 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		}
 	},
 	
+	executeReconcile: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
 
+    var store = this.getReceiptVouchersStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'reconciliation_date' , values['reconciliation_date'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					reconcile: true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					me.reloadRecord( record ) ; 
+					
+					list.enableRecordButtons(); 
+					
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	
+	
+	executeUnreconcile: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getReceiptVouchersStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'reconciliation_date' , values['reconciliation_date'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unreconcile : true 
+				},
+				success : function(record){
+					form.setLoading(false);
+					
+					me.reloadRecord( record ) ; 
+					list.enableRecordButtons(); 
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
 
   deleteObject: function() {
     var record = this.getList().getSelectedObject();

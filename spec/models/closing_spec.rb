@@ -269,14 +269,14 @@ describe Closing do
         :year_period => 2,
         :beginning_period => DateTime.now - 1.years,
         :end_date_period => DateTime.now + 1.months,
-        :is_year => true
+        :is_year_closing => true
         )
     end
     
     it "check all " do
       @rv_1.errors.size.should == 0
       @si_1.errors.size.should == 0
-        
+      @cls.is_year_closing.should == true
     end
     
     it "should create detail" do
@@ -285,20 +285,20 @@ describe Closing do
     
     context "confirm Closing" do
       before(:each) do
-        @cls.confirm_object(:confirmed_at => DateTime.now)
+        @cls.close_object(:closed_at => DateTime.now)
       end
       
     
       it "should confirm Closing" do
-        @cls.is_confirmed.should == true  
+        @cls.is_closed.should == true  
       end 
       
       context "unconfirm closing" do
         before(:each) do
-          @cls.unconfirm_object
+          @cls.open_object
         end
         it "should unconfirm Closing" do
-          @cls.is_confirmed.should == false
+          @cls.is_closed.should == false
         end
       end
       

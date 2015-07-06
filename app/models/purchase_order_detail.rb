@@ -9,7 +9,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
   belongs_to :purchase_order
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
   def valid_amount
@@ -55,14 +55,14 @@ class PurchaseOrderDetail < ActiveRecord::Base
   end 
   
   def self.create_object(params)
+    new_object = self.new
     purchase_order = PurchaseOrder.find_by_id(params[:purchase_order_id])
     if not purchase_order.nil?
       if purchase_order.is_confirmed?
-        self.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return self 
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
       end
     end
-    new_object = self.new
     new_object.purchase_order_id = params[:purchase_order_id]
     new_object.item_id = params[:item_id]
     new_object.amount = BigDecimal( params[:amount] || '0')

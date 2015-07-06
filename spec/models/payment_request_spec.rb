@@ -79,7 +79,6 @@ describe PaymentRequest do
       :contact_id => 123213,
       :request_date => @request_date_1,
       :due_date => @due_date_1,
-      :exchange_id => @exc_1.id,
       :account_id => @coa_1.id
     )
     pr.errors.size.should_not == 0
@@ -91,7 +90,6 @@ describe PaymentRequest do
       :contact_id => @ct_1.id,
       :request_date => nil,
       :due_date => @due_date_1,
-      :exchange_id => @exc_1.id,
       :account_id => @coa_1.id
     )
     pr.errors.size.should_not == 0
@@ -105,7 +103,6 @@ describe PaymentRequest do
       :contact_id => @ct_1.id,
       :request_date => @request_date_1,
       :due_date => nil,
-      :exchange_id => @exc_1.id,
       :account_id => @coa_1.id
     )
     pr.errors.size.should_not == 0
@@ -117,7 +114,6 @@ describe PaymentRequest do
       :contact_id => @ct_1.id,
       :request_date => @request_date_1,
       :due_date => @due_date_1,
-      :exchange_id => @exc_1.id,
       :account_id => 12321312
     )
     pr.errors.size.should_not == 0
@@ -130,7 +126,6 @@ describe PaymentRequest do
         :contact_id => @ct_1.id,
         :request_date => @request_date_1,
         :due_date => @due_date_1,
-        :exchange_id => @exc_1.id,
         :account_id => @coa_1.id
         )
     end
@@ -145,7 +140,6 @@ describe PaymentRequest do
         :contact_id => @ct_2.id,
         :request_date => @request_date_2,
         :due_date => @due_date_2,
-        :exchange_id => @exc_1.id,
         :account_id => @coa_2.id
         )
       @pr.should be_valid
@@ -153,7 +147,6 @@ describe PaymentRequest do
     
       @pr.contact_id.should == @ct_2.id
       @pr.request_date.should == @request_date_2
-      @pr.exchange_id.should == @exc_1.id
       @pr.account_id.should == @coa_2.id
     end
     
@@ -174,7 +167,6 @@ describe PaymentRequest do
         :contact_id => @ct_2.id,
         :request_date => nil,
         :due_date => @due_date_2,
-        :exchange_id => @exc_1.id,
         :account_id => @coa_2.id
       )
       @pr.errors.size.should_not == 0
@@ -186,7 +178,6 @@ describe PaymentRequest do
         :contact_id => @ct_2.id,
         :request_date => @request_date_2,
         :due_date => nil,
-        :exchange_id => @exc_1.id,
         :account_id => @coa_2.id
       )
       @pr.errors.size.should_not == 0
@@ -198,7 +189,6 @@ describe PaymentRequest do
         :contact_id => @ct_2.id,
         :request_date => @request_date_2,
         :due_date => @due_date_2,
-        :exchange_id => @exc_1.id,
         :account_id => 1231
       )
       @pr.errors.size.should_not == 0
@@ -226,7 +216,6 @@ describe PaymentRequest do
           :contact_id => @ct_2.id,
           :request_date => @request_date_2,
           :due_date => @due_date_2,
-          :exchange_id => @exc_1.id,
           :account_id => @coa_2.id
         )
         @pr.errors.size.should_not == 0
@@ -253,7 +242,6 @@ describe PaymentRequest do
             :contact_id => @ct_2.id,
             :request_date => @request_date_2,
             :due_date => @due_date_2,
-            :exchange_id => @exc_1.id,
             :account_id => @coa_2.id
           )
           @pr.errors.size.should_not == 0

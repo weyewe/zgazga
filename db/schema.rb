@@ -290,11 +290,9 @@ ActiveRecord::Schema.define(version: 20150706035325) do
     t.integer  "year_period"
     t.datetime "beginning_period"
     t.datetime "end_date_period"
-    t.boolean  "is_year",          default: false
+    t.boolean  "is_year_closing",  default: false
     t.boolean  "is_closed",        default: false
     t.datetime "closed_at"
-    t.boolean  "is_confirmed",     default: false
-    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -551,6 +549,7 @@ ActiveRecord::Schema.define(version: 20150706035325) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
     t.integer  "exchange_id"
@@ -767,6 +766,7 @@ ActiveRecord::Schema.define(version: 20150706035325) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
     t.integer  "exchange_id"
@@ -1280,8 +1280,10 @@ ActiveRecord::Schema.define(version: 20150706035325) do
   create_table "virtual_orders", force: true do |t|
     t.string   "code"
     t.integer  "contact_id"
-    t.integer  "order_type"
+    t.integer  "employee_id"
     t.datetime "order_date"
+    t.integer  "order_type"
+    t.text     "description"
     t.string   "nomor_surat"
     t.integer  "exchange_id"
     t.boolean  "is_confirmed",          default: false

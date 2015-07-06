@@ -41,7 +41,6 @@ class CashBankMutation < ActiveRecord::Base
   
   def valid_amount
     return if amount.nil? 
-    
     if amount <= BigDecimal("0")
       self.errors.add(:amount, "Harus lebih besar dari 0")
       return self
@@ -55,10 +54,10 @@ class CashBankMutation < ActiveRecord::Base
     new_object.amount =  BigDecimal( params[:amount] || '0')
     new_object.description = params[:description]
     new_object.mutation_date = params[:mutation_date]   
+    new_object.no_bukti = params[:no_bukti]
     new_object.save
     new_object.code = "Cmt-" + new_object.id.to_s  
     new_object.save
-    
     return new_object
   end
    
@@ -72,8 +71,7 @@ class CashBankMutation < ActiveRecord::Base
     self.amount =  BigDecimal( params[:amount] || '0')
     self.description = params[:description]
     self.mutation_date = params[:mutation_date]
-   
-    
+    self.no_bukti = params[:no_bukti]
     self.save
     return self
   end

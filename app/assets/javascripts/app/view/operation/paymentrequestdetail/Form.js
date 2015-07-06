@@ -14,50 +14,35 @@ Ext.define('AM.view.operation.paymentrequestdetail.Form', {
   initComponent: function() {
 	
 	
-    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-		type : 'array',
-		storeId : 'sales_status_search',
-		fields	: [ 
-			{ name : "is_service"}, 
-			{ name : "is_service_text"}  
-		], 
-		data : [
-			{ is_service : false, is_service_text : "Trading"},
-			{ is_service : true, is_service_text : "Service"}
-		] 
-	});
-	
-	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
-		fields	: [
-		 		{
-					name : 'item_sku',
-					mapping : "sku"
-				}, 
-				{
-					name : 'item_name',
-					mapping : 'name'
-				},
-				{
-					name : 'item_id',
-					mapping : "id"
-				}, 
-	 
-		],
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_items',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
+    var remoteJsonStoreAccount = Ext.create(Ext.data.JsonStore, {
+			storeId : 'account_search',
+			fields	: [
+			 		{
+						name : 'account_code',
+						mapping : "code"
+					}, 
+					{
+						name : 'account_name',
+						mapping : 'name'
+					},
+					{
+						name : 'account_id',
+						mapping : "id"
+					}, 
+		 
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_ledger_accounts',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
-	
 	 
 		
     this.items = [{
@@ -75,81 +60,43 @@ Ext.define('AM.view.operation.paymentrequestdetail.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-			{
+				{
 	        xtype: 'hidden',
-	        name : 'sales_order_id',
-	        fieldLabel: 'sales_order_id'
+	        name : 'payment_request_id',
+	        fieldLabel: 'payment_request_id'
 	      },
 	      {
             xtype: 'displayfield',
-            name : 'sales_order_code',
-            fieldLabel: 'Kode SalesOrder'
+            name : 'payment_request_code',
+            fieldLabel: 'Kode PaymentRequest'
         },
-			{
-				fieldLabel: 'Status',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'is_service_text',
-				valueField : 'is_service',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : localJsonStoreStatus , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{is_service_text}">' +  
-												'<div class="combo-name">{is_service_text}</div>' +  
-						 					'</div>';
-					}
+				{
+					fieldLabel: 'Account',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'account_name',
+					valueField : 'account_id',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : remoteJsonStoreAccount , 
+					listConfig : {
+						getInnerTpl: function(){
+							return  	'<div data-qtip="{account_name}">' + 
+  												'<div class="combo-name">Code : {account_code}</div>' + 
+  												'<div class="combo-name">Name: {account_name}</div>' + 
+  						 					'</div>';
+						}
+					},
+					name : 'account_id' 
 				},
-				name : 'is_service' 
-			},
-			{
-				fieldLabel: 'Item',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'item_name',
-				valueField : 'item_id',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : remoteJsonStoreItem , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{item_name}">' +  
-												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
-												 "</div>" +  
-						 					'</div>';
-					}
-				},
-				name : 'item_id' 
-			},
-				
-			{
-    	        xtype: 'textfield',
-    	        name : 'amount',
-    	        fieldLabel: 'Quantity'
-    	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
-    	        xtype: 'textfield',
-    	        name : 'price',
-    	        fieldLabel: 'Value per item'
-    	     },
-		
-	 
-			
-			
+				{
+	        xtype: 'numberfield',
+	        name : 'amount',
+	        fieldLabel: 'Amount'
+		    },
 			]
     }];
 
@@ -165,52 +112,32 @@ Ext.define('AM.view.operation.paymentrequestdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedItem: function( item_id ){
+	setSelectedAccount: function( account_id ){
 		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var comboBox = this.down('form').getForm().findField('account_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : item_id 
+				selected_id : account_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( item_id );
+				comboBox.setValue( account_id );
 			}
 		});
 	},
-	
-	setSelectedStatus: function( is_service ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('is_service'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : is_service 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( is_service );
-			}
-		});
-	},
-	
 	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
-		
-		
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedAccount( record.get("account_id")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('payment_request_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('payment_request_id').setValue(record.get('id'));
 	}
  
 });

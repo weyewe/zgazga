@@ -10,10 +10,10 @@ class PaymentVoucher < ActiveRecord::Base
   
   
   def self.active_objects
-    self.where(:is_deleted => false)
+    self
   end
   
-  def active_payment_voucher_details
+  def active_children
     self.payment_voucher_details
   end
   
