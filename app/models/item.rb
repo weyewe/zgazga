@@ -6,7 +6,8 @@ class Item < ActiveRecord::Base
   belongs_to :sub_type
   has_many :stock_mutations 
   has_many :batched_stock_mutations
-   
+  has_many :batch_instances
+  
    
   validates_presence_of :sku
   validates_uniqueness_of :sku
