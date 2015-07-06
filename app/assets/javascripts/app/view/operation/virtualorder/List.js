@@ -9,10 +9,12 @@ Ext.define('AM.view.operation.virtualorder.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
+			{ header: 'Nomor Surat',  dataIndex: 'nomor_surat', flex: 1},
 			{	header: 'Description', dataIndex: 'description', flex: 2 },
 			{	header: 'Customer', dataIndex: 'contact_name', flex: 2 },
 			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
 			{	header: 'Marketing', dataIndex: 'employee_name', flex: 2 },
+			{	header: 'Tipe Order', dataIndex: 'order_type_text', flex: 2 },
 			{	header: 'Tanggal Order', dataIndex: 'order_date', flex: 2 },
 			{
 				xtype : 'templatecolumn',

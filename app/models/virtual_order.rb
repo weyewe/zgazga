@@ -56,6 +56,7 @@ class VirtualOrder < ActiveRecord::Base
     new_object.contact_id = params[:contact_id]
     new_object.employee_id = params[:employee_id]
     new_object.order_date = params[:order_date]
+    new_object.order_type = params[:order_type]
     new_object.description = params[:description]
     new_object.nomor_surat = params[:nomor_surat]
     new_object.exchange_id = params[:exchange_id]
@@ -79,6 +80,7 @@ class VirtualOrder < ActiveRecord::Base
     self.employee_id = params[:employee_id]
     self.description = params[:description]
     self.order_date = params[:order_date]
+    self.order_type = params[:order_type]
     self.nomor_surat = params[:nomor_surat]
     self.exchange_id = params[:exchange_id]
     self.save 

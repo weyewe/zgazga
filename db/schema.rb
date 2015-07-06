@@ -1242,6 +1242,7 @@ ActiveRecord::Schema.define(version: 20150701140322) do
     t.integer  "contact_id"
     t.integer  "employee_id"
     t.datetime "order_date"
+    t.integer  "order_type"
     t.text     "description"
     t.string   "nomor_surat"
     t.integer  "exchange_id"

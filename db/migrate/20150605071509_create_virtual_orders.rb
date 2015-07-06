@@ -5,6 +5,7 @@ class CreateVirtualOrders < ActiveRecord::Migration
       t.integer :contact_id
       t.integer :employee_id
       t.datetime :order_date
+      t.integer :order_type
       t.text :description
       t.string  :nomor_surat
       t.integer :exchange_id

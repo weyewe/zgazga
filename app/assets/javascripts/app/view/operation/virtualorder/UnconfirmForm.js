@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.virtualorder.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmvirtualorderform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Unconfirm VirtualOrder',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?

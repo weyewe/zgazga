@@ -12,8 +12,22 @@ Ext.define('AM.view.operation.virtualorder.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-			var me = this; 
-	
+		var me = this; 
+		
+		var localJsonStoreOrderType = Ext.create(Ext.data.Store, {
+			type : 'array',
+			storeId : 'order_type_case',
+			fields	: [ 
+				{ name : "order_type"}, 
+				{ name : "order_type_text"}  
+			], 
+			data : [
+				{ order_type : 0, order_type_text : "Trial Order"},
+				{ order_type : 1, order_type_text : "Sample Order"},
+				{ order_type : 2, order_type_text : "Consignment"},
+			] 
+		});
+		
 		var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
 		storeId : 'contact_search',
 		fields	: [
@@ -118,101 +132,119 @@ Ext.define('AM.view.operation.virtualorder.Form', {
 					anchor: '100%'
       },
       items: [
-   					{
-        	        xtype: 'hidden',
-        	        name : 'id',
-        	        fieldLabel: 'id'
+   						{
+      	        xtype: 'hidden',
+      	        name : 'id',
+      	        fieldLabel: 'id'
     	        },
     	        {
     		        xtype: 'displayfield',
     		        name : 'code',
     		        fieldLabel: 'Kode'
     		  	  },
-    		  	{
-					xtype: 'textfield',
-					fieldLabel : 'Nomor Surat',
-					name : 'nomor_surat'
-				},
-    		    {
-    					xtype: 'datefield',
-    					name : 'order_date',
-    					fieldLabel: 'Tanggal Order',
-    					format: 'Y-m-d',
-    				},
-    				{
-        	        xtype: 'textarea',
-        	        name : 'description',
-        	        fieldLabel: 'Deskripsi'
-    	      },
-    	        
-    	      {
-	    				fieldLabel: 'Contact',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
-    				
-    				{
-	    				fieldLabel: 'Marketing',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'employee_name',
-	    				valueField : 'employee_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreEmployee , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{employee_name}">' + 
-	    												'<div class="combo-name">{employee_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'employee_id' 
-    				},
-    				
-    				{
-	    				fieldLabel: 'Currency',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'exchange_name',
-	    				valueField : 'exchange_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreExchange , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{exchange_name}">' + 
-	    												'<div class="combo-name">{exchange_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'exchange_id' 
-    				},
+	    		  	{
+								xtype: 'textfield',
+								fieldLabel : 'Nomor Surat',
+								name : 'nomor_surat'
+							},
+	    		    {
+	    					xtype: 'datefield',
+	    					name : 'order_date',
+	    					fieldLabel: 'Tanggal Order',
+	    					format: 'Y-m-d',
+	    				},
+	    				{
+      	        xtype: 'textarea',
+      	        name : 'description',
+      	        fieldLabel: 'Deskripsi'
+	    	      },
+    	        {
+		    				fieldLabel: 'Order Type',
+		    				xtype: 'combo',
+		    				queryMode: 'remote',
+		    				forceSelection: true, 
+		    				displayField : 'order_type_text',
+		    				valueField : 'order_type',
+		    				pageSize : 5,
+		    				minChars : 1, 
+		    				allowBlank : false, 
+		    				triggerAction: 'all',
+		    				store : localJsonStoreOrderType , 
+		    				listConfig : {
+		    					getInnerTpl: function(){
+		    						return  	'<div data-qtip="{order_type_text}">' + 
+		    												'<div class="combo-name">{order_type_text}</div>' + 
+		    						 					'</div>';
+		    					}
+	    					},
+	    					name : 'order_type' 
+	    	      },
+	    	      {
+		    				fieldLabel: 'Contact',
+		    				xtype: 'combo',
+		    				queryMode: 'remote',
+		    				forceSelection: true, 
+		    				displayField : 'contact_name',
+		    				valueField : 'contact_id',
+		    				pageSize : 5,
+		    				minChars : 1, 
+		    				allowBlank : false, 
+		    				triggerAction: 'all',
+		    				store : remoteJsonStoreContact , 
+		    				listConfig : {
+		    					getInnerTpl: function(){
+		    						return  	'<div data-qtip="{contact_name}">' + 
+		    												'<div class="combo-name">{contact_name}</div>' + 
+		    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
+		    						 					'</div>';
+		    					}
+	    					},
+	    					name : 'contact_id' 
+	    	      },
+	    				{
+		    				fieldLabel: 'Marketing',
+		    				xtype: 'combo',
+		    				queryMode: 'remote',
+		    				forceSelection: true, 
+		    				displayField : 'employee_name',
+		    				valueField : 'employee_id',
+		    				pageSize : 5,
+		    				minChars : 1, 
+		    				allowBlank : false, 
+		    				triggerAction: 'all',
+		    				store : remoteJsonStoreEmployee , 
+		    				listConfig : {
+		    					getInnerTpl: function(){
+		    						return  	'<div data-qtip="{employee_name}">' + 
+		    												'<div class="combo-name">{employee_name}</div>' + 
+		    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
+		    						 					'</div>';
+		    					}
+	    					},
+	    					name : 'employee_id' 
+	    				},
+	    				{
+		    				fieldLabel: 'Currency',
+		    				xtype: 'combo',
+		    				queryMode: 'remote',
+		    				forceSelection: true, 
+		    				displayField : 'exchange_name',
+		    				valueField : 'exchange_id',
+		    				pageSize : 5,
+		    				minChars : 1, 
+		    				allowBlank : false, 
+		    				triggerAction: 'all',
+		    				store : remoteJsonStoreExchange , 
+		    				listConfig : {
+		    					getInnerTpl: function(){
+		    						return  	'<div data-qtip="{exchange_name}">' + 
+		    												'<div class="combo-name">{exchange_name}</div>' + 
+		    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
+		    						 					'</div>';
+		    					}
+	    					},
+	    					name : 'exchange_id' 
+	    				},
 			]
     }];
 
@@ -242,6 +274,22 @@ Ext.define('AM.view.operation.virtualorder.Form', {
 			}
 		});
 	},
+	
+	setSelectedOrderType: function( order_type ){
+		var comboBox = this.down('form').getForm().findField('order_type'); 
+		var me = this; 
+		var store = comboBox.store; 
+		store.load({
+			params: {
+				selected_id : order_type 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( order_type );
+			}
+		});
+	},
+	
 	
 	setSelectedEmployee: function( employee_id ){
 		var comboBox = this.down('form').getForm().findField('employee_id'); 
@@ -277,7 +325,7 @@ Ext.define('AM.view.operation.virtualorder.Form', {
 
 		var me = this; 
 		me.setLoading(true);
-		
+		me.setSelectedOrderType( record.get("order_type")  ) ;
 		me.setSelectedEmployee( record.get("employee_id")  ) ;
 		me.setSelectedExchange( record.get("exchange_id")  ) ;
 		me.setSelectedCustomer( record.get("contact_id")  ) ;
