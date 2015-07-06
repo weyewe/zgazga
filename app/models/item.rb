@@ -4,7 +4,10 @@ class Item < ActiveRecord::Base
   belongs_to :exchange
   belongs_to :uom 
   belongs_to :sub_type
-  
+  has_many :stock_mutations 
+  has_many :batched_stock_mutations
+   
+   
   validates_presence_of :sku
   validates_uniqueness_of :sku
   validates_presence_of :name
@@ -23,6 +26,10 @@ class Item < ActiveRecord::Base
       self.errors.add(:uom_id, "Harus ada uom_id")
       return self
     end
+  end
+  
+  def is_batched
+    self.item_type.is_batched? 
   end
   
   def self.compounds
@@ -178,6 +185,12 @@ class Item < ActiveRecord::Base
     self.selling_price =  BigDecimal( params[:selling_price] || '0') 
     self.exchange_id = params[:exchange_id]
     self.price_list =  BigDecimal( params[:price_list] || '0') 
+    
+    if batched_stock_mutations.count != 0 
+      self.errors.add(:item_type_id, "Tidak bisa mengubah item type karena sudah ada batch stock mutation")
+      return self 
+    end
+    
     self.save
     return self
   end
