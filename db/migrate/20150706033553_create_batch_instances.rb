@@ -6,6 +6,8 @@ class CreateBatchInstances < ActiveRecord::Migration
       t.string :name
       t.text :description 
       
+      t.datetime :manufactured_at 
+      
       t.decimal :amount, :default => 0 , :default => 0,  :precision => 14, :scale => 2      
 
       t.timestamps

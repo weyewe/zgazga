@@ -17,6 +17,7 @@ class BatchInstance < ActiveRecord::Base
         new_object.item_id         = params[:item_id]
         new_object.name            = params[:name]
         new_object.description     = params[:description]    
+        new_object.manufactured_at = params[:manufactured_at]
         
         new_object.save
         
@@ -28,6 +29,7 @@ class BatchInstance < ActiveRecord::Base
          
         self.name            = params[:name]
         self.description     = params[:description]    
+        self.manufactured_at = params[:manufactured_at]
         self.save 
         
         return self 
