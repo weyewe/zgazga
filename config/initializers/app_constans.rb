@@ -353,4 +353,4 @@ BASE_ITEM_TYPE = {
 } 
 
 EXCHANGE_BASE_NAME = "Rupiah"
-
+ 
