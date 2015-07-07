@@ -11,7 +11,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch) |
            ( virtual_order.code =~  livesearch) |
-           ( virtual_order.contact.name =~  livesearch) |
+          # ( virtual_order.contact.name =~  livesearch) |
            ( virtual_order.nomor_surat =~  livesearch)
          )
 
@@ -23,7 +23,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch) |
            ( virtual_order.code =~  livesearch) |
-           ( virtual_order.contact.name =~  livesearch) |
+          # ( virtual_order.contact.name =~  livesearch) |
            ( virtual_order.nomor_surat =~  livesearch)
          )
        }.count
@@ -212,7 +212,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
            ( code =~ query)  | 
            ( warehouse.name =~  query) |
            ( virtual_order.code =~  query) |
-           ( virtual_order.contact.name =~  query) |
+          # ( virtual_order.contact.name =~  query) |
            ( virtual_order.nomor_surat =~  query)
          )
       }.
@@ -226,7 +226,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
            ( code =~ query)  | 
            ( warehouse.name =~  query) |
            ( virtual_order.code =~  query) |
-           ( virtual_order.contact.name =~  query) |
+          # ( virtual_order.contact.name =~  query) |
            ( virtual_order.nomor_surat =~  query)
          )
       }.count 

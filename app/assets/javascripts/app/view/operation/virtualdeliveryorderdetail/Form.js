@@ -113,7 +113,7 @@ Ext.define('AM.view.operation.virtualdeliveryorderdetail.Form', {
 			
 				
 			{
-    	        xtype: 'textfield',
+    	        xtype: 'numberfield',
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
