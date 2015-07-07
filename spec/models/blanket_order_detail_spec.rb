@@ -296,9 +296,11 @@ describe BlanketOrderDetail do
   
   context "create BlanketOrderDetail" do
     before(:each) do
+      @quantity = 5 
       @bod = BlanketOrderDetail.create_object(
           :blanket_order_id => @bo.id,
-          :blanket_id => @blanket_1.id
+          :blanket_id => @blanket_1.id,
+          :quantity => @quantity 
           )
     end
     
@@ -330,11 +332,17 @@ describe BlanketOrderDetail do
           @bod.finish_object(
             :finished_at => DateTime.now,
             :roll_blanket_usage => 5,
-            :roll_blanket_defect => 5
+            :roll_blanket_defect => 5,
+            :finished_quantity => 3,
+            :rejected_quantity => 1
             )
+              
+     
+    
         end
         
         it "should finish BlanketOrderDetail" do
+          @bod.errors.messages.each {|x| puts "THE MESSAGE IS #{x}" } 
           @bod.errors.size.should == 0
           @bod.is_finished.should == true
         end
@@ -351,33 +359,7 @@ describe BlanketOrderDetail do
         end
         
       end
-      context "reject BlanketOrderDetail" do
-        before(:each) do
-          @bod.reject_object(
-          :rejected_date => DateTime.now,
-          :roll_blanket_usage => 5,
-          :roll_blanket_defect => 5
-          )
-        end
-        
-        it "should reject BlanketOrderDetail" do
-          @bod.errors.size.should == 0
-          @bod.is_rejected.should == true
-        end
-        
-        context "undo reject BlanketOrderDetail" do
-          before(:each) do
-            @bod.unreject_object
-          end
-          
-          it "should unreject BlanketOrderDetail" do
-            @bod.errors.size.should == 0
-            @bod.is_rejected.should == false
-          end
-          
-        end
-        
-      end
+ 
     
     end
     

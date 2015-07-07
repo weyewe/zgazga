@@ -429,9 +429,11 @@ describe BlanketOrder do
     
     context "Create BlanketOrderDetail" do
       before(:each) do
+        @quantity = 5 
         @bod = BlanketOrderDetail.create_object(
           :blanket_order_id => @bo.id,
-          :blanket_id => @blanket_1.id
+          :blanket_id => @blanket_1.id,
+          :quantity => @quantity 
           )
       end
       

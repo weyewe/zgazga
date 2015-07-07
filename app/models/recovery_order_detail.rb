@@ -97,8 +97,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
     return self if self.errors.size != 0 
-    
-    self.compound_batch_instance_id = params[:batch_instance_id]
+     
     self.compound_usage = BigDecimal( params[:compound_usage] || '0')
     self.compound_under_layer_usage = BigDecimal( params[:compound_under_layer_usage] || '0')
     self.is_disassembled = params[:is_disassembled]
@@ -116,51 +115,13 @@ class RecoveryOrderDetail < ActiveRecord::Base
     return self
   end
   
-  def compound_batch_instance
-    BatchInstance.find_by_id self.compound_batch_instance_id
-  end
-  
-  def create_batch_stock_mutation( text ) 
-      new_batch_stock_mutation = BatchStockMutation.create_object(
-        :source_class => self.class.to_s, 
-        :source_id => self.id ,  
-        :amount => self.amount ,  
-        :status => ADJUSTMENT_STATUS[:deduction] ,  
-        :mutation_date => self.finished_date   ,  
-        :item_id =>  compound_batch_instance.item_id  ,
-        :batch_instance_id => compound_batch_instance.id ,
-        :description => "[Recovery #{text}] recovery order code: #{self.recovery_order.code}, RIF Detail: #{self.roller_identification_form_detail.detail_id} "
-        )
-  end
-  
-  def delete_batch_stock_mutation
-    BatchStockMutation.where(
-        :source_class => self.class.to_s,
-        :source_id => self.id 
-      ).each {|x| x.delete_object }
-  end
-  
-  def ensure_compound_batch_and_amount_is_valid
-    if compound_batch_instance.nil?
-      self.errors.add(:generic_errors, "Harus memilih batch compound di Process")
-      return self 
-    end
     
-    if self.compound_usage.nil? or self.compound_usage <= BigDecimal("0")
-      self.errors.add(:generic_errors, "Harus ada penggunaan compound")
-      return self 
-    end
-    
-    if compound_batch_instance.amount - self.compound_usage < BigDecimal("0")
-      self.errors.add(:generic_errors, "Tidak cukup kuantitas di batch #{compound_batch_instance.name}")
-      return self 
-    end
-    
-  end
+  
+
   
   def finish_object(params)
     
-    self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
+    # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
     
     
@@ -171,8 +132,8 @@ class RecoveryOrderDetail < ActiveRecord::Base
       # create batch stock mutation
       # update amount in the batch_instance
             # create batch stock mutation
-      self.create_batch_stock_mutation( "FINISH")
-      self.update_batch_instance_amount( -1*self.compound_usage )
+      # self.create_batch_stock_mutation( "FINISH")
+      # self.update_batch_instance_amount( -1*self.compound_usage )
   
 
     
@@ -283,8 +244,8 @@ class RecoveryOrderDetail < ActiveRecord::Base
     self.is_finished = false
     self.finished_date = nil
     if self.save
-      self.delete_batch_stock_mutation 
-      self.update_batch_instance_amount( self.compound_usage )
+      # self.delete_batch_stock_mutation 
+      # self.update_batch_instance_amount( self.compound_usage )
       
       complete_recovery_order
       total_cost = self.total_cost
@@ -337,15 +298,15 @@ class RecoveryOrderDetail < ActiveRecord::Base
   end
   
   def reject_object(params)
-    self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
+    # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
     
     self.is_rejected = true
     self.rejected_date = params[:rejected_date]
     if self.save
 
-      self.create_batch_stock_mutation( "REJECT")
-      self.update_batch_instance_amount( self.compound_usage )
+      # self.create_batch_stock_mutation( "REJECT")
+      # self.update_batch_instance_amount( self.compound_usage )
       
       calculate_total_cost
       update_recovery_order_amount_rejected(:recovery_order_id => self.recovery_order_id,:amount => 1)
@@ -388,8 +349,8 @@ class RecoveryOrderDetail < ActiveRecord::Base
     self.is_rejected = false
     self.rejected_date = nil
     if self.save
-      self.delete_batch_stock_mutation 
-      self.update_batch_instance_amount( self.compound_usage )
+      # self.delete_batch_stock_mutation 
+      # self.update_batch_instance_amount( self.compound_usage )
       
       self.total_cost = 0
       self.accessories_cost = 0

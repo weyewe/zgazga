@@ -99,7 +99,7 @@ class BlanketOrderDetail < ActiveRecord::Base
     multiplier = 1 
     multiplier = -1 if is_cancelation == true 
     
-    self.item.calculate_avg_price(:added_amount => added_amount,:added_avg_price => multiplier * added_avg_price) 
+    self.blanket.item.calculate_avg_price(:added_amount => added_amount,:added_avg_price => multiplier * added_avg_price) 
   end
    
   

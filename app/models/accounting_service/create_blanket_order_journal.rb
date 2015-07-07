@@ -135,7 +135,7 @@ module AccountingService
       # for the finished case 
       total_finished_cost  =  (blanket_order_detail.total_cost * blanket_order_detail.finished_quantity_ratio  ).round(2)
       finished_roll_blanket_cost  =  (blanket_order_detail.manufacturing_used_roll_blanket_cost * blanket_order_detail.finished_quantity_ratio    ).round(2)
-      finished_bar_cost = total_finished_cost - finished_roll_blanket_cost - finished_adhesive_cost
+      finished_bar_cost = total_finished_cost - finished_roll_blanket_cost  
       
       # for the reject case
       total_rejected_cost =  blanket_order_detail.total_cost  - total_finished_cost

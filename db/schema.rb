@@ -63,7 +63,8 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "item_id"
     t.string   "name"
     t.text     "description"
-    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
+    t.datetime "manufactured_at"
+    t.decimal  "amount",          precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -72,28 +73,32 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "batch_source_id"
     t.integer  "batch_instance_id"
     t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
+    t.integer  "status",                                     default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "batch_sources", force: true do |t|
     t.integer  "item_id"
-    t.integer  "status",                                  default: 1
+    t.integer  "status",                                      default: 1
     t.string   "source_class"
     t.integer  "source_id"
     t.datetime "generated_date"
-    t.decimal  "amount",         precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.decimal  "unallocated_amount", precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "batch_stock_mutations", force: true do |t|
     t.integer  "item_id"
-    t.integer  "status",                                 default: 1
+    t.integer  "status",                                     default: 1
     t.string   "source_class"
     t.integer  "source_id"
     t.datetime "mutation_date"
-    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
+    t.text     "description"
+    t.integer  "batch_instance_id"
+    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -307,11 +312,9 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "year_period"
     t.datetime "beginning_period"
     t.datetime "end_date_period"
-    t.boolean  "is_year",          default: false
+    t.boolean  "is_year_closing",  default: false
     t.boolean  "is_closed",        default: false
     t.datetime "closed_at"
-    t.boolean  "is_confirmed",     default: false
-    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -568,6 +571,7 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
     t.integer  "exchange_id"
@@ -784,6 +788,7 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
     t.integer  "exchange_id"
@@ -830,7 +835,6 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.decimal  "compound_under_layer_usage",           precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "compound_batch_instance_id"
   end
 
   create_table "recovery_orders", force: true do |t|
@@ -1298,8 +1302,10 @@ ActiveRecord::Schema.define(version: 20150707065149) do
   create_table "virtual_orders", force: true do |t|
     t.string   "code"
     t.integer  "contact_id"
-    t.integer  "order_type"
+    t.integer  "employee_id"
     t.datetime "order_date"
+    t.integer  "order_type"
+    t.text     "description"
     t.string   "nomor_surat"
     t.integer  "exchange_id"
     t.boolean  "is_confirmed",          default: false
