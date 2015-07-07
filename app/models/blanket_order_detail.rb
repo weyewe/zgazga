@@ -228,10 +228,10 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.roll_blanket_usage = 0
     self.roll_blanket_defect = 0
     # deduce blanket_order_amount_final
-    self.update_blanket_order_amount_final(
-      :blanket_order_id => self.blanket_order_id,
-      :amount => -1
-      )
+    # self.update_blanket_order_amount_final(
+    #   :blanket_order_id => self.blanket_order_id,
+    #   :amount => -1
+    #   )
     self.complete_blanket_order
     # revese stock_mutation
     StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
