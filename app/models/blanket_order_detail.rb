@@ -204,14 +204,7 @@ class BlanketOrderDetail < ActiveRecord::Base
         )
       self.complete_blanket_order
       # create journal blanket order finish
-      AccountingService::CreateBlanketOrderJournal.create_finish_journal(self)
-      if self.rejected_quantity != 0 
-        AccountingService::CreateBlanketOrderJournal.create_reject_journal(self)  # expense the manufactured blanket (FAIL)
-      end 
-      
-      if self.roll_blanket_defect != BigDecimal("0")
-        AccountingService::CreateBlanketOrderJournal.create_defect_journal(self)  # expense the defect roll blanket
-      end 
+      AccountingService::CreateBlanketOrderJournal.create_finish_journal(self) 
     end
   end
   
@@ -248,116 +241,8 @@ class BlanketOrderDetail < ActiveRecord::Base
     AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
   end
   
-  def reject_object(params)
-    if params[:rejected_date].nil?
-      self.errors.add(:rejected_date,"Rejected Date tidak boleh kosong")
-      return self
-    end
-    if self.blanket_order.is_confirmed == false
-      self.errors.add(:generic,"Belum di confirm")
-      return self
-    end
-    if self.is_finished == true
-      self.errors.add(:generic,"Sudah di finish")
-      return self
-    end
-    if self.is_rejected == true
-      self.errors.add(:generic,"Sudah di reject")
-      return self
-    end
-    if params[:roll_blanket_usage] <= 0
-      self.errors.add(:roll_blanket_usage,"Belum di isi")
-      return self
-    end
-    item = WarehouseItem.find_or_create_object(
-      :warehouse_id => self.blanket_order.warehouse_id,
-      :item_id => self.blanket.roll_blanket_item_id
-      )
-    if item.amount < params[:roll_blanket_usage] 
-      self.errors.add(:roll_blanket_defect,"Stock quantity Roll Blanket kurang dari #{params[:roll_blanket_usage]}")
-      return self
-    end
-    self.roll_blanket_usage = params[:roll_blanket_usage]
-    self.is_rejected = true
-    self.rejected_date = params[:rejected_date]
-    if self.save
-    self.calculate_total_cost
-    # add blanket_order_amount_rejected
-    self.update_blanket_order_amount_rejected(
-      :blanket_order_id => self.blanket_order_id,
-      :amount => 1
-      )
-    update_warehouse_item_amount(
-      :item_id => self.blanket.item.id,
-      :mutation_date => self.rejected_date,
-      :case_addition =>ADJUSTMENT_STATUS[:addition],
-      :amount => 1,
-      )    
-    # deduce bar amount
-    if self.blanket.has_left_bar == true
-      update_warehouse_item_amount(
-        :item_id => self.blanket.left_bar_item_id,
-        :mutation_date => self.rejected_date,
-        :case_addition =>ADJUSTMENT_STATUS[:deduction],
-        :amount => 1,
-        )
-    end  
-    if self.blanket.has_right_bar == true
-      update_warehouse_item_amount(
-        :item_id => self.blanket.right_bar_item_id,
-        :mutation_date => self.rejected_date,
-        :case_addition =>ADJUSTMENT_STATUS[:deduction],
-        :amount => 1,
-        )
-    end  
-    # deduce roll_blanket amount
-    update_warehouse_item_amount(
-      :item_id => self.blanket.roll_blanket_item_id,
-      :mutation_date => self.rejected_date,
-      :case_addition =>ADJUSTMENT_STATUS[:deduction],
-      :amount => self.roll_blanket_usage,
-      )
-    self.complete_blanket_order
-    
-    # create journal blanket order reject
-     AccountingService::CreateBlanketOrderJournal.create_reject_journal(self)
-    end
-  end
+ 
   
-  def unreject_object
-    if self.blanket_order.is_confirmed == false
-      self.errors.add(:generic,"Belum di confirm")
-      return self
-    end
-    if self.is_finished == true
-      self.errors.add(:generic,"Sudah di finish")
-      return self
-    end
-    if self.is_rejected == false
-      self.errors.add(:generic,"Belum di reject")
-      return self
-    end
-    # set all cost to 0
-    self.is_rejected = false
-    self.rejected_date = nil
-    self.total_cost = 0
-    self.adhesive_cost = 0
-    self.roll_blanket_cost = 0
-    self.roll_blanket_usage = 0
-    self.roll_blanket_defect = 0
-    # deduce blanket_order_amount_reject
-    self.update_blanket_order_amount_rejected(
-      :blanket_order_id => self.blanket_order_id,
-      :amount => -1
-      )
-    self.complete_blanket_order
-    # revese stock_mutation
-    StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
-      sm.reverse_stock_mutate_object
-      sm.delete_object
-    end
-    AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
-  end
   
   def update_blanket_order_amount_received(params)
     blanket_order = BlanketOrder.find_by_id(params[:blanket_order_id])
@@ -420,9 +305,6 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.roll_blanket_defect_cost = roll_blanket_defect_cost 
     
     self.save
-     
-    
-    
   end
   
   def complete_blanket_order
