@@ -387,6 +387,11 @@ describe BlanketWarehouseMutation do
             @bwm.is_confirmed.should == false
           end
           
+          it "should recover undelivered quantity in bod" do
+            @bod.reload
+            @bod.undelivered_quantity.should == @quantity
+          end
+          
         end
       end
       
