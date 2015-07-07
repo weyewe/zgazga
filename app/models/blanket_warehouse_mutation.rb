@@ -192,6 +192,8 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         :source_code => bwmd.code
         ) 
       new_stock_mutation_to.stock_mutate_object
+      
+      bwmd.blanket_order_detail.update_undelivered_quantity( -1 * bwmd.quantity )
     end
   end
   
@@ -217,6 +219,9 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         ).first
       stock_mutation.reverse_stock_mutate_object  
       stock_mutation.delete_object
+      
+      bwmd.blanket_order_detail.update_undelivered_quantity(  bwmd.quantity )
+      
     end
   end
   

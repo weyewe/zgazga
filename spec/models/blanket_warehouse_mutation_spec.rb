@@ -341,12 +341,15 @@ describe BlanketWarehouseMutation do
     
     context "create BlanketWarehouseMutationDetail" do
       before(:each) do
+        @bod.reload 
         @mutation_quantity = 2 
+        @initial_undelivered_quantity = @bod.undelivered_quantity
         @bwmd = BlanketWarehouseMutationDetail.create_object(
           :blanket_warehouse_mutation_id  => @bwm.id,
           :blanket_order_detail_id => @bod.id,
           :quantity => @mutation_quantity
           )
+        
       end
       
       it "should create BlanketWarehouseMutationDetail" do
@@ -360,11 +363,17 @@ describe BlanketWarehouseMutation do
           @bwm.confirm_object(
             :confirmed_at => DateTime.now
             )
+          @bod.reload 
         end
         
         it "should confirm BlanketWarehouseMutation" do
           @bwm.errors.size.should == 0
           @bwm.is_confirmed.should == true
+        end
+        
+        it "should reduce the undelivered_quantity in bod by mutation_quantity" do
+          diff = @initial_undelivered_quantity - @bod.undelivered_quantity
+          diff.should == @mutation_quantity
         end
         
         context "unconfirm BlanketWarehouseMutation" do
