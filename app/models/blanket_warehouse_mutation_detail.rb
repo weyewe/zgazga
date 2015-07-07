@@ -5,9 +5,21 @@ class BlanketWarehouseMutationDetail < ActiveRecord::Base
   validates_presence_of :blanket_warehouse_mutation_id
   validate :valid_blanket_order_detail
   validate :valid_blanket_warehouse_mutation
+  validate :valid_quantity_amount 
+  
   
   def self.active_objects
     self 
+  end
+  
+  def valid_quantity_amount
+    return if not quantity.present? 
+    
+    if quantity <= 0 
+      self.errors.add(:generic_errors, "Quantity tidak boleh 0 atau negative")
+    end
+    
+    
   end
   
   def valid_blanket_warehouse_mutation
@@ -45,6 +57,7 @@ class BlanketWarehouseMutationDetail < ActiveRecord::Base
     new_object = self.new
     new_object.blanket_warehouse_mutation_id = params[:blanket_warehouse_mutation_id]
     new_object.blanket_order_detail_id = params[:blanket_order_detail_id]
+    new_object.quantity  = params[:quantity]
     if new_object.save
       new_object.item_id = new_object.blanket_order_detail.blanket.item.id
       new_object.code = "Cadj-" + new_object.id.to_s  
@@ -59,6 +72,7 @@ class BlanketWarehouseMutationDetail < ActiveRecord::Base
       return self 
     end
     self.blanket_order_detail_id = params[:blanket_order_detail_id]
+    self.quantity  = params[:quantity]
     if new_object.save
       self.item_id = self.blanket_order_detail.blanket.item.id
     end

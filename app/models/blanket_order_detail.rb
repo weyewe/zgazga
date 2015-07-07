@@ -4,6 +4,9 @@ class BlanketOrderDetail < ActiveRecord::Base
   validates_presence_of :blanket_order_id
   validates_presence_of :blanket_id
   validates_presence_of :quantity
+  
+  has_many :blanket_warehouse_mutation_details 
+  
   validate :valid_blanket_order
   validate :valid_blanket
   
@@ -163,6 +166,9 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.finished_at = params[:finished_at]
  
     if self.save
+      self.undelivered_quantity = self.finished_quantity
+      self.save 
+      
       self.calculate_total_cost
       # add blanket_order_amount_final
       # self.update_blanket_order_amount_final(
@@ -217,6 +223,11 @@ class BlanketOrderDetail < ActiveRecord::Base
       self.errors.add(:generic,"Belum di finish")
       return self
     end
+    
+    if self.blanket_warehouse_mutation_details.count != 0 
+      self.errors.add(:generic_errors, "Sudah ada perpindahan gudang ")
+      return self 
+    end
 
     # set all cost to 0
     self.is_finished = false
@@ -232,13 +243,20 @@ class BlanketOrderDetail < ActiveRecord::Base
     #   :blanket_order_id => self.blanket_order_id,
     #   :amount => -1
     #   )
-    self.complete_blanket_order
-    # revese stock_mutation
-    StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
-      sm.reverse_stock_mutate_object
-      sm.delete_object
+    
+    if self.save
+      self.undelivered_quantity =  0
+      self.save 
+      
+      self.complete_blanket_order
+      # revese stock_mutation
+      StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
+        sm.reverse_stock_mutate_object
+        sm.delete_object
+      end
+      AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
     end
-    AccountingService::CreateBlanketOrderJournal.undo_create_confirmation_journal(self)
+
   end
   
  

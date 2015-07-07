@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "quantity"
     t.integer  "finished_quantity"
     t.integer  "rejected_quantity"
+    t.integer  "undelivered_quantity"
     t.decimal  "roll_blanket_defect_cost",    precision: 14, scale: 2, default: 0.0
     t.decimal  "finished_blanket_total_cost", precision: 14, scale: 2, default: 0.0
     t.decimal  "rejected_blanket_total_cost", precision: 14, scale: 2, default: 0.0
@@ -171,6 +172,7 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "blanket_order_detail_id"
     t.string   "code"
     t.integer  "item_id"
+    t.integer  "quantity",                      default: 0
     t.boolean  "is_confirmed",                  default: false
     t.datetime "confirmed_at"
     t.datetime "created_at"
@@ -183,8 +185,7 @@ ActiveRecord::Schema.define(version: 20150707065149) do
     t.integer  "warehouse_from_id"
     t.integer  "warehouse_to_id"
     t.datetime "mutation_date"
-    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                               default: false
+    t.boolean  "is_confirmed",      default: false
     t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"

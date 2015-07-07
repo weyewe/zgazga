@@ -341,6 +341,9 @@ describe BlanketOrderDetail do
     
         end
         
+        it "should set the undelivered quantity" do
+          @bod.undelivered_quantity.should == @bod.finished_quantity
+        end
         it "should finish BlanketOrderDetail" do
           @bod.errors.messages.each {|x| puts "THE MESSAGE IS #{x}" } 
           @bod.errors.size.should == 0
@@ -355,6 +358,11 @@ describe BlanketOrderDetail do
           it "should unfinish BlanketOrderDetail" do
             @bod.errors.size.should == 0
             @bod.is_finished.should == false
+          end
+          
+          it "should set undelivered_quantity to be 0 " do
+            @bod.reload
+            @bod.undelivered_quantity.should == 0 
           end
         end
         

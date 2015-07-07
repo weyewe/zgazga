@@ -5,6 +5,9 @@ class CreateBlanketWarehouseMutationDetails < ActiveRecord::Migration
       t.integer :blanket_order_detail_id
       t.string  :code
       t.integer :item_id
+      
+      t.integer  :quantity, :default => 0 
+      
       t.boolean :is_confirmed , :default => false
       t.datetime  :confirmed_at
       t.timestamps

@@ -252,6 +252,7 @@ Ext.define('AM.controller.SalesOrders', {
 					
 					list.enableRecordButtons(); 
 					
+ 
 					
 					win.close();
 				},
