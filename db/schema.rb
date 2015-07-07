@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707044521) do
+ActiveRecord::Schema.define(version: 20150707065149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,31 +98,48 @@ ActiveRecord::Schema.define(version: 20150707044521) do
     t.datetime "updated_at"
   end
 
+  create_table "blanket_order_detail_usages", force: true do |t|
+    t.integer  "blanket_order_detail_id"
+    t.integer  "roll_blanket_batch_instance_id"
+    t.decimal  "used_amount",                    precision: 14, scale: 2, default: 0.0
+    t.decimal  "defect_amount",                  precision: 14, scale: 2, default: 0.0
+    t.decimal  "cut_amount",                     precision: 14, scale: 2, default: 0.0
+    t.decimal  "reject_amount",                  precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "blanket_order_details", force: true do |t|
     t.integer  "blanket_order_id"
     t.integer  "blanket_id"
-    t.decimal  "total_cost",               precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_cut",                                            default: false
-    t.boolean  "is_side_sealed",                                    default: false
-    t.boolean  "is_bar_prepared",                                   default: false
-    t.boolean  "is_adhesive_tape_applied",                          default: false
-    t.boolean  "is_bar_mounted",                                    default: false
-    t.boolean  "is_bar_heat_pressed",                               default: false
-    t.boolean  "is_bar_pull_off_tested",                            default: false
-    t.boolean  "is_qc_and_marked",                                  default: false
-    t.boolean  "is_packaged",                                       default: false
-    t.boolean  "is_rejected",                                       default: false
+    t.decimal  "total_cost",                  precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_cut",                                               default: false
+    t.boolean  "is_side_sealed",                                       default: false
+    t.boolean  "is_bar_prepared",                                      default: false
+    t.boolean  "is_adhesive_tape_applied",                             default: false
+    t.boolean  "is_bar_mounted",                                       default: false
+    t.boolean  "is_bar_heat_pressed",                                  default: false
+    t.boolean  "is_bar_pull_off_tested",                               default: false
+    t.boolean  "is_qc_and_marked",                                     default: false
+    t.boolean  "is_packaged",                                          default: false
+    t.boolean  "is_rejected",                                          default: false
     t.datetime "rejected_date"
-    t.boolean  "is_job_scheduled",                                  default: false
-    t.boolean  "is_finished",                                       default: false
+    t.boolean  "is_job_scheduled",                                     default: false
+    t.boolean  "is_finished",                                          default: false
     t.datetime "finished_at"
-    t.decimal  "bar_cost",                 precision: 14, scale: 2, default: 0.0
-    t.decimal  "adhesive_cost",            precision: 14, scale: 2, default: 0.0
-    t.decimal  "roll_blanket_cost",        precision: 14, scale: 2, default: 0.0
-    t.decimal  "roll_blanket_usage",       precision: 14, scale: 2, default: 0.0
-    t.decimal  "roll_blanket_defect",      precision: 14, scale: 2, default: 0.0
+    t.decimal  "bar_cost",                    precision: 14, scale: 2, default: 0.0
+    t.decimal  "adhesive_cost",               precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_cost",           precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_usage",          precision: 14, scale: 2, default: 0.0
+    t.decimal  "roll_blanket_defect",         precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "quantity"
+    t.integer  "finished_quantity"
+    t.integer  "rejected_quantity"
+    t.decimal  "roll_blanket_defect_cost",    precision: 14, scale: 2, default: 0.0
+    t.decimal  "finished_blanket_total_cost", precision: 14, scale: 2, default: 0.0
+    t.decimal  "rejected_blanket_total_cost", precision: 14, scale: 2, default: 0.0
   end
 
   create_table "blanket_orders", force: true do |t|

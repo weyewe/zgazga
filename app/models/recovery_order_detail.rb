@@ -95,6 +95,9 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
+    self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
+    return self if self.errors.size != 0 
+    
     self.compound_batch_instance_id = params[:batch_instance_id]
     self.compound_usage = BigDecimal( params[:compound_usage] || '0')
     self.compound_under_layer_usage = BigDecimal( params[:compound_under_layer_usage] || '0')
