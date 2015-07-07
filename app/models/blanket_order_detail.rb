@@ -260,8 +260,9 @@ class BlanketOrderDetail < ActiveRecord::Base
   end
   
   def update_undelivered_quantity( quantity ) 
-    self.undelivered_quantity = self.undelivered_quantity + quantity 
-    self.save 
+    
+    self.undelivered_quantity = self.undelivered_quantity + quantity  
+    self.save  
   end
   
  

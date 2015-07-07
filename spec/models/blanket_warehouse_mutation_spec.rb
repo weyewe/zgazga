@@ -289,11 +289,12 @@ describe BlanketWarehouseMutation do
     
     @bo.confirm_object(:confirmed_at => DateTime.now)
     
+    @finished_quantity = 3 
     @bod.finish_object(
       :finished_at => DateTime.now,
       :roll_blanket_usage => 5,
       :roll_blanket_defect => 5,
-      :finished_quantity => 3,
+      :finished_quantity => @finished_quantity,
             :rejected_quantity => 1
       )
     
@@ -379,6 +380,7 @@ describe BlanketWarehouseMutation do
         context "unconfirm BlanketWarehouseMutation" do
           before(:each) do
             @bwm.unconfirm_object
+            @bod.reload 
           end
           
           it "should unconfirm BlanketWarehouseMutation" do
@@ -389,7 +391,7 @@ describe BlanketWarehouseMutation do
           
           it "should recover undelivered quantity in bod" do
             @bod.reload
-            @bod.undelivered_quantity.should == @quantity
+            @bod.undelivered_quantity.should == @finished_quantity
           end
           
         end

@@ -220,6 +220,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
       stock_mutation.reverse_stock_mutate_object  
       stock_mutation.delete_object
       
+      puts "gonna ask to update undelivered quantity by #{bwmd.quantity }"
       bwmd.blanket_order_detail.update_undelivered_quantity(  bwmd.quantity )
       
     end
