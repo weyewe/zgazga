@@ -229,104 +229,18 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
       text: 'Save',
       action: 'save'
     }, {
+      text: 'Reset',
+      action: 'reset'
+    },{
       text: 'Cancel',
       scope: this,
       handler: this.close
-    }];
+    },
+    ];
 
     this.callParent(arguments);
   },
-  
-    setSelectedCustomer: function( contact_id ){
-		var comboBox = this.down('form').getForm().findField('contact_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : contact_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( contact_id );
-			}
-		});
-	},
-	
-	setSelectedEmployee: function( employee_id ){
-		var comboBox = this.down('form').getForm().findField('employee_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : employee_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( employee_id );
-			}
-		});
-	},
-	
-	setSelectedExchange: function( exchange_id ){
-		var comboBox = this.down('form').getForm().findField('exchange_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : exchange_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( exchange_id );
-			}
-		});
-	},
-	
-	setComboBoxData : function( record){ 
-
-		var me = this; 
-		me.setLoading(true);
-		
-		if( record["is_confirmed"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		
-		if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		 
-		if( record["employee_id"].length != 0 ){
-	    	me.setSelectedEmployee( record["employee_id"]  ) ;
-		}
-		
-		if( record["exchange_id"].length != 0 ){
-	    	me.setSelectedExchange( record["exchange_id"]  ) ;
-		}
-		
-		if( record["contact_id"].length != 0 ){
-	    	me.setSelectedCustomer( record["contact_id"]  ) ;
-		}
-		 
-	 
-	},
-	
+   
 	setPreviousValue: function(extraParamsObject){
 	   // console.log("inside setting the previous value");
 	    var me = this; 
@@ -367,7 +281,7 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
         		var comboBox = field;  
         		var me = this; 
         		var store = comboBox.store;   
-                console.log("gonna remote load "+ field_name);
+                // console.log("gonna remote load "+ field_name);
                 
                 me.loadComboBox( comboBox, field_value, field_name );
   

@@ -87,6 +87,10 @@ Ext.define('AM.controller.SalesOrders', {
 			'filtersalesorderform button[action=save]' : {
 				click : this.executeFilterObject  
 			},
+			
+			'filtersalesorderform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
 		
     });
   },
@@ -132,6 +136,36 @@ Ext.define('AM.controller.SalesOrders', {
 		
 		// console.log("the final params");
 		// console.log( extraParams);
+		 
+		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
+		
+
+
+ 
+	 
+		me.getSalesOrdersStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues();
+    // console.log("The values");
+    // console.log( values ) ;
+
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+	 
 		 
 		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
 		
