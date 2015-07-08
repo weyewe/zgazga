@@ -374,6 +374,117 @@ Ext.define("AM.controller.Operation", {
 		]
 	},
  
+	recoveryFolder : {
+		text 			: "Roller", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Recovery Order', 
+				viewClass:'AM.view.operation.RecoveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Clearance', 
+				viewClass:'AM.view.operation.RecoveryOrderClearance', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_order_clearances',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Pindah Gudang', 
+				viewClass:'AM.view.operation.RecoveryWarehouseMutation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_warehouse_mutations',
+						action : 'index'
+					}
+				]
+			}, 
+		]
+	},
+	
+	blanketFolder : {
+		text 			: "Blanket Convertion", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Blanket Order', 
+				viewClass:'AM.view.operation.BlanketOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blanket_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Clearance', 
+				viewClass:'AM.view.operation.BlanketOrderClearance', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blankety_order_clearances',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Pindah Gudang', 
+				viewClass:'AM.view.operation.BlanketWarehouseMutation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blanket_warehouse_mutations',
+						action : 'index'
+					}
+				]
+			}, 
+		]
+	},
+	
+	blendingFolder : {
+		text 			: "Blending", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Blending Order', 
+				viewClass:'AM.view.operation.BlendingOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blending_orders',
+						action : 'index'
+					}
+				]
+			}, 
+		 
+		]
+	},
 	   
 	 
 	onActiveProtectedContent: function( panel, options) {
@@ -384,11 +495,15 @@ Ext.define("AM.controller.Operation", {
 		me.folderList = [
 			this.logisticFolder,
 			this.batchFolder, 
+ 			this.recoveryFolder,
+ 			this.blanketFolder,
+ 			this.blendingFolder,
 			this.salesFolder,
 			this.purchaseFolder,
  			this.financeFolder,
  			this.accountingFolder,
- 			this.cashbankFolder
+ 			this.cashbankFolder,
+
  			
 		];
 		

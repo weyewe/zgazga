@@ -230,15 +230,7 @@ if Rails.env.development?
   end
   
   
-  ItemType.all.each do |item_type| 
-    (1.upto 10).each do  |counter | 
-      BatchInstance.create_object(
-        :item_id         =>  item_type.id , 
-        :name            =>  "#{item_type.name} #{counter}",
-        :description     =>  "The description",
-        :manufactured_at => DateTime.now  
-      )
-    end
+
   
   item_array = [] 
   (1.upto 10).each do |x|
@@ -265,11 +257,23 @@ if Rails.env.development?
         
       )
   end
+
+  ItemType.all.each do |item_type| 
+    next if item_type.items.count == 0 
+    item = item_type.items.first 
+    (1.upto 10).each do  |counter | 
+      BatchInstance.create_object(
+        :item_id         =>  item.id , 
+        :name            =>  "#{item_type.name} #{counter}",
+        :description     =>  "The description",
+        :manufactured_at => DateTime.now  
+      )
+    end
+  end
   
   stock_adjustment_array =[]
   # (1.upto 10).each do |x|
-  warehouse_array.each do |selected_warehouse|
-    selected_warehouse = warehouse_array[rand( 0..(warehouse_array.length - 1 ))]
+  Warehouse.all.each do |selected_warehouse| 
     stock_adjustment = StockAdjustment.create_object(
       :warehouse_id => selected_warehouse.id , 
       :adjustment_date => DateTime.now 

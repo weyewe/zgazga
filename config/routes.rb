@@ -168,6 +168,8 @@ Ticketie::Application.routes.draw do
     resources :closings
     resources :closing_details
     
+    
+    resources :batch_instances
   end
   
   
