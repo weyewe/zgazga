@@ -7,6 +7,7 @@ Ext.define('AM.controller.SalesOrders', {
   views: [
     'operation.salesorder.List',
     'operation.salesorder.Form',
+    'operation.salesorder.FilterForm',
 		'operation.salesorderdetail.List',
 		'Viewport'
   ],
@@ -79,9 +80,67 @@ Ext.define('AM.controller.SalesOrders', {
 			},
 			'salesorderform button[action=save]': {
         click: this.updateObject
-      }
+      },
+      'salesorderProcess salesorderlist button[action=filterObject]': {
+        click: this.filterObject
+      },
+			'filtersalesorderform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
 		
     });
+  },
+  
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filtersalesorderform');
+		
+		view.setPreviousValue( me.getSalesOrdersStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues();
+    // console.log("The values");
+    // console.log( values ) ;
+
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		
+		// console.log("the final params");
+		// console.log( extraParams);
+		 
+		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
+		
+
+
+ 
+	 
+		me.getSalesOrdersStore().load();
+		win.close();
   },
 
 	onColorPickerSelect: function(colorId, theColorPicker){

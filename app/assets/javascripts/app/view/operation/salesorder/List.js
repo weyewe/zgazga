@@ -82,10 +82,52 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 			disabled: true
 		});
 		
-		this.checkBoxField = new Ext.form.field.Checkbox({
-			action : "filterPending",
-			boxLabel: 'Pending'
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
 		});
+		
+	 
+		var me = this; 
+		// console.log("in the init component of List from SalesOrder");
+		// console.log("the store: ");
+		// console.log( me.store ) ;
+		// console.log("The grid");
+		// console.log( me ) ;
+		
+		
+		
+		// this.filterButton = new Ext.weyewe.FilterButton({
+		// 	formItems : [
+	 //       {
+		//         xtype: 'checkboxfield',
+		//         name : 'is_confirmed',
+		//         fieldLabel: 'Sudah Konfirmasi?'
+		//   	  },
+		// 	  	{
+		// 				xtype: 'datefield',
+		// 				fieldLabel : 'start_confirm',
+		// 				name : 'Tanggal Awal Konfirmasi'
+		// 			},
+		// 			{
+		// 				xtype: 'datefield',
+		// 				fieldLabel : 'end_confirm',
+		// 				name : 'Tanggal Selesai Konfirmasi'
+		// 			},
+		// 			theList : me   //
+		// 		]
+		// });
+		
+		
+		
+		// var store = this.getList().getStore();
+		// me.getSalesOrdersStore().currentPage  = 1; 
+
+		// me.getSalesOrdersStore().getProxy().extraParams = {
+		//     livesearch: newValue
+		// };
+	 
+		// me.getSalesOrdersStore().load();
 		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
@@ -94,7 +136,7 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 					'-',
 					this.downloadButton,
 					'->',
-					this.checkBoxField, 
+					this.filterButton, 
 					'-',
 					this.searchField ];
 	 
