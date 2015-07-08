@@ -8,14 +8,29 @@ json.blanket_order_details @objects do |object|
 	json.id 								object.id  
 	json.blanket_order_id 			 object.blanket_order_id
 	json.blanket_id 			 object.blanket_id
-	json.blanket_sku 			 object.blanket_sku
-	json.blanket_name 			 object.blanket_name
-	json.blanket_roll_blanket_item_id 			 object.blanket_roll_blanket_item_id
-	json.blanket_roll_blanket_item.name 			 object.blanket_roll_blanket_item.name
-	json.blanket_left_bar_item_id		 object.blanket_left_bar_item_id
-	json.blanket_left_bar_item_name		 object.blanket_left_bar_item.name
-	json.blanket_right_bar_item_id		 object.blanket_right_bar_item_id
-	json.blanket_right_bar_item_name		 object.blanket_right_bar_item_name
+	json.blanket_sku 			 object.blanket.sku
+	json.blanket_name 			 object.blanket.name
+	json.blanket_roll_blanket_item_id 			 object.blanket.roll_blanket_item_id
+	json.blanket_roll_blanket_item_name 			 object.blanket.roll_blanket_item.name
+	json.blanket_roll_blanket_item_sku   	 object.blanket.roll_blanket_item.sku
+	json.blanket_left_bar_item_id		 object.blanket.left_bar_item_id
+	
+	if object.blanket.left_bar_item.nil?
+		json.blanket_left_bar_item_name		 ""
+		json.blanket_left_bar_item_sku		 ""
+	else
+		json.blanket_left_bar_item_name		 object.blanket.left_bar_item.name
+		json.blanket_left_bar_item_sku		 object.blanket.left_bar_item.sku
+	end
+	json.blanket_right_bar_item_id		 object.blanket.right_bar_item_id
+	
+	if object.blanket.right_bar_item.nil?
+		json.blanket_right_bar_item_name		 ""
+		json.blanket_right_bar_item_sku		 ""
+	else
+		json.blanket_right_bar_item_name		 object.blanket.right_bar_item.name
+		json.blanket_right_bar_item_sku		 object.blanket.right_bar_item.sku
+	end
 	json.total_cost		 object.total_cost
 	json.is_cut		 object.is_cut
 	json.is_side_sealed		 object.is_side_sealed

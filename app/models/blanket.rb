@@ -16,10 +16,16 @@ class Blanket < ActiveRecord::Base
   validate :valid_cropping_type
   validate :valid_application_case
   
+  
+  
+  def self.active_objects
+    self
+  end
+  
   def valid_cropping_type
     return if cropping_type.nil? 
     if not [CROPPING_TYPE[:normal],CROPPING_TYPE[:special], CROPPING_TYPE[:none]].include?( cropping_type) 
-      self.errors.add(:contact_type, "Cropping Type harus ada")
+      self.errors.add(:cropping_type, "Cropping Type harus ada")
  
       return self 
     end

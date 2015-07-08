@@ -1,31 +1,40 @@
-Ext.define('AM.view.operation.blanketorder.List' ,{
+Ext.define('AM.view.operation.rolleracc.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.blanketorderlist',
+  	alias : 'widget.rolleracclist',
 
-  	store: 'BlanketOrders',  
+  	store: 'RollerAccs',  
  
 
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Order No.',  dataIndex: 'code', flex: 1},
-			{	header: 'Production No', dataIndex: 'production_no', flex: 2 },
-			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
-			{	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
-			{	header: 'QTY', dataIndex: 'amount_received', flex: 2 },
-			{	header: 'QTY Finished', dataIndex: 'amount_final', flex: 2 },
-			{	header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
-			{	header: 'Order Date', dataIndex: 'order_date', flex: 2 },
-			{	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
-			{	header: 'Notes', dataIndex: 'notes', flex: 2 },
-			{	header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			{ header: 'RIF Id', dataIndex: 'detail_id', flex: 1},
+			{ header: 'Roller No',  dataIndex: 'roller_no', flex: 1},
+    		{ header: 'Material',  dataIndex: 'material_case_text', flex: 1},
+    		{ header: 'Core SKU',  dataIndex: 'core_builder_sku', flex: 2},
+    		{ header: 'Core',  dataIndex: 'core_builder_name', flex: 2},
+    		{ header: 'Roller Type',  dataIndex: 'roller_type_name', flex: 2},
+    		{ header: 'Machine',  dataIndex: 'machine_name', flex: 2},
+    		{ header: 'Repair',  dataIndex: 'repair_request_case_text', flex: 2},
+    		{ header: 'RD',  dataIndex: 'rd', flex: 1},
+    		{ header: 'CD',  dataIndex: 'cd', flex: 1},
+    		{ header: 'WL',  dataIndex: 'wl', flex: 1},
+    		{ header: 'TL',  dataIndex: 'gl', flex: 1},
+    		{ header: 'Groove Length',  dataIndex: 'groove_length', flex: 1},
+    		{ header: 'QTY Grooves',  dataIndex: 'groove_amount', flex: 1},
+		 
+			
+			
+			
+			
+ 
 			{
 				xtype : 'templatecolumn',
-				text : "Konfirmasi",
+				text : "Transaksi",
 				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
 			},
 			
 			

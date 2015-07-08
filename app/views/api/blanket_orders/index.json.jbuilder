@@ -14,11 +14,11 @@ json.blanket_orders @objects do |object|
 	json.amount_rejected		object.amount_rejected 
 	json.amount_final		object.amount_final 
 	json.production_no		object.production_no 
-	json.order_date		object.order_date 
+	json.order_date			format_date_friendly( object.order_date ) 
 	json.notes		object.notes 
 	json.is_confirmed		object.is_confirmed 
 	json.is_completed		object.is_completed 
 	json.has_due_date		object.has_due_date 
-	json.confirmed_at		object.confirmed_at 
-	json.due_date		object.due_date 
+	json.confirmed_at		format_date_friendly( object.confirmed_at ) 
+	json.due_date	format_date_friendly( object.due_date ) 
 end

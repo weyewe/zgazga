@@ -3,7 +3,6 @@ class BlanketOrderDetail < ActiveRecord::Base
   belongs_to :blanket
   validates_presence_of :blanket_order_id
   validates_presence_of :blanket_id
-  validates_presence_of :quantity
   
   has_many :blanket_warehouse_mutation_details 
   
@@ -11,6 +10,12 @@ class BlanketOrderDetail < ActiveRecord::Base
   validate :valid_blanket
   
   validate :valid_quantity
+  
+  def self.active_objects
+    self
+  end
+  
+  
   
   def valid_quantity
     return if not  quantity.present? 
@@ -57,12 +62,12 @@ class BlanketOrderDetail < ActiveRecord::Base
     new_object = self.new
     new_object.blanket_order_id = params[:blanket_order_id]
     new_object.blanket_id = params[:blanket_id]
-    new_object.quantity = params[:quantity]
+    new_object.quantity = 1
     if new_object.save
       # add blanket_order.amount_received
       new_object.update_blanket_order_amount_received(
       :blanket_order_id => new_object.blanket_order_id,
-      :amount => -1
+      :amount => 1
       )
     end
     return new_object

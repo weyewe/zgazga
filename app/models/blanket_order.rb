@@ -10,6 +10,15 @@ class BlanketOrder < ActiveRecord::Base
   validate :valid_contact_id
   validate :valid_warehouse_id
   
+  def self.active_objects
+    self
+  end
+  
+  def active_children
+    self.blanket_order_details 
+  end
+  
+  
   def valid_contact_id
     return if contact_id.nil?
     

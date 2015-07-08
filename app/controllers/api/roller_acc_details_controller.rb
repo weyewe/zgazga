@@ -1,22 +1,22 @@
-class Api::BlanketOrderDetailsController < Api::BaseApiController
+class Api::RollerAccDetailsController < Api::BaseApiController
   
   def index
-    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
-    @objects = @parent.active_children.joins(:blanket_order, :blanket).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = RollerAcc.find_by_id params[:roller_acc_id]
+    @objects = @parent.active_children.joins(:roller_acc, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
+    @parent = RollerAcc.find_by_id params[:roller_acc_id]
     
   
-    @object = BlanketOrderDetail.create_object(params[:blanket_order_detail])
+    @object = RollerAccDetail.create_object(params[:roller_acc_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :blanket_order_details => [@object] , 
+                        :roller_acc_details => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = BlanketOrderDetail.find_by_id params[:id] 
-    @parent = @object.blanket_order 
+    @object = RollerAccDetail.find_by_id params[:id] 
+    @parent = @object.roller_acc 
     
     
-    params[:blanket_order_detail][:blanket_order_id] = @parent.id  
+    params[:roller_acc_detail][:roller_acc_id] = @parent.id  
     
-    @object.update_object( params[:blanket_order_detail])
+    @object.update_object( params[:roller_acc_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :blanket_order_details => [@object],
+                        :roller_acc_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = BlanketOrderDetail.find(params[:id])
-    @parent = @object.blanket_order 
+    @object = RollerAccDetail.find(params[:id])
+    @parent = @object.roller_acc 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -82,31 +82,31 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.contact.name  =~ query ) | 
-        ( blanket.machine.name =~ query ) | 
-        ( blanket.sku  =~ query  )  | 
-        ( blanket.name  =~ query  )  
+      @objects = RollerAccDetail.joins(:roller_acc, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  | 
+        ( code  =~ query  )  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.contact.name  =~ query ) | 
-        ( blanket.machine.name =~ query ) | 
-        ( blanket.sku  =~ query  )  | 
-        ( blanket.name  =~ query  )  
+      @total = RollerAccDetail.joins(:roller_acc, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  |
+        ( code  =~ query  )  
       }.count
     else
-      @objects = BlanketOrderDetail.where{ 
+      @objects = RollerAccDetail.where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = BlanketOrderDetail.where{ 
+      @total = RollerAccDetail.where{ 
               (id.eq selected_id)   
       }.count 
     end

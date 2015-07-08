@@ -223,7 +223,7 @@ class Api::ItemsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+      @objects = Item.adhesive_blankets.joins(:exchange, :item_type, :uom).where{ 
             ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
@@ -232,19 +232,19 @@ class Api::ItemsController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+      @total = Item.adhesive_blankets.joins(:exchange, :item_type, :uom).where{ 
                ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.count
     else
-      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+      @objects = Item.adhesive_blankets.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+      @total = Item.adhesive_blankets.where{ (id.eq selected_id)   
                               }.count 
     end
     

@@ -1,7 +1,7 @@
 
-Ext.define('AM.view.operation.blanketorderdetail.Form', {
+Ext.define('AM.view.operation.rolleraccdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.blanketorderdetailform',
+  alias : 'widget.rolleraccdetailform',
 
   title : 'Add / Edit Memorial Detail',
   layout: 'fit',
@@ -13,38 +13,41 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
 	
   initComponent: function() {
 	
-	var remoteJsonStoreBlanket = Ext.create(Ext.data.JsonStore, {
-		storeId : 'blanket_search',
+	
+    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
+		type : 'array',
+		storeId : 'sales_status_search',
+		fields	: [ 
+			{ name : "is_service"}, 
+			{ name : "is_service_text"}  
+		], 
+		data : [
+			{ is_service : false, is_service_text : "Trading"},
+			{ is_service : true, is_service_text : "Service"}
+		] 
+	});
+	
+	
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
 		fields	: [
 		 		{
-					name : 'blanket_sku',
+					name : 'item_sku',
 					mapping : "sku"
 				}, 
 				{
-					name : 'blanket_name',
+					name : 'item_name',
 					mapping : 'name'
 				},
 				{
-					name : 'blanket_roll_blanket_name',
-					mapping : 'roll_blanket_item_name'
-				},
-				{
-					name : 'blanket_left_bar_item_name',
-					mapping : 'left_bar_item_name'
-				},
-				{
-					name : 'blanket_right_bar_item_name',
-					mapping : 'right_bar_item_name'
-				},
-				{
-					name : 'blanket_id',
+					name : 'item_id',
 					mapping : "id"
 				}, 
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_blankets',
+			url : 'api/search_items',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -74,34 +77,79 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
 	      },
 			{
 	        xtype: 'hidden',
-	        name : 'blanket_order_id',
-	        fieldLabel: 'blanket_order_id'
+	        name : 'sales_order_id',
+	        fieldLabel: 'sales_order_id'
 	      },
-		   {
-				fieldLabel: 'Blanket',
+	      {
+            xtype: 'displayfield',
+            name : 'sales_order_code',
+            fieldLabel: 'Kode SalesOrder'
+        },
+			{
+				fieldLabel: 'Status',
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'blanket_name',
-				valueField : 'blanket_id',
+				displayField : 'is_service_text',
+				valueField : 'is_service',
 				pageSize : 5,
 				minChars : 1, 
 				allowBlank : false, 
 				triggerAction: 'all',
-				store : remoteJsonStoreBlanket , 
+				store : localJsonStoreStatus , 
 				listConfig : {
 					getInnerTpl: function(){
-						return  	'<div data-qtip="{blanket_name}">' +  
-												'<div class="combo-name">Sku : {blanket_sku}</div>' +  
-												'<div class="combo-name">Name : {blanket_name}</div>' +  
-												'<div class="combo-name">Roll Blanket :{blanket_roll_blanket_name}</div>' +  
-												'<div class="combo-name">Bar 1 : {blanket_left_bar_item_name}</div>' +  
-												'<div class="combo-name">Bar 2 : {blanket_right_bar_item_name}</div>' +  
+						return  	'<div data-qtip="{is_service_text}">' +  
+												'<div class="combo-name">{is_service_text}</div>' +  
 						 					'</div>';
 					}
 				},
-				name : 'blanket_id' 
+				name : 'is_service' 
 			},
+			{
+				fieldLabel: 'Item',
+				xtype: 'combo',
+				queryMode: 'remote',
+				forceSelection: true, 
+				displayField : 'item_name',
+				valueField : 'item_id',
+				pageSize : 5,
+				minChars : 1, 
+				allowBlank : false, 
+				triggerAction: 'all',
+				store : remoteJsonStoreItem , 
+				listConfig : {
+					getInnerTpl: function(){
+						return  	'<div data-qtip="{item_name}">' +  
+												'<div class="combo-name">'  + 
+															" ({item_name}) " 		+ "<br />" 	 + 
+															'{item_sku}' 			+  
+												 "</div>" +  
+						 					'</div>';
+					}
+				},
+				name : 'item_id' 
+			},
+				
+			{
+    	        xtype: 'textfield',
+    	        name : 'amount',
+    	        fieldLabel: 'Quantity'
+    	     },
+    	     {
+    	        xtype: 'displayfield',
+    	        name : 'item_uom_name',
+    	        fieldLabel: 'UoM'
+    	     },
+    	     {
+    	        xtype: 'textfield',
+    	        name : 'price',
+    	        fieldLabel: 'Value per item'
+    	     },
+		
+	 
+			
+			
 			]
     }];
 
@@ -161,7 +209,8 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('blanket_order_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
 	}
  
 });
