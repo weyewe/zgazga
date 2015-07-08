@@ -136,7 +136,8 @@ class Api::PayablesController < Api::BaseApiController
       if params[:contact_id].present?
         object = Contact.find_by_id params[:contact_id]
         if not object.nil?  
-          query.where(:contact_id => object.id )
+          puts "banzaiii!!!! contact_id : #{object.id}\n"*5
+          query = query.where(:contact_id => object.id )
         end
       end
       
