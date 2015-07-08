@@ -8,6 +8,17 @@ class RecoveryOrder < ActiveRecord::Base
   validate :valid_roller_identification_form_id
   validate :valid_warehouse_id
   
+   
+  def self.active_objects
+    self
+  end
+  
+  def active_children
+    self.recovery_order_details 
+  end
+  
+  
+  
   def valid_roller_identification_form_id
     return if roller_identification_form_id.nil?
     rif = RollerIdentificationForm.find_by_id roller_identification_form_id

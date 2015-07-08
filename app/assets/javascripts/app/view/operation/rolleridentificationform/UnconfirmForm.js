@@ -1,6 +1,6 @@
-Ext.define('AM.view.operation.salesorder.UnconfirmForm', {
+Ext.define('AM.view.operation.rolleridentificationform.UnconfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmsalesorderform',
+  alias : 'widget.unconfirmrolleridentificationformform',
 
   title : 'Unconfirm Memorial',
   layout: 'fit',

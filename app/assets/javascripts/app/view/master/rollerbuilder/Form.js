@@ -50,7 +50,7 @@ Ext.define('AM.view.master.rollerbuilder.Form', {
 			],
 			proxy  	: {
 				type : 'ajax',
-				url : 'api/search_roller_type',
+				url : 'api/search_roller_types',
 				reader : {
 					type : 'json',
 					root : 'records', 

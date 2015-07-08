@@ -86,11 +86,21 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
 					anchor: '100%'
       },
       items: [
-   			{
-        	        xtype: 'hidden',
-        	        name : 'id',
-        	        fieldLabel: 'id'
-    	        },
+			 			{
+      	        xtype: 'hidden',
+      	        name : 'id',
+      	        fieldLabel: 'id'
+  	        },
+	        	{
+			        xtype: 'hidden',
+			        name : 'roller_identification_form_id',
+			        fieldLabel: 'roller_identification_form_id'
+			      },
+			      {
+		            xtype: 'displayfield',
+		            name : 'roller_identification_form_code',
+		            fieldLabel: 'Kode RIF'
+		        },
     	      {
     		        xtype: 'displayfield',
     		        name : 'code',

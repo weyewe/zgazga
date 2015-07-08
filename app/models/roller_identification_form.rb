@@ -8,6 +8,16 @@ class RollerIdentificationForm < ActiveRecord::Base
   validate :valid_warehouse_id
   validate :valid_contact_id
   
+   
+  def self.active_objects
+    self
+  end
+  
+  def active_children
+    self.roller_identification_form_details 
+  end
+  
+  
   def valid_warehouse_id
     return if  warehouse_id.nil?
     wh = Warehouse.find_by_id warehouse_id
@@ -30,10 +40,12 @@ class RollerIdentificationForm < ActiveRecord::Base
   def self.create_object(params)
     new_object = self.new
     new_object.warehouse_id = params[:warehouse_id]
+    new_object.code = params[:code]
     new_object.contact_id = params[:contact_id]
     new_object.is_in_house = params[:is_in_house]
     new_object.amount = params[:amount]
     new_object.identified_date = params[:identified_date]
+    new_object.incoming_roll = params[:incoming_roll]
     new_object.nomor_disasembly = params[:nomor_disasembly]
     if new_object.save
       
@@ -43,9 +55,11 @@ class RollerIdentificationForm < ActiveRecord::Base
   
   def update_object(params)
     self.warehouse_id = params[:warehouse_id]
+    self.code = params[:code]
     self.contact_id = params[:contact_id]
     self.is_in_house = params[:is_in_house]
     self.amount = params[:amount]
+    self.incoming_roll = params[:incoming_roll]
     self.identified_date = params[:identified_date]
     self.nomor_disasembly = params[:nomor_disasembly]
     if self.save

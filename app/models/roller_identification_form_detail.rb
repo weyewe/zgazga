@@ -13,6 +13,14 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   validate :valid_core_builder_id
   validate :valid_roller_type_id
   
+  def self.active_objects
+    return self
+  end
+  
+  def active_children
+    self.roller_accessory_details  
+  end
+  
   def valid_roller_identification_form_id
     return if  roller_identification_form_id.nil?
     rif = RollerIdentificationForm.find_by_id roller_identification_form_id
@@ -57,6 +65,7 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
     new_object.detail_id = params[:detail_id]
     new_object.roller_type_id = params[:roller_type_id]
     new_object.machine_id = params[:machine_id]
+    new_object.roller_no = params[:roller_no]
     new_object.repair_request_case = params[:repair_request_case]
     new_object.is_job_scheduled = params[:is_job_scheduled]
     new_object.is_delivered = params[:is_delivered]
@@ -77,10 +86,12 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   
   def update_object(params)
     self.roller_identification_form_id = params[:roller_identification_form_id]
+    self.detail_id = params[:detail_id]
     self.material_case = params[:material_case]
     self.core_builder_id = params[:core_builder_id]
     self.roller_type_id = params[:roller_type_id]
     self.machine_id = params[:machine_id]
+    self.roller_no = params[:roller_no]
     self.repair_request_case = params[:repair_request_case]
     self.is_job_scheduled = params[:is_job_scheduled]
     self.is_delivered = params[:is_delivered]

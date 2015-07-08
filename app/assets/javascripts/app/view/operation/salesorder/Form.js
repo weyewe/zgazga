@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
-		storeId : 'employee_search',
+	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search',
 		fields	: [
 		 		{
-					name : 'employee_name',
+					name : 'warehouse_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'employee_description',
+					name : 'warehouse_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'employee_id',
+					name : 'warehouse_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,38 +66,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_employees',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
-	
-	var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
-		storeId : 'exchange_search',
-		fields	: [
-		 		{
-					name : 'exchange_name',
-					mapping : "name"
-				} ,
-				{
-					name : 'exchange_description',
-					mapping : "description"
-				} ,
-		 
-				{
-					name : 'exchange_id',
-					mapping : 'id'
-				}  
-		],
-		
-	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_exchanges',
+			url : 'api/search_warehouses',
 			reader : {
 				type : 'json',
 				root : 'records', 

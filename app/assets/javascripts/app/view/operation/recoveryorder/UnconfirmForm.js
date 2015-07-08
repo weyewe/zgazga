@@ -1,6 +1,6 @@
-Ext.define('AM.view.operation.salesorder.UnconfirmForm', {
+Ext.define('AM.view.operation.recoveryorder.UnconfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmsalesorderform',
+  alias : 'widget.unconfirmrecoveryorderform',
 
   title : 'Unconfirm Memorial',
   layout: 'fit',
@@ -43,6 +43,8 @@ Ext.define('AM.view.operation.salesorder.UnconfirmForm', {
   },
 
 	setParentData: function( record ) {
+		// console.log("Inside set Parent Data");
+// d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
 	}
 });

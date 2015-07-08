@@ -11,6 +11,8 @@ Ticketie::Application.routes.draw do
   resources :payment_requests
   resources :payment_vouchers
   resources :receipt_vouchers
+  resources :roller_accs
+  resources :roller_acc_details
   
   
   
@@ -46,11 +48,14 @@ Ticketie::Application.routes.draw do
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
+    get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder
     get 'search_blending_recipes' => 'blending_recipes#search', :as => :search_blending_recipe
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
     get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
     get 'search_blending_work_orders' => 'blending_work_orders#search', :as => :search_blending_work_order
+    get 'search_roller_accessorys' => 'roller_identification_form_details#search', :as => :search_roller_accessorys
+    get 'search_roller_accessory_details' => 'roller_accessory_details#search', :as => :search_roller_accessory_detail
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -64,6 +69,10 @@ Ticketie::Application.routes.draw do
     get 'search_virtual_order_clearance_details' => 'virtual_order_clearance_details#search', :as => :search_virtual_order_clearance_detail
     get 'search_temporary_delivery_orders' => 'temporary_delivery_orders#search', :as => :search_temporary_delivery_order
     get 'search_temporary_delivery_order_details' => 'temporary_delivery_order_details#search', :as => :search_temporary_delivery_order_detail
+    get 'search_roller_identification_forms' => 'roller_identification_forms#search', :as => :search_roller_identification_form
+    get 'search_roller_identification_form_details' => 'roller_identification_form_details#search', :as => :search_roller_identification_form_detail
+    get 'search_recovery_orders' => 'recovery_orders#search', :as => :search_recovery_order
+    get 'search_recovery_order_details' => 'recovery_order_details#search', :as => :search_recovery_order_detail
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
@@ -175,6 +184,12 @@ Ticketie::Application.routes.draw do
     
     resources :blanket_orders
     resources :blanket_order_details
+    
+    resources :roller_identification_forms
+    resources :roller_identification_form_details
+    
+    resources :recovery_orders
+    resources :recovery_order_details
     
     resources :blending_work_orders
     
