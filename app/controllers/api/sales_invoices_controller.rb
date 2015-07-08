@@ -3,40 +3,96 @@ class Api::SalesInvoicesController < Api::BaseApiController
   def index
      
      
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
-         (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( delivery_order.code =~  livesearch) |
-           ( delivery_order.nomor_surat =~  livesearch)
-         )
+    # if params[:livesearch].present? 
+    #   livesearch = "%#{params[:livesearch]}%"
+    #   @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
+    #     (
+    #       ( description =~  livesearch ) | 
+    #       ( code =~ livesearch)  | 
+    #       ( nomor_surat =~ livesearch)  | 
+    #       ( delivery_order.code =~  livesearch) |
+    #       ( delivery_order.nomor_surat =~  livesearch)
+    #     )
 
 
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
+    #   }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
-         (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( delivery_order.code =~  livesearch) |
-           ( delivery_order.nomor_surat =~  livesearch)
-         )
+    #   @total = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).where{
+    #     (
+    #       ( description =~  livesearch ) | 
+    #       ( code =~ livesearch)  | 
+    #       ( nomor_surat =~ livesearch)  | 
+    #       ( delivery_order.code =~  livesearch) |
+    #       ( delivery_order.nomor_surat =~  livesearch)
+    #     )
 
-       }.count
+    #   }.count
  
 
-     else
-       @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = SalesInvoice.active_objects.count
-     end
+    # else
+    #   @objects = SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]]).page(params[:page]).per(params[:limit]).order("id DESC")
+    #   @total = SalesInvoice.active_objects.count
+    # end
      
      
+    # "livesearch"=>"", "is_confirmed"=>"on", "start_confirmation"=>"2015-07-01", "end_confirmation"=>"2015-07-09", "start_invoice_date"=>"2015-07-01", "end_invoice_date"=>"2015-07-09", "delivery_order_id"=>"2",
      
+    query =   SalesInvoice.active_objects.joins(:delivery_order =>[:sales_order =>[:contact,:exchange]])
+    # puts "The query : #{query}"
+    # puts "initial query total: #{query.count}"
+    
+    if params[:livesearch].present?
+      
+      # livesearch = params[:livesearch]
+      livesearch = "%#{params[:livesearch]}%"
+      query = query.where{
+         (
+           ( description =~  livesearch ) | 
+           ( code =~ livesearch)  | 
+           ( nomor_surat =~ livesearch)  | 
+           ( delivery_order.code =~  livesearch) |
+           ( delivery_order.nomor_surat =~  livesearch)
+         )
+
+       }
+    end
+    
+    # puts "after livesearch query total: #{query.count}" 
+    start_confirmation =  parse_date( params[:start_confirmation] )
+    end_confirmation =  parse_date( params[:end_confirmation] )
+    start_invoice_date =  parse_date( params[:start_invoice_date] )
+    end_invoice_date =  parse_date( params[:end_invoice_date] )
+    
      
+    
+    if params[:is_confirmed].present?
+      query = query.where(:is_confirmed => true ) 
+      if  start_confirmation.present?
+        query = query.where{ confirmed_at.gte start_confirmation }
+      end
+      
+      if end_confirmation.present?
+        query = query.where{ confirmed_at.lt  end_confirmation }
+      end
+    end
+  
+    if start_invoice_date.present?
+      query = query.where{ invoice_date.gte start_invoice_date}
+    end
+    
+    if end_invoice_date.present?
+      query = query.where{ invoice_date.lt end_invoice_date}
+    end
+    
+    object = DeliveryOrder.find_by_id params[:delivery_order_id]
+    if not object.nil? 
+      query = query.where(:delivery_order_id => object.id )
+    end
+    
+   
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
   end
 
   def create

@@ -93,12 +93,18 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 			disabled: true
 		});
 		
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
 					this.downloadButton, 
 					'->',
+					this.filterButton ,
 					this.searchField ];
 	 
 

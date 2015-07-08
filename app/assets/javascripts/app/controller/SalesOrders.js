@@ -133,11 +133,7 @@ Ext.define('AM.controller.SalesOrders', {
 		 
 		 
 		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
-		
-
-
- 
-	 
+		 
 		me.getSalesOrdersStore().load();
 		win.close();
   },
@@ -150,24 +146,15 @@ Ext.define('AM.controller.SalesOrders', {
 		me.getSalesOrdersStore().currentPage  = 1; 
 		
 		
-    var values = form.getValues();
-    // console.log("The values");
-    // console.log( values ) ;
-
+    var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
 			livesearch: me.getSalesOrdersStore().getProxy().extraParams["livesearch"]
 		};
-		 
-	 
-		 
+		  
 		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
-		
-
-
- 
-	 
+		 
 		me.getSalesOrdersStore().load();
 		win.close();
   },

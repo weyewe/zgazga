@@ -7,6 +7,7 @@ Ext.define('AM.controller.SalesInvoices', {
   views: [
     'operation.salesinvoice.List',
     'operation.salesinvoice.Form',
+    'operation.salesinvoice.FilterForm',
 		'operation.salesinvoicedetail.List',
 		'Viewport'
   ],
@@ -79,11 +80,88 @@ Ext.define('AM.controller.SalesInvoices', {
       
       'salesinvoiceProcess salesinvoicelist button[action=downloadObject]': {
 			    click: this.downloadObject
-			}	
+			},
+	    'salesinvoiceProcess salesinvoicelist button[action=filterObject]': {
+	        click: this.filterObject
+	    },
+	    'filtersalesinvoiceform button[action=save]' : {
+	    	click : this.executeFilterObject  
+	    },
+	    
+	    'filtersalesinvoiceform button[action=reset]' : {
+	    	click : this.executeResetFilterObject  
+	    },
+	    
 			
 
 		
     });
+  },
+  
+
+      
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filtersalesinvoiceform');
+		
+		view.setPreviousValue( me.getSalesInvoicesStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesInvoicesStore().getProxy().extraParams["livesearch"]
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getSalesInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getSalesInvoicesStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesInvoicesStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getSalesInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getSalesInvoicesStore().load();
+		win.close();
   },
 	  
 	 downloadObject: function(){

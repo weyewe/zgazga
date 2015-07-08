@@ -119,7 +119,24 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
       },
       items: [
    			 
-
+    		    {
+    					xtype: 'checkboxfield',
+    					name : 'is_confirmed',
+    					fieldLabel: 'Sudah Konfirmasi?' 
+				},
+                {
+    					xtype: 'datefield',
+    					name : 'start_confirmation',
+    					fieldLabel: 'Mulai Konfirmasi',
+    					format: 'Y-m-d',
+				},
+				
+                {
+    					xtype: 'datefield',
+    					name : 'end_confirmation',
+    					fieldLabel: 'Akhir Konfirmasi',
+    					format: 'Y-m-d',
+				},
  
     		    {
     					xtype: 'datefield',
