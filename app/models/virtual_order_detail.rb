@@ -82,7 +82,7 @@ class VirtualOrderDetail < ActiveRecord::Base
     end
     self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')
-    self.pending_receival_quantity = BigDecimal( params[:amount] || '0')
+    self.pending_delivery_amount = BigDecimal( params[:amount] || '0')
     self.price = BigDecimal( params[:price] || '0')
     self.save
     return self

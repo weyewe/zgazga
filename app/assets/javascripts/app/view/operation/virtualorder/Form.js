@@ -1,4 +1,3 @@
-
 Ext.define('AM.view.operation.virtualorder.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.virtualorderform',

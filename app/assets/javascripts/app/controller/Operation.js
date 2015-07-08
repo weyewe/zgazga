@@ -102,7 +102,7 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Delivery VirtualOrder', 
-				viewClass:'AM.view.operation.VirtuaDeliverylOrder', 
+				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
@@ -308,6 +308,100 @@ Ext.define("AM.controller.Operation", {
 		]
 	},
 	
+	manufacturingFolder : {
+		text 			: "Manufacturing", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+        	{ 
+				text:'Blending Work Order', 
+				viewClass:'AM.view.operation.BlendingWorkOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blending_work_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Roller Identification Form (RIF)', 
+				viewClass:'AM.view.operation.RollerIdentificationForm', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'roller_identification_forms',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Roller Identification Form (RIF)', 
+				viewClass:'AM.view.operation.RollerIdentificationForm', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'roller_identification_forms',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Roller Collection Note (RCN)', 
+				viewClass:'AM.view.operation.RecoveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Customer Accessories', 
+				viewClass:'AM.view.operation.RecoveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Recovery Work Chart (RWC)', 
+				viewClass:'AM.view.operation.RecoveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Recovery Warehouse Mutation', 
+				viewClass:'AM.view.operation.RecoveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'recovery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+		]
+	},
+	
+	
 	cashbankFolder : {
 		text 			: "Cash dan Bank", 
 		viewClass : '',
@@ -494,6 +588,7 @@ Ext.define("AM.controller.Operation", {
 		
 		me.folderList = [
 			this.logisticFolder,
+			this.manufacturingFolder,
 			this.batchFolder, 
  			this.recoveryFolder,
  			this.blanketFolder,

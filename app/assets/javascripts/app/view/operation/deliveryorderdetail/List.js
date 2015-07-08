@@ -10,11 +10,9 @@ Ext.define('AM.view.operation.deliveryorderdetail.List' ,{
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'sales_order_detail_item_sku', flex: 1},
+			{ header: 'Name',  dataIndex: 'sales_order_detail_item_name', flex: 1},
     		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
     		{ header: 'PendingDelivery Qty',  dataIndex: 'sales_order_detail_pending_delivery_amount', flex: 2},
-    
-			
-			 
 		];
 		
 

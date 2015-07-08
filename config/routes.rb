@@ -50,6 +50,7 @@ Ticketie::Application.routes.draw do
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
     get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
+    get 'search_blending_work_orders' => 'blending_work_orders#search', :as => :search_blending_work_order
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -57,6 +58,10 @@ Ticketie::Application.routes.draw do
     get 'search_delivery_order_details' => 'delivery_order_details#search', :as => :search_delivery_order_detail
     get 'search_virtual_orders' => 'virtual_orders#search', :as => :search_virtual_order
     get 'search_virtual_order_details' => 'virtual_order_details#search', :as => :search_virtual_order_detail
+    get 'search_virtual_delivery_orders' => 'virtual_delivery_orders#search', :as => :search_virtual_delivery_order
+    get 'search_virtual_delivery_order_details' => 'virtual_delivery_order_details#search', :as => :search_virtual_delivery_order_detail
+    get 'search_virtual_order_clearances' => 'virtual_order_clearances#search', :as => :search_virtual_order_clearance
+    get 'search_virtual_order_clearance_details' => 'virtual_order_clearance_details#search', :as => :search_virtual_order_clearance_detail
     get 'search_temporary_delivery_orders' => 'temporary_delivery_orders#search', :as => :search_temporary_delivery_order
     get 'search_temporary_delivery_order_details' => 'temporary_delivery_order_details#search', :as => :search_temporary_delivery_order_detail
     
@@ -131,6 +136,12 @@ Ticketie::Application.routes.draw do
     resources :virtual_orders
     resources :virtual_order_details
     
+    resources :virtual_order_clearances
+    resources :virtual_order_clearance_details
+    
+    resources :virtual_delivery_orders
+    resources :virtual_delivery_order_details
+    
     resources :temporary_delivery_orders
     resources :temporary_delivery_order_details
     
@@ -164,6 +175,8 @@ Ticketie::Application.routes.draw do
     
     resources :blanket_orders
     resources :blanket_order_details
+    
+    resources :blending_work_orders
     
     resources :closings
     resources :closing_details

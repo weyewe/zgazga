@@ -13,7 +13,7 @@ class VirtualOrderClearanceDetail < ActiveRecord::Base
     new_object.virtual_order_clearance_id = params[:virtual_order_clearance_id]
     new_object.amount = params[:amount]
     if new_object.save  
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "VOCD--" + new_object.id.to_s  
     new_object.save
     end
     return new_object

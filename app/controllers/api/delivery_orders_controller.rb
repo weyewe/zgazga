@@ -11,6 +11,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch) |
            ( sales_order.code =~  livesearch) |
+           ( sales_order.contact.name =~  livesearch) |
            ( sales_order.nomor_surat =~  livesearch)
          )
        }.page(params[:page]).per(params[:limit]).order("id DESC")
@@ -21,6 +22,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch) |
            ( sales_order.code =~  livesearch) |
+           ( sales_order.contact.name =~  livesearch) |
            ( sales_order.nomor_surat =~  livesearch)
          )
        }.count
@@ -57,6 +59,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
                           :warehouse_id => @object.warehouse_id,
                           :warehouse_name => @object.warehouse.name, 
                           :sales_order_code => @object.sales_order.code,
+                          :contact_name => @object.sales_order.contact.name,
                           :sales_order_id => @object.sales_order.id ,
                           :delivery_date => format_date_friendly(@object.delivery_date)  ,
                           :is_confirmed => @object.is_confirmed,
@@ -91,6 +94,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
                           :warehouse_id => @object.warehouse_id,
                           :warehouse_name => @object.warehouse.name, 
                           :sales_order_code => @object.sales_order.code,
+                          :contact_name => @object.sales_order.contact.name,
                           :sales_order_id => @object.sales_order.id ,
                           :delivery_date => format_date_friendly(@object.delivery_date)  ,
                           :is_confirmed => @object.is_confirmed,
@@ -157,6 +161,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
                           :warehouse_id => @object.warehouse_id,
                           :warehouse_name => @object.warehouse.name, 
                           :sales_order_code => @object.sales_order.code,
+                          :contact_name => @object.sales_order.contact.name,
                           :sales_order_id => @object.sales_order.id ,
                           :delivery_date => format_date_friendly(@object.delivery_date)  ,
                           :is_confirmed => @object.is_confirmed,

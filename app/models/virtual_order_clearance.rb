@@ -21,12 +21,16 @@ class VirtualOrderClearance < ActiveRecord::Base
     self
   end
   
+  def active_children
+    self.virtual_order_clearance_details 
+  end
+  
   def self.create_object(params)
     new_object = self.new
     new_object.virtual_delivery_order_id = params[:virtual_delivery_order_id]
     new_object.clearance_date = params[:clearance_date]
     if new_object.save  
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "VOC-" + new_object.id.to_s  
     new_object.save
     end
     return new_object
@@ -82,6 +86,9 @@ class VirtualOrderClearance < ActiveRecord::Base
     
     if self.save 
       self.update_virtual_delivery_order_confirm
+      if self.total_waste_cogs > 0 
+        AccountingService::CreateVirtualOrderClearanceJournal.create_confirmation_journal(self)
+      end
     end
     return self
   end
@@ -89,12 +96,13 @@ class VirtualOrderClearance < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
-      return self 
+      return self  
     end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
       self.update_virtual_delivery_order_unconfirm
+      AccountingService::CreateVirtualOrderClearanceJournal.undo_create_confirmation_journal(self)
     end
     return self
   end
@@ -102,7 +110,6 @@ class VirtualOrderClearance < ActiveRecord::Base
   def update_virtual_delivery_order_confirm 
     total_waste_cogs = 0
     self.virtual_order_clearance_details.each do |vdod|
-      
       new_stock_mutation = StockMutation.create_object(
         :source_class => self.class.to_s, 
         :source_id => self.id ,  
@@ -128,14 +135,14 @@ class VirtualOrderClearance < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
-      vdod.virtual_delivery_order_detail.restock_amount = 
+      end
+      vdod.virtual_delivery_order_detail.restock_amount = vdod.amount
       vdod.virtual_delivery_order_detail.waste_amount = diffamountclear
       vdod.waste_cogs = diffamountclear * vdod.virtual_delivery_order_detail.item.avg_price
       total_waste_cogs += vdod.waste_cogs 
-      end
-     
       vdod.virtual_delivery_order_detail.is_reconciled = true
       vdod.virtual_delivery_order_detail.save
+      vdod.save
       self.total_waste_cogs = total_waste_cogs
       if self.virtual_delivery_order.virtual_delivery_order_details.where(
         :is_reconciled => false

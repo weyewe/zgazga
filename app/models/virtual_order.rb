@@ -18,7 +18,7 @@ class VirtualOrder < ActiveRecord::Base
     self
   end
   
-   def active_children
+  def active_children
     self.virtual_order_details 
   end
   

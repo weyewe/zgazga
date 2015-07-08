@@ -68,7 +68,7 @@ Ext.define('AM.view.operation.virtualorderdetail.Form', {
 	      {
             xtype: 'displayfield',
             name : 'virtual_order_code',
-            fieldLabel: 'Kode VirtualOrder'
+            fieldLabel: 'Kode SalesOrder'
         },
 				{
 					fieldLabel: 'Item',
@@ -94,21 +94,26 @@ Ext.define('AM.view.operation.virtualorderdetail.Form', {
 					},
 					name : 'item_id' 
 				},
+				
 				{
-  	        xtype: 'numberfield',
-  	        name : 'amount',
-  	        fieldLabel: 'Quantity'
-  	    },
-				{
-				  xtype: 'displayfield',
-				  name : 'item_uom_name',
-				  fieldLabel: 'UoM'
-				},
-				{
-				  xtype: 'numberfield',
-				  name : 'price',
-				  fieldLabel: 'Value per item'
-				}
+	        xtype: 'textfield',
+	        name : 'amount',
+	        fieldLabel: 'Quantity'
+	     	},
+    	     {
+    	        xtype: 'displayfield',
+    	        name : 'item_uom_name',
+    	        fieldLabel: 'UoM'
+    	     },
+    	     {
+    	        xtype: 'textfield',
+    	        name : 'price',
+    	        fieldLabel: 'Value per item'
+    	     },
+		
+	 
+			
+			
 			]
     }];
 
@@ -125,6 +130,7 @@ Ext.define('AM.view.operation.virtualorderdetail.Form', {
   },
 
 	setSelectedItem: function( item_id ){
+		// console.log("inside set selected original account id ");
 		var comboBox = this.down('form').getForm().findField('item_id'); 
 		var me = this; 
 		var store = comboBox.store;  
@@ -138,6 +144,7 @@ Ext.define('AM.view.operation.virtualorderdetail.Form', {
 			}
 		});
 	},
+	
 	
 	
 	setComboBoxData : function( record){
