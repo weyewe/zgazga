@@ -1,22 +1,22 @@
-class Api::RollerAccDetailsController < Api::BaseApiController
+class Api::RecoveryAccessoryDetailsController < Api::BaseApiController
   
   def index
-    @parent = RollerIdentificationFormDetail.find_by_id params[:roller_identification_form_detail_id]
-    @objects = @parent.active_children.joins(:roller_identification_form_detail, :item).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
+    @objects = @parent.active_children.joins(:recovery_order_detail, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = RollerIdentificationFormDetail.find_by_id params[:roller_identification_form_detail_id]
+    @parent = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
     
   
-    @object = RollerAccessoryDetail.create_object(params[:roller_accessory_detail])
+    @object = RecoveryAccessoryDetail.create_object(params[:recovery_accessory_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :roller_accessory_details => [@object] , 
+                        :recovery_accessory_detail => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::RollerAccDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = RollerAccessoryDetail.find_by_id params[:id] 
-    @parent = @object.roller_acc 
+    @object = RecoveryAccessoryDetail.find_by_id params[:id] 
+    @parent = @object.recovery_order_detail 
     
     
-    params[:roller_acc_detail][:roller_acc_id] = @parent.id  
+    params[:recovery_accessory_detail][:recovery_order_detail_id] = @parent.id  
     
-    @object.update_object( params[:roller_accessory_details])
+    @object.update_object( params[:recovery_accessory_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :roller_accessory_details => [@object],
+                        :recovery_accessory_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::RollerAccDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = RollerAccessoryDetail.find(params[:id])
-    @parent = @object.roller_acc 
+    @object = RecoveryAccessoryDetail.find(params[:id])
+    @parent = @object.recovery_order_detail 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -82,7 +82,7 @@ class Api::RollerAccDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = RollerAccessoryDetail.joins(:roller_identification_form_detail, :item).where{ 
+      @objects = RecoveryAccessoryDetail.joins(:recovery_order_detail, :item).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  
@@ -91,20 +91,20 @@ class Api::RollerAccDetailsController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RollerAccessoryDetail.joins(:roller_identification_form_detail, :item).where{ 
+      @total = RecoveryAccessoryDetail.joins(:recovery_order_detail, :item).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  
       }.count
     else
-      @objects = RollerAccessoryDetail.where{ 
+      @objects = RecoveryAccessoryDetail.joins(:recovery_order_detail, :item).where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = RollerAccessoryDetail.where{ 
+      @total = RecoveryAccessoryDetail.joins(:recovery_order_detail, :item).where{ 
               (id.eq selected_id)   
       }.count 
     end

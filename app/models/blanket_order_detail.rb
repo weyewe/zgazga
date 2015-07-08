@@ -15,8 +15,6 @@ class BlanketOrderDetail < ActiveRecord::Base
     self
   end
   
-  
-  
   def valid_quantity
     return if not  quantity.present? 
     

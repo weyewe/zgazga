@@ -1,9 +1,9 @@
-Ext.define('AM.model.RollerAccDetail', {
+Ext.define('AM.model.RecoveryWorkProcessDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
  
 
-	        { name: 'roller_identification_form_detail_id', type: 'int' }, 
+	        { name: 'recover_order_detail_id', type: 'int' }, 
 	 
     	    { name: 'id', type: 'int' },
     	    { name: 'amount', type: 'int' },
@@ -20,19 +20,19 @@ Ext.define('AM.model.RollerAccDetail', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/roller_accessory_details',
+			url: 'api/recovery_accessory_details',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'roller_accessory_details',
+				root: 'recovery_accessory_details',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { roller_acc_detail : record.data };
+					return { recovery_work_process_detail : record.data };
 				}
 			}
 		}

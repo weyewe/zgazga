@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.rolleraccdetail.Form', {
+Ext.define('AM.view.operation.recoveryworkprocessdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.rolleraccdetailform',
+  alias : 'widget.recoveryworkprocessdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Accessory Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,7 +13,8 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
 	
   initComponent: function() {
 	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+	
+    	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
 		storeId : 'item_search',
 		fields	: [
 		 		{
@@ -60,10 +61,10 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
 	        name : 'id',
 	        fieldLabel: 'id'
 	      },
-			{
+		{
 	        xtype: 'hidden',
-	        name : 'roller_identification_form_detail_id',
-	        fieldLabel: 'roller_identification_form_detail_id'
+	        name : 'recovery_order_detail_id',
+	        fieldLabel: 'recovery_order_detail_id'
 	      },
 		   {
 				fieldLabel: 'Item',
@@ -95,6 +96,8 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
+	 
+			
 			
 			]
     }];
@@ -127,6 +130,22 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
 		});
 	},
 	
+	setSelectedStatus: function( is_service ){
+		// console.log("inside set selected original account id ");
+		var comboBox = this.down('form').getForm().findField('is_service'); 
+		var me = this; 
+		var store = comboBox.store;  
+		store.load({
+			params: {
+				selected_id : is_service 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( is_service );
+			}
+		});
+	},
+	
 	
 	setComboBoxData : function( record){
 		var me = this; 
@@ -134,11 +153,12 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
 		
 		
 		me.setSelectedItem( record.get("item_id")  ) ; 
+		me.setSelectedStatus( record.get("is_service")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('roller_identification_form_detail_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('recovery_order_detail_id').setValue(record.get('id'));
 	}
  
 });

@@ -1,7 +1,8 @@
-Ext.define('AM.model.RecoveryOrderDetail', {
+Ext.define('AM.model.RecoveryWorkProcess', {
   	extend: 'Ext.data.Model',
   	fields: [
-	         { name: 'id', type: 'int' },
+
+    	    { name: 'id', type: 'int' },
 	         { name: 'recovery_order_id', type: 'int' },
 	         { name: 'roller_identification_form_detail_id', type: 'int' },	
 	         { name: 'roller_identification_form_detail_core_sku', type: 'string' },	
@@ -23,6 +24,7 @@ Ext.define('AM.model.RecoveryOrderDetail', {
 	         { name: 'is_polished_and_gc', type: 'boolean' },	
 	         { name: 'is_packaged', type: 'boolean' },	
 	         { name: 'is_rejected', type: 'boolean' },	
+	         { name: 'is_rejected', type: 'boolean' },	
 	         { name: 'rejected_date', type: 'string' },	
 	         { name: 'is_finished', type: 'boolean' },	
 	         { name: 'finished_date', type: 'string' },	
@@ -31,7 +33,9 @@ Ext.define('AM.model.RecoveryOrderDetail', {
 	         { name: 'compound_cost', type: 'string' },	
 	         { name: 'compound_under_layer_id', type: 'int' },	
 	         { name: 'compound_under_layer_name', type: 'string' },	
-	         { name: 'compound_under_layer_usage', type: 'string' },	
+	         { name: 'compound_under_layer_usage', type: 'string' },
+			
+			
   	],
 
 	 
@@ -41,19 +45,19 @@ Ext.define('AM.model.RecoveryOrderDetail', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/recovery_order_details',
+			url: 'api/recovery_work_processs',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'recovery_order_details',
+				root: 'recovery_work_processs',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { recovery_order_detail : record.data };
+					return { recovery_work_process : record.data };
 				}
 			}
 		}

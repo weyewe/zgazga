@@ -7,7 +7,6 @@ class Api::RollerAccsController < Api::BaseApiController
        livesearch = "%#{params[:livesearch]}%"
        @objects = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{
          (
-           ( nomor_surat =~ livesearch)  | 
            ( machine.name =~  livesearch) | 
            ( roller_type.name =~  livesearch) | 
            ( core_builder.name =~  livesearch)
@@ -15,18 +14,15 @@ class Api::RollerAccsController < Api::BaseApiController
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine.where{
+       @total = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{
          (
-           ( nomor_surat =~ livesearch)  | 
            ( machine.name =~  livesearch) | 
            ( roller_type.name =~  livesearch) | 
            ( core_builder.name =~  livesearch)
          )
        }.count
- 
-
      else
-       @objects = RollerIdentificationFormDetail.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = RollerIdentificationFormDetail.active_objects.count
      end
      
@@ -73,7 +69,7 @@ class Api::RollerAccsController < Api::BaseApiController
   end
   
   def show
-    @object  = RollerAcc.find params[:id]
+    @object  = RollerIdentificationFormDetail.find params[:id]
     render :json => { :success => true,   
                       :roller_accs => [
                           :id => @object.id, 
@@ -87,7 +83,7 @@ class Api::RollerAccsController < Api::BaseApiController
                           :employee_id => @object.employee_id
                         
                         ],
-                      :total => RollerAcc.active_objects.count  }
+                      :total => RollerIdentificationFormDetail.active_objects.count  }
   end
 
   def update
@@ -195,7 +191,9 @@ class Api::RollerAccsController < Api::BaseApiController
     if  selected_id.nil?  
       @objects = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{  
         ( 
-           ( code =~ query )  
+           ( machine.name =~  query) | 
+           ( roller_type.name =~  query) | 
+           ( core_builder.name =~  query) 
          )
       }.
       page(params[:page]).
@@ -204,7 +202,9 @@ class Api::RollerAccsController < Api::BaseApiController
                         
       @total = RollerIdentificationFormDetail.active_objects.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{  
         ( 
-           ( code =~ query )  
+           ( machine.name =~  query) | 
+           ( roller_type.name =~  query) | 
+           ( core_builder.name =~  query)
          )
       }.count 
     else

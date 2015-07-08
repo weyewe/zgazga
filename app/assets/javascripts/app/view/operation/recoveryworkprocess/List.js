@@ -1,42 +1,19 @@
-Ext.define('AM.view.operation.rolleracc.List' ,{
+Ext.define('AM.view.operation.recoveryworkprocess.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.rolleracclist',
+  	alias : 'widget.recoveryworkprocesslist',
 
-  	store: 'RollerAccs',  
+  	store: 'RecoveryWorkProcesss',  
  
 
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'RIF Id', dataIndex: 'detail_id', flex: 1},
-			{ header: 'Roller No',  dataIndex: 'roller_no', flex: 1},
-    		{ header: 'Material',  dataIndex: 'material_case_text', flex: 1},
-    		{ header: 'Core SKU',  dataIndex: 'core_builder_sku', flex: 2},
-    		{ header: 'Core',  dataIndex: 'core_builder_name', flex: 2},
-    		{ header: 'Roller Type',  dataIndex: 'roller_type_name', flex: 2},
-    		{ header: 'Machine',  dataIndex: 'machine_name', flex: 2},
-    		{ header: 'Repair',  dataIndex: 'repair_request_case_text', flex: 2},
-    		{ header: 'RD',  dataIndex: 'rd', flex: 1},
-    		{ header: 'CD',  dataIndex: 'cd', flex: 1},
-    		{ header: 'WL',  dataIndex: 'wl', flex: 1},
-    		{ header: 'TL',  dataIndex: 'gl', flex: 1},
-    		{ header: 'Groove Length',  dataIndex: 'groove_length', flex: 1},
-    		{ header: 'QTY Grooves',  dataIndex: 'groove_amount', flex: 1},
-		 
-			
-			
-			
-			
- 
-			{
-				xtype : 'templatecolumn',
-				text : "Transaksi",
-				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
-			},
-			
+			{ header: 'RIF Id', dataIndex: 'roller_identification_form_detail_id', flex: 1},
+			{ header: 'Sku Roller',  dataIndex: 'roller_builder_sku', flex: 1},
+    		{ header: 'Roller',  dataIndex: 'roller_builder_name', flex: 1},
+    		{ header: 'Core Type',  dataIndex: 'core_type_case_text', flex: 2},
+    		{ header: 'Rejected Date',  dataIndex: 'rejected_date', flex: 2},
+    		{ header: 'Finished Date',  dataIndex: 'finished_date', flex: 2},
 			
 		];
 
@@ -46,7 +23,7 @@ Ext.define('AM.view.operation.rolleracc.List' ,{
 		});
 
 		this.editObjectButton = new Ext.Button({
-			text: 'Edit',
+			text: 'Process',
 			action: 'editObject',
 			disabled: true
 		});
@@ -62,10 +39,36 @@ Ext.define('AM.view.operation.rolleracc.List' ,{
 			action: 'confirmObject',
 			disabled: true
 		});
-	
+		
+		this.finishObjectButton = new Ext.Button({
+			text: 'Finish',
+			action: 'finishObject',
+			disabled: true
+		});
+		
+		this.rejectObjectButton = new Ext.Button({
+			text: 'Reject',
+			action: 'rejectObject',
+			disabled: true
+		});
+		
 		this.unconfirmObjectButton = new Ext.Button({
 			text: 'Unconfirm',
 			action: 'unconfirmObject',
+			disabled: true,
+			hidden : true
+		});
+		
+		this.unfinishObjectButton = new Ext.Button({
+			text: 'Unfinisih',
+			action: 'unfinishObject',
+			disabled: true,
+			hidden : true
+		});
+		
+		this.unrejectObjectButton = new Ext.Button({
+			text: 'Unreject',
+			action: 'unrejectObject',
 			disabled: true,
 			hidden : true
 		});
@@ -79,7 +82,10 @@ Ext.define('AM.view.operation.rolleracc.List' ,{
 		});
 		
 		 
-			this.tbar = [
+			this.tbar = [ this.editObjectButton, 
+				'-',
+					this.finishObjectButton, this.rejectObjectButton,this.unfinishObjectButton,
+					this.unrejectObjectButton,
 					'->',
 					this.searchField ];
 	 

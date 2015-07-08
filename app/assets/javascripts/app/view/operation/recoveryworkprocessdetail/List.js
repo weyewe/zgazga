@@ -1,13 +1,14 @@
-Ext.define('AM.view.operation.rolleraccdetail.List' ,{
+Ext.define('AM.view.operation.recoveryworkprocessdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.rolleraccdetaillist',
+  	alias : 'widget.recoveryworkprocessdetaillist',
 
-  	store: 'RollerAccDetails', 
+  	store: 'RecoveryWorkProcessDetails', 
  
 
 	initComponent: function() {
 		this.columns = [
 		 
+		
 			{ header: 'Item Sku', dataIndex: 'item_sku', flex: 1},
 			{ header: 'Item Name',  dataIndex: 'item_name', flex: 1},
     		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
@@ -74,6 +75,6 @@ Ext.define('AM.view.operation.rolleraccdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("RollerAcc: " + record.get("code"));
+		this.setTitle("RecoveryOrderDetail: " + record.get("id"));
 	}
 });

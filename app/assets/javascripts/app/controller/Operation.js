@@ -339,6 +339,18 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
+				text:'Blanket Work Process', 
+				viewClass:'AM.view.operation.BlanketWorkProcess', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blanket_work_processs',
+						action : 'index'
+					}
+				]
+			},
+			{ 
 				text:'Roller Identification Form (RIF)', 
 				viewClass:'AM.view.operation.RollerIdentificationForm', 
 				leaf:true, 
