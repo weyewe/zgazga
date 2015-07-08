@@ -46,6 +46,7 @@ Ticketie::Application.routes.draw do
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
+    get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder
     get 'search_blending_recipes' => 'blending_recipes#search', :as => :search_blending_recipe
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
@@ -64,8 +65,10 @@ Ticketie::Application.routes.draw do
     get 'search_virtual_order_clearance_details' => 'virtual_order_clearance_details#search', :as => :search_virtual_order_clearance_detail
     get 'search_temporary_delivery_orders' => 'temporary_delivery_orders#search', :as => :search_temporary_delivery_order
     get 'search_temporary_delivery_order_details' => 'temporary_delivery_order_details#search', :as => :search_temporary_delivery_order_detail
-    get 'search_roller_identifications_forms' => 'roller_identifications_forms#search', :as => :search_roller_identifications_form
-    get 'search_roller_identifications_form_details' => 'roller_identifications_form_details#search', :as => :search_roller_identifications_form_detail
+    get 'search_roller_identification_forms' => 'roller_identification_forms#search', :as => :search_roller_identification_form
+    get 'search_roller_identification_form_details' => 'roller_identification_form_details#search', :as => :search_roller_identification_form_detail
+    get 'search_recovery_orders' => 'recovery_orders#search', :as => :search_recovery_order
+    get 'search_recovery_order_details' => 'recovery_order_details#search', :as => :search_recovery_order_detail
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
@@ -180,6 +183,9 @@ Ticketie::Application.routes.draw do
     
     resources :roller_identification_forms
     resources :roller_identification_form_details
+    
+    resources :recovery_orders
+    resources :recovery_order_details
     
     resources :blending_work_orders
     

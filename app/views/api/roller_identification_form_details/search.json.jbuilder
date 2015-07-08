@@ -9,7 +9,7 @@ json.records @objects do |object|
     json.detail_id 	object.detail_id  
     json.material_case 	object.material_case  
     json.core_builder_id 	object.core_builder_id  
-    json.core_builder_sku 	object.core_builder.sku  
+    json.core_builder_sku 	object.core_builder.base_sku  
     json.core_builder_name 	object.core_builder.name  
     json.roller_type_id 	object.roller_type_id
     json.roller_type_name 	object.roller_type.name

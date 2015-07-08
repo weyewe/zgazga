@@ -2,7 +2,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
   
   def index
     @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
-    @objects = @parent.active_children.joins(:recovery_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -71,7 +71,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -82,21 +82,17 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = RecoveryOrderDetail.joins(:recovery_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
+      @objects = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
+        ( roller_builder.base_sku  =~ query ) | 
+        ( roller_builder.code  =~ query ) 
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RecoveryOrderDetail.joins(:recovery_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
+      @total = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
+        ( roller_builder.base_sku  =~ query ) | 
+        ( roller_builder.code  =~ query )  
       }.count
     else
       @objects = RecoveryOrderDetail.where{ 

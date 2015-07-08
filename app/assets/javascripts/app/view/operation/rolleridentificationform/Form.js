@@ -1,4 +1,3 @@
-
 Ext.define('AM.view.operation.rolleridentificationform.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.rolleridentificationformform',
@@ -233,7 +232,3 @@ Ext.define('AM.view.operation.rolleridentificationform.Form', {
 	}
  
 });
-
-
-
-

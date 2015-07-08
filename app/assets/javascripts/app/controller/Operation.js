@@ -339,18 +339,6 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Roller Identification Form (RIF)', 
-				viewClass:'AM.view.operation.RollerIdentificationForm', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'roller_identification_forms',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
 				text:'Roller Collection Note (RCN)', 
 				viewClass:'AM.view.operation.RecoveryOrder', 
 				leaf:true, 

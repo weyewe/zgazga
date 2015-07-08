@@ -3,7 +3,7 @@ class Roller < ActiveRecord::Base
  
   def self.create_object(params)
   new_object = self.new
-  new_object.item_type_id = ItemType.find_by_name("Core").id
+  new_object.item_type_id = ItemType.find_by_name("Roller").id
   new_object.sku = params[:sku]
   new_object.name = params[:name]
   new_object.description = params[:description]

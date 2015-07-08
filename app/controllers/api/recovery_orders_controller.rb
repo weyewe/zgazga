@@ -5,32 +5,26 @@ class Api::RecoveryOrdersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = RecoveryOrder.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{
          (
-           
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( roller_identification_form.nomor_disasembly =~  livesearch) | 
+           ( warehouse.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = RecoveryOrder.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{
          (
-            
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( roller_identification_form.nomor_disasembly =~  livesearch) | 
+           ( warehouse.name =~  livesearch)
          )
        }.count
  
 
      else
-       @objects = RecoveryOrder.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = RecoveryOrder.active_objects.count
      end
      
@@ -41,7 +35,7 @@ class Api::RecoveryOrdersController < Api::BaseApiController
 
   def create
     
-    params[:recovery_order][:transaction_datetime] =  parse_date( params[:recovery_order][:transaction_datetime] )
+    # params[:recovery_order][:transaction_datetime] =  parse_date( params[:recovery_order][:transaction_datetime] )
     
     
     @object = RecoveryOrder.create_object( params[:recovery_order])
@@ -51,11 +45,20 @@ class Api::RecoveryOrdersController < Api::BaseApiController
       render :json => { :success => true, 
                         :recovery_orders => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                          :roller_identification_form_id => @object.roller_identification_form_id, 
+                          :roller_identification_form_nomor_disasembly => @object.roller_identification_form.nomor_disasembly, 
+                          :roller_identification_form_code => @object.roller_identification_form.code, 
+                          :warehouse_id => @object.warehouse_id, 
+                          :warehouse_name => @object.warehouse.name, 
+                          :code => @object.code, 
+                          :amount_received => @object.amount_received, 
+                          :amount_rejected => @object.amount_rejected, 
+                          :amount_final => @object.amount_final, 
+                          :is_completed => @object.is_completed, 
+                          :is_confirmed => @object.is_confirmed, 
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) , 
+                          :has_due_date => @object.has_due_date, 
+                          :due_date => format_date_friendly(@object.due_date) ,
                           ] , 
                         :total => RecoveryOrder.active_objects.count }  
     else
@@ -81,21 +84,26 @@ class Api::RecoveryOrdersController < Api::BaseApiController
     render :json => { :success => true,   
                       :recovery_orders => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :roller_identification_form_id => @object.roller_identification_form_id, 
+                          :roller_identification_form_nomor_disasembly => @object.roller_identification_form.nomor_disasembly, 
+                          :roller_identification_form_code => @object.roller_identification_form.code, 
+                          :warehouse_id => @object.warehouse_id, 
+                          :warehouse_name => @object.warehouse.name, 
+                          :code => @object.code, 
+                          :amount_received => @object.amount_received, 
+                          :amount_rejected => @object.amount_rejected, 
+                          :amount_final => @object.amount_final, 
+                          :is_completed => @object.is_completed, 
+                          :is_confirmed => @object.is_confirmed, 
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) , 
+                          :has_due_date => @object.has_due_date, 
+                          :due_date => format_date_friendly(@object.due_date) ,
                         
                         ],
                       :total => RecoveryOrder.active_objects.count  }
   end
 
   def update
-    params[:recovery_order][:transaction_datetime] =  parse_date( params[:recovery_order][:transaction_datetime] )
     params[:recovery_order][:confirmed_at] =  parse_date( params[:recovery_order][:confirmed_at] )
     
     @object = RecoveryOrder.find(params[:id])
@@ -145,15 +153,21 @@ class Api::RecoveryOrdersController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :recovery_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                           :id => @object.id, 
+                          :roller_identification_form_id => @object.roller_identification_form_id, 
+                          :roller_identification_form_nomor_disasembly => @object.roller_identification_form.nomor_disasembly, 
+                          :roller_identification_form_code => @object.roller_identification_form.code, 
+                          :warehouse_id => @object.warehouse_id, 
+                          :warehouse_name => @object.warehouse.name, 
+                          :code => @object.code, 
+                          :amount_received => @object.amount_received, 
+                          :amount_rejected => @object.amount_rejected, 
+                          :amount_final => @object.amount_final, 
+                          :is_completed => @object.is_completed, 
+                          :is_confirmed => @object.is_confirmed, 
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) , 
+                          :has_due_date => @object.has_due_date, 
+                          :due_date => format_date_friendly(@object.due_date) ,
                           ],
                         :total => RecoveryOrder.active_objects.count  } 
     else
@@ -197,29 +211,33 @@ class Api::RecoveryOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = RecoveryOrder.where{  
+      @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( roller_identification_form.nomor_disasembly =~  query) | 
+           ( warehouse.name =~  query) 
          )
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RecoveryOrder.where{  
+      @total = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{  
         ( 
-           ( code =~ query )  
+           ( code =~ query)  | 
+           ( roller_identification_form.nomor_disasembly =~  query) | 
+           ( warehouse.name =~  query) 
          )
       }.count 
     else
-      @objects = RecoveryOrder.where{ 
+      @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RecoveryOrder.where{ 
+      @total = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{ 
           (id.eq selected_id)  
       }.count 
     end

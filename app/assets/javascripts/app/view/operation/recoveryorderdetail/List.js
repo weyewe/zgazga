@@ -8,14 +8,10 @@ Ext.define('AM.view.operation.recoveryorderdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
-			
+			{ header: 'RIF Id', dataIndex: 'roller_identification_form_detail_id', flex: 1},
+			{ header: 'Sku Roller',  dataIndex: 'roller_builder_sku', flex: 1},
+    		{ header: 'Roller',  dataIndex: 'roller_builder_name', flex: 1},
+    		{ header: 'Core Type',  dataIndex: 'core_type_case_text', flex: 2},
 			 
 		];
 		

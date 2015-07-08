@@ -3,21 +3,20 @@ Ext.define('AM.model.RecoveryOrder', {
   	fields: [
 
     	    { name: 'id', type: 'int' },
-    	    { name: 'sales_date', type: 'string' },
-			{ name: 'nomor_surat', type: 'string' } ,
-			{ name: 'code', type: 'string' } ,
-			
-			{ name: 'contact_id', type: 'int' },
-    	    { name: 'contact_name', type: 'string' },
-    	    
-    	    { name: 'employee_id', type: 'int' },
-    	    { name: 'employee_name', type: 'string' },
-    	    
-    	    { name: 'exchange_id', type: 'int' },
-    	    { name: 'exchange_name', type: 'string' },
-			
-			{ name: 'is_confirmed', type: 'boolean' } , 
-			{ name: 'confirmed_at', type: 'string' }   ,
+    	    { name: 'roller_identification_form_id', type: 'int' },
+    	    { name: 'roller_identification_form_nomor_disasembly', type: 'string' },
+    	    { name: 'roller_identification_form_code', type: 'string' },
+    	    { name: 'warehouse_id', type: 'int' },
+    	    { name: 'warehouse_name', type: 'string' },
+    	    { name: 'code', type: 'string' },
+    	    { name: 'amount_received', type: 'int' },
+    	    { name: 'amount_rejected', type: 'int' },
+    	    { name: 'amount_final', type: 'int' },
+    	    { name: 'is_completed', type: 'boolean' },
+    	    { name: 'is_confirmed', type: 'boolean' },
+    	    { name: 'confirmed_at', type: 'string' },
+    	    { name: 'has_due_date', type: 'int' },
+    	    { name: 'due_date', type: 'string' },
 			
 			
   	],
