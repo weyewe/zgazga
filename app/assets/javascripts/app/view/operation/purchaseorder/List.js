@@ -7,11 +7,33 @@ Ext.define('AM.view.operation.purchaseorder.List' ,{
 
 	initComponent: function() {
 		this.columns = [
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+			// { header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
+			// { header: 'Tanggal Pembelian', dataIndex: 'purchase_date', flex: 2 },
+		 //	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
+			// { header: 'Currency',  dataIndex: 'exchange_name', flex: 2},
+			
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			{ header: 'Tanggal Pembelian', dataIndex: 'purchase_date', flex: 2 },
-		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
-			{ header: 'Currency',  dataIndex: 'exchange_name', flex: 2},
+
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Sales Date: <br />  <b>{purchase_date}</b>'  + '<br />' + '<br />' +
+							'No Surat: <b>{nomor_surat}</b>' + '<br />' + '<br />' +
+							'Quantity Editable: <b>{allow_edit_detail}</b>' 
+			},
+			
+			{	header: 'Supplier', dataIndex: 'contact_name', flex: 2 },
+			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 }, 
+		  
+			{
+				xtype : 'templatecolumn',
+				text : "Konfirmasi",
+				flex : 3,
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			},
 			
 			
 		];

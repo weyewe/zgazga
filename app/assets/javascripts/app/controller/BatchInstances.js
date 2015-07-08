@@ -275,21 +275,17 @@ Ext.define('AM.controller.BatchInstances', {
     var values = form.getValues();
 
 
-		// console.log("The values");
-		// console.log( values);
-		form.query('checkbox').forEach(function(checkbox){
-						// 
-						// record.set( checkbox['name']  ,checkbox['checked'] ) ;
-						// console.log("the checkbox name: " +  checkbox['name']   );
-						// console.log("the checkbox value: " + checkbox['checked']  );
-			values[checkbox['name']] = checkbox['checked'];
-		});
+ 
 		
 		
 		
 		if( record ){
 			record.set( values );
-			 
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
+			
 			form.setLoading(true);
 			record.save({
 				success : function(record){

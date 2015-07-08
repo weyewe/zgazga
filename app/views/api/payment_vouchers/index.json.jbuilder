@@ -16,7 +16,7 @@ json.payment_vouchers @objects do |object|
 	json.is_confirmed 			 object.is_confirmed
 	json.gbch_no 			 object.gbch_no
 	json.is_gbch 			 object.is_gbch
-	json.due_date 			 object.due_date
+	json.due_date 			 format_date_friendly(  object.due_date ) 
 	
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 
 	

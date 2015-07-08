@@ -82,6 +82,11 @@ Ext.define('AM.controller.Customers', {
 		
 		if( record ){
 			record.set( values );
+			
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			  
 			 
 			form.setLoading(true);
 			record.save({
