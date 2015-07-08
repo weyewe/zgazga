@@ -351,14 +351,14 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Customer Accessories', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				text:'Customer Accessories',
+				viewClass:'AM.view.operation.RollerAcc', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
-						action : 'index'
+						controller : 'roller_accs',
+						action : 'index_1'
 					}
 				]
 			}, 

@@ -11,6 +11,8 @@ Ticketie::Application.routes.draw do
   resources :payment_requests
   resources :payment_vouchers
   resources :receipt_vouchers
+  resources :roller_accs
+  resources :roller_acc_details
   
   
   
@@ -52,6 +54,8 @@ Ticketie::Application.routes.draw do
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
     get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
     get 'search_blending_work_orders' => 'blending_work_orders#search', :as => :search_blending_work_order
+    get 'search_roller_accessorys' => 'roller_identification_form_details#search', :as => :search_roller_accessorys
+    get 'search_roller_accessory_details' => 'roller_accessory_details#search', :as => :search_roller_accessory_detail
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail

@@ -187,7 +187,7 @@ Ext.define('AM.view.operation.rolleridentificationformdetail.Form', {
 	        fieldLabel: 'roller_identification_form_id'
 	      },
 	      {
-						xtype: 'numberfield',
+						xtype: 'textfield',
 						name : 'detail_id',
 						fieldLabel: 'RIF id'
 					},

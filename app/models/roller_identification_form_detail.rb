@@ -13,6 +13,14 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   validate :valid_core_builder_id
   validate :valid_roller_type_id
   
+  def self.active_objects
+    return self
+  end
+  
+  def active_children
+    self.roller_accessory_details  
+  end
+  
   def valid_roller_identification_form_id
     return if  roller_identification_form_id.nil?
     rif = RollerIdentificationForm.find_by_id roller_identification_form_id
