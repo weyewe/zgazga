@@ -193,6 +193,25 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	},
 	
 	
+	setExtraParamInReceivableComboBox: function(contact_id){
+		console.log("inside setExtraParamInReceivable");
+		console.log("The contact_id");
+		console.log( contact_id);
+		var comboBox = this.down('form').getForm().findField('receivable_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.contact_id =  contact_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {
+		console.log("inside setComboBoxExtraParams");
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInReceivableComboBox( record.get("contact_id") ); 
+	},
+	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
