@@ -617,6 +617,7 @@ if Rails.env.development?
       :employee_id => selected_employee.id,
       :exchange_id => selected_exchange.id,
       :order_date => DateTime.now,
+      :order_type => ORDER_TYPE_CASE[:trial_order],
       :nomor_surat => "Nomor surat #{x}"
       )
     (1.upto 4).each do |y|
@@ -624,7 +625,7 @@ if Rails.env.development?
       VirtualOrderDetail.create_object(
         :virtual_order_id => virtual_order.id,
         :item_id => selected_item.id,
-        :amount => BigDecimal("2"),
+        :amount => BigDecimal("10"),
         :price => BigDecimal("1000")
         )
     end
@@ -649,7 +650,7 @@ if Rails.env.development?
     (1.upto 4).each do |y|
       selected_virtual_order_detail = 
       selected_virtual_order.virtual_order_details[rand(0..(selected_virtual_order.virtual_order_details.length - 1))]
-      VirtualDeliveryOrderDetail.create_object(
+      vd = VirtualDeliveryOrderDetail.create_object(
         :virtual_delivery_order_id => virtual_delivery_order.id,
         :virtual_order_detail_id => selected_virtual_order_detail.id,
         :amount => BigDecimal("2")

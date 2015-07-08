@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.salesorder.Form', {
+Ext.define('AM.view.operation.recoveryorder.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.salesorderform',
+  alias : 'widget.recoveryorderform',
 
-  title : 'Add / Edit SalesOrder',
+  title : 'Add / Edit RecoveryOrder',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
-		storeId : 'warehouse_search',
+	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
+		storeId : 'employee_search',
 		fields	: [
 		 		{
-					name : 'warehouse_name',
+					name : 'employee_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'warehouse_description',
+					name : 'employee_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'warehouse_id',
+					name : 'employee_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,7 +66,38 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_warehouses',
+			url : 'api/search_employees',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+	
+	var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
+		storeId : 'exchange_search',
+		fields	: [
+		 		{
+					name : 'exchange_name',
+					mapping : "name"
+				} ,
+				{
+					name : 'exchange_description',
+					mapping : "description"
+				} ,
+		 
+				{
+					name : 'exchange_id',
+					mapping : 'id'
+				}  
+		],
+		
+	 
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_exchanges',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -250,13 +281,13 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	
 	setComboBoxData : function( record){ 
 
-		var me = this; 
-		me.setLoading(true);
+		// var me = this; 
+		// me.setLoading(true);
 		
 		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
-		me.setSelectedEmployee( record.get("employee_id")  ) ;
-		me.setSelectedExchange( record.get("exchange_id")  ) ;
-		me.setSelectedCustomer( record.get("contact_id")  ) ;
+		// me.setSelectedEmployee( record.get("employee_id")  ) ;
+		// me.setSelectedExchange( record.get("exchange_id")  ) ;
+		// me.setSelectedCustomer( record.get("contact_id")  ) ;
  
 	}
  

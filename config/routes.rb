@@ -64,6 +64,8 @@ Ticketie::Application.routes.draw do
     get 'search_virtual_order_clearance_details' => 'virtual_order_clearance_details#search', :as => :search_virtual_order_clearance_detail
     get 'search_temporary_delivery_orders' => 'temporary_delivery_orders#search', :as => :search_temporary_delivery_order
     get 'search_temporary_delivery_order_details' => 'temporary_delivery_order_details#search', :as => :search_temporary_delivery_order_detail
+    get 'search_roller_identifications_forms' => 'roller_identifications_forms#search', :as => :search_roller_identifications_form
+    get 'search_roller_identifications_form_details' => 'roller_identifications_form_details#search', :as => :search_roller_identifications_form_detail
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
@@ -175,6 +177,9 @@ Ticketie::Application.routes.draw do
     
     resources :blanket_orders
     resources :blanket_order_details
+    
+    resources :roller_identification_forms
+    resources :roller_identification_form_details
     
     resources :blending_work_orders
     

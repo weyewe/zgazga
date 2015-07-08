@@ -22,7 +22,7 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
   
   def valid_virtual_order_detail
     return if  virtual_order_detail_id.nil?
-    pod = VirtualDeliveryOrderDetail.find_by_id virtual_order_detail_id
+    pod = VirtualOrderDetail.find_by_id virtual_order_detail_id
     if pod.nil? 
       self.errors.add(:virtual_order_detail_id, "Harus ada virtual_order_detail_id")
       return self 
