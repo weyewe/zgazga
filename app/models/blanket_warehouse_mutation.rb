@@ -57,8 +57,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     new_object.blanket_order_id = params[:blanket_order_id]
     new_object.warehouse_from_id = params[:warehouse_from_id]
     new_object.warehouse_to_id = params[:warehouse_to_id]
-    new_object.mutation_date = params[:mutation_date]
-    new_object.amount = BigDecimal( params[:amount] || '0')
+    new_object.mutation_date = params[:mutation_date] 
     if new_object.save
       new_object.code = "Cadj-" + new_object.id.to_s  
       new_object.save
@@ -81,8 +80,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     self.blanket_order_id = params[:blanket_order_id]
     self.warehouse_from_id = params[:warehouse_from_id]
     self.warehouse_to_id = params[:warehouse_to_id]
-    self.mutation_date = params[:mutation_date]
-    self.amount = BigDecimal( params[:amount] || '0')
+    self.mutation_date = params[:mutation_date] 
     return self
   end
   
@@ -112,6 +110,13 @@ class BlanketWarehouseMutation < ActiveRecord::Base
       return self 
     end
     
+    self.blanket_warehouse_mutation_details.each do |bwmd|
+      if bwmd.quantity > bwmd.blanket_order_detail.undelivered_quantity
+        self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk blanket #{bwmd.blanket_order_detail.blanket.name}")
+        return self 
+      end
+    end
+    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
@@ -125,6 +130,21 @@ class BlanketWarehouseMutation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Belum di konfirmasi")
       return self
     end
+    
+    self.blanket_warehouse_mutation_details.each do |bwmd|
+      item_in_warehouse_to = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.warehouse_to_id,
+        :item_id => bwmd.item_id)
+      
+      puts "item in warehouse_to : #{item_in_warehouse_to.amount.to_i }, while quantity returned: #{bwmd.quantity}"
+      if item_in_warehouse_to.amount.to_i - bwmd.quantity < 0 
+        self.errors.add(:generic_errors, "Tidak cukup item dari warehouse tujuan ke warehouse sumber")
+        return self 
+      end
+    end
+    
+    
+    
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save
@@ -133,16 +153,19 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     return self
   end
   
+ 
+  
   def update_blanket_warehouse_item_confirm
     self.blanket_warehouse_mutation_details.each do |bwmd|
       # deduce item_in_warehouse_from
       item_in_warehouse_from = WarehouseItem.find_or_create_object(
         :warehouse_id => self.warehouse_from_id,
         :item_id => bwmd.item_id)     
+          
       new_stock_mutation_from = StockMutation.create_object(
-        :source_class => self.class.to_s, 
-        :source_id => self.id ,  
-        :amount => self.amount,  
+        :source_class => bwmd.class.to_s, 
+        :source_id => bwmd.id ,  
+        :amount => bwmd.quantity,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.mutation_date ,  
         :warehouse_id => self.warehouse_from_id ,
@@ -157,10 +180,10 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         :warehouse_id => self.warehouse_to_id,
         :item_id => bwmd.item_id)
       new_stock_mutation_to = StockMutation.create_object(
-        :source_class => self.class.to_s, 
-        :source_id => self.id ,  
-        :amount => self.amount,  
-        :status => ADJUSTMENT_STATUS[:deduction],  
+        :source_class => bwmd.class.to_s, 
+        :source_id => bwmd.id ,  
+        :amount => bwmd.quantity,  
+        :status => ADJUSTMENT_STATUS[:addition],  
         :mutation_date => self.mutation_date ,  
         :warehouse_id => self.warehouse_to_id ,
         :warehouse_item_id => item_in_warehouse_to.id,
@@ -169,6 +192,8 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         :source_code => bwmd.code
         ) 
       new_stock_mutation_to.stock_mutate_object
+      
+      bwmd.blanket_order_detail.update_undelivered_quantity( -1 * bwmd.quantity )
     end
   end
   
@@ -177,8 +202,8 @@ class BlanketWarehouseMutation < ActiveRecord::Base
       #       Update Warehouse From
       item_in_warehouse_from = WarehouseItem.where(:warehouse_id => self.warehouse_from_id,:item_id => bwmd.item_id).first
       stock_mutation = StockMutation.where(
-        :source_class => self.class.to_s, 
-        :source_id => self.id,
+        :source_class => bwmd.class.to_s, 
+        :source_id => bwmd.id,
         :warehouse_item_id => item_in_warehouse_from.id,
         :item_id => item_in_warehouse_from.item_id
         ).first
@@ -187,13 +212,17 @@ class BlanketWarehouseMutation < ActiveRecord::Base
 #       Update Warehouse To
       item_in_warehouse_to = WarehouseItem.where(:warehouse_id => self.warehouse_to_id,:item_id => bwmd.item_id).first
       stock_mutation = StockMutation.where(
-        :source_class => self.class.to_s, 
-        :source_id => self.id,
+        :source_class => bwmd.class.to_s, 
+        :source_id => bwmd.id,
         :warehouse_item_id => item_in_warehouse_to.id,
         :item_id => item_in_warehouse_to.item_id
         ).first
       stock_mutation.reverse_stock_mutate_object  
       stock_mutation.delete_object
+      
+      puts "gonna ask to update undelivered quantity by #{bwmd.quantity }"
+      bwmd.blanket_order_detail.update_undelivered_quantity(  bwmd.quantity )
+      
     end
   end
   

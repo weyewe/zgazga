@@ -10,11 +10,17 @@ Ext.define('AM.view.operation.salesorderdetail.List' ,{
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Quantity",
+				flex : 2,
+				tpl : '{amount} ({item_uom_name}) '
+			},
+			
     		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
     		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+			{	header: 'Price', dataIndex: 'price', flex: 1 } , 
 			
 			 
 		];

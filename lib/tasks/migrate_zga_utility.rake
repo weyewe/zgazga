@@ -4,6 +4,58 @@ require 'active_record'
 require 'csv'
 require 'rake'
 
+def original_file_location(  migration_filename) 
+  BASE_MIGRATION_ORIGINAL_LOCATION + '/' + migration_filename
+end
+
+def lookup_file_location(  migration_filename) 
+  BASE_MIGRATION_LOOKUP_LOCATION + '/' + migration_filename
+end
+
+def get_mapping_hash( filename) 
+  file_location = lookup_file_location(  filename ) 
+  
+  hash =  {} 
+  
+  CSV.open(file_location, 'r') do |csv| 
+      csv.each do |row| 
+        hash[ row[0] ]  = row[1] 
+      end
+  end
+  
+  return hash 
+end
+
+def get_parsed_date( date_string )
+    
+    return nil if not date_string.present? 
+
+    date_array = date_string.split('-').map{|x| x.to_i } 
+
+    
+    parsed_date = DateTime.new( 
+            date_array[0] ,
+            date_array[1],
+            date_array[2],
+            0,0,0
+            
+        )
+        
+    return parsed_date
+
+end
+
+
+def get_truth_value(truth_string )
+    return false if not truth_string.present?
+    
+    return true  if truth_string == "True" 
+    
+    return false 
+        
+end
+
+
 # call this using 
 # rake task_name['yhooooo',4]   => no spaces allowed in the argument 
 task :task_name, :display_value  do |t, args|
@@ -11,6 +63,10 @@ task :task_name, :display_value  do |t, args|
 #   args.display_times.to_i.times do
 #     puts args.display_value
 #   end
+end
+
+task :flush_lookup_folder  do |t, args|
+ FileUtils.rm_rf Dir.glob("#{Rails.root.to_s}/zga_migration/lookup/*")
 end
  
 
@@ -56,7 +112,7 @@ task :inspect_csv,  :filename do   | t, args|
 end
 
 
-# rake see_single_column_data['ContactGroup.csv',1]   << no spaces allowed
+# rake see_single_column_data['Items.csv',17]   << no spaces allowed
 task :see_single_column_data , :filename, :column  do | t, args | 
     column = args.column.to_i
     filename = args.filename

@@ -1,11 +1,20 @@
 class Api::SalesOrdersController < Api::BaseApiController
   
   def index
-     
-     
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
+    
+    # puts "\n"
+    # puts ">>>>>>>>>>>>>>\n"*5
+    
+    # build query
+    query =   SalesOrder.active_objects.joins(:contact,:employee,:exchange)
+    # puts "The query : #{query}"
+    # puts "initial query total: #{query.count}"
+    
+    if params[:livesearch].present?
+      
+      # livesearch = params[:livesearch]
+      livesearch = "%#{params[:livesearch]}%"
+      query = query.where{
          (
            
            ( code =~ livesearch)  | 
@@ -15,24 +24,56 @@ class Api::SalesOrdersController < Api::BaseApiController
            ( exchange.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
+       }
+    end
+    
+    # puts "after livesearch query total: #{query.count}"
+    
+    if params[:is_confirmed].present?
+      query = query.where(:is_confirmed => true ) 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
+    
+    
+    # puts ">>>>>>>>>>>>\n\n total: #{@total}"
+    # puts "The livesearch: #{params[:livesearch]}"
+    # puts "@objects: #{@objects}"
+    
+    
+     
+     
+    # if params[:livesearch].present? 
+    #   livesearch = "%#{params[:livesearch]}%"
+    #   @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
+    #     (
+           
+    #       ( code =~ livesearch)  | 
+    #       ( nomor_surat =~ livesearch)  | 
+    #       ( contact.name =~  livesearch) | 
+    #       ( employee.name =~  livesearch) | 
+    #       ( exchange.name =~  livesearch)
+    #     )
 
-       @total = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
-         (
+    #   }.page(params[:page]).per(params[:limit]).order("id DESC")
+
+    #   @total = SalesOrder.active_objects.joins(:contact,:employee,:exchange).where{
+    #     (
             
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-       }.count
+    #       ( code =~ livesearch)  | 
+    #       ( nomor_surat =~ livesearch)  | 
+    #       ( contact.name =~  livesearch) | 
+    #       ( employee.name =~  livesearch) | 
+    #       ( exchange.name =~  livesearch)
+    #     )
+    #   }.count
  
 
-     else
-       @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = SalesOrder.active_objects.count
-     end
+    # else
+    #   @objects = SalesOrder.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+    #   @total = SalesOrder.active_objects.count
+    # end
      
      
      

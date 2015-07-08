@@ -1,6 +1,8 @@
 class WarehouseItem < ActiveRecord::Base
 
   belongs_to :warehouse
+  belongs_to :item 
+  
   def self.active_objects
     self
   end

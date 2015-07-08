@@ -85,6 +85,7 @@ class StockAdjustment < ActiveRecord::Base
            return self 
         end
       end
+
     end
   end
   
@@ -105,6 +106,22 @@ class StockAdjustment < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
+      
+      
+      if sad.item.is_batched?
+        BatchSource.create_object( 
+          :item_id  => sad.item_id,
+          :status   =>   sad.status, 
+          :source_class => sad.class.to_s, 
+          :source_id => sad.id , 
+          :generated_date => self.confirmed_at , 
+          :amount => sad.amount 
+        )
+      end
+      
+
+      
+      
     end
   end
   
@@ -120,6 +137,13 @@ class StockAdjustment < ActiveRecord::Base
         ).first
       stock_mutation.reverse_stock_mutate_object  
       stock_mutation.delete_object
+      
+      if sad.item.is_batched?
+        BatchSource.where( 
+          :source_class => sad.class.to_s, 
+          :source_id => sad.id 
+        ).each {|x| x.delete_object } 
+      end
     end
   end
   
@@ -166,6 +190,14 @@ class StockAdjustment < ActiveRecord::Base
       return self 
     end
     
+    item_id_list = self.stock_adjustment_details.map{|x| x.item_id  } 
+    if BatchSourceAllocation.joins(:batch_source).where{
+      batch_sources.item_id.in item_id_list
+    }.count != 0 
+      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+      return self 
+    end
+    
 #   validate remaining amount in warehouse_item
     self.stock_adjustment_details.each do |sad|
       
@@ -178,6 +210,7 @@ class StockAdjustment < ActiveRecord::Base
       end
     end
     
+
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

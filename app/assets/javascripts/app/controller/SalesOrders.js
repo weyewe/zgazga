@@ -101,6 +101,8 @@ Ext.define('AM.controller.SalesOrders', {
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
+		
+		me.getSalesOrdersStore().currentPage  = 1; 
 
 		me.getSalesOrdersStore().getProxy().extraParams = {
 		    livesearch: newValue
@@ -250,6 +252,7 @@ Ext.define('AM.controller.SalesOrders', {
 					
 					list.enableRecordButtons(); 
 					
+ 
 					
 					win.close();
 				},

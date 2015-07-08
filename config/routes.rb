@@ -8,7 +8,9 @@ Ticketie::Application.routes.draw do
   resources :purchase_orders
   resources :purchase_receivals
   resources :purchase_invoices
-  
+  resources :payment_requests
+  resources :payment_vouchers
+  resources :receipt_vouchers
   
   
   

@@ -280,17 +280,22 @@ describe BlanketWarehouseMutation do
       :due_date => DateTime.now,
       )
       
+    @quantity = 5 
     @bod = BlanketOrderDetail.create_object(
       :blanket_order_id => @bo.id,
-      :blanket_id => @blanket_1.id
+      :blanket_id => @blanket_1.id,
+      :quantity => @quantity
       )
     
     @bo.confirm_object(:confirmed_at => DateTime.now)
     
+    @finished_quantity = 3 
     @bod.finish_object(
       :finished_at => DateTime.now,
       :roll_blanket_usage => 5,
-      :roll_blanket_defect => 5
+      :roll_blanket_defect => 5,
+      :finished_quantity => @finished_quantity,
+            :rejected_quantity => 1
       )
     
     @mutation_date_1 = DateTime.now
@@ -305,8 +310,7 @@ describe BlanketWarehouseMutation do
         :blanket_order_id => @bo.id,
         :warehouse_from_id => @wrh_1.id,
         :warehouse_to_id => @wrh_2.id,
-        :mutation_date => @mutation_date_1,
-        :amount => @amount_1,
+        :mutation_date => @mutation_date_1 
         )
     end
     
@@ -320,16 +324,14 @@ describe BlanketWarehouseMutation do
         :blanket_order_id => @bo.id,
         :warehouse_from_id => @wrh_2.id,
         :warehouse_to_id => @wrh_1.id,
-        :mutation_date => @mutation_date_2,
-        :amount => @amount_2,
+        :mutation_date => @mutation_date_2 
         )
       @bwm.errors.size.should == 0
       @bwm.should be_valid
       @bwm.blanket_order_id.should == @bo.id
       @bwm.warehouse_from_id.should == @wrh_2.id
       @bwm.warehouse_to_id.should == @wrh_1.id
-      @bwm.mutation_date.should == @mutation_date_2
-      @bwm.amount.should == @amount_2
+      @bwm.mutation_date.should == @mutation_date_2 
     end
     
     it "should delete BlanketWarehouseMutation" do 
@@ -340,13 +342,19 @@ describe BlanketWarehouseMutation do
     
     context "create BlanketWarehouseMutationDetail" do
       before(:each) do
+        @bod.reload 
+        @mutation_quantity = 2 
+        @initial_undelivered_quantity = @bod.undelivered_quantity
         @bwmd = BlanketWarehouseMutationDetail.create_object(
           :blanket_warehouse_mutation_id  => @bwm.id,
           :blanket_order_detail_id => @bod.id,
+          :quantity => @mutation_quantity
           )
+        
       end
       
       it "should create BlanketWarehouseMutationDetail" do
+        @bwmd.errors.messages.each {|x| puts "The error message: #{x}" } 
         @bwmd.errors.size.should == 0
         @bwmd.should be_valid
       end
@@ -356,6 +364,7 @@ describe BlanketWarehouseMutation do
           @bwm.confirm_object(
             :confirmed_at => DateTime.now
             )
+          @bod.reload 
         end
         
         it "should confirm BlanketWarehouseMutation" do
@@ -363,14 +372,26 @@ describe BlanketWarehouseMutation do
           @bwm.is_confirmed.should == true
         end
         
+        it "should reduce the undelivered_quantity in bod by mutation_quantity" do
+          diff = @initial_undelivered_quantity - @bod.undelivered_quantity
+          diff.should == @mutation_quantity
+        end
+        
         context "unconfirm BlanketWarehouseMutation" do
           before(:each) do
             @bwm.unconfirm_object
+            @bod.reload 
           end
           
           it "should unconfirm BlanketWarehouseMutation" do
+            @bwm.errors.messages.each {|x| puts "the error msg from bwm unconfirm: #{x}" } 
             @bwm.errors.size.should == 0
             @bwm.is_confirmed.should == false
+          end
+          
+          it "should recover undelivered quantity in bod" do
+            @bod.reload
+            @bod.undelivered_quantity.should == @finished_quantity
           end
           
         end

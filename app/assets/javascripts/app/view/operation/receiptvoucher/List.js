@@ -76,11 +76,18 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 			hidden : true
 		});
 		
-		this.unreconcileObjectButton = new Ext.Button({
+ 
+		this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+			disabled: true}); 
+ 
+ 		this.unreconcileObjectButton = new Ext.Button({
 			text: 'Unreconcile',
 			action: 'unreconcileObject',
 			disabled: true,
 			hidden : true
+ 
 		});
 		
 		this.searchField = new Ext.form.field.Text({
@@ -94,8 +101,11 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
+ 
 					this.confirmObjectButton, this.unconfirmObjectButton,this.reconcileObjectButton, 
 					this.unreconcileObjectButton,
+					this.downloadButton, 
+ 
 					'->',
 					this.searchField ];
 	 
@@ -121,6 +131,7 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable(); 
+		this.downloadButton.enable();
 		
 		selectedObject = this.getSelectedObject();
 		
@@ -151,6 +162,9 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 		this.deleteObjectButton.disable();
 		this.unconfirmObjectButton.disable();
 		this.confirmObjectButton.disable(); 
+ 
+		this.downloadButton.disable();
+ 
 		
 		selectedObject = this.getSelectedObject();
 		
@@ -170,5 +184,6 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 			this.reconcileObjectButton.show();
 			this.unreconcileObjectButton.hide();
 		}
+ 
 	}
 });
