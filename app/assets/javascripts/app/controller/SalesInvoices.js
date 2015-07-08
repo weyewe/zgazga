@@ -75,10 +75,25 @@ Ext.define('AM.controller.SalesInvoices', {
 			},
 			'salesinvoiceform button[action=save]': {
         click: this.updateObject
-      }
+      },
+      
+      'salesinvoiceProcess salesinvoicelist button[action=downloadObject]': {
+			    click: this.downloadObject
+			}	
+			
+
 		
     });
   },
+	  
+	 downloadObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id")
+			if( record ){
+				window.open( 'sales_invoices/' + id + '.pdf' );
+			}
+			
+	},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

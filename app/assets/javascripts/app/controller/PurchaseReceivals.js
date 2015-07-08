@@ -75,10 +75,23 @@ Ext.define('AM.controller.PurchaseReceivals', {
 			},
 			'purchasereceivalform button[action=save]': {
         click: this.updateObject
-      }
+      },
+				      
+				'purchasereceivalProcess purchasereceivallist button[action=downloadObject]': {
+				    click: this.downloadObject
+				}
 		
     });
   },
+	  
+	downloadObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id")
+			if( record ){
+				window.open( 'purchase_receivals/' + id + '.pdf' );
+			}
+			
+	},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

@@ -6,10 +6,14 @@ class SalesInvoiceDetail < ActiveRecord::Base
   validate :valid_amount
   belongs_to :delivery_order_detail
   belongs_to :sales_invoice
-  belongs_to :item
+  # belongs_to :item
   
   def self.active_objects
     self
+  end
+  
+  def item
+    self.delivery_order_detail.item
   end
   
   def valid_amount

@@ -75,10 +75,22 @@ Ext.define('AM.controller.PurchaseOrders', {
 			},
 			'purchaseorderform button[action=save]': {
         click: this.updateObject
-      }
+      },
+			'purchaseorderProcess purchaseorderlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			}	
 		
     });
   },
+  
+ downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id")
+		if( record ){
+			window.open( 'purchase_orders/' + id + '.pdf' );
+		}
+		
+},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

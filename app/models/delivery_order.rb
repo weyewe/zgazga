@@ -87,7 +87,7 @@ class DeliveryOrder < ActiveRecord::Base
     self.delivery_order_details.each do |dod|
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
       if item_in_warehouse.amount < dod.amount
-        self.errors.add(:generic_errors, "Amount Item tidak mencukupi")
+        self.errors.add(:generic_errors, "Amount #{item_in_warehouse.item.sku} tidak mencukupi")
         return self 
       end
     end
@@ -119,6 +119,15 @@ class DeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
+    
+    item_id_list = self.delivery_order_details.map{|x| x.item_id  } 
+    if BatchSourceAllocation.joins(:batch_source).where{
+      batch_source.item_id.in item_id_list
+    }.count != 0 
+      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+      return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
@@ -230,11 +239,27 @@ class DeliveryOrder < ActiveRecord::Base
       dod.sales_order_detail.save
       dod.save    
       total_cogs += dod.cogs
+      
+      
+      if dod.item.is_batched?
+        BatchSource.create_object( 
+          :item_id  => dod.item_id,
+          :status   =>  ADJUSTMENT_STATUS[:deduction], 
+          :source_class => dod.class.to_s, 
+          :source_id => dod.id , 
+          :generated_date => self.confirmed_at , 
+          :amount => dod.amount 
+        )
+      end
+
     end
     
     self.total_cogs = total_cogs
     self.save
     self.sales_order.update_is_delivery_completed
+    
+    
+
   end
   
   def update_delivery_order_unconfirm
@@ -262,6 +287,17 @@ class DeliveryOrder < ActiveRecord::Base
       end
       dod.sales_order_detail.save
       dod.save
+      
+      
+      
+      if dod.item.is_batched?
+        BatchSource.where( 
+          :source_class => dod.class.to_s, 
+          :source_id => dod.id 
+        ).each {|x| x.delete_object } 
+      end
+      
+      
     end
     self.total_cogs = 0
     self.save

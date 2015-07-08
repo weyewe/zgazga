@@ -2,10 +2,12 @@ migration_procedure:
 
 rake db:drop; rake db:create; rake db:migrate
 
+rake flush_lookup_folder
 rake migrate_zga:base_setup
 rake migrate_zga:exchange
 rake migrate_zga:cash_bank
 rake migrate_zga:coa 
+
 
 
 rake migrate_zga:contact_group
@@ -20,6 +22,81 @@ rake migrate_zga:uom
 rake migrate_zga:item_type
 rake  migrate_zga:sub_type
 
-migrate_zga:core_builder
-pending: migrate_zga:roller_builder
-pending: migrate_zga:item 
+
+rake migrate_zga:independent_item 
+rake migrate_zga:blanket 
+rake migrate_zga:core_builder
+rake migrate_zga:roller_type
+rake  migrate_zga:roller_builder 
+rake migrate_zga:warehouse 
+
+
+rake migrate_zga:exchange_rate
+ 
+rake migrate_zga:stock_adjustment
+rake migrate_zga:stock_adjustment_detail  
+rake migrate_zga:confirm_stock_adjustment
+
+
+
+
+rake migrate_zga:purchase_order
+rake migrate_zga:purchase_order_detail  
+rake migrate_zga:confirm_purchase_order
+
+rake migrate_zga:purchase_receival
+rake migrate_zga:purchase_receival_detail  
+rake migrate_zga:confirm_purchase_receival
+
+rake migrate_zga:purchase_invoice
+rake migrate_zga:purchase_invoice_detail  
+rake migrate_zga:confirm_purchase_invoice
+
+rake migrate_zga:sales_order
+rake migrate_zga:sales_order_detail  
+rake migrate_zga:confirm_sales_order
+rake migrate_zga:delivery_order
+rake migrate_zga:delivery_order_detail  
+rake migrate_zga:confirm_delivery_order
+
+rake migrate_zga:sales_invoice
+rake migrate_zga:sales_invoice_detail  
+rake migrate_zga:confirm_sales_invoice
+rake migrate_zga:outstanding_sales_invoice 
+rake migrate_zga:receivable 
+
+
+rake migrate_zga:receipt_voucher
+rake migrate_zga:receipt_voucher_detail
+rake migrate_zga:confirm_receipt_voucher
+
+
+rake migrate_zga:payment_request
+rake migrate_zga:payment_request_detail
+rake migrate_zga:confirm_payment_request
+rake migrate_zga:outstanding_purchase_invoice 
+rake migrate_zga:payable 
+
+
+
+
+rake migrate_zga:payment_voucher
+rake migrate_zga:payment_voucher_detail
+rake migrate_zga:confirm_payment_voucher
+
+
+ 
+rake migrate_zga:roller_identification_form
+rake migrate_zga:roller_identification_form_detail
+rake migrate_zga:confirm_roller_identification_form
+
+rake migrate_zga:recovery_order
+rake migrate_zga:recovery_order_detail
+rake migrate_zga:confirm_recovery_order 
+
+ 
+ 
+ 
+rake migrate_zga:blanket_order
+rake migrate_zga:blanket_order_detail 
+rake migrate_zga:confirm_blanket_order 

@@ -185,7 +185,8 @@ STATUS_PEMBULATAN = {
 
 CROPPING_TYPE = {
   :normal => 1,
-  :special => 2
+  :special => 2,
+  :none => 3 
 }
 
 APPLICATION_CASE = {
@@ -260,15 +261,96 @@ MIGRATION_FILENAME = {
   :item_type => 'ItemTypes.csv',
   :sub_type => 'SubTypes.csv',
   :core_builder => "CoreBuilders.csv",
+  :roller_type => "RollerTypes.csv",
   :roller_builder => "RollerBuilders.csv",
+  :blanket => "Blankets.csv",
   :machine => "Machines.csv",
   :uom => 'UoMs.csv',
+  :item => "Items.csv",
   :warehouse => 'Warehouses.csv',
   :cash_bank => "CashBanks.csv",
   :exchange => "Currencies.csv",
-  :coa => 'Accounts.csv'
+  :coa => 'Accounts.csv',
+  
+  :exchange_rate => "ExchangeRates.csv",
+  :stock_adjustment => "StockAdjustments.csv", 
+  :stock_adjustment_detail => "StockAdjustmentDetails.csv",
+  :stock_adjustment_confirm => "StockAdjustmentConfirm.csv",
+  
+  :sales_order => "SalesOrders.csv",
+  :sales_order_detail => "SalesOrderDetails.csv",
+  :sales_order_confirm => "SalesOrderConfirm.csv",
+  
+  :delivery_order => "DeliveryOrders.csv",
+  :delivery_order_detail => "DeliveryOrderDetails.csv",
+  :delivery_order_confirm => "DeliveryOrderConfirm.csv",
+  
+  :sales_invoice => "SalesInvoices.csv",
+  :sales_invoice_detail => "SalesInvoiceDetails.csv",
+  :sales_invoice_confirm => "SalesInvoiceConfirm.csv",
+  
+  :purchase_order => "PurchaseOrders.csv",
+  :purchase_order_detail => "PurchaseOrderDetails.csv",
+  :purchase_order_confirm => "PurchaseOrderConfirm.csv",
+  
+  :purchase_receival => "PurchaseReceivals.csv",
+  :purchase_receival_detail => "PurchaseReceivalDetails.csv",
+  :purchase_receival_confirm => "PurchaseReceivalConfirm.csv",
+  
+  :purchase_invoice => "PurchaseInvoices.csv",
+  :purchase_invoice_detail => "PurchaseInvoiceDetails.csv",
+  :purchase_invoice_confirm => "PurchaseInvoiceConfirm.csv",
+  
+  :roller_identification_form => "CoreIdentifications.csv",
+  :roller_identification_form_detail => "CoreIdentificationDetails.csv",
+  :roller_identification_form_confirm => "CoreIdentificationConfirm.csv",
+  
+  :recovery_order  => "RecoveryOrders.csv",
+  :recovery_order_detail => "RecoveryOrderDetails.csv",
+  :recovery_order_confirm => "RecoveryOrderConfirm.csv",
+  :recovery_accessory_detail => "RecoveryAccessoryDetails.csv",
+  :recovery_detail_finish_reject => "RecoveryDetailFinishReject.csv",
+  
+  :blanket_order  => "BlanketOrders.csv",
+  :blanket_order_detail => "BlanketOrderDetails.csv",
+  :blanket_order_confirm => "BlanketOrderConfirm.csv",
+  :blanket_detail_finish_reject => "BlanketDetailFinishReject.csv",
+  
+  :payable => "Payables.csv",
+  :receivable => "Receivables.csv",
+  
+  :outstanding_sales_invoice  => "SalesInvoiceMigrations.csv",
+  :outstanding_purchase_invoice  => "PurchaseInvoiceMigrations.csv" ,
+  
+  :payment_request => "PaymentRequests.csv",
+  :payment_request_detail => "PaymentRequestDetails.csv",
+  :payment_request_confirm => "PaymentRequestConfirm.csv",
+  
+  :receipt_voucher => "ReceiptVouchers.csv",
+  :receipt_voucher_detail => "ReceiptVoucherDetails.csv",
+  :receipt_voucher_confirm => "ReceiptVoucherConfirm.csv",
+  
+  :payment_voucher => "PaymentVouchers.csv",
+  :payment_voucher_detail => "PaymentVoucherDetails.csv",
+  :payment_voucher_confirm => "PaymentVoucherConfirm.csv",
+  
+  
+} 
+
+BASE_ITEM_TYPE = {
+  :accessory => "Accessory",
+  :adhesive_blanket => "AdhesiveBlanket",
+  :adhesive_roller => "AdhesiveRoller",
+  :bar => "Bar",
+  :blanket => "Blanket",
+  :roll_blanket => "RollBlanket",
+  :chemical => "Chemical",
+  :compound => "Compound",
+  :core => "Core",
+  :underpacking => "Underpacking",
+  :roller => "Roller"
   
 } 
 
 EXCHANGE_BASE_NAME = "Rupiah"
-
+ 

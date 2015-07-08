@@ -11,6 +11,10 @@ Ext.application({
 		Dir[subdir + '/*.js*'].map {|f| File.basename(f)[/^[^.]+/] }.to_json
 		%>,
 	<% end %>
+	
+	
+	
+	
 
 // ... the rest of your ExtJS 4 application definition goes here ...
 // the global namespace
@@ -35,6 +39,18 @@ Ext.override(Ext.Container, {
     }
 });
 
+ 
+
+
+ 
+Ext.override(Ext.Container, {
+    removeAll: function() {
+        this.items.each(function(childItem){ this.remove(childItem);}, this);
+    }
+});
+
+ 
+ 
 Ext.define("AM.view.Constants",{
 	singleton	: true,
 	

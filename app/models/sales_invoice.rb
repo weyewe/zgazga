@@ -49,9 +49,9 @@ class SalesInvoice < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.due_date = params[:due_date]
     if new_object.save  
-    new_object.exchange_id = new_object.delivery_order.sales_order.exchange_id
-    new_object.code = "Cadj-" + new_object.id.to_s  
-    new_object.save
+      new_object.exchange_id = new_object.delivery_order.sales_order.exchange_id
+      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.save
     end
     return new_object
   end
