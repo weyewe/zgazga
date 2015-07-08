@@ -58,7 +58,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       query = query.where(:contact_id => object.id )
     end
     
-    object = Exchange.find_by_id params[:exchange]
+    object = Exchange.find_by_id params[:exchange_id]
     if not object.nil? 
       query = query.where(:exchange_id => object.id )
     end

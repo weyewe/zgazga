@@ -7,6 +7,7 @@ Ext.define('AM.controller.DeliveryOrders', {
   views: [
     'operation.deliveryorder.List',
     'operation.deliveryorder.Form',
+    'operation.deliveryorder.FilterForm',
 		'operation.deliveryorderdetail.List',
 		'Viewport'
   ],
@@ -81,7 +82,91 @@ Ext.define('AM.controller.DeliveryOrders', {
         click: this.downloadObject
 			}	,
 		
+      'deliveryorderProcess deliveryorderlist button[action=filterObject]': {
+        click: this.filterObject
+      },
+			'filterdeliveryorderform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterdeliveryorderform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+		
     });
+  },
+  
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterdeliveryorderform');
+		
+		view.setPreviousValue( me.getDeliveryOrdersStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getDeliveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getDeliveryOrdersStore().getProxy().extraParams = extraParams;
+		
+
+
+ 
+	 
+		me.getDeliveryOrdersStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getDeliveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues();
+    // console.log("The values");
+    // console.log( values ) ;
+
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+	 
+		 
+		me.getDeliveryOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getDeliveryOrdersStore().load();
+		win.close();
   },
   
 	downloadObject: function(){

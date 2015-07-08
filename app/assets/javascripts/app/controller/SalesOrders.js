@@ -113,10 +113,7 @@ Ext.define('AM.controller.SalesOrders', {
 		me.getSalesOrdersStore().currentPage  = 1; 
 		
 		
-    var values = form.getValues();
-    // console.log("The values");
-    // console.log( values ) ;
-
+    var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
@@ -133,9 +130,7 @@ Ext.define('AM.controller.SalesOrders', {
 		    	extraParams[k] = values[k]; 
 		    }
 		}
-		
-		// console.log("the final params");
-		// console.log( extraParams);
+		 
 		 
 		me.getSalesOrdersStore().getProxy().extraParams = extraParams;
 		
