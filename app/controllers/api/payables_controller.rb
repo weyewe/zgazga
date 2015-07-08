@@ -125,23 +125,47 @@ class Api::PayablesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Payable.joins(:exchange,:contact).where{ 
+      
+      query = Payable.joins(:exchange,:contact).where{ 
         ( source_class =~  query )  | 
         ( source_code =~ query ) | 
         ( contact.name =~ query ) | 
         ( exchange.name =~ query ) 
-                              }.
-                        page(params[:page]).
+                              }
+                              
+      if params[:contact_id].present?
+        object = Contact.find_by_id params[:contact_id]
+        if not object.nil?  
+          query.where(:contact_id => object.id )
+        end
+      end
+      
+      
+      # @objects = Payable.joins(:exchange,:contact).where{ 
+      #   ( source_class =~  query )  | 
+      #   ( source_code =~ query ) | 
+      #   ( contact.name =~ query ) | 
+      #   ( exchange.name =~ query ) 
+      #                         }.
+      #                   page(params[:page]).
+      #                   per(params[:limit]).
+      #                   order("id DESC")
+      
+      
+    
+                        
+      # @total = Payable.joins(:exchange,:contact).where{ 
+      #   ( source_class =~  query )  | 
+      #   ( source_code =~ query ) | 
+      #   ( contact.name =~ query ) | 
+      #   ( exchange.name =~ query ) 
+        
+      #                         }.count
+                              
+      @objects = query.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
-                        
-      @total = Payable.joins(:exchange,:contact).where{ 
-        ( source_class =~  query )  | 
-        ( source_code =~ query ) | 
-        ( contact.name =~ query ) | 
-        ( exchange.name =~ query ) 
-        
-                              }.count
+      @total = query.count 
     else
       @objects = Payable.joins(:exchange,:contact).where{ (id.eq selected_id)  
                               }.
