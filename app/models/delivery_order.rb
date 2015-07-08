@@ -87,7 +87,7 @@ class DeliveryOrder < ActiveRecord::Base
     self.delivery_order_details.each do |dod|
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
       if item_in_warehouse.amount < dod.amount
-        self.errors.add(:generic_errors, "Amount #{item_in_warehouse.item.sku} tidak mencukupi")
+        self.errors.add(:generic_errors, "Amount item #{item_in_warehouse.item.sku}  di warehouse #{self.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
         return self 
       end
     end

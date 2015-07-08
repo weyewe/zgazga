@@ -229,15 +229,27 @@ if Rails.env.development?
           )
   end
   
+  
+  ItemType.all.each do |item_type| 
+    (1.upto 10).each do  |counter | 
+      BatchInstance.create_object(
+        :item_id         =>  item_type.id , 
+        :name            =>  "#{item_type.name} #{counter}",
+        :description     =>  "The description",
+        :manufactured_at => DateTime.now  
+      )
+    end
+  
   item_array = [] 
   (1.upto 10).each do |x|
     selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
-    selected_sub_type = sub_type_array[  rand( 0..(sub_type_array.length - 1 ))]
-    selected_item_type = selected_sub_type.item_type 
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_item_type = ItemType.where(:is_batched => true).first 
     selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
     
     item_array << Item.create_object(
-        :sub_type_id => selected_sub_type.id , 
+        :sub_type_id => nil, 
         :item_type_id => selected_item_type.id , 
         :exchange_id => selected_exchange.id , 
         :uom_id => selected_uom.id ,
@@ -255,51 +267,53 @@ if Rails.env.development?
   end
   
   stock_adjustment_array =[]
-  (1.upto 10).each do |x|
+  # (1.upto 10).each do |x|
+  warehouse_array.each do |selected_warehouse|
     selected_warehouse = warehouse_array[rand( 0..(warehouse_array.length - 1 ))]
     stock_adjustment = StockAdjustment.create_object(
       :warehouse_id => selected_warehouse.id , 
       :adjustment_date => DateTime.now 
       )
-    (1.upto 10).each do |y|
-      selected_item = item_array[rand( 0..(item_array.length - 1 ))]
+    Item.all.each do |selected_item| 
       StockAdjustmentDetail.create_object(
         :stock_adjustment_id => stock_adjustment.id,
         :item_id => selected_item.id,
         :price => BigDecimal("1000"),
-        :amount => 10,
+        :amount => 1000,
         :status => ADJUSTMENT_STATUS[:addition],
         )
     end
-    stock_adjustment.reload
-    if not stock_adjustment.errors.size == 0
+ 
       stock_adjustment.confirm_object(:confirmed_at => DateTime.now )
+      puts "Fark stock adjustment is not confirmed " if not stock_adjustment.is_confirmed?
+      stock_adjustment.errors.messages.each {|x| puts "error in stock adjustment: #{x}" }
       stock_adjustment_array << stock_adjustment
-    end
+ 
   end
   
-  warehouse_mutation_array = []
-  (1.upto 10).each do |x|
-    selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
-    selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
-    warehouse_mutation = WarehouseMutation.create_object(
-      :warehouse_from_id => selected_warehouse_from.id,
-      :warehouse_to_id => selected_warehouse_to.id,
-      :mutation_date => DateTime.now
-      )
-    (1.upto 10).each do |y| 
-      selected_item = item_array[rand( 0..(item_array.length - 1 ))]
-      WarehouseMutationDetail.create_object(
-        :warehouse_mutation_id => warehouse_mutation.id,
-        :item_id => selected_item.id,
-        :amount => 1
-        )
-    end
-    if not warehouse_mutation.errors.size == 0
-      warehouse_mutation.confirm_object(:confirmed_at =>DateTime.now)
-      warehouse_mutation_array << warehouse_mutation
-    end
-  end
+  # warehouse_mutation_array = []
+  # (1.upto 10).each do |x|
+  #   selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
+  #   selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
+  #   warehouse_mutation = WarehouseMutation.create_object(
+  #     :warehouse_from_id => selected_warehouse_from.id,
+  #     :warehouse_to_id => selected_warehouse_to.id,
+  #     :mutation_date => DateTime.now
+  #     )
+  #   (1.upto 10).each do |y| 
+  #     selected_item = item_array[rand( 0..(item_array.length - 1 ))]
+  #     WarehouseMutationDetail.create_object(
+  #       :warehouse_mutation_id => warehouse_mutation.id,
+  #       :item_id => selected_item.id,
+  #       :amount => 1
+  #       )
+  #   end
+  #   if not warehouse_mutation.errors.size == 0
+  #     warehouse_mutation.confirm_object(:confirmed_at =>DateTime.now)
+  #     puts "farkk. warehouse mutation is not confirmed" if not warehouse_mutation.is_confirmed? 
+  #     warehouse_mutation_array << warehouse_mutation
+  #   end
+  # end
   
   cashbank_adjustment_array = []
   (1.upto 10).each do |x|
@@ -503,12 +517,15 @@ if Rails.env.development?
     if sales_order.errors.size == 0 
       sales_order.reload
       sales_order.confirm_object(:confirmed_at => DateTime.now)
+      puts "Fark sales order is not confirmed " if not sales_order.is_confirmed?
       sales_order_array << sales_order
     end
   end
   
   delivery_order_array = []
-  (1.upto 5).each do |x|
+  counter  = 0 
+  (1.upto 2).each do |x|
+    counter = counter + 1 
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
     selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 6))]
     delivery_order = DeliveryOrder.create_object(
@@ -517,20 +534,30 @@ if Rails.env.development?
       :nomor_surat => "Nomor surat #{x}",
       :sales_order_id => selected_sales_order.id
       )
-    (1.upto 4).each do |y|
+    # (1.upto 4).each do |y| 
+    detail_counter = 0
+    selected_sales_order.sales_order_details.each do |selected_sales_order_detail|
+      detail_counter = detail_counter + 1 
       selected_item = item_array[rand(0..(item_array.length - 1))]
-      selected_sales_order_detail = 
-      selected_sales_order.sales_order_details[rand(0..(selected_sales_order.sales_order_details.length - 1))]
+      # selected_sales_order_detail = 
+      # selected_sales_order.sales_order_details[rand(0..(selected_sales_order.sales_order_details.length - 1))]
       DeliveryOrderDetail.create_object(
         :delivery_order_id => delivery_order.id,
         :sales_order_detail_id => selected_sales_order_detail.id,
-        :order_code => "Order #{x}",
+        :order_code => "Order #{selected_sales_order_detail.id}",
         :amount => BigDecimal("2"),
         )
     end
     if delivery_order.errors.size == 0 
       delivery_order.reload
       delivery_order.confirm_object(:confirmed_at => DateTime.now)
+      delivery_order.errors.messages.each {|x| puts "the delivery order confirm error: #{x}" }
+      if not delivery_order.is_confirmed?
+        puts "Fark delivery order is not confirmed "
+        delivery_order.delivery_order_details.each do |x|
+          puts "item requested: #{x.item.sku}, ready quantity : #{x.item.amount}. Requested quantity :#{x.amount}"
+        end
+      end
       delivery_order_array << delivery_order
     end
   end
