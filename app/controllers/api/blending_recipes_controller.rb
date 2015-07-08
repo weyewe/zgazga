@@ -9,11 +9,11 @@ class Api::BlendingRecipesController < Api::BaseApiController
          (
            
            ( name =~ livesearch)  | 
-           ( description =~ livesearch)  | 
-           ( target_item.name =~  livesearch) | 
-           ( target_item.sku =~  livesearch) | 
-           ( target_item.amount =~  livesearch) |
-           ( target_item.uom.name =~  livesearch)
+           ( description =~ livesearch)  
+          # ( target_item.name =~  livesearch) | 
+          # ( target_item.sku =~  livesearch) | 
+          # ( target_item.amount =~  livesearch) |
+          # ( target_item.uom.name =~  livesearch)
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
@@ -22,11 +22,11 @@ class Api::BlendingRecipesController < Api::BaseApiController
          (
             
            ( name =~ livesearch)  | 
-           ( description =~ livesearch)  | 
-           ( target_item.name =~  livesearch) | 
-           ( target_item.sku =~  livesearch) | 
-           ( target_item.amount =~  livesearch) |
-           ( target_item.uom.name =~  livesearch)
+           ( description =~ livesearch)  
+          # ( target_item.name =~  livesearch) | 
+          # ( target_item.sku =~  livesearch) | 
+          # ( target_item.amount =~  livesearch) |
+          # ( target_item.uom.name =~  livesearch)
          )
        }.count
  
@@ -189,11 +189,11 @@ class Api::BlendingRecipesController < Api::BaseApiController
       @objects = BlendingRecipe.where{  
         ( 
            ( name =~ query)  | 
-           ( description =~ query)  | 
-           ( target_item.name =~  query) | 
-           ( target_item.sku =~  query) | 
-           ( target_item.amount =~  query) |
-           ( target_item.uom.name =~  query)
+           ( description =~ query)  
+          # ( target_item.name =~  query) | 
+          # ( target_item.sku =~  query) | 
+          # ( target_item.amount =~  query) |
+          # ( target_item.uom.name =~  query)
          )
       }.
       page(params[:page]).
@@ -203,11 +203,11 @@ class Api::BlendingRecipesController < Api::BaseApiController
       @total = BlendingRecipe.where{  
         ( 
            ( name =~ query)  | 
-           ( description =~ query)  | 
-           ( target_item.name =~  query) | 
-           ( target_item.sku =~  query) | 
-           ( target_item.amount =~  query) |
-           ( target_item.uom.name =~  query)
+           ( description =~ query)  
+          # ( target_item.name =~  query) | 
+          # ( target_item.sku =~  query) | 
+          # ( target_item.amount =~  query) |
+          # ( target_item.uom.name =~  query)
          )
       }.count 
     else

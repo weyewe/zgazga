@@ -115,7 +115,7 @@ Ext.define('AM.view.operation.stockadjustment.Form', {
     this.callParent(arguments);
   },
   
-    setSelectedCustomer: function( contact_id ){
+  setSelectedCustomer: function( contact_id ){
 		var comboBox = this.down('form').getForm().findField('contact_id'); 
 		var me = this; 
 		var store = comboBox.store; 

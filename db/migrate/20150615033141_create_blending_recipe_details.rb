@@ -8,3 +8,4 @@ class CreateBlendingRecipeDetails < ActiveRecord::Migration
     end
   end
 end
+

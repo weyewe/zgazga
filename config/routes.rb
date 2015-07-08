@@ -48,6 +48,7 @@ Ticketie::Application.routes.draw do
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
     get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
+    get 'search_blending_work_orders' => 'blending_work_orders#search', :as => :search_blending_work_order
     
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
@@ -172,6 +173,8 @@ Ticketie::Application.routes.draw do
     
     resources :blanket_orders
     resources :blanket_order_details
+    
+    resources :blending_work_orders
     
     resources :closings
     resources :closing_details

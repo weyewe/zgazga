@@ -29,6 +29,10 @@ class BlendingWorkOrder < ActiveRecord::Base
       end
     end
     
+    def self.active_objects
+      return self
+    end
+    
     def self.create_object(params)
       new_object = self.new
       new_object.blending_recipe_id = params[:blending_recipe_id]
