@@ -1,33 +1,33 @@
-class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
+class Api::PurchaseDownPaymentAllocationsController < Api::BaseApiController
   
   def index
      
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{
+       @objects = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{
          (
            
-          ( code =~ livesearch)  | 
+           ( code =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( payable.source_code =~  livesearch) 
+           ( receivable.source_code =~  livesearch) 
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{
+       @total = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{
          (
             
            ( code =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
-           ( payable.source_code =~  livesearch) 
+           ( receivable.source_code =~  livesearch) 
          )
        }.count
  
 
      else
-       @objects = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = SalesDownPaymentAllocation.active_objects.count
+       @objects = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = PurchaseDownPaymentAllocation.active_objects.count
      end
      
      
@@ -37,20 +37,20 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
 
   def create
     
-    params[:sales_down_payment_allocation][:allocation_date] =  parse_date( params[:sales_down_payment_allocation][:allocation_date] )
+    params[:purchase_down_payment_allocation][:allocation_date] =  parse_date( params[:purchase_down_payment_allocation][:allocation_date] )
     
     
-    @object = SalesDownPaymentAllocation.create_object( params[:sales_down_payment_allocation])
+    @object = PurchaseDownPaymentAllocation.create_object( params[:purchase_down_payment_allocation])
  
     if @object.errors.size == 0 
       
       render :json => { :success => true, 
-                        :sales_down_payment_allocations => [
+                        :purchase_down_payment_allocations => [
                           :id => @object.id, 
                           :contact_id => @object.contact_id, 
                           :contact_name => @object.contact.name, 
-                          :payable_id => @object.payable_id, 
-                          :payable_source_code => @object.payable.source_code, 
+                          :receivable_id => @object.receivable_id, 
+                          :receivable_source_code => @object.receivable.source_code, 
                           :code => @object.code, 
                           :allocation_date => format_date_friendly(@object.allocation_date) , 
                           :total_amount => @object.total_amount, 
@@ -58,7 +58,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
                           :is_confirmed => @object.is_confirmed, 
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ] , 
-                        :total => SalesDownPaymentAllocation.active_objects.count }  
+                        :total => PurchaseDownPaymentAllocation.active_objects.count }  
     else
       puts "It is fucking error!!\n"*10
       @object.errors.messages.each {|x| puts x }
@@ -78,14 +78,14 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
   end
   
   def show
-    @object  = SalesDownPaymentAllocation.find params[:id]
+    @object  = PurchaseDownPaymentAllocation.find params[:id]
     render :json => { :success => true,   
-                      :sales_down_payment_allocations => [
+                      :purchase_down_payment_allocations => [
                           :id => @object.id, 
                           :contact_id => @object.contact_id, 
                           :contact_name => @object.contact.name, 
-                          :payable_id => @object.payable_id, 
-                          :payable_source_code => @object.payable.source_code, 
+                          :receivable_id => @object.receivable_id, 
+                          :receivable_source_code => @object.receivable.source_code, 
                           :code => @object.code, 
                           :allocation_date => format_date_friendly(@object.allocation_date) , 
                           :total_amount => @object.total_amount, 
@@ -94,24 +94,24 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
-                      :total => SalesDownPaymentAllocation.active_objects.count  }
+                      :total => PurchaseDownPaymentAllocation.active_objects.count  }
   end
 
   def update
-    params[:sales_down_payment_allocation][:allocation_date] =  parse_date( params[:sales_down_payment_allocation][:allocation_date] )
-    params[:sales_down_payment_allocation][:confirmed_at] =  parse_date( params[:sales_down_payment_allocation][:confirmed_at] )
+    params[:purchase_down_payment_allocation][:allocation_date] =  parse_date( params[:purchase_down_payment_allocation][:allocation_date] )
+    params[:purchase_down_payment_allocation][:confirmed_at] =  parse_date( params[:purchase_down_payment_allocation][:confirmed_at] )
     
-    @object = SalesDownPaymentAllocation.find(params[:id])
+    @object = PurchaseDownPaymentAllocation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_down_payment_allocations, :confirm)
+      if not current_user.has_role?( :purchase_down_payment_allocations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm_object(:confirmed_at => params[:sales_down_payment_allocation][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:purchase_down_payment_allocation][:confirmed_at] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -122,7 +122,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_down_payment_allocations, :unconfirm)
+      if not current_user.has_role?( :purchase_down_payment_allocations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -137,7 +137,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
       
       
     else
-      @object.update_object(params[:sales_down_payment_allocation])
+      @object.update_object(params[:purchase_down_payment_allocation])
     end
     
      
@@ -147,20 +147,20 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
     
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :sales_down_payment_allocations => [
+                        :purchase_down_payment_allocations => [
                            :id => @object.id, 
-                          :contact_id => @object.contact_id, 
-                          :contact_name => @object.contact.name, 
-                          :payable_id => @object.payable_id, 
-                          :payable_source_code => @object.payable.source_code, 
-                          :code => @object.code, 
-                          :allocation_date => format_date_friendly(@object.allocation_date) , 
-                          :total_amount => @object.total_amount, 
-                          :rate_to_idr => @object.rate_to_idr, 
-                          :is_confirmed => @object.is_confirmed, 
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                            :contact_id => @object.contact_id, 
+                            :contact_name => @object.contact.name, 
+                            :receivable_id => @object.receivable_id, 
+                            :receivable_source_code => @object.receivable.source_code, 
+                            :code => @object.code, 
+                            :allocation_date => format_date_friendly(@object.allocation_date) , 
+                            :total_amount => @object.total_amount, 
+                            :rate_to_idr => @object.rate_to_idr, 
+                            :is_confirmed => @object.is_confirmed, 
+                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
-                        :total => SalesDownPaymentAllocation.active_objects.count  } 
+                        :total => PurchaseDownPaymentAllocation.active_objects.count  } 
     else
       
       msg = {
@@ -177,13 +177,13 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
    
 
   def destroy
-    @object = SalesDownPaymentAllocation.find(params[:id])
+    @object = PurchaseDownPaymentAllocation.find(params[:id])
     @object.delete_object
 
     if   not @object.persisted? 
-      render :json => { :success => true, :total => SalesDownPaymentAllocation.active_objects.count }  
+      render :json => { :success => true, :total => PurchaseDownPaymentAllocation.active_objects.count }  
     else
-      render :json => { :success => false, :total => SalesDownPaymentAllocation.active_objects.count, 
+      render :json => { :success => false, :total => PurchaseDownPaymentAllocation.active_objects.count, 
         :message => {
           :errors => extjs_error_format( @object.errors )  
         } 
@@ -202,33 +202,33 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{  
+      @objects = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{  
         ( 
-           ( code =~ query)  | 
+           ( code =~ query )  |
            ( contact.name =~  query) | 
-           ( payable.source_code =~  query)   
+           ( receivable.source_code =~  query) 
          )
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{  
+      @total = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{  
         ( 
-            ( code =~ query)  | 
+           ( code =~ query )  |
            ( contact.name =~  query) | 
-           ( payable.source_code =~  query)   
+           ( receivable.source_code =~  query)  
          )
       }.count 
     else
-      @objects = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{ 
+      @objects = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = SalesDownPaymentAllocation.active_objects.joins(:contact,:payable).where{ 
+      @total = PurchaseDownPaymentAllocation.active_objects.joins(:contact,:receivable).where{ 
           (id.eq selected_id)  
       }.count 
     end
