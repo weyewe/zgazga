@@ -351,6 +351,18 @@ Ext.define("AM.controller.Operation", {
 				]
 			},
 			{ 
+				text:'Blanket Warehouse Mutation', 
+				viewClass:'AM.view.operation.BlanketWarehouseMutation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blanket_warehouse_mutations',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
 				text:'Roller Identification Form (RIF)', 
 				viewClass:'AM.view.operation.RollerIdentificationForm', 
 				leaf:true, 
@@ -400,12 +412,12 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Recovery Warehouse Mutation', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				viewClass:'AM.view.operation.RollerWarehouseMutation', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
+						controller : 'roller_warehouse_mutations',
 						action : 'index'
 					}
 				]

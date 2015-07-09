@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
+Ext.define('AM.view.operation.rollerwarehousemutation.UnconfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unfinishblanketworkprocessform',
+  alias : 'widget.unconfirmrollerwarehousemutationform',
 
-  title : 'Unfinish BlanketWorkProcess',
+  title : 'Unconfirm Memorial',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -21,6 +21,18 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
 					anchor: '100%'
       },
       items: [
+
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Kode',
+					name: 'code' 
+				},
+			 
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Tanggal Transaksi',
+					name: 'transaction_datetime' 
+				}
 			]
     }];
 
@@ -37,5 +49,9 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
   },
 
 	setParentData: function( record ) {
+		// console.log("Inside set Parent Data");
+// d.get('total_members_count') );
+		this.down('form').getForm().findField('code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
 	}
 });

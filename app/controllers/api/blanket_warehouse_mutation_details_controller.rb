@@ -1,22 +1,22 @@
-class Api::BlanketOrderDetailsController < Api::BaseApiController
+class Api::BlanketWarehouseMutationDetailsController < Api::BaseApiController
   
   def index
-    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
-    @objects = @parent.active_children.joins(:blanket_order, :blanket).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = BlanketWarehouseMutation.find_by_id params[:blanket_warehouse_mutation_id]
+    @objects = @parent.active_children.joins(:blanket_warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = BlanketOrder.find_by_id params[:blanket_order_id]
+    @parent = BlanketWarehouseMutation.find_by_id params[:blanket_warehouse_mutation_id]
     
   
-    @object = BlanketOrderDetail.create_object(params[:blanket_order_detail])
+    @object = BlanketWarehouseMutationDetail.create_object(params[:blanket_warehouse_mutation_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :blanket_order_details => [@object] , 
+                        :blanket_warehouse_mutation_details => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = BlanketOrderDetail.find_by_id params[:id] 
-    @parent = @object.blanket_order 
+    @object = BlanketWarehouseMutationDetail.find_by_id params[:id] 
+    @parent = @object.blanket_warehouse_mutation 
     
     
-    params[:blanket_order_detail][:blanket_order_id] = @parent.id  
+    params[:blanket_warehouse_mutation_detail][:blanket_warehouse_mutation_id] = @parent.id  
     
-    @object.update_object( params[:blanket_order_detail])
+    @object.update_object( params[:blanket_warehouse_mutation_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :blanket_order_details => [@object],
+                        :blanket_warehouse_mutation_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = BlanketOrderDetail.find(params[:id])
-    @parent = @object.blanket_order 
+    @object = BlanketWarehouseMutationDetail.find(params[:id])
+    @parent = @object.blanket_warehouse_mutation 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -82,25 +82,31 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.roll_no  =~ query  )   
+      @objects = BlanketWarehouseMutationDetail.joins(:blanket_warehouse_mutation, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  | 
+        ( code  =~ query  )  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.roll_no  =~ query  )  
+      @total = BlanketWarehouseMutationDetail.joins(:blanket_warehouse_mutation, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  |
+        ( code  =~ query  )  
       }.count
     else
-      @objects = BlanketOrderDetail.where{ 
+      @objects = BlanketWarehouseMutationDetail.where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = BlanketOrderDetail.where{ 
+      @total = BlanketWarehouseMutationDetail.where{ 
               (id.eq selected_id)   
       }.count 
     end

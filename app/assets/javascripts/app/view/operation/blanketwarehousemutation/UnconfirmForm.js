@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
+Ext.define('AM.view.operation.blanketwarehousemutation.UnconfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unfinishblanketworkprocessform',
+  alias : 'widget.unconfirmblanketwarehousemutationform',
 
-  title : 'Unfinish BlanketWorkProcess',
+  title : 'Unconfirm Memorial',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -21,6 +21,13 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
 					anchor: '100%'
       },
       items: [
+
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Kode',
+					name: 'code' 
+				},
+			 
 			]
     }];
 
@@ -37,5 +44,6 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
   },
 
 	setParentData: function( record ) {
+		this.down('form').getForm().findField('code').setValue(record.get('code')); 
 	}
 });
