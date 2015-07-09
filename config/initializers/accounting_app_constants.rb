@@ -684,7 +684,7 @@ ACCOUNT_CODE = {
     :bank_administration_journal => 150,
     :memorial_journal => 160,
     :virtual_order_clearance_journal => 170,
-    :group_loan_close_compulsory_savings_deposit_deduction_for_bad_debt_allowance => 181,
+    :sales_down_payment_journal => 180,
     :group_loan_close_withdrawal_return_rounding_down_revenue => 182,
     :group_loan_close_withdrawal_return  => 183,
 
