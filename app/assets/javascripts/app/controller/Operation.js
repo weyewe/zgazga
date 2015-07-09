@@ -400,12 +400,12 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Recovery Work Chart (RWC)', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				viewClass:'AM.view.operation.RecoveryResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
+						controller : 'recovery_results',
 						action : 'index'
 					}
 				]

@@ -217,6 +217,9 @@ Ticketie::Application.routes.draw do
     
     resources :blanket_results 
     resources :blanket_result_details 
+    
+    resources :recovery_results
+    resources :recovery_result_details 
   end
   
   
