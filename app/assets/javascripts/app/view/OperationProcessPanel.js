@@ -27,7 +27,6 @@ Ext.define('AM.view.OperationProcessPanel', {
 							 // : "Ini adalah tampilan operation. Anda dapat membuat operation baru, atau menambah customer",
 						}
 					]
-      }
-    ]
+      }    ]
  
 });

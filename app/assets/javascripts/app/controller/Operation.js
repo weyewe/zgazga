@@ -351,6 +351,18 @@ Ext.define("AM.controller.Operation", {
 				]
 			},
 			{ 
+				text:'Blanket Warehouse Mutation', 
+				viewClass:'AM.view.operation.BlanketWarehouseMutation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'blanket_warehouse_mutations',
+						action : 'index'
+					}
+				]
+			},
+			{ 
 				text:'Roller Identification Form (RIF)', 
 				viewClass:'AM.view.operation.RollerIdentificationForm', 
 				leaf:true, 
@@ -388,24 +400,24 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Recovery Work Chart (RWC)', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				viewClass:'AM.view.operation.RecoveryWorkProcess', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
+						controller : 'recovery_work_processs',
 						action : 'index'
 					}
 				]
 			}, 
 			{ 
-				text:'Recovery Warehouse Mutation', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				text:'Roller Warehouse Mutation', 
+				viewClass:'AM.view.operation.RollerWarehouseMutation', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
+						controller : 'roller_warehouse_mutations',
 						action : 'index'
 					}
 				]
@@ -602,11 +614,13 @@ Ext.define("AM.controller.Operation", {
 			this.logisticFolder,
 			this.manufacturingFolder,
 			this.batchFolder, 
+			
  			// this.recoveryFolder,
  			// this.blanketFolder,
  			// this.blendingFolder,
-			this.salesFolder,
-			this.purchaseFolder,
+ 			
+			// this.salesFolder,
+			// this.purchaseFolder,
  			this.financeFolder,
  			this.accountingFolder,
  			this.cashbankFolder,

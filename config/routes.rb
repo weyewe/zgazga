@@ -73,6 +73,10 @@ Ticketie::Application.routes.draw do
     get 'search_roller_identification_form_details' => 'roller_identification_form_details#search', :as => :search_roller_identification_form_detail
     get 'search_recovery_orders' => 'recovery_orders#search', :as => :search_recovery_order
     get 'search_recovery_order_details' => 'recovery_order_details#search', :as => :search_recovery_order_detail
+    get 'search_blanket_warehouse_mutations' => 'blanket_warehouse_mutations#search', :as => :search_blanket_warehouse_mutation
+    get 'search_blanket_warehouse_mutation_details' => 'blanket_warehouse_mutation_details#search', :as => :search_blanket_warehouse_mutation_details
+    get 'search_roller_warehouse_mutations' => 'roller_warehouse_mutations#search', :as => :search_roller_warehouse_mutation
+    get 'search_roller_warehouse_mutation_details' => 'roller_warehouse_mutation_details#search', :as => :search_roller_warehouse_mutation_details
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
@@ -192,6 +196,12 @@ Ticketie::Application.routes.draw do
     resources :recovery_order_details
     
     resources :blending_work_orders
+    
+    resources :blanket_warehouse_mutations
+    resources :blanket_warehouse_mutation_details
+    
+    resources :roller_warehouse_mutations
+    resources :roller_warehouse_mutation_details
     
     resources :closings
     resources :closing_details

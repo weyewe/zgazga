@@ -1,6 +1,6 @@
 Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmblanketworkprocessform',
+  alias : 'widget.unfinishblanketworkprocessform',
 
   title : 'Unfinish BlanketWorkProcess',
   layout: 'fit',
