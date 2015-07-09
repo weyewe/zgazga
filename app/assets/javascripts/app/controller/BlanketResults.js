@@ -55,19 +55,19 @@ Ext.define('AM.controller.BlanketResults', {
         click: this.deleteObject
 			}	,
 			
-			'blanketresultProcess blanketresultlist button[action=confirmObject]': {
-        click: this.confirmObject
+			'blanketresultProcess blanketresultlist button[action=finishObject]': {
+        click: this.finishObject
       },
 
-			'blanketresultProcess blanketresultlist button[action=unconfirmObject]': {
-        click: this.unconfirmObject
+			'blanketresultProcess blanketresultlist button[action=unfinishObject]': {
+        click: this.unfinishObject
       },
-			'confirmblanketresultform button[action=confirm]' : {
-				click : this.executeConfirm
+			'finishblanketresultform button[action=finish]' : {
+				click : this.executeFinish
 			},
 			
-			'unconfirmblanketresultform button[action=confirm]' : {
-				click : this.executeUnconfirm
+			'unfinishblanketresultform button[action=finish]' : {
+				click : this.executeUnfinish
 			},
 
 			'blanketresultProcess blanketresultlist textfield[name=searchField]': {
@@ -126,11 +126,12 @@ Ext.define('AM.controller.BlanketResults', {
     view.setComboBoxData( record ) ;
   },
 
-	confirmObject: function(){
+	finishObject: function(){
 		// console.log("the startObject callback function");
+		console.log("clicked the finishObject");
 		var record = this.getList().getSelectedObject();
 		if(record){
-			var view = Ext.widget('confirmblanketresultform');
+			var view = Ext.widget('finishblanketresultform');
 
 			view.setParentData( record );
 	    view.show();
@@ -207,16 +208,16 @@ Ext.define('AM.controller.BlanketResults', {
 		} 
   },
 
-	unconfirmObject: function(){
+	unfinishObject: function(){
 		// console.log("the startObject callback function");
-		var view = Ext.widget('unconfirmblanketresultform');
+		var view = Ext.widget('unfinishblanketresultform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
     view.show();
 		// this.reloadRecordView( record, view ) ; 
 	},
 	
-	executeConfirm: function(button){
+	executeFinish: function(button){
 		var me = this; 
 		var win = button.up('window');
     var form = win.down('form');
@@ -228,7 +229,12 @@ Ext.define('AM.controller.BlanketResults', {
  
 		if(record){
 			var rec_id = record.get("id");
-			record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'finished_at' , values['finished_at'] );
+			record.set( 'finished_quantity' , values['finished_quantity'] );
+			record.set( 'rejected_quantity' , values['rejected_quantity'] );
+			record.set( 'roll_blanket_usage' , values['roll_blanket_usage'] );
+			record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
+			record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -237,7 +243,7 @@ Ext.define('AM.controller.BlanketResults', {
 			form.setLoading(true);
 			record.save({
 				params : {
-					confirm: true 
+					finish: true 
 				},
 				success : function(record){
 					form.setLoading(false);
@@ -264,7 +270,7 @@ Ext.define('AM.controller.BlanketResults', {
 	
 	
 	
-	executeUnconfirm: function(button){
+	executeUnfinish: function(button){
 		var me = this; 
 		var win = button.up('window');
     var form = win.down('form');
@@ -276,7 +282,7 @@ Ext.define('AM.controller.BlanketResults', {
  
 		if(record){
 			var rec_id = record.get("id");
-			record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'finished_at' , values['finished_at'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -285,7 +291,7 @@ Ext.define('AM.controller.BlanketResults', {
 			form.setLoading(true);
 			record.save({
 				params : {
-					unconfirm: true 
+					unfinish: true 
 				},
 				success : function(record){
 					form.setLoading(false);
@@ -347,7 +353,7 @@ Ext.define('AM.controller.BlanketResults', {
 	updateChildGrid: function(record){
 		var templateDetailGrid = this.getBlanketResultDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		templateDetailGrid.setObjectTitle( record  ) ;
+		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		

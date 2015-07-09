@@ -161,7 +161,7 @@ class BlanketOrderDetail < ActiveRecord::Base
       :warehouse_id => self.blanket_order.warehouse_id,
       :item_id => self.blanket.roll_blanket_item_id
       )
-    if item.amount < params[:roll_blanket_usage] 
+    if item.amount < BigDecimal( params[:roll_blanket_usage] ) 
       self.errors.add(:roll_blanket_defect,"Stock quantity Roll Blanket kurang dari #{params[:roll_blanket_usage]}")
       return self
     end
@@ -183,7 +183,7 @@ class BlanketOrderDetail < ActiveRecord::Base
     if self.save
       
       BatchSource.create_object( 
-          :item_id  => self.blanket.item_id,
+          :item_id  => self.blanket.item.id,
           :status   =>  ADJUSTMENT_STATUS[:deduction], 
           :source_class => self.class.to_s, 
           :source_id => self.id , 
@@ -279,7 +279,7 @@ class BlanketOrderDetail < ActiveRecord::Base
     if self.save
       
       BatchSource.where( 
-          :item_id  => self.blanket.item_id, 
+          :item_id  => self.blanket.item.id, 
           :source_class => self.class.to_s, 
           :source_id => self.id  
         ).each {|x| x.destroy } 

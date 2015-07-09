@@ -84,10 +84,21 @@ Ext.define('AM.view.operation.blanketresult.List' ,{
 			checkChangeBuffer: 300
 		});
 		
+		this.finishObjectButton = new Ext.Button({
+			text: 'Finish',
+			action: 'finishObject',
+			disabled: true
+		});
+	
+		this.unfinishObjectButton = new Ext.Button({
+			text: 'Unfinish',
+			action: 'unfinishObject',
+			disabled: true,
+			hidden : true
+		});
+		
 		 
-			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
-				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+			this.tbar = [ this.finishObjectButton, this.unfinishObjectButton ,
 					'->',
 					this.searchField ];
 	 
@@ -116,14 +127,16 @@ Ext.define('AM.view.operation.blanketresult.List' ,{
 		
 		selectedObject = this.getSelectedObject();
 		
-		if( selectedObject && selectedObject.get("is_confirmed") == true ){
-			this.confirmObjectButton.hide();
-			this.unconfirmObjectButton.show();
-			this.unconfirmObjectButton.enable();
+		if( selectedObject && selectedObject.get("is_finished") == true ){
+			 this.finishObjectButton.hide() 
+			 this.unfinishObjectButton.show() ;
+		 
+			this.unfinishObjectButton.enable();
 		}else{
-			this.confirmObjectButton.enable();
-			this.confirmObjectButton.show();
-			this.unconfirmObjectButton.hide();
+			this.finishObjectButton.show() 
+			 this.unfinishObjectButton.hide() ;
+		 
+			this.finishObjectButton.enable();
 		}
 	},
 
@@ -131,5 +144,7 @@ Ext.define('AM.view.operation.blanketresult.List' ,{
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
 		this.confirmObjectButton.disable(); 
+		this.finishObjectButton.disable();
+		this.unfinishObjectButton.disable();
 	}
 });

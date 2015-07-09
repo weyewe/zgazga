@@ -26,14 +26,14 @@ class Api::BlanketResultsController < Api::BaseApiController
     end
     
     
-    # render :json => { :blanket_work_processes => @objects , :total => @total , :success => true }
+    # render :json => { :blanket_results => @objects , :total => @total , :success => true }
   end
 
   def create
     @object = BlanketOrderDetail.create_object( params[:blanket_work_process] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :blanket_work_processes => [@object] , 
+                        :blanket_results => [@object] , 
                         :total => BlanketOrderDetail.active_objects.count  }  
     else
       msg = {
@@ -48,7 +48,7 @@ class Api::BlanketResultsController < Api::BaseApiController
   end
 
   def update
-    params[:blanket_order_detail][:finished_at] =  parse_date( params[:blanket_order_detail][:finished_at] )
+    params[:blanket_result][:finished_at] =  parse_date( params[:blanket_result][:finished_at] )
     
     @object = BlanketOrderDetail.find(params[:id])
     
@@ -60,7 +60,7 @@ class Api::BlanketResultsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.finishObject(params[:blanket_order_detail]) 
+          @object.finish_object(params[:blanket_result]) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -86,14 +86,14 @@ class Api::BlanketResultsController < Api::BaseApiController
       
       
     else
-      @object.update_object(params[:blanket_order_detail])
+      @object.update_object(params[:blanket_result])
     end
     
      
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :blanket_order_details => [@object],
+                        :blanket_results => [@object],
                         :total => BlanketOrderDetail.active_objects.count } 
     else
       msg = {
@@ -112,7 +112,7 @@ class Api::BlanketResultsController < Api::BaseApiController
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
     render :json => { :success => true, 
-                      :blanket_work_processes => [@object] , 
+                      :blanket_results => [@object] , 
                       :total => BlanketOrderDetail.count }
   end
 
