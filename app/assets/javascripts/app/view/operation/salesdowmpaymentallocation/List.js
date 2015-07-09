@@ -1,26 +1,34 @@
-Ext.define('AM.view.operation.purchasedownpayment.List' ,{
+Ext.define('AM.view.operation.salesdowmpaymentallocation.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.purchasedownpaymentlist',
+  	alias : 'widget.salesdowmpaymentallocationlist',
 
-  	store: 'PurchaseDownPayments', 
+  	store: 'SalesDowmPaymentAllocations',  
  
 
 	initComponent: function() {
 		this.columns = [
-				{ header: 'Kode', dataIndex: 'code'},
-			{ header: 'Contact', dataIndex: 'contact_name'},
-			{ header: 'DownPaymentDate', dataIndex: 'down_payment_date'},
-			{ header: 'DueDate', dataIndex: 'due_date'},
-			{ header: 'Total Amount', dataIndex: 'total_amount'},
-			{ header: 'Currency', dataIndex: 'exchange_name'},
-			{ header: 'Rate', dataIndex: 'exchange_rate_amount'},
+			// { header: 'ID', dataIndex: 'id'},
+			{ header: 'Kode',  dataIndex: 'code', flex: 1},
+			{	header: 'Description', dataIndex: 'description', flex: 2 },
+			
+			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
+			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
+			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
+		 
+			
+			
+			
+			
+ 
 			{
 				xtype : 'templatecolumn',
-				text : "Konfirmasi",
+				text : "Transaksi",
 				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
 			},
+			
 			
 		];
 
@@ -41,15 +49,7 @@ Ext.define('AM.view.operation.purchasedownpayment.List' ,{
 			disabled: true
 		});
 		
-		this.searchField = new Ext.form.field.Text({
-			name: 'searchField',
-			hideLabel: true,
-			width: 200,
-			emptyText : "Search",
-			checkChangeBuffer: 300
-		});
-		
-			this.confirmObjectButton = new Ext.Button({
+		this.confirmObjectButton = new Ext.Button({
 			text: 'Confirm',
 			action: 'confirmObject',
 			disabled: true
@@ -61,16 +61,25 @@ Ext.define('AM.view.operation.purchasedownpayment.List' ,{
 			disabled: true,
 			hidden : true
 		});
+		
+		this.searchField = new Ext.form.field.Text({
+			name: 'searchField',
+			hideLabel: true,
+			width: 200,
+			emptyText : "Search",
+			checkChangeBuffer: 300
+		});
+		
+		 
+			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
+				'-',
+					this.confirmObjectButton, this.unconfirmObjectButton,
+					'->',
+					this.searchField ];
+	 
 
 
-
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
-		 				'-',
-		 				this.confirmObjectButton, this.unconfirmObjectButton,
-						'->',
-						this.searchField,
-						
-		];
+		
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,

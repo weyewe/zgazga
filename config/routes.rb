@@ -78,6 +78,7 @@ Ticketie::Application.routes.draw do
     get 'search_roller_warehouse_mutations' => 'roller_warehouse_mutations#search', :as => :search_roller_warehouse_mutation
     get 'search_roller_warehouse_mutation_details' => 'roller_warehouse_mutation_details#search', :as => :search_roller_warehouse_mutation_detail
     get 'search_sales_down_payments' => 'sales_down_payments#search', :as => :search_sales_down_payments
+    get 'search_purchase_down_payments' => 'purchase_down_payments#search', :as => :search_purchase_down_payment
     
     
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
@@ -208,6 +209,7 @@ Ticketie::Application.routes.draw do
     resources :closings
     resources :closing_details
     resources :sales_down_payments
+    resources :purchase_down_payments
     
     
     resources :batch_instances

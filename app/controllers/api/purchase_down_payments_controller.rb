@@ -7,24 +7,20 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = PurchaseDownPayment.where{
+        @objects = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( code =~  livesearch )  | 
+            ( contact.name =~ livesearch ) | 
+            ( exchange.name =~ livesearch ) 
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        @total = PurchaseDownPayment.where{
+        @total = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( code =~  livesearch )  | 
+            ( contact.name =~ livesearch ) | 
+            ( exchange.name =~ livesearch ) 
           )
         }.count
    
@@ -59,9 +55,40 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
   def update
     @object = PurchaseDownPayment.find(params[:id]) 
     
-
+    if params[:confirm].present?  
+      if not current_user.has_role?( :purchase_down_payments, :confirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.confirm_object(:confirmed_at => params[:purchase_down_payment][:confirmed_at] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+      
+      
+      
+    elsif params[:unconfirm].present?    
+      
+      if not current_user.has_role?( :purchase_down_payments, :unconfirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unconfirm_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+  else
     @object.update_object( params[:purchase_down_payment] )
-    
+  end
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
@@ -127,33 +154,29 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = PurchaseDownPayment.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
+      @objects = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ 
+            ( code =~  query )  | 
+            ( contact.name =~ query ) | 
+            ( exchange.name =~ query ) 
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = PurchaseDownPayment.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
+      @total = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ 
+            ( code =~  query )  | 
+            ( contact.name =~ query ) | 
+            ( exchange.name =~ query ) 
         
                               }.count
     else
-      @objects = PurchaseDownPayment.where{ (id.eq selected_id)  
+      @objects = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = PurchaseDownPayment.where{ (id.eq selected_id)   
+      @total = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable)..where{ (id.eq selected_id)   
                               }.count 
     end
     
