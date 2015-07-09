@@ -11,7 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150709003400) do
+ 
+ActiveRecord::Schema.define(version: 20150709114251) do
+ 
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -665,6 +667,23 @@ ActiveRecord::Schema.define(version: 20150709003400) do
     t.datetime "updated_at"
   end
 
+  create_table "purchase_down_payments", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "receivable_id"
+    t.integer  "payable_id"
+    t.string   "code"
+    t.datetime "down_payment_date"
+    t.datetime "due_date"
+    t.integer  "exchange_id"
+    t.integer  "exchange_rate_id"
+    t.decimal  "exchange_rate_amount", precision: 14, scale: 2, default: 0.0
+    t.decimal  "total_amount",         precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                                  default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "purchase_invoice_details", force: true do |t|
     t.integer  "purchase_invoice_id"
     t.integer  "purchase_receival_detail_id"
@@ -988,6 +1007,23 @@ ActiveRecord::Schema.define(version: 20150709003400) do
   end
 
   create_table "rollers", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_down_payments", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "receivable_id"
+    t.integer  "payable_id"
+    t.string   "code"
+    t.datetime "down_payment_date"
+    t.datetime "due_date"
+    t.integer  "exchange_id"
+    t.integer  "exchange_rate_id"
+    t.decimal  "exchange_rate_amount", precision: 14, scale: 2, default: 0.0
+    t.decimal  "total_amount",         precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                                  default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
