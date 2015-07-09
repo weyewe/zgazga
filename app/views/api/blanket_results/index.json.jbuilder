@@ -3,7 +3,7 @@ json.success true
 json.total @total
  
 
-json.blanket_order_details @objects do |object|
+json.blanket_results @objects do |object|
     
 	json.id 								object.id  
 	json.blanket_order_id 			 object.blanket_order_id
@@ -51,4 +51,5 @@ json.blanket_order_details @objects do |object|
 	json.roll_blanket_cost		 object.roll_blanket_cost
 	json.roll_blanket_usage		 object.roll_blanket_usage
 	json.roll_blanket_defect		 object.roll_blanket_defect
+	json.quantity object.quantity 
 end

@@ -340,7 +340,7 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Blanket Work Process', 
-				viewClass:'AM.view.operation.BlanketWorkProcess', 
+				viewClass:'AM.view.operation.BlanketResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [

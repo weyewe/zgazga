@@ -1,7 +1,7 @@
-Ext.define('AM.controller.BlanketWorkProcesss', {
+Ext.define('AM.controller.BlanketWorkProcesses', {
   extend: 'Ext.app.Controller',
 
-  stores: ['BlanketWorkProcesss'],
+  stores: ['BlanketWorkProcesses'],
   models: ['BlanketWorkProcess'],
 
   views: [
@@ -63,11 +63,11 @@ Ext.define('AM.controller.BlanketWorkProcesss', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getBlanketWorkProcesssStore().getProxy().extraParams = {
+		me.getBlanketWorkProcessesStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getBlanketWorkProcesssStore().load();
+		me.getBlanketWorkProcessesStore().load();
 	},
 	
 	finishObject: function(){
@@ -209,7 +209,7 @@ Ext.define('AM.controller.BlanketWorkProcesss', {
     var win = button.up('window');
     var form = win.down('form');
 
-    var store = this.getBlanketWorkProcesssStore();
+    var store = this.getBlanketWorkProcessesStore();
     var record = form.getRecord();
     var values = form.getValues();
 
@@ -284,7 +284,7 @@ Ext.define('AM.controller.BlanketWorkProcesss', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getBlanketWorkProcesssStore();
+      var store = this.getBlanketWorkProcessesStore();
       store.remove(record);
       store.sync();
 // to do refresh programmatically

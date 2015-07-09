@@ -1,5 +1,4 @@
-class Api::BlanketWorkProcesssController < Api::BaseApiController
-  
+class Api::BlanketResultsController < Api::BaseApiController
   def index
      
     
@@ -33,14 +32,14 @@ class Api::BlanketWorkProcesssController < Api::BaseApiController
     end
     
     
-    # render :json => { :blanket_work_processs => @objects , :total => @total , :success => true }
+    # render :json => { :blanket_work_processes => @objects , :total => @total , :success => true }
   end
 
   def create
     @object = BlanketOrderDetail.create_object( params[:blanket_work_process] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :blanket_work_processs => [@object] , 
+                        :blanket_work_processes => [@object] , 
                         :total => BlanketOrderDetail.active_objects.count  }  
     else
       msg = {
@@ -119,7 +118,7 @@ class Api::BlanketWorkProcesssController < Api::BaseApiController
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
     render :json => { :success => true, 
-                      :blanket_work_processs => [@object] , 
+                      :blanket_work_processes => [@object] , 
                       :total => BlanketOrderDetail.count }
   end
 

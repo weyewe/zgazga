@@ -14,7 +14,7 @@ Ticketie::Application.routes.draw do
   resources :roller_accs
   resources :roller_acc_details
   resources :roller_accessory_details
-  resources :blanket_work_processs
+  
   
   resources :action_assignments 
   
@@ -211,6 +211,10 @@ Ticketie::Application.routes.draw do
     
     
     resources :batch_instances
+    resources :blanket_work_processes
+    
+    resources :blanket_results 
+    resources :blanket_result_details 
   end
   
   

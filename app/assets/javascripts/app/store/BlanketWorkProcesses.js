@@ -1,4 +1,4 @@
-Ext.define('AM.store.BlanketWorkProcesss', {
+Ext.define('AM.store.BlanketWorkProcesses', {
   	extend: 'Ext.data.Store',
 		require : ['AM.model.BlanketWorkProcess'],
   	model: 'AM.model.BlanketWorkProcess',

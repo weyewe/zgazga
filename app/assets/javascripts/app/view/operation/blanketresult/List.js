@@ -1,23 +1,14 @@
-Ext.define('AM.view.operation.blanketworkprocess.List' ,{
+Ext.define('AM.view.operation.blanketresult.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.blanketworkprocesslist',
+  	alias : 'widget.blanketresultlist',
 
-  	store: 'BlanketWorkProcesses', 
+  	store: 'BlanketResults',  
  
 
 	initComponent: function() {
 		this.columns = [
-			 
-				// { header: 'Roll Blanket Sku',  dataIndex: 'blanket_roll_blanket_item_sku', flex: 1},
-				// { header: 'Roll Blanket Name',  dataIndex: 'blanket_roll_blanket_item_name', flex: 1},
-				// { header: 'LeftBar Sku', dataIndex: 'blanket_left_bar_item_sku', flex: 1},
-				// { header: 'LeftBar name', dataIndex: 'blanket_left_bar_item_name', flex: 1},
-				// { header: 'RightBar sku', dataIndex: 'blanket_right_bar_item_sku', flex: 1},
-				// { header: 'RightBar name', dataIndex: 'blanket_right_bar_item_name', flex: 1},
-				// { header: 'Rejected Date', dataIndex: 'rejected_date', flex: 1},
-				// { header: 'Finished Date', dataIndex: 'finished_at', flex: 1},
-				
-				{
+			// { header: 'ID', dataIndex: 'id'},
+			{
 					xtype : 'templatecolumn',
 					text : "Blanket Info",
 					flex : 3,
@@ -49,6 +40,7 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 								'Penggunaan Roll Blanket: <br /> <b>{roll_blanket_usage}</b>' + '<br />' + '<br />' +
 								'Defect Roll Blanket: <br /><b>{roll_blanket_defect}</b>'  
 				},
+			
 		];
 
 		this.addObjectButton = new Ext.Button({
@@ -68,6 +60,19 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 			disabled: true
 		});
 		
+		this.confirmObjectButton = new Ext.Button({
+			text: 'Confirm',
+			action: 'confirmObject',
+			disabled: true
+		});
+	
+		this.unconfirmObjectButton = new Ext.Button({
+			text: 'Unconfirm',
+			action: 'unconfirmObject',
+			disabled: true,
+			hidden : true
+		});
+		
 		this.searchField = new Ext.form.field.Text({
 			name: 'searchField',
 			hideLabel: true,
@@ -76,30 +81,16 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 			checkChangeBuffer: 300
 		});
 		
-		this.finishObjectButton = new Ext.Button({
-			text: 'Finish',
-			action: 'finishObject',
-			disabled: true
-		});
-	
-		this.unfinishObjectButton = new Ext.Button({
-			text: 'Unfinish',
-			action: 'unfinishObject',
-			disabled: true,
-			hidden : true
-		});
+		 
+			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
+				'-',
+					this.confirmObjectButton, this.unconfirmObjectButton,
+					'->',
+					this.searchField ];
+	 
 
 
-
-		this.tbar = [
-		    	        this.finishObjectButton,
-						this.unfinishObjectButton,
-		 				'-',
-						
-						'->',this.searchField,
-					
-						
-		];
+		
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -118,27 +109,24 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
-		this.deleteObjectButton.enable();
-		
+		this.deleteObjectButton.enable(); 
 		
 		selectedObject = this.getSelectedObject();
 		
-		if( selectedObject && selectedObject.get("is_finished") == true ){
-			this.finishObjectButton.hide();
-			this.unfinishObjectButton.show();
-			this.unfinishObjectButton.enable();
+		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show();
+			this.unconfirmObjectButton.enable();
 		}else{
-			this.finishObjectButton.enable();
-			this.finishObjectButton.show();
-			this.unfinishObjectButton.hide();
+			this.confirmObjectButton.enable();
+			this.confirmObjectButton.show();
+			this.unconfirmObjectButton.hide();
 		}
-
-
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.finishObjectButton.disable(); 
+		this.confirmObjectButton.disable(); 
 	}
 });

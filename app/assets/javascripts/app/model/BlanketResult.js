@@ -1,7 +1,8 @@
-Ext.define('AM.model.BlanketWorkProcess', {
+Ext.define('AM.model.BlanketResult', {
   	extend: 'Ext.data.Model',
   	fields: [
-		{ name: 'blanket_order_id', type: 'int' }, 
+
+    	    { name: 'blanket_order_id', type: 'int' }, 
 	        { name: 'blanket_id', type: 'int' }, 
 	        { name: 'blanket_sku', type: 'string' }, 
 	        { name: 'blanket_name', type: 'string' }, 
@@ -36,6 +37,8 @@ Ext.define('AM.model.BlanketWorkProcess', {
     	    { name: 'roll_blanket_usage', type: 'string' },
     	    { name: 'roll_blanket_defect', type: 'string' },		
     	    { name: 'quantity', type: 'int' },	
+			
+			
   	],
 
 	 
@@ -45,19 +48,19 @@ Ext.define('AM.model.BlanketWorkProcess', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/blanket_work_processes',
+			url: 'api/blanket_results',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'blanket_work_processes',
+				root: 'blanket_results',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { blanket_work_process : record.data };
+					return { blanket_result : record.data };
 				}
 			}
 		}
