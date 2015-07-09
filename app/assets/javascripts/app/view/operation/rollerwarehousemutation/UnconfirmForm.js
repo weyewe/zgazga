@@ -28,11 +28,6 @@ Ext.define('AM.view.operation.rollerwarehousemutation.UnconfirmForm', {
 					name: 'code' 
 				},
 			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				}
 			]
     }];
 
@@ -49,9 +44,6 @@ Ext.define('AM.view.operation.rollerwarehousemutation.UnconfirmForm', {
   },
 
 	setParentData: function( record ) {
-		// console.log("Inside set Parent Data");
-// d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
 	}
 });

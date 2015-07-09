@@ -83,16 +83,14 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
-        ( roller_builder.base_sku  =~ query ) | 
-        ( roller_builder.code  =~ query ) 
+        ( roller_builder.base_sku  =~ query ) 
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
       @total = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
-        ( roller_builder.base_sku  =~ query ) | 
-        ( roller_builder.code  =~ query )  
+        ( roller_builder.base_sku  =~ query ) 
       }.count
     else
       @objects = RecoveryOrderDetail.where{ 

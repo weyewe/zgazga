@@ -14,40 +14,26 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
   initComponent: function() {
 	
 	
-    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-		type : 'array',
-		storeId : 'sales_status_search',
-		fields	: [ 
-			{ name : "is_service"}, 
-			{ name : "is_service_text"}  
-		], 
-		data : [
-			{ is_service : false, is_service_text : "Trading"},
-			{ is_service : true, is_service_text : "Service"}
-		] 
-	});
-	
-	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
+   var remoteJsonStoreRecoveryOrderDetail = Ext.create(Ext.data.JsonStore, {
+		storeId : 'recovery_order_details_search',
 		fields	: [
 		 		{
-					name : 'item_sku',
-					mapping : "sku"
+					name : 'recovery_order_detail_recovery_sku',
+					mapping : "roller_builder_sku"
 				}, 
 				{
-					name : 'item_name',
-					mapping : 'name'
+					name : 'recovery_order_detail_recovery_name',
+					mapping : 'roller_builder_name'
 				},
 				{
-					name : 'item_id',
+					name : 'recovery_order_detail_id',
 					mapping : "id"
 				}, 
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_items',
+			url : 'api/search_recovery_order_details',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -77,75 +63,36 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 	      },
 			{
 	        xtype: 'hidden',
-	        name : 'sales_order_id',
-	        fieldLabel: 'sales_order_id'
+	        name : 'roller_warehouse_mutation_id',
+	        fieldLabel: 'roller_warehouse_mutation_id'
 	      },
 	      {
             xtype: 'displayfield',
-            name : 'sales_order_code',
-            fieldLabel: 'Kode SalesOrder'
+            name : 'roller_warehouse_mutation_code',
+            fieldLabel: 'Kode RollerWarehouseMutation'
         },
-			{
-				fieldLabel: 'Status',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'is_service_text',
-				valueField : 'is_service',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : localJsonStoreStatus , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{is_service_text}">' +  
-												'<div class="combo-name">{is_service_text}</div>' +  
-						 					'</div>';
-					}
-				},
-				name : 'is_service' 
-			},
-			{
-				fieldLabel: 'Item',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'item_name',
-				valueField : 'item_id',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : remoteJsonStoreItem , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{item_name}">' +  
-												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
-												 "</div>" +  
-						 					'</div>';
-					}
-				},
-				name : 'item_id' 
-			},
-				
-			{
-    	        xtype: 'textfield',
-    	        name : 'amount',
-    	        fieldLabel: 'Quantity'
-    	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
-    	        xtype: 'textfield',
-    	        name : 'price',
-    	        fieldLabel: 'Value per item'
-    	     },
+				{
+	    				fieldLabel: 'Recovery Order Detail',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'recovery_order_detail_recovery_name',
+	    				valueField : 'recovery_order_detail_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreRecoveryOrderDetail , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{recovery_order_detail_recovery_name}">' + 
+	    												'<div class="combo-name">{recovery_order_detail_recovery_sku}</div>' + 
+	    												'<div class="combo-name">Name: {recovery_order_detail_recovery_name}</div>' + 
+	    						 					'</div>';
+	    					}
+	    				},
+	    				name : 'recovery_order_detail_id' 
+    				},
 		
 	 
 			
@@ -165,37 +112,22 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedItem: function( item_id ){
+	setSelectedRecoveryOrderDetail: function( recovery_order_detail_id ){
 		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var comboBox = this.down('form').getForm().findField('recovery_order_detail_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : item_id 
+				selected_id : recovery_order_detail_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( item_id );
+				comboBox.setValue( recovery_order_detail_id );
 			}
 		});
 	},
 	
-	setSelectedStatus: function( is_service ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('is_service'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : is_service 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( is_service );
-			}
-		});
-	},
 	
 	
 	setComboBoxData : function( record){
@@ -203,14 +135,13 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 		me.setLoading(true);
 		
 		
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedRecoveryOrderDetail( record.get("recovery_order_detail_id")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('roller_warehouse_mutation_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('roller_warehouse_mutation_id').setValue(record.get('id'));
 	}
  
 });

@@ -5,32 +5,24 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = RollerWarehouseMutation.active_objects.joins(:contact,:employee,:exchange).where{
+       @objects = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{
          (
-           
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( recovery_order.code =~ livesearch)  
          )
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = RollerWarehouseMutation.active_objects.joins(:contact,:employee,:exchange).where{
+       @total = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{
          (
-            
            ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
+           ( recovery_order.code =~ livesearch)  
          )
        }.count
  
 
      else
-       @objects = RollerWarehouseMutation.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
+       @objects = RollerWarehouseMutation.active_objects.joins(:recovery_order).page(params[:page]).per(params[:limit]).order("id DESC")
        @total = RollerWarehouseMutation.active_objects.count
      end
      
@@ -51,11 +43,17 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
       render :json => { :success => true, 
                         :roller_warehouse_mutations => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :recovery_order_id => @object.recovery_order_id, 
+                          :recovery_order_code => @object.recovery_order.code,
+                          :code => @object.code, 
+                          :warehouse_from_id => @object.warehouse_from_id, 
+                          :warehouse_from_name => @object.warehouse_from.name, 
+                          :warehouse_to_id => @object.warehouse_to_id, 
+                          :warehouse_to_name => @object.warehouse_to.name, 
+                          :amount => @object.amount, 
+                          :mutation_date =>format_date_friendly(@object.mutation_date),
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                          :confirmed_at => format_date_friendly(@object.confirmed_at)  
                           ] , 
                         :total => RollerWarehouseMutation.active_objects.count }  
     else
@@ -81,14 +79,17 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
     render :json => { :success => true,   
                       :roller_warehouse_mutations => [
                           :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
+                          :recovery_order_id => @object.recovery_order_id, 
+                          :recovery_order_code => @object.recovery_order.code,
+                          :code => @object.code, 
+                          :warehouse_from_id => @object.warehouse_from_id, 
+                          :warehouse_from_name => @object.warehouse_from.name, 
+                          :warehouse_to_id => @object.warehouse_to_id, 
+                          :warehouse_to_name => @object.warehouse_to.name, 
+                          :amount => @object.amount, 
+                          :mutation_date =>format_date_friendly(@object.mutation_date),
                           :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                         
                         ],
                       :total => RollerWarehouseMutation.active_objects.count  }
@@ -145,15 +146,18 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :roller_warehouse_mutations => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
+                            :id => @object.id, 
+                            :recovery_order_id => @object.recovery_order_id, 
+                            :recovery_order_code => @object.recovery_order.code, 
+                            :code => @object.code, 
+                            :warehouse_from_id => @object.warehouse_from_id, 
+                            :warehouse_from_name => @object.warehouse_from.name, 
+                            :warehouse_to_id => @object.warehouse_to_id, 
+                            :warehouse_to_name => @object.warehouse_to.name, 
+                            :amount => @object.amount, 
+                            :mutation_date =>format_date_friendly(@object.mutation_date),
                             :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
+                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => RollerWarehouseMutation.active_objects.count  } 
     else
@@ -197,7 +201,7 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = RollerWarehouseMutation.where{  
+      @objects = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{  
         ( 
            ( code =~ query )  
          )
@@ -206,20 +210,20 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RollerWarehouseMutation.where{  
+      @total = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{  
         ( 
            ( code =~ query )  
          )
       }.count 
     else
-      @objects = RollerWarehouseMutation.where{ 
+      @objects = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RollerWarehouseMutation.where{ 
+      @total = RollerWarehouseMutation.active_objects.joins(:recovery_order).where{ 
           (id.eq selected_id)  
       }.count 
     end

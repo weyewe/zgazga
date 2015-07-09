@@ -9,24 +9,17 @@ Ext.define('AM.view.operation.rollerwarehousemutation.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
+			{ header: 'Order No',  dataIndex: 'recovery_order_code', flex: 1},
+			{ header: 'Tanggal Mutasi', dataIndex: 'mutation_date', flex: 2 },
+		 	{ header: 'Warehouse From',  dataIndex: 'warehouse_from_name', flex: 1},
+			{ header: 'Warehouse To',  dataIndex: 'warehouse_to_name', flex: 1},
  
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 'Tanggal konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
 			},
 			
 			

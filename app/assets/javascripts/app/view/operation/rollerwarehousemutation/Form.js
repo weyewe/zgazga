@@ -14,20 +14,20 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
   initComponent: function() {
 			var me = this; 
 	
-	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
-		storeId : 'contact_search',
+	var remoteJsonStoreWarehouseSource = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search',
 		fields	: [
 		 		{
-					name : 'contact_name',
+					name : 'warehouse_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'contact_description',
+					name : 'warehouse_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'contact_id',
+					name : 'warehouse_id',
 					mapping : 'id'
 				}  
 		],
@@ -35,7 +35,7 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_customers',
+			url : 'api/search_warehouses',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
-		storeId : 'employee_search',
+	var remoteJsonStoreWarehouseTarget = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search_target',
 		fields	: [
 		 		{
-					name : 'employee_name',
+					name : 'warehouse_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'employee_description',
+					name : 'warehouse_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'employee_id',
+					name : 'warehouse_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,7 +66,7 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_employees',
+			url : 'api/search_warehouses',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -76,20 +76,20 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
-		storeId : 'exchange_search',
+	var remoteJsonStoreRecoveryOrder = Ext.create(Ext.data.JsonStore, {
+		storeId : 'recovery_order_search',
 		fields	: [
 		 		{
-					name : 'exchange_name',
-					mapping : "name"
+					name : 'recovery_order_code',
+					mapping : "code"
 				} ,
 				{
-					name : 'exchange_description',
-					mapping : "description"
+					name : 'recovery_order_production_no',
+					mapping : "production_no"
 				} ,
 		 
 				{
-					name : 'exchange_id',
+					name : 'recovery_order_id',
 					mapping : 'id'
 				}  
 		],
@@ -97,7 +97,7 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_exchanges',
+			url : 'api/search_recovery_orders',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -129,90 +129,82 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
     		        fieldLabel: 'Kode'
     		  	  },
     		  	{
-					xtype: 'textfield',
-					fieldLabel : 'Nomor Surat',
-					name : 'nomor_surat'
-				},
-    		    {
     					xtype: 'datefield',
-    					name : 'sales_date',
-    					fieldLabel: 'Tanggal Penjualan',
+    					name : 'mutation_date',
+    					fieldLabel: 'Tanggal Mutasi',
     					format: 'Y-m-d',
     				},
     				{
-        	        xtype: 'textarea',
-        	        name : 'description',
-        	        fieldLabel: 'Deskripsi'
-    	      },
-    	        
-    	      {
-	    				fieldLabel: 'Contact',
+	    				fieldLabel: 'Recovery Order',
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
+	    				displayField : 'recovery_order_code',
+	    				valueField : 'recovery_order_id',
 	    				pageSize : 5,
 	    				minChars : 1, 
 	    				allowBlank : false, 
 	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
+	    				store : remoteJsonStoreRecoveryOrder , 
 	    				listConfig : {
 	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
+	    						return  	'<div data-qtip="{recovery_order_code}">' + 
+	    												'<div class="combo-name">{recovery_order_code}</div>' + 
+	    												'<div class="combo-name">Production No : {recovery_order_production_no}</div>' + 
 	    						 					'</div>';
 	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
-    				
-    				{
-	    				fieldLabel: 'Marketing',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'employee_name',
-	    				valueField : 'employee_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreEmployee , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{employee_name}">' + 
-	    												'<div class="combo-name">{employee_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'employee_id' 
+	    				},
+	    				name : 'recovery_order_id' 
     				},
-    				
     				{
-	    				fieldLabel: 'Currency',
+	    				fieldLabel: 'Warehouse From',
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
-	    				displayField : 'exchange_name',
-	    				valueField : 'exchange_id',
+	    				displayField : 'warehouse_name',
+	    				valueField : 'warehouse_id',
 	    				pageSize : 5,
 	    				minChars : 1, 
 	    				allowBlank : false, 
 	    				triggerAction: 'all',
-	    				store : remoteJsonStoreExchange , 
+	    				store : remoteJsonStoreWarehouseSource , 
 	    				listConfig : {
 	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{exchange_name}">' + 
-	    												'<div class="combo-name">{exchange_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
+	    						return  	'<div data-qtip="{warehouse_name}">' + 
+	    												'<div class="combo-name">{warehouse_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {warehouse_description}</div>' + 
 	    						 					'</div>';
 	    					}
-    					},
-    					name : 'exchange_id' 
+	    				},
+	    				name : 'warehouse_from_id' 
     				},
+    				{
+	    				fieldLabel: 'Warehouse To',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'warehouse_name',
+	    				valueField : 'warehouse_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreWarehouseTarget , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{warehouse_name}">' + 
+	    												'<div class="combo-name">{warehouse_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {warehouse_description}</div>' + 
+	    						 					'</div>';
+	    					}
+	    				},
+	    				name : 'warehouse_to_id' 
+    				},
+    				{
+    		        xtype: 'numberfield',
+    		        name : 'amount',
+    		        fieldLabel: 'Amount'
+    		    },
 			]
     }];
 
@@ -228,66 +220,66 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
     this.callParent(arguments);
   },
   
-    setSelectedCustomer: function( contact_id ){
-		var comboBox = this.down('form').getForm().findField('contact_id'); 
+    setSelectedRecoveryOrder: function( recovery_order_id ){ 
+		var comboBox = this.down('form').getForm().findField('recovery_order_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : contact_id 
+				selected_id : recovery_order_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( contact_id );
+				comboBox.setValue( recovery_order_id );
 			}
 		});
 	},
 	
-	setSelectedEmployee: function( employee_id ){
-		var comboBox = this.down('form').getForm().findField('employee_id'); 
+    setSelectedWarehouseSource: function( warehouse_from_id ){ 
+		var comboBox = this.down('form').getForm().findField('warehouse_from_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : employee_id 
+				selected_id : warehouse_from_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( employee_id );
+				comboBox.setValue( warehouse_from_id );
 			}
 		});
 	},
 	
-	setSelectedExchange: function( exchange_id ){
-		var comboBox = this.down('form').getForm().findField('exchange_id'); 
+	setSelectedWarehouseTarget: function( warehouse_to_id ){ 
+  	// console.log(warehouse_id);
+		var comboBox = this.down('form').getForm().findField('warehouse_to_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : exchange_id 
+				selected_id : warehouse_to_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( exchange_id );
+				comboBox.setValue( warehouse_to_id );
 			}
 		});
 	},
 	
 	setComboBoxData : function( record){ 
 
-		// var me = this; 
-		// me.setLoading(true);
+		var me = this; 
+		me.setLoading(true);
 		
-		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
-		// me.setSelectedEmployee( record.get("employee_id")  ) ;
-		// me.setSelectedExchange( record.get("exchange_id")  ) ;
-		// me.setSelectedCustomer( record.get("contact_id")  ) ;
+		me.setSelectedRecoveryOrder( record.get("recovery_order_id")  ) ;
+		me.setSelectedWarehouseSource( record.get("warehouse_from_id")  ) ;
+		me.setSelectedWarehouseTarget( record.get("warehouse_to_id")  ) ;
  
 	}
  
