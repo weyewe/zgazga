@@ -196,6 +196,26 @@ if Rails.env.development?
       )
   end
   
+  machine_array = []
+  (1.upto 10).each do |x|
+    
+    machine_array << Machine.create_object(
+        :name => "machine name #{x}",   
+        :code => "machine code #{x}",   
+        :description => "machine description #{x}",   
+        
+      )
+  end
+  
+  roller_type_array = []
+  (1.upto 10).each do |x|
+    
+    roller_type_array << RollerType.create_object(
+        :name => "roller type  name #{x}",   
+        :description => "roller type description #{x}",   
+        
+      )
+  end
   
   exchange_array = []
   (1.upto 10).each do |x|
@@ -257,7 +277,135 @@ if Rails.env.development?
         
       )
   end
-
+  
+  item_roll_blanket_array = [] 
+  (1.upto 10).each do |x|
+    selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+    
+    item_roll_blanket_array << Item.create_object(
+        :sub_type_id => nil, 
+        :item_type_id => ItemType.where(:name => BASE_ITEM_TYPE[:roll_blanket]).first.id  , 
+        :exchange_id => selected_exchange.id , 
+        :uom_id => selected_uom.id ,
+        
+        :name => "rb #{x}",
+        :sku => "rb#{x}",
+        :minimum_amount => BigDecimal( x.to_s ),
+        
+        :is_tradeable => true , 
+        :selling_price => BigDecimal("1000") * x ,
+        :price_list => BigDecimal("20000") * x ,
+        :description => "The description #{x}"
+        
+      )
+  end
+  
+  item_adhesive_blanket_array = [] 
+  (1.upto 10).each do |x|
+    selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+    
+    item_adhesive_blanket_array << Item.create_object(
+        :sub_type_id => nil, 
+        :item_type_id => ItemType.where(:name => BASE_ITEM_TYPE[:adhesive_blanket]).first.id, 
+        :exchange_id => selected_exchange.id , 
+        :uom_id => selected_uom.id ,
+        
+        :name => "ab name #{x}",
+        :sku => "ab#{x}",
+        :minimum_amount => BigDecimal( x.to_s ),
+        
+        :is_tradeable => true , 
+        :selling_price => BigDecimal("1000") * x ,
+        :price_list => BigDecimal("20000") * x ,
+        :description => "The description #{x}"
+        
+      )
+  end
+  
+  
+  item_adhesive_roller_array = [] 
+  (1.upto 10).each do |x|
+    selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+    
+    item_adhesive_roller_array << Item.create_object(
+        :sub_type_id => nil, 
+        :item_type_id => ItemType.where(:name => BASE_ITEM_TYPE[:adhesive_roller]).first.id , 
+        :exchange_id => selected_exchange.id , 
+        :uom_id => selected_uom.id ,
+        
+        :name => "ad name #{x}",
+        :sku => "ar#{x}",
+        :minimum_amount => BigDecimal( x.to_s ),
+        
+        :is_tradeable => true , 
+        :selling_price => BigDecimal("1000") * x ,
+        :price_list => BigDecimal("20000") * x ,
+        :description => "The description #{x}"
+        
+      )
+  end
+  
+  
+  item_bar_array = [] 
+  (1.upto 10).each do |x|
+    selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+    
+    item_bar_array << Item.create_object(
+        :sub_type_id => nil, 
+        :item_type_id => ItemType.where(:name => BASE_ITEM_TYPE[:bar]).first.id , 
+        :exchange_id => selected_exchange.id , 
+        :uom_id => selected_uom.id ,
+        
+        :name => "bar name #{x}",
+        :sku => "bar#{x}",
+        :minimum_amount => BigDecimal( x.to_s ),
+        
+        :is_tradeable => true , 
+        :selling_price => BigDecimal("1000") * x ,
+        :price_list => BigDecimal("20000") * x ,
+        :description => "The description #{x}"
+        
+      )
+  end
+  
+  item_compound_array = [] 
+  (1.upto 10).each do |x|
+    selected_uom = uom_array[  rand( 0..(uom_array.length - 1 ))]
+    # selected_sub_type =  nil 
+    # selected_item_type = selected_sub_type.item_type 
+    selected_exchange = exchange_array[  rand( 0..(exchange_array.length - 1 ))]
+    
+    item_compound_array << Item.create_object(
+        :sub_type_id => nil, 
+        :item_type_id => ItemType.where(:name => BASE_ITEM_TYPE[:compound]).first.id , 
+        :exchange_id => selected_exchange.id , 
+        :uom_id => selected_uom.id ,
+        
+        :name => "compound name #{x}",
+        :sku => "com#{x}",
+        :minimum_amount => BigDecimal( x.to_s ),
+        
+        :is_tradeable => true , 
+        :selling_price => BigDecimal("1000") * x ,
+        :price_list => BigDecimal("20000") * x ,
+        :description => "The description #{x}"
+        
+      )
+  end
+  
+  
   ItemType.all.each do |item_type| 
     next if item_type.items.count == 0 
     item = item_type.items.first 
@@ -750,5 +898,242 @@ if Rails.env.development?
     end
   end
   
+  core_builder_array = []
+  (1.upto 10).each do |x|
+    selected_machine = machine_array[rand(0..(machine_array.length - 1))]
+    selected_uom = uom_array[rand(0..(uom_array.length - 1))]
+    core_builder_array << CoreBuilder.create_object(
+        :base_sku => "corebuilder#{x}",
+        :name => "corebuildername #{x}",
+        :description => "desc #{x}",
+        :uom_id => selected_uom.id,
+        :machine_id => selected_machine.id,
+        :core_builder_type_case => CORE_BUILDER_TYPE[:shaft],
+        :cd => 10,
+        :tl => 10   
+      )
+  end
+  
+  roller_builder_array = []
+  (1.upto 10).each do |x|
+    selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]
+    selected_uom = uom_array[rand(0..(uom_array.length - 1))]
+    selected_machine = machine_array[rand(0..(machine_array.length - 1))]
+    selected_roller_type = roller_type_array[rand(0..(roller_type_array.length - 1))]
+    selected_adhesive_roller = item_adhesive_roller_array[rand(0..(item_adhesive_roller_array.length - 1))]
+    selected_compound = item_compound_array[rand(0..(item_compound_array.length - 1))]
+    selected_compound = item_compound_array[rand(0..(item_compound_array.length - 1))]
+    roller_builder_array << RollerBuilder.create_object(
+        :base_sku => "rollerbuilder#{x}",
+        :name => "rollerbuildername#{x}",
+        :description => "desc #{x}",
+        :uom_id => selected_uom.id,
+        :adhesive_id => selected_adhesive_roller.id,
+        :compound_id => selected_compound.id,
+        :machine_id =>selected_machine.id,
+        :roller_type_id => selected_roller_type.id,
+        :core_builder_id => selected_core_builder.id,
+        :is_grooving => true,
+        :is_crowning => true,
+        :is_chamfer => true,
+        :crowning_size => 1,
+        :grooving_width => 2,
+        :grooving_depth => 3,
+        :grooving_position => 4,
+        :cd => 5,
+        :rd => 6,
+        :rl => 7,
+        :wl => 8,
+        :tl => 9,
+      )
+  end
+  
+  blanket_array = []
+  (1.upto 10).each do |x|
+    selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]
+    selected_uom = uom_array[rand(0..(uom_array.length - 1))]
+    selected_machine = machine_array[rand(0..(machine_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_roller_type = roller_type_array[rand(0..(roller_type_array.length - 1))]
+    selected_roll_blanket = item_roll_blanket_array[rand(0..(item_roll_blanket_array.length - 1))]
+    selected_adhesive_blanket = item_adhesive_blanket_array[rand(0..(item_adhesive_roller_array.length - 1))]
+    selected_compound = item_compound_array[rand(0..(item_compound_array.length - 1))]
+    selected_bar = item_bar_array[rand(0..(item_bar_array.length - 1))]
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    blanket_array << Blanket.create_object(
+        :sku => "blanket#{x}",
+        :name => "blanketname#{x}",
+        :description => "desc#{x}",
+        :uom_id => selected_uom.id,
+        :roll_no => "roll#{x}",
+        :contact_id => selected_contact.id,
+        :machine_id => selected_machine.id,
+        :adhesive_id => selected_adhesive_blanket.id,
+        :adhesive2_id => selected_adhesive_blanket.id,
+        :roll_blanket_item_id => selected_roll_blanket.id,
+        :left_bar_item_id => selected_bar.id,
+        :right_bar_item_id => selected_bar.id,
+        :ac => 1,
+        :ar => 2,
+        :thickness =>3,
+        :is_bar_required => true,
+        :cropping_type => CROPPING_TYPE[:normal],
+        :special => 4,
+        :application_case => APPLICATION_CASE[:sheetfed],
+        :left_over_ac => 5,
+        :left_over_ar => 6,
+        :minimum_amount => BigDecimal("1"),
+        :selling_price => BigDecimal("2000"),
+        :price_list => BigDecimal("500"),
+        :exchange_id => selected_exchange.id,
+      )
+  end
+  
+  blending_recipe_array = []
+  (1.upto 10).each do |x|
+    selected_item = item_array[rand(0..(item_array.length - 4))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    blending_recipe = BlendingRecipe.create_object(
+        :name => "blendingrecipe name#{x}",
+        :description => "desc#{x}",
+        :target_item_id => selected_item.id,
+        :target_amount => 1
+      )
+    (1.upto 4).each do |y|
+      selected_item = item_array[rand(5..(item_array.length - 1))]
+      BlendingRecipeDetail.create_object(
+         :blending_recipe_id => blending_recipe.id,
+         :item_id => selected_item.id,
+         :amount => 1
+        )
+    end
+    if blending_recipe.errors.size == 0 
+      blending_recipe.reload
+      blending_recipe_array << blending_recipe
+    end
+  end
+  
+  blanket_order_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+   
+    blanket_order = BlanketOrder.create_object(
+        :contact_id => selected_contact.id,
+        :warehouse_id => selected_warehouse.id,
+        :order_date => DateTime.now,
+        :production_no => "Produc #{x}",
+        :has_due_date => true,
+        :due_date =>DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_blanket = blanket_array[rand(0..(blanket_array.length - 1))]
+      BlanketOrderDetail.create_object(
+          :blanket_order_id => blanket_order.id,
+          :blanket_id => selected_blanket.id,
+          :quantity => 1 
+        )
+    end
+    if blanket_order.errors.size == 0 
+      blanket_order.confirm_object(:confirmed_at => DateTime.now)
+      blanket_order.reload
+      blanket_order_array << blanket_order
+    end
+  end
+  
+  roller_identification_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+   
+    roller_identification = RollerIdentificationForm.create_object(
+        :warehouse_id =>selected_warehouse.id,
+        :contact_id => selected_contact.id,
+        :is_in_house => true,
+        :amount => 4,
+        :identified_date => DateTime.now,
+        :nomor_disasembly => "no diss #{x}"
+      )
+    (1.upto 4).each do |y|
+      selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]
+      selected_roller_type = roller_type_array[rand(0..(roller_type_array.length - 1))]
+      selected_machine = machine_array[rand(0..(machine_array.length - 1))]
+      RollerIdentificationFormDetail.create_object(
+          :roller_identification_form_id => roller_identification.id,
+          :detail_id => y,
+          :material_case => MATERIAL_CASE[:new],
+          :core_builder_id => selected_core_builder.id,
+          :roller_type_id => selected_roller_type.id,
+          :machine_id => selected_machine.id,
+          :repair_request_case => REPAIR_REQUEST_CASE[:all],
+          :roller_no => "rollerNo #{x} #{y}",
+          :rd => BigDecimal("10"),
+          :cd => BigDecimal("10"),
+          :rl => BigDecimal("10"),
+          :wl => BigDecimal("10"),
+          :tl => BigDecimal("10"),
+          :gl => BigDecimal("10"),
+          :groove_amount => BigDecimal("10"),
+          :groove_length => BigDecimal("10"), 
+        )
+    end
+    if roller_identification.errors.size == 0 
+      roller_identification.confirm_object(:confirmed_at => DateTime.now)
+      roller_identification.reload
+      roller_identification_array << roller_identification
+    end
+  end
+  
+  recovery_order_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_roller_identification = roller_identification_array[rand(0..(roller_identification_array.length - 1))]
+   
+    recovery_order = RecoveryOrder.create_object(
+        :roller_identification_form_id => selected_roller_identification.id,
+        :warehouse_id => selected_warehouse.id,
+        :code => "Code RIF #{x}",
+        :has_due_date => true,
+        :due_date => DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_roller_identification_detail = 
+      selected_roller_identification.roller_identification_form_details[rand(0..(selected_roller_identification.roller_identification_form_details.length - 1))]
+      selected_roller_builder = roller_builder_array[rand(0..(roller_builder_array.length - 1))]
+      RecoveryOrderDetail.create_object(
+          :recovery_order_id => recovery_order.id,
+          :roller_identification_form_detail_id => selected_roller_identification_detail.id,
+          :roller_builder_id => selected_roller_builder.id,
+          :core_type_case => CORE_TYPE_CASE[:r],
+        )
+    end
+    if recovery_order.errors.size == 0 
+      recovery_order.confirm_object(:confirmed_at => DateTime.now)
+      recovery_order.reload
+      recovery_order_array << recovery_order
+    end
+  end
+  
+  blending_work_order_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_blending_recipe = blending_recipe_array[rand(0..(blending_recipe_array.length - 1))]
+    blending_work_order = BlendingWorkOrder.create_object(
+        :blending_recipe_id => selected_blending_recipe.id,
+        :warehouse_id => selected_warehouse.id,
+        :description => "desc #{x}",
+        :blending_date => DateTime.now,
+        :code => "Code Bwo #{x}"
+      )
+    if blending_work_order.errors.size == 0 
+      blending_work_order.confirm_object(:confirmed_at => DateTime.now)
+      blending_work_order.reload
+      blending_work_order_array << blending_work_order
+    end
+  end
+  
+  
   
 end
+  
