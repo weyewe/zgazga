@@ -34,7 +34,7 @@ json.records @objects do |object|
     json.core_cost 	object.core_cost
     json.compound_cost 	object.compound_cost
     json.compound_under_layer_id 	object.compound_under_layer_id
-    if object.compound_under_layer_id == 0 
+    if object.compound_under_layer_id == 0 ||  object.compound_under_layer_id.nil? 
       json.compound_under_layer_name ""
     else
       json.compound_under_layer_name 	object.compound_under_layer.name

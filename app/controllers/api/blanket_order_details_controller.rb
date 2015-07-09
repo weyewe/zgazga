@@ -83,20 +83,14 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.contact.name  =~ query ) | 
-        ( blanket.machine.name =~ query ) | 
-        ( blanket.sku  =~ query  )  | 
-        ( blanket.name  =~ query  )  
+        ( blanket.roll_no  =~ query  )   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
       @total = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.contact.name  =~ query ) | 
-        ( blanket.machine.name =~ query ) | 
-        ( blanket.sku  =~ query  )  | 
-        ( blanket.name  =~ query  )  
+        ( blanket.roll_no  =~ query  )  
       }.count
     else
       @objects = BlanketOrderDetail.where{ 

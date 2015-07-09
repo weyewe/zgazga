@@ -1,6 +1,7 @@
 class BlanketWarehouseMutationDetail < ActiveRecord::Base
   belongs_to :blanket_warehouse_mutation
   belongs_to :blanket_order_detail
+  belongs_to :item
   validates_presence_of :blanket_order_detail_id
   validates_presence_of :blanket_warehouse_mutation_id
   validate :valid_blanket_order_detail

@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
+Ext.define('AM.view.operation.rollerwarehousemutation.ConfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unfinishblanketworkprocessform',
+  alias : 'widget.confirmrollerwarehousemutationform',
 
-  title : 'Unfinish BlanketWorkProcess',
+  title : 'Confirm RollerWarehouseMutation',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -21,11 +21,25 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
 					anchor: '100%'
       },
       items: [
+
+				{
+					xtype: 'displayfield',
+					fieldLabel: 'Kode',
+					name: 'code' 
+				},
+			 
+				{
+					xtype: 'datefield',
+					fieldLabel: 'Tanggal Konfirmasi',
+					name: 'confirmed_at' ,
+					format: 'Y-m-d',
+				},  
+		 
 			]
     }];
 
     this.buttons = [{
-      text: 'Unconfirm',
+      text: 'Confirm',
       action: 'confirm'
     }, {
       text: 'Cancel',
@@ -37,5 +51,6 @@ Ext.define('AM.view.operation.blanketworkprocess.UnfinishForm', {
   },
 
 	setParentData: function( record ) {
+		this.down('form').getForm().findField('code').setValue(record.get('code')); 
 	}
 });

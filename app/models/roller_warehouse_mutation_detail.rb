@@ -1,6 +1,7 @@
 class RollerWarehouseMutationDetail < ActiveRecord::Base
   belongs_to :roller_warehouse_mutation
   belongs_to :recovery_order_detail
+  belongs_to :item
   validates_presence_of :recovery_order_detail_id
   validates_presence_of :roller_warehouse_mutation_id
   validate :valid_recovery_order_detail

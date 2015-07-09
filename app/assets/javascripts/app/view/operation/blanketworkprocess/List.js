@@ -45,34 +45,28 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 			checkChangeBuffer: 300
 		});
 		
-		this.markAsDeceasedObjectButton = new Ext.Button({
-			text: 'Deceased',
-			action: 'markasdeceasedObject',
+		this.finishObjectButton = new Ext.Button({
+			text: 'Finish',
+			action: 'finishObject',
 			disabled: true
 		});
-
-		this.unmarkAsDeceasedObjectButton = new Ext.Button({
-			text: 'Cancel Deceased',
-			action: 'unmarkasdeceasedObject',
+	
+		this.unfinishObjectButton = new Ext.Button({
+			text: 'Unfinish',
+			action: 'unfinishObject',
 			disabled: true,
-			hidden :true 
-		});
-		
-		this.markAsRunAwayObjectButton = new Ext.Button({
-			text: 'Run Away',
-			action: 'markasrunawayObject',
-			disabled: true
+			hidden : true
 		});
 
 
 
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
+		this.tbar = [
+		    	        this.finishObjectButton,
+						this.unfinishObjectButton,
 		 				'-',
-						this.searchField,
-						'->',
-						this.markAsDeceasedObjectButton,
-						this.unmarkAsDeceasedObjectButton,
-						this.markAsRunAwayObjectButton
+						
+						'->',this.searchField,
+					
 						
 		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
@@ -96,21 +90,16 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 		this.deleteObjectButton.enable();
 		
 		
-		this.markAsRunAwayObjectButton.enable();
-
-		this.unmarkAsDeceasedObjectButton.enable();
-		this.markAsDeceasedObjectButton.enable();
-
-
-
 		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
+		
+		if( selectedObject && selectedObject.get("is_finished") == true ){
+			this.finishObjectButton.hide();
+			this.unfinishObjectButton.show();
+			this.unfinishObjectButton.enable();
 		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
+			this.finishObjectButton.enable();
+			this.finishObjectButton.show();
+			this.unfinishObjectButton.hide();
 		}
 
 
@@ -119,18 +108,6 @@ Ext.define('AM.view.operation.blanketworkprocess.List' ,{
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.markAsDeceasedObjectButton.disable();
-		this.unmarkAsDeceasedObjectButton.disable();
-		this.markAsRunAwayObjectButton.disable();
-
-		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
-		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
-		}
+		this.finishObjectButton.disable(); 
 	}
 });

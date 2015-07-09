@@ -1,22 +1,22 @@
-class Api::RecoveryOrderDetailsController < Api::BaseApiController
+class Api::BlanketWarehouseMutationDetailsController < Api::BaseApiController
   
   def index
-    @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
-    @objects = @parent.active_children.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = BlanketWarehouseMutation.find_by_id params[:blanket_warehouse_mutation_id]
+    @objects = @parent.active_children.joins(:blanket_warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
+    @parent = BlanketWarehouseMutation.find_by_id params[:blanket_warehouse_mutation_id]
     
   
-    @object = RecoveryOrderDetail.create_object(params[:recovery_order_detail])
+    @object = BlanketWarehouseMutationDetail.create_object(params[:blanket_warehouse_mutation_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :recovery_order_details => [@object] , 
+                        :blanket_warehouse_mutation_details => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = RecoveryOrderDetail.find_by_id params[:id] 
-    @parent = @object.recovery_order 
+    @object = BlanketWarehouseMutationDetail.find_by_id params[:id] 
+    @parent = @object.blanket_warehouse_mutation 
     
     
-    params[:recovery_order_detail][:recovery_order_id] = @parent.id  
+    params[:blanket_warehouse_mutation_detail][:blanket_warehouse_mutation_id] = @parent.id  
     
-    @object.update_object( params[:recovery_order_detail])
+    @object.update_object( params[:blanket_warehouse_mutation_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :recovery_order_details => [@object],
+                        :blanket_warehouse_mutation_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = RecoveryOrderDetail.find(params[:id])
-    @parent = @object.recovery_order 
+    @object = BlanketWarehouseMutationDetail.find(params[:id])
+    @parent = @object.blanket_warehouse_mutation 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -71,7 +71,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     end
   end
   
-  def search
+    def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -82,25 +82,31 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
-        ( roller_builder.base_sku  =~ query ) 
+      @objects = BlanketWarehouseMutationDetail.joins(:blanket_warehouse_mutation, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  | 
+        ( code  =~ query  )  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = RecoveryOrderDetail.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{ 
-        ( roller_builder.base_sku  =~ query ) 
+      @total = BlanketWarehouseMutationDetail.joins(:blanket_warehouse_mutation, :item => [:uom]).where{ 
+        ( item.sku  =~ query ) | 
+        ( item.name =~ query ) | 
+        ( item.description  =~ query  )  |
+        ( code  =~ query  )  
       }.count
     else
-      @objects = RecoveryOrderDetail.where{ 
+      @objects = BlanketWarehouseMutationDetail.where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = RecoveryOrderDetail.where{ 
+      @total = BlanketWarehouseMutationDetail.where{ 
               (id.eq selected_id)   
       }.count 
     end
