@@ -7,50 +7,18 @@ class Api::BlanketsController < Api::BaseApiController
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = Blanket.joins(:uom,:machine,:contact).where{
+        @objects = Blanket.joins(:machine,:contact).where{
           (
-            ( sku =~  livesearch )  | 
-            ( name =~  livesearch )  | 
-            ( amount =~ livesearch ) | 
-            ( uom.name =~ livesearch ) | 
-            ( ac =~ livesearch ) | 
-            ( ar =~ livesearch ) | 
-            ( thickness =~ livesearch ) | 
-            ( machine.name =~ livesearch ) | 
-            ( adhesive.name =~ livesearch ) | 
-            ( adhesive2.name =~ livesearch ) | 
-            ( roll_blanket_item.name =~ livesearch ) | 
-            ( right_bar_item.name =~ livesearch ) | 
-            ( left_bar_item.name =~ livesearch ) | 
-            ( contact.name =~ livesearch ) | 
-            ( application_case =~ livesearch ) | 
-            ( cropping_type =~ livesearch ) | 
-            ( left_over_ac =~ livesearch ) | 
-            ( left_over_ar =~ livesearch ) 
+            ( contact.name =~ livesearch ) |
+            ( machine.name =~ livesearch ) 
           )
 
         }.page(params[:page]).per(params[:limit])
 
-        @total = Blanket.joins(:uom,:machine,:contact).where{
+        @total = Blanket.joins(:machine,:contact).where{
           (
-            ( sku =~  livesearch )  | 
-            ( name =~  livesearch )  | 
-            ( amount =~ livesearch ) | 
-            ( uom.name =~ livesearch ) | 
-            ( ac =~ livesearch ) | 
-            ( ar =~ livesearch ) | 
-            ( thickness =~ livesearch ) | 
-            ( machine.name =~ livesearch ) | 
-            ( adhesive.name =~ livesearch ) | 
-            ( adhesive2.name =~ livesearch ) | 
-            ( roll_blanket_item.name =~ livesearch ) | 
-            ( right_bar_item.name =~ livesearch ) | 
-            ( left_bar_item.name =~ livesearch ) | 
-            ( contact.name =~ livesearch ) | 
-            ( application_case =~ livesearch ) | 
-            ( cropping_type =~ livesearch ) | 
-            ( left_over_ac =~ livesearch ) | 
-            ( left_over_ar =~ livesearch ) 
+            ( contact.name =~ livesearch ) |
+            ( machine.name =~ livesearch ) 
           )
         }.count
    
@@ -153,59 +121,27 @@ class Api::BlanketsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Blanket.joins(:uom,:machine,:contact).where{ 
-            ( sku =~  query )  | 
-            ( name =~  query )  | 
-            ( amount =~ query ) | 
-            ( uom.name =~ query ) | 
-            ( ac =~ query ) | 
-            ( ar =~ query ) | 
-            ( thickness =~ query ) | 
-            ( machine.name =~ query ) | 
-            ( adhesive.name =~ query ) | 
-            ( adhesive2.name =~ query ) | 
-            ( roll_blanket_item.name =~ query ) | 
-            ( right_bar_item.name =~ query ) | 
-            ( left_bar_item.name =~ query ) | 
-            ( contact.name =~ query ) | 
-            ( application_case =~ query ) | 
-            ( cropping_type =~ query ) | 
-            ( left_over_ac =~ query ) | 
-            ( left_over_ar =~ query ) 
+      @objects = Blanket.joins(:machine,:contact).where{ 
+            ( contact.name =~ query ) |
+            ( machine.name =~ query ) 
                               }.
                         page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+                        per(params[:limit])
+                        # order("id DESC")
                         
-      @total = Blanket.joins(:uom,:machine,:contact).where{ 
-         ( sku =~  query )  | 
-            ( name =~  query )  | 
-            ( amount =~ query ) | 
-            ( uom.name =~ query ) | 
-            ( ac =~ query ) | 
-            ( ar =~ query ) | 
-            ( thickness =~ query ) | 
-            ( machine.name =~ query ) | 
-            ( adhesive.name =~ query ) | 
-            ( adhesive2.name =~ query ) | 
-            ( roll_blanket_item.name =~ query ) | 
-            ( right_bar_item.name =~ query ) | 
-            ( left_bar_item.name =~ query ) | 
-            ( contact.name =~ query ) | 
-            ( application_case =~ query ) | 
-            ( cropping_type =~ query ) | 
-            ( left_over_ac =~ query ) | 
-            ( left_over_ar =~ query ) 
+      @total = Blanket.joins(:machine,:contact).where{ 
+            ( contact.name =~ query ) |
+            ( machine.name =~ query ) 
         
                               }.count
     else
-      @objects = Blanket.joins(:uom,:machine,:contact).where{ (id.eq selected_id)  
+      @objects = Blanket.joins(:machine,:contact).where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+                        per(params[:limit])
+                        # order("id DESC")
    
-      @total = Blanket.joins(:uom,:machine,:contact).where{ (id.eq selected_id)   
+      @total = Blanket.joins(:machine,:contact).where{ (id.eq selected_id)   
                               }.count 
     end
     

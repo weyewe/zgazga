@@ -21,29 +21,17 @@ Ext.define('AM.view.operation.blanketorder.ConfirmForm', {
 					anchor: '100%'
       },
       items: [
-
-				{
+        {
 					xtype: 'displayfield',
-					fieldLabel: 'Kode',
+					fieldLabel: 'Order No.',
 					name: 'code' 
-				},
-			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
 				},
 				{
 					xtype: 'datefield',
 					fieldLabel: 'Tanggal Konfirmasi',
 					name: 'confirmed_at' ,
 					format: 'Y-m-d',
-				},  
+				}
 		 
 			]
     }];
@@ -61,8 +49,6 @@ Ext.define('AM.view.operation.blanketorder.ConfirmForm', {
   },
 
 	setParentData: function( record ) {
-		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
-		this.down('form').getForm().findField('description').setValue(record.get('description')); 
+	  this.down('form').getForm().findField('code').setValue(record.get('code')); 
 	}
 });

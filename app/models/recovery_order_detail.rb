@@ -9,6 +9,14 @@ class RecoveryOrderDetail < ActiveRecord::Base
   validate :valid_roller_identification_form_detail_id
   validate :valid_roller_builder_id
     
+  def self.active_objects
+    self
+  end
+  
+  def active_children
+    self.recovery_accessory_details 
+  end 
+    
   def valid_roller_identification_form_detail_id
     return if roller_identification_form_detail_id.nil?
     rifd = RollerIdentificationFormDetail.find_by_id roller_identification_form_detail_id

@@ -2,7 +2,7 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   
   def index
     @parent = BlanketOrder.find_by_id params[:blanket_order_id]
-    @objects = @parent.active_children.joins(:blanket_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:blanket_order, :blanket).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -92,7 +92,7 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = BlanketOrderDetail.joins(:blanket_order, :item => [:uom]).where{ 
+      @total = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
         ( blanket.contact.name  =~ query ) | 
         ( blanket.machine.name =~ query ) | 
         ( blanket.sku  =~ query  )  | 

@@ -8,15 +8,17 @@ Ext.define('AM.view.operation.blanketorderdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
-			
-			 
+			{ header: 'Id', dataIndex: 'id', flex: 1},
+			{ header: 'Blanket Sku',  dataIndex: 'blanket_sku', flex: 1},
+    		{ header: 'Blanket Name',  dataIndex: 'blanket_name', flex: 1},
+    		{ header: 'Roll Blanket Sku',  dataIndex: 'blanket_roll_blanket_item_sku', flex: 1},
+    		{ header: 'Roll Blanket Name',  dataIndex: 'blanket_roll_blanket_item_name', flex: 1},
+    		{ header: 'LeftBar Sku', dataIndex: 'blanket_left_bar_item_sku', flex: 1},
+    		{ header: 'LeftBar name', dataIndex: 'blanket_left_bar_item_name', flex: 1},
+    		{ header: 'RightBar sku', dataIndex: 'blanket_right_bar_item_sku', flex: 1},
+    		{ header: 'RightBar name', dataIndex: 'blanket_right_bar_item_name', flex: 1},
+    		{ header: 'Rejected Date', dataIndex: 'rejected_date', flex: 1},
+    		{ header: 'Finished Date', dataIndex: 'finished_at', flex: 1},
 		];
 		
 

@@ -23,7 +23,6 @@ Ext.define('AM.model.RecoveryOrderDetail', {
 	         { name: 'is_polished_and_gc', type: 'boolean' },	
 	         { name: 'is_packaged', type: 'boolean' },	
 	         { name: 'is_rejected', type: 'boolean' },	
-	         { name: 'is_rejected', type: 'boolean' },	
 	         { name: 'rejected_date', type: 'string' },	
 	         { name: 'is_finished', type: 'boolean' },	
 	         { name: 'finished_date', type: 'string' },	

@@ -8,25 +8,24 @@ Ext.define('AM.view.operation.blanketorder.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
- 
+			{ header: 'Order No.',  dataIndex: 'code', flex: 1},
+			{	header: 'Production No', dataIndex: 'production_no', flex: 2 },
+			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			{	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
+			{	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
+			{	header: 'QTY', dataIndex: 'amount_received', flex: 2 },
+			{	header: 'QTY Finished', dataIndex: 'amount_final', flex: 2 },
+			{	header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
+			{	header: 'Order Date', dataIndex: 'order_date', flex: 2 },
+			{	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
+			{	header: 'Notes', dataIndex: 'notes', flex: 2 },
+			{	header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
 			
 			

@@ -13,8 +13,8 @@ Ticketie::Application.routes.draw do
   resources :receipt_vouchers
   resources :roller_accs
   resources :roller_acc_details
-  
-  
+  resources :roller_accessory_details
+  resources :blanket_work_processs
   
   namespace :api do
     devise_for :users
