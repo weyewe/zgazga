@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.salesdowmpaymentallocation.UnconfirmForm', {
+Ext.define('AM.view.operation.salesdownpaymentallocation.ConfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmsalesdowmpaymentallocationform',
+  alias : 'widget.confirmsalesdownpaymentallocationform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Confirm SalesDownPaymentAllocation',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -29,15 +29,17 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.UnconfirmForm', {
 				},
 			 
 				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				}
+					xtype: 'datefield',
+					fieldLabel: 'Tanggal Konfirmasi',
+					name: 'confirmed_at' ,
+					format: 'Y-m-d',
+				},  
+		 
 			]
     }];
 
     this.buttons = [{
-      text: 'Unconfirm',
+      text: 'Confirm',
       action: 'confirm'
     }, {
       text: 'Cancel',
@@ -49,9 +51,6 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.UnconfirmForm', {
   },
 
 	setParentData: function( record ) {
-		// console.log("Inside set Parent Data");
-// d.get('total_members_count') );
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
 	}
 });

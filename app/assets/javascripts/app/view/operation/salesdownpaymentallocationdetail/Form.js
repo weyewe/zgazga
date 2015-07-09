@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
+Ext.define('AM.view.operation.salesdownpaymentallocationdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.receiptvoucherdetailform',
+  alias : 'widget.salesdownpaymentallocationdetailform',
 
-  title : 'Add / Edit ReceiptVoucher Detail',
+  title : 'Add / Edit Memorial Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -14,7 +14,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
   initComponent: function() {
 	
 	
-    var remoteJsonStorePayable = Ext.create(Ext.data.JsonStore, {
+    var remoteJsonStoreReceivable = Ext.create(Ext.data.JsonStore, {
 		storeId : 'receivable_search',
 		fields	: [
 		 		{
@@ -71,6 +71,8 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 		autoLoad : false 
 	});
 		
+	
+	 
 		
     this.items = [{
       xtype: 'form',
@@ -89,10 +91,10 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	      },
 				{
 	        xtype: 'hidden',
-	        name : 'receipt_voucher_id',
-	        fieldLabel: 'receipt_voucher_id'
+	        name : 'sales_down_payment_allocation_id',
+	        fieldLabel: 'sales_down_payment_allocation_id'
 	      },
-				{
+	      {
 					fieldLabel: 'Receivable',
 					xtype: 'combo',
 					queryMode: 'remote',
@@ -103,7 +105,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 					minChars : 1, 
 					allowBlank : false, 
 					triggerAction: 'all',
-					store : remoteJsonStorePayable , 
+					store : remoteJsonStoreReceivable , 
 					listConfig : {
 						getInnerTpl: function(){
 							return  	'<div data-qtip="{receivable_source_code}">' +  
@@ -131,12 +133,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	        name : 'amount',
 	        fieldLabel: 'Amount'
 	      },
-	      {
-	        xtype: 'numberfield',
-	        name : 'pph_23',
-	        fieldLabel: 'PPh 23'
-	      },
-				{
+	      	{
 	        xtype: 'textarea',
 	        name : 'description',
 	        fieldLabel: 'Description'
@@ -159,7 +156,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 
     this.callParent(arguments);
   },
-	
+
 	setSelectedReceivable: function( receivable_id ){
 		// console.log("inside set selected original account id ");
 		var comboBox = this.down('form').getForm().findField('receivable_id'); 
@@ -176,52 +173,17 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 		});
 	},
 	
-	setSelectedItem: function( item_id ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : item_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( item_id );
-			}
-		});
-	},
-	
-	setSelectedStatus: function( is_service ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('is_service'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : is_service 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( is_service );
-			}
-		});
-	},
-	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
 		
-		me.setSelectedReceivable( record.get("item_id")  ) ; 
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		
+		me.setSelectedReceivable( record.get("receivable_id")  ) ; 
 	},
 	
 	
 	setParentData: function( record) {
-		// this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('receipt_voucher_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('sales_down_payment_allocation_id').setValue(record.get('id'));
 	}
  
 });

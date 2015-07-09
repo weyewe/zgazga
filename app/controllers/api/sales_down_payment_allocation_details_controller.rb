@@ -1,22 +1,22 @@
-class Api::SalesDowmPaymentAllocationDetailsController < Api::BaseApiController
+class Api::SalesDownPaymentAllocationDetailsController < Api::BaseApiController
   
   def index
-    @parent = SalesDowmPaymentAllocation.find_by_id params[:sales_dowm_payment_allocation_id]
-    @objects = @parent.active_children.joins(:sales_dowm_payment_allocation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = SalesDownPaymentAllocation.find_by_id params[:sales_down_payment_allocation_id]
+    @objects = @parent.active_children.joins(:sales_down_payment_allocation, :receivable).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = SalesDowmPaymentAllocation.find_by_id params[:sales_dowm_payment_allocation_id]
+    @parent = SalesDownPaymentAllocation.find_by_id params[:sales_down_payment_allocation_id]
     
   
-    @object = SalesDowmPaymentAllocationDetail.create_object(params[:sales_dowm_payment_allocation_detail])
+    @object = SalesDownPaymentAllocationDetail.create_object(params[:sales_down_payment_allocation_detail])
     
     
     if @object.errors.size == 0 
       render :json => { :success => true, 
-                        :sales_dowm_payment_allocation_details => [@object] , 
+                        :sales_down_payment_allocation_details => [@object] , 
                         :total => @parent.active_children.count }  
     else
       msg = {
@@ -31,17 +31,17 @@ class Api::SalesDowmPaymentAllocationDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = SalesDowmPaymentAllocationDetail.find_by_id params[:id] 
-    @parent = @object.sales_dowm_payment_allocation 
+    @object = SalesDownPaymentAllocationDetail.find_by_id params[:id] 
+    @parent = @object.sales_down_payment_allocation 
     
     
-    params[:sales_dowm_payment_allocation_detail][:sales_dowm_payment_allocation_id] = @parent.id  
+    params[:sales_down_payment_allocation_detail][:sales_down_payment_allocation_id] = @parent.id  
     
-    @object.update_object( params[:sales_dowm_payment_allocation_detail])
+    @object.update_object( params[:sales_down_payment_allocation_detail])
      
     if @object.errors.size == 0 
       render :json => { :success => true,   
-                        :sales_dowm_payment_allocation_details => [@object],
+                        :sales_down_payment_allocation_details => [@object],
                         :total => @parent.active_children.count  } 
     else
       msg = {
@@ -56,8 +56,8 @@ class Api::SalesDowmPaymentAllocationDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = SalesDowmPaymentAllocationDetail.find(params[:id])
-    @parent = @object.sales_dowm_payment_allocation 
+    @object = SalesDownPaymentAllocationDetail.find(params[:id])
+    @parent = @object.sales_down_payment_allocation 
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -82,31 +82,27 @@ class Api::SalesDowmPaymentAllocationDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = SalesDowmPaymentAllocationDetail.joins(:sales_dowm_payment_allocation, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
+      @objects = SalesDownPaymentAllocationDetail.joins(:sales_down_payment_allocation, :receivable).where{ 
+        ( receivable.source_code  =~ query  )  | 
         ( code  =~ query  )  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = SalesDowmPaymentAllocationDetail.joins(:sales_dowm_payment_allocation, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
+      @total = SalesDownPaymentAllocationDetail.joins(:sales_down_payment_allocation, :receivable).where{ 
+         ( receivable.source_code  =~ query  )  | 
         ( code  =~ query  )  
       }.count
     else
-      @objects = SalesDowmPaymentAllocationDetail.where{ 
+      @objects = SalesDownPaymentAllocationDetail.joins(:sales_down_payment_allocation, :receivable).where{ 
               (id.eq selected_id)  
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
    
-      @total = SalesDowmPaymentAllocationDetail.where{ 
+      @total = SalesDownPaymentAllocationDetail.joins(:sales_down_payment_allocation, :receivable).where{ 
               (id.eq selected_id)   
       }.count 
     end

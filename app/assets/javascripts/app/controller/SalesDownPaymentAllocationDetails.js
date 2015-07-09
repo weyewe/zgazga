@@ -1,56 +1,56 @@
-Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
+Ext.define('AM.controller.SalesDownPaymentAllocationDetails', {
   extend: 'Ext.app.Controller',
 
-  stores: ['SalesDowmPaymentAllocationDetails', 'SalesDowmPaymentAllocations'],
-  models: ['SalesDowmPaymentAllocationDetail'],
+  stores: ['SalesDownPaymentAllocationDetails', 'SalesDownPaymentAllocations'],
+  models: ['SalesDownPaymentAllocationDetail'],
 
   views: [
-    'operation.salesdowmpaymentallocationdetail.List',
-    'operation.salesdowmpaymentallocationdetail.Form',
-		'operation.salesdowmpaymentallocation.List'
+    'operation.salesdownpaymentallocationdetail.List',
+    'operation.salesdownpaymentallocationdetail.Form',
+		'operation.salesdownpaymentallocation.List'
   ],
 
   refs: [
 		{
 			ref: 'list',
-			selector: 'salesdowmpaymentallocationdetaillist'
+			selector: 'salesdownpaymentallocationdetaillist'
 		},
 		{
 			ref : 'parentList',
-			selector : 'salesdowmpaymentallocationlist'
+			selector : 'salesdownpaymentallocationlist'
 		}
 	],
 
   init: function() {
     this.control({
-      'salesdowmpaymentallocationdetaillist': {
+      'salesdownpaymentallocationdetaillist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange ,
 				afterrender : this.loadObjectList
       },
-      'salesdowmpaymentallocationdetailform button[action=save]': {
+      'salesdownpaymentallocationdetailform button[action=save]': {
         click: this.updateObject
       },
 
 	 
-      'salesdowmpaymentallocationdetaillist button[action=addObject]': {
+      'salesdownpaymentallocationdetaillist button[action=addObject]': {
         click: this.addObject
       },
 
-			'salesdowmpaymentallocationdetaillist button[action=repeatObject]': {
+			'salesdownpaymentallocationdetaillist button[action=repeatObject]': {
         click: this.addObject
       },
 
 
-      'salesdowmpaymentallocationdetaillist button[action=editObject]': {
+      'salesdownpaymentallocationdetaillist button[action=editObject]': {
         click: this.editObject
       },
-      'salesdowmpaymentallocationdetaillist button[action=deleteObject]': {
+      'salesdownpaymentallocationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
  
 			// monitor parent(sales_order) update
-			'salesdowmpaymentallocationlist' : {
+			'salesdownpaymentallocationlist' : {
 				'updated' : this.reloadStore,
 				'confirmed' : this.reloadStore,
 				'deleted' : this.cleanList
@@ -65,11 +65,11 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 
 	reloadStore : function(record){
 		var list = this.getList();
-		var store = this.getSalesDowmPaymentAllocationDetailsStore();
+		var store = this.getSalesDownPaymentAllocationDetailsStore();
 		
 		store.load({
 			params : {
-				sales_dowm_payment_allocation_id : record.get('id')
+				sales_down_payment_allocation_id : record.get('id')
 			}
 		});
 		
@@ -78,7 +78,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 	
 	cleanList : function(){
 		var list = this.getList();
-		var store = this.getSalesDowmPaymentAllocationDetailsStore();
+		var store = this.getSalesDownPaymentAllocationDetailsStore();
 		
 		list.setTitle('');
 		// store.removeAll(); 
@@ -94,7 +94,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 			return; 
 		}
 		 
-		var widgetName = 'salesdowmpaymentallocationdetailform'; 
+		var widgetName = 'salesdownpaymentallocationdetailform'; 
 		
     var view = Ext.widget(widgetName , {
 			parentRecord : record 
@@ -113,7 +113,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 		}
 
 
-		var widgetName = 'salesdowmpaymentallocationdetailform';
+		var widgetName = 'salesdownpaymentallocationdetailform';
 		 
     var view = Ext.widget(widgetName, {
 			parentRecord : parentRecord
@@ -132,7 +132,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 
 		var parentRecord = this.getParentList().getSelectedObject();
 	
-    var store = this.getSalesDowmPaymentAllocationDetailsStore();
+    var store = this.getSalesDownPaymentAllocationDetailsStore();
     var record = form.getRecord();
     var values = form.getValues();
 		console.log("The values: " );
@@ -148,7 +148,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 			form.setLoading(true);
 			record.save({
 				params : {
-					sales_dowm_payment_allocation_id : parentRecord.get('id')
+					sales_down_payment_allocation_id : parentRecord.get('id')
 				},
 				success : function(record){
 					form.setLoading(false);
@@ -156,7 +156,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 					// form.fireEvent('item_quantity_changed');
 					store.load({
 						params: {
-							sales_dowm_payment_allocation_id : parentRecord.get('id')
+							sales_down_payment_allocation_id : parentRecord.get('id')
 						}
 					});
 					
@@ -177,7 +177,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
 		
-			var newObject = new AM.model.SalesDowmPaymentAllocationDetail( values ) ;
+			var newObject = new AM.model.SalesDownPaymentAllocationDetail( values ) ;
 			
 		 
 			
@@ -193,13 +193,13 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 			form.setLoading(true);
 			newObject.save({
 				params : {
-					sales_dowm_payment_allocation_id : parentRecord.get('id')
+					sales_down_payment_allocation_id : parentRecord.get('id')
 				},
 				success: function(record){
 					//  since the grid is backed by store, if store changes, it will be updated
 					store.load({
 						params: {
-							sales_dowm_payment_allocation_id : parentRecord.get('id')
+							sales_down_payment_allocation_id : parentRecord.get('id')
 						}
 					});
 					// form.fireEvent('item_quantity_changed');
@@ -222,7 +222,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 	deleteObject: function() {
     var record = this.getList().getSelectedObject();
 		if(!record){return;}
-		var parent_id = record.get('sales_dowm_payment_allocation_id');
+		var parent_id = record.get('sales_down_payment_allocation_id');
 		var list  = this.getList();
 		list.setLoading(true); 
 		
@@ -236,7 +236,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocationDetails', {
 					// this.getPurchaseOrdersStore.load();
 					list.getStore().load({
 						params : {
-							sales_dowm_payment_allocation_id : parent_id
+							sales_down_payment_allocation_id : parent_id
 						}
 					});
 				},

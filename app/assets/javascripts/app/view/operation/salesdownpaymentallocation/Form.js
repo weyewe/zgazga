@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
+Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.salesdowmpaymentallocationform',
+  alias : 'widget.salesdownpaymentallocationform',
 
-  title : 'Add / Edit SalesDowmPaymentAllocation',
+  title : 'Add / Edit SalesDownPaymentAllocation',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -45,51 +45,32 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
-		storeId : 'employee_search',
-		fields	: [
-		 		{
-					name : 'employee_name',
-					mapping : "name"
-				} ,
-				{
-					name : 'employee_description',
-					mapping : "description"
-				} ,
-		 
-				{
-					name : 'employee_id',
-					mapping : 'id'
-				}  
-		],
-		
-	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_employees',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
 	
-	var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
-		storeId : 'exchange_search',
+	var remoteJsonStoreSalesDownPayment = Ext.create(Ext.data.JsonStore, {
+		storeId : 'sales_down_payment_search',
 		fields	: [
 		 		{
-					name : 'exchange_name',
-					mapping : "name"
+					name : 'sales_down_payment_code',
+					mapping : "code"
 				} ,
 				{
-					name : 'exchange_description',
-					mapping : "description"
+					name : 'sales_down_payment_payable_source_code',
+					mapping : "payable_source_code"
 				} ,
-		 
+		 		{
+					name : 'sales_down_payment_payable_total_amount',
+					mapping : "payable_total_amount"
+				} ,
 				{
-					name : 'exchange_id',
+					name : 'sales_down_payment_payable_remaining_amount',
+					mapping : "payable_remaining_amount"
+				} ,
+				{
+					name : 'sales_down_payment_payable_id',
+					mapping : "payable_id"
+				} ,
+				{
+					name : 'sales_down_payment_id',
 					mapping : 'id'
 				}  
 		],
@@ -97,7 +78,7 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_exchanges',
+			url : 'api/search_sales_down_payments',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -118,7 +99,7 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
 					anchor: '100%'
       },
       items: [
-   					{
+   				{
         	        xtype: 'hidden',
         	        name : 'id',
         	        fieldLabel: 'id'
@@ -128,23 +109,12 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
     		        name : 'code',
     		        fieldLabel: 'Kode'
     		  	  },
-    		  	{
-					xtype: 'textfield',
-					fieldLabel : 'Nomor Surat',
-					name : 'nomor_surat'
-				},
     		    {
     					xtype: 'datefield',
-    					name : 'sales_date',
-    					fieldLabel: 'Tanggal Penjualan',
+    					name : 'allocation_date',
+    					fieldLabel: 'Tanggal Alokasi',
     					format: 'Y-m-d',
     				},
-    				{
-        	        xtype: 'textarea',
-        	        name : 'description',
-        	        fieldLabel: 'Deskripsi'
-    	      },
-    	        
     	      {
 	    				fieldLabel: 'Contact',
 	    				xtype: 'combo',
@@ -167,52 +137,35 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
     					},
     					name : 'contact_id' 
     	      },
-    				
     				{
-	    				fieldLabel: 'Marketing',
+	    				fieldLabel: 'Payable',
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
-	    				displayField : 'employee_name',
-	    				valueField : 'employee_id',
+	    				displayField : 'sales_down_payment_code',
+	    				valueField : 'sales_down_payment_payable_id',
 	    				pageSize : 5,
 	    				minChars : 1, 
 	    				allowBlank : false, 
 	    				triggerAction: 'all',
-	    				store : remoteJsonStoreEmployee , 
+	    				store : remoteJsonStoreSalesDownPayment , 
 	    				listConfig : {
 	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{employee_name}">' + 
-	    												'<div class="combo-name">{employee_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
+	    						return  	'<div data-qtip="{sales_down_payment_code}">' + 
+	    												'<div class="combo-name">{sales_down_payment_code}</div>' + 
+	    												'<div class="combo-name">Source: {sales_down_payment_payable_source_code}</div>' + 
+	    												'<div class="combo-name">Total: {sales_down_payment_payable_total_amount}</div>' + 
+	    												'<div class="combo-name">Remaining: {sales_down_payment_payable_remaining_amount}</div>' + 
 	    						 					'</div>';
 	    					}
     					},
-    					name : 'employee_id' 
+    					name : 'payable_id' 
     				},
-    				
-    				{
-	    				fieldLabel: 'Currency',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'exchange_name',
-	    				valueField : 'exchange_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreExchange , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{exchange_name}">' + 
-	    												'<div class="combo-name">{exchange_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'exchange_id' 
-    				},
+    				 {
+    		        xtype: 'numberfield',
+    		        name : 'rate_to_idr',
+    		        fieldLabel: 'Rate to IDR'
+    		  	  },
 			]
     }];
 
@@ -245,19 +198,19 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
 		});
 	},
 	
-	setSelectedEmployee: function( employee_id ){
-		var comboBox = this.down('form').getForm().findField('employee_id'); 
+	setSelectedPayable: function( payable_id ){
+		var comboBox = this.down('form').getForm().findField('payable_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : employee_id 
+				selected_id : payable_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( employee_id );
+				comboBox.setValue( payable_id );
 			}
 		});
 	},
@@ -281,13 +234,12 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.Form', {
 	
 	setComboBoxData : function( record){ 
 
-		// var me = this; 
-		// me.setLoading(true);
+		var me = this; 
+		me.setLoading(true);
 		
-		// // me.setSelectedCustomer( record.get("contact_id")  ) ;
-		// me.setSelectedEmployee( record.get("employee_id")  ) ;
-		// me.setSelectedExchange( record.get("exchange_id")  ) ;
-		// me.setSelectedCustomer( record.get("contact_id")  ) ;
+		me.setSelectedPayable( record.get("payable_id")  ) ;
+		me.setSelectedExchange( record.get("exchange_id")  ) ;
+		me.setSelectedCustomer( record.get("contact_id")  ) ;
  
 	}
  

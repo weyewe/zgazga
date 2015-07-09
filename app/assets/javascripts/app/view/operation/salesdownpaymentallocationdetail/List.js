@@ -1,20 +1,17 @@
-Ext.define('AM.view.operation.salesdowmpaymentallocationdetail.List' ,{
+Ext.define('AM.view.operation.salesdownpaymentallocationdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.salesdowmpaymentallocationdetaillist',
+  	alias : 'widget.salesdownpaymentallocationdetaillist',
 
-  	store: 'SalesDowmPaymentAllocationDetails', 
+  	store: 'SalesDownPaymentAllocationDetails', 
  
 
 	initComponent: function() {
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+			{ header: 'Receivable Code',  dataIndex: 'receivable_source_code', flex: 1},
+    		{ header: 'Amount',  dataIndex: 'amount', flex: 1},
+    		{ header: 'Description',  dataIndex: 'description', flex: 2},
 			
 			 
 		];
@@ -78,6 +75,6 @@ Ext.define('AM.view.operation.salesdowmpaymentallocationdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("SalesDowmPaymentAllocation: " + record.get("code"));
+		this.setTitle("SalesDownPaymentAllocation: " + record.get("code"));
 	}
 });

@@ -1,29 +1,29 @@
-Ext.define('AM.controller.SalesDowmPaymentAllocations', {
+Ext.define('AM.controller.SalesDownPaymentAllocations', {
   extend: 'Ext.app.Controller',
 
-  stores: ['SalesDowmPaymentAllocations'],
-  models: ['SalesDowmPaymentAllocation'],
+  stores: ['SalesDownPaymentAllocations'],
+  models: ['SalesDownPaymentAllocation'],
 
   views: [
-    'operation.salesdowmpaymentallocation.List',
-    'operation.salesdowmpaymentallocation.Form',
-		'operation.salesdowmpaymentallocationdetail.List',
+    'operation.salesdownpaymentallocation.List',
+    'operation.salesdownpaymentallocation.Form',
+		'operation.salesdownpaymentallocationdetail.List',
 		'Viewport'
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'salesdowmpaymentallocationlist'
+			selector: 'salesdownpaymentallocationlist'
 		},
 		{
-			ref : 'salesDowmPaymentAllocationDetailList',
-			selector : 'salesdowmpaymentallocationdetaillist'
+			ref : 'salesDownPaymentAllocationDetailList',
+			selector : 'salesdownpaymentallocationdetaillist'
 		},
 		
 		{
 			ref : 'form',
-			selector : 'salesdowmpaymentallocationform'
+			selector : 'salesdownpaymentallocationform'
 		},
 		{
 			ref: 'viewport',
@@ -33,47 +33,47 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 
   init: function() {
     this.control({
-      'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist': {
+      'salesdownpaymentallocationProcess salesdownpaymentallocationlist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'salesdowmpaymentallocationProcess salesdowmpaymentallocationform button[action=save]': {
+      'salesdownpaymentallocationProcess salesdownpaymentallocationform button[action=save]': {
         click: this.updateObject
       },
-			'salesdowmpaymentallocationProcess salesdowmpaymentallocationform customcolorpicker' : {
+			'salesdownpaymentallocationProcess salesdownpaymentallocationform customcolorpicker' : {
 				'colorSelected' : this.onColorPickerSelect
 			},
 
-      'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist button[action=addObject]': {
+      'salesdownpaymentallocationProcess salesdownpaymentallocationlist button[action=addObject]': {
         click: this.addObject
       },
-      'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist button[action=editObject]': {
+      'salesdownpaymentallocationProcess salesdownpaymentallocationlist button[action=editObject]': {
         click: this.editObject
       },
-      'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist button[action=deleteObject]': {
+      'salesdownpaymentallocationProcess salesdownpaymentallocationlist button[action=deleteObject]': {
         click: this.deleteObject
 			}	,
 			
-			'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist button[action=confirmObject]': {
+			'salesdownpaymentallocationProcess salesdownpaymentallocationlist button[action=confirmObject]': {
         click: this.confirmObject
       },
 
-			'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist button[action=unconfirmObject]': {
+			'salesdownpaymentallocationProcess salesdownpaymentallocationlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
       },
-			'confirmsalesdowmpaymentallocationform button[action=confirm]' : {
+			'confirmsalesdownpaymentallocationform button[action=confirm]' : {
 				click : this.executeConfirm
 			},
 			
-			'unconfirmsalesdowmpaymentallocationform button[action=confirm]' : {
+			'unconfirmsalesdownpaymentallocationform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
 
-			'salesdowmpaymentallocationProcess salesdowmpaymentallocationlist textfield[name=searchField]': {
+			'salesdownpaymentallocationProcess salesdownpaymentallocationlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
-			'salesdowmpaymentallocationform button[action=save]': {
+			'salesdownpaymentallocationform button[action=save]': {
         click: this.updateObject
       }
 		
@@ -98,11 +98,11 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getSalesDowmPaymentAllocationsStore().getProxy().extraParams = {
+		me.getSalesDownPaymentAllocationsStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getSalesDowmPaymentAllocationsStore().load();
+		me.getSalesDownPaymentAllocationsStore().load();
 	},
  
 
@@ -112,7 +112,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 	},
 
   addObject: function() {
-	var view = Ext.widget('salesdowmpaymentallocationform');
+	var view = Ext.widget('salesdownpaymentallocationform');
   view.show();
 
 	 
@@ -120,7 +120,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 
   editObject: function() {
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('salesdowmpaymentallocationform');
+    var view = Ext.widget('salesdownpaymentallocationform');
 
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
@@ -130,7 +130,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 		// console.log("the startObject callback function");
 		var record = this.getList().getSelectedObject();
 		if(record){
-			var view = Ext.widget('confirmsalesdowmpaymentallocationform');
+			var view = Ext.widget('confirmsalesdownpaymentallocationform');
 
 			view.setParentData( record );
 	    view.show();
@@ -145,7 +145,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
     var form = win.down('form');
 		var me = this; 
 
-    var store = this.getSalesDowmPaymentAllocationsStore();
+    var store = this.getSalesDownPaymentAllocationsStore();
     var record = form.getRecord();
     var values = form.getValues();
  
@@ -176,7 +176,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 			//  no record at all  => gonna create the new one 
 			console.log("This is the new record")
 			var me  = this; 
-			var newObject = new AM.model.SalesDowmPaymentAllocation( values ) ; 
+			var newObject = new AM.model.SalesDownPaymentAllocation( values ) ; 
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -209,7 +209,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 
 	unconfirmObject: function(){
 		// console.log("the startObject callback function");
-		var view = Ext.widget('unconfirmsalesdowmpaymentallocationform');
+		var view = Ext.widget('unconfirmsalesdownpaymentallocationform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
     view.show();
@@ -222,7 +222,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getSalesDowmPaymentAllocationsStore();
+    var store = this.getSalesDownPaymentAllocationsStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -270,7 +270,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getSalesDowmPaymentAllocationsStore();
+    var store = this.getSalesDownPaymentAllocationsStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -314,7 +314,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getSalesDowmPaymentAllocationsStore();
+      var store = this.getSalesDownPaymentAllocationsStore();
 			store.remove(record);
 			store.sync( );
  
@@ -345,17 +345,17 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
   },
 
 	updateChildGrid: function(record){
-		var templateDetailGrid = this.getSalesDowmPaymentAllocationDetailList();
+		var templateDetailGrid = this.getSalesDownPaymentAllocationDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		templateDetailGrid.getStore().getProxy().extraParams.sales_dowm_payment_allocation_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.sales_down_payment_allocation_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
 			params : {
-				sales_dowm_payment_allocation_id : record.get('id')
+				sales_down_payment_allocation_id : record.get('id')
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
@@ -372,7 +372,7 @@ Ext.define('AM.controller.SalesDowmPaymentAllocations', {
 		
 		// console.log("modifiedId:  " + modifiedId);
 		 
-		AM.model.SalesDowmPaymentAllocation.load( modifiedId , {
+		AM.model.SalesDownPaymentAllocation.load( modifiedId , {
 		    scope: list,
 		    failure: function(record, operation) {
 		        //do something if the load failed

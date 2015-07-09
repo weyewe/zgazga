@@ -14,7 +14,7 @@ class SalesDownPaymentAllocation < ActiveRecord::Base
     co = Payable.find_by_id payable_id
     
     if co.nil? 
-      self.errors.add(:payable_id, "Harus ada Receivable Id")
+      self.errors.add(:payable_id, "Harus ada Payable Id")
       return self 
     end
   end

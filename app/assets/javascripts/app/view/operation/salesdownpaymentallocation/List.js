@@ -1,32 +1,25 @@
-Ext.define('AM.view.operation.salesdowmpaymentallocation.List' ,{
+Ext.define('AM.view.operation.salesdownpaymentallocation.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.salesdowmpaymentallocationlist',
+  	alias : 'widget.salesdownpaymentallocationlist',
 
-  	store: 'SalesDowmPaymentAllocations',  
+  	store: 'SalesDownPaymentAllocations',  
  
 
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
- 
+		{ header: 'Kode',  dataIndex: 'code', flex: 1},
+			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			{	header: 'Payable Id', dataIndex: 'payable_id', flex: 2 },
+			{	header: 'Payable Code', dataIndex: 'payable_source_code', flex: 2 },
+			{	header: 'Allocation Date', dataIndex: 'allocation_date', flex: 2 },
+			{	header: 'Total amount', dataIndex: 'total_amount', flex: 2 },
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
 			
 			

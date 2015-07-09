@@ -1,7 +1,7 @@
-Ext.define('AM.store.SalesDowmPaymentAllocations', {
+Ext.define('AM.store.SalesDownPaymentAllocations', {
   	extend: 'Ext.data.Store',
-		require : ['AM.model.SalesDowmPaymentAllocation'],
-  	model: 'AM.model.SalesDowmPaymentAllocation',
+		require : ['AM.model.SalesDownPaymentAllocation'],
+  	model: 'AM.model.SalesDownPaymentAllocation',
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,

@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.salesdowmpaymentallocation.ConfirmForm', {
+Ext.define('AM.view.operation.salesdownpaymentallocation.UnconfirmForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.confirmsalesdowmpaymentallocationform',
+  alias : 'widget.unconfirmsalesdownpaymentallocationform',
 
-  title : 'Confirm SalesDowmPaymentAllocation',
+  title : 'Unconfirm Memorial',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -27,29 +27,11 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.ConfirmForm', {
 					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
-				},
-				{
-					xtype: 'datefield',
-					fieldLabel: 'Tanggal Konfirmasi',
-					name: 'confirmed_at' ,
-					format: 'Y-m-d',
-				},  
-		 
 			]
     }];
 
     this.buttons = [{
-      text: 'Confirm',
+      text: 'Unconfirm',
       action: 'confirm'
     }, {
       text: 'Cancel',
@@ -62,7 +44,5 @@ Ext.define('AM.view.operation.salesdowmpaymentallocation.ConfirmForm', {
 
 	setParentData: function( record ) {
 		this.down('form').getForm().findField('code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
-		this.down('form').getForm().findField('description').setValue(record.get('description')); 
 	}
 });
