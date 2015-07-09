@@ -1032,7 +1032,7 @@ if Rails.env.development?
       BlanketOrderDetail.create_object(
           :blanket_order_id => blanket_order.id,
           :blanket_id => selected_blanket.id,
-          :quantity => 1 
+          :quantity => 10 
         )
     end
     if blanket_order.errors.size == 0 

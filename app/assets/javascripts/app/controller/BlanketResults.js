@@ -347,7 +347,7 @@ Ext.define('AM.controller.BlanketResults', {
 	updateChildGrid: function(record){
 		var templateDetailGrid = this.getBlanketResultDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
-		templateDetailGrid.setObjectTitle( record ) ;
+		templateDetailGrid.setObjectTitle( record  ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		

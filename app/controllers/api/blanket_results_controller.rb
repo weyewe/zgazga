@@ -5,25 +5,19 @@ class Api::BlanketResultsController < Api::BaseApiController
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
         
+        query = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ blanket_order.is_confirmed.eq true }
         
-        @objects = BlanketOrderDetail.joins(:blanket_order, :blanket).where{
+        query = query.where{
           (
             ( blanket.contact.name  =~ livesearch ) | 
             ( blanket.machine.name =~ livesearch ) | 
             ( blanket.sku  =~ livesearch  )  | 
             ( blanket.name  =~ livesearch  )  
-          )
+          ) 
+        }
+        @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-        @total = BlanketOrderDetail.joins(:blanket_order, :blanket).where{
-          (
-            ( blanket.contact.name  =~ livesearch ) | 
-            ( blanket.machine.name =~ livesearch ) | 
-            ( blanket.sku  =~ livesearch  )  | 
-            ( blanket.name  =~ livesearch  )  
-          )
-        }.count
+        @total = query.count
    
     else
       puts "In this shite"

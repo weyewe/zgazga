@@ -41,7 +41,7 @@ Ext.define('AM.view.operation.blanketresultdetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [this.addObjectButton,   this.deleteObjectButton ]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -78,6 +78,6 @@ Ext.define('AM.view.operation.blanketresultdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("BlanketResult: " + record.get("code"));
+		this.setTitle("Roll Blanket Allocation: " + record.get("blanket_roll_blanket_item_sku"));
 	}
 });

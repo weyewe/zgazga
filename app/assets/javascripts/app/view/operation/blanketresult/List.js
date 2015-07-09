@@ -15,6 +15,9 @@ Ext.define('AM.view.operation.blanketresult.List' ,{
 					tpl : 	'Blanket SKU:  <br /><b>{blanket_sku}</b>'    + '<br />' +
 								'Nama: <br /><b>{blanket_name}</b>'  + '<br />' + '<br />' +
 								
+							'Roll Blanket SKU:  <br /><b>{blanket_roll_blanket_item_sku}</b>'    + '<br />' +
+								'{blanket_roll_blanket_item_name}'  + '<br />' + '<br />' +	
+								
 							'LeftBar SKU:  <br /><b>{blanket_left_bar_item_sku}</b>'    + '<br />' +
 								'{blanket_left_bar_item_name}'  + '<br />' + '<br />' +
 								

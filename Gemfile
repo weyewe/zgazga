@@ -67,6 +67,8 @@ gem 'the_role_api', '~> 3.0.0'
 gem 'protected_attributes', '~> 1.0.5'
 gem 'squeel', :git => "git://github.com/activerecord-hackery/squeel.git"
  
+ 
+
 # https://github.com/activerecord-hackery/squeel.git
 group :production do
   gem 'rails_12factor'

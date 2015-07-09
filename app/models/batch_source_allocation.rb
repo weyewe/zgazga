@@ -2,11 +2,38 @@ class BatchSourceAllocation < ActiveRecord::Base
     belongs_to :batch_source 
     belongs_to :batch_instance 
     
+    validates_presence_of :batch_source_id
+    validates_presence_of :batch_instance_id
+    
     validate :valid_final_batch_instance_amount 
     
     validate :valid_final_batch_source_amount
     
+    validate :valid_batch_source_id
+    validate :valid_batch_instance_id
     
+    
+    def valid_batch_source_id
+      return if not batch_source_id.present?
+      object = BatchSource.find_by_id batch_source_id
+      
+      if object.nil?
+        self.errors.add(:generic_errors, "Harus ada Batch Source")
+        return self 
+      end
+      
+    end
+    
+    def valid_batch_instance_id
+      return if not batch_instance_id.present?
+      object = BatchInstance.find_by_id batch_instance_id
+      
+      if object.nil?
+        self.errors.add(:batch_instance_id, "Harus ada Batch Instance")
+        return self 
+      end
+      
+    end
   
     def valid_final_batch_instance_amount
       if status == ADJUSTMENT_STATUS[:deduction]
@@ -31,8 +58,7 @@ class BatchSourceAllocation < ActiveRecord::Base
       new_object = self.new      
       new_object.batch_source_id     = params[:batch_source_id  ]       
       new_object.batch_instance_id   = params[:batch_instance_id]      
-      new_object.amount              = params[:amount           ]
-      new_object.status  = new_object.batch_source.status 
+      new_object.amount              = params[:amount ] 
       
       if new_object.save
         new_object.status = new_object.batch_source.status 

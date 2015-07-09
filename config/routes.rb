@@ -98,6 +98,8 @@ Ticketie::Application.routes.draw do
     get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
     get 'search_receipt_vouchers' => 'receipt_voucher_details#search', :as => :search_receipt_voucher
     get 'search_receipt_voucher_details' => 'receipt_voucher_details#search', :as => :search_receipt_voucher_detail
+    
+    get 'search_batch_instances' => 'batch_instances#search', :as => :search_batch_instance
    
    
     # master data 

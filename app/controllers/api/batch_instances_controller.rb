@@ -123,29 +123,31 @@ class Api::BatchInstancesController < Api::BaseApiController
       selected_id = nil
     end
     
-    query = "%#{search_params}%"
+    query_value = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-                              }.
-                        page(params[:page]).
+      query = BatchInstance.where{
+          ( name =~ query_value ) | 
+          ( description =~ query_value )  
+      }
+      
+      zero_value = BigDecimal("0")
+      object  = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
+      if not object.nil?
+        query = query.where{
+          ( amount.gt zero_value ) & 
+          ( item_id.eq object.blanket.roll_blanket_item_id )
+        }
+      end
+      
+      
+      @objects = query.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-        
-                              }.count
+      @total  = query.count 
+      
     else
       @objects = BatchInstance.where{ (id.eq selected_id)  
                               }.
