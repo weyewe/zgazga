@@ -11,7 +11,7 @@ namespace :master_extjs do
     puts "the first"
 
  
-    main_view_name = 'AM.view.operation.BlanketWorkProcess'
+    main_view_name = 'AM.view.operation.PurchaseDownPayment'
  
     tokenized_main_view_name = main_view_name.split('.')
 

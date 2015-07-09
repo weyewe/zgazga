@@ -685,13 +685,14 @@ ACCOUNT_CODE = {
     :memorial_journal => 160,
     :virtual_order_clearance_journal => 170,
     :sales_down_payment_journal => 180,
-    :group_loan_close_withdrawal_return_rounding_down_revenue => 182,
-    :group_loan_close_withdrawal_return  => 183,
+    :purchase_down_payment_journal => 190,
+    :sales_down_payment_allocation_journal  => 200,
+    :purchase_down_payment_allocation_journal  => 210,
 
-    :savings_account => 200,
-    :membership_savings_account => 201,
-    :locked_savings_account => 203,
-    :memorial_general => 300
+    :savings_account => 220,
+    :membership_savings_account => 230,
+    :locked_savings_account => 240,
+    :memorial_general => 250
   
   
 }

@@ -1,7 +1,7 @@
 module AccountingService
   class CreatePurchaseDownPaymentJournal
   def CreatePurchaseDownPaymentJournal.create_confirmation_journal(purchase_down_payment) 
-    message = "Purchase Invoice"
+    message = "PurchaseDownPayment"
       ta = TransactionData.create_object({
         :transaction_datetime => purchase_down_payment.down_payment_date,
         :description =>  message,
@@ -13,7 +13,7 @@ module AccountingService
     
     #      Credit AccountPayable, Debit Hutang Lain-Lain
     
-#     Credit AccountReceivable
+#     Credit AccountPayable
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => purchase_down_payment.exchange.account_payable_id  ,
@@ -21,15 +21,15 @@ module AccountingService
       :amount              => (purchase_down_payment.total_amount   * purchase_down_payment.exchange_rate_amount).round(2),
       :real_amount         => purchase_down_payment.total_amount,
       :exchange_id         => purchase_down_payment.exchange_id,
-      :description => "Debit Account Receivable"
+      :description => "Credit Account Payable"
       )
-#     Credit Hutang Lain-Lain
+#     Debit Hutang Lain-Lain
     TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_lainnya][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (purchase_down_payment.total_amount   * purchase_down_payment.exchange_rate_amount).round(2),
-        :description         => "Credit Revenue"
+        :description         => "Debit Revenue"
         )
     ta.confirm
   end

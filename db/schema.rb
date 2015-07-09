@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150709114251) do
+ActiveRecord::Schema.define(version: 20150709145340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -650,6 +650,31 @@ ActiveRecord::Schema.define(version: 20150709114251) do
     t.datetime "updated_at"
   end
 
+  create_table "purchase_down_payment_allocation_details", force: true do |t|
+    t.integer  "purchase_down_payment_allocation_id"
+    t.integer  "payable_id"
+    t.string   "code"
+    t.decimal  "amount",                              precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_paid",                         precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate",                                precision: 18, scale: 11, default: 0.0
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_down_payment_allocations", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "receivable_id"
+    t.string   "code"
+    t.datetime "allocation_date"
+    t.decimal  "total_amount",    precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate_to_idr",     precision: 18, scale: 11, default: 0.0
+    t.boolean  "is_confirmed",                              default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "purchase_down_payments", force: true do |t|
     t.integer  "contact_id"
     t.integer  "receivable_id"
@@ -990,6 +1015,31 @@ ActiveRecord::Schema.define(version: 20150709114251) do
   end
 
   create_table "rollers", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_down_payment_allocation_details", force: true do |t|
+    t.integer  "sales_down_payment_allocation_id"
+    t.integer  "receivable_id"
+    t.string   "code"
+    t.decimal  "amount",                           precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_paid",                      precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate",                             precision: 18, scale: 11, default: 0.0
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_down_payment_allocations", force: true do |t|
+    t.integer  "contact_id"
+    t.integer  "payable_id"
+    t.string   "code"
+    t.datetime "allocation_date"
+    t.decimal  "total_amount",    precision: 14, scale: 2,  default: 0.0
+    t.decimal  "rate_to_idr",     precision: 18, scale: 11, default: 0.0
+    t.boolean  "is_confirmed",                              default: false
+    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

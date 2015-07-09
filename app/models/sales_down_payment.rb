@@ -11,7 +11,7 @@ class SalesDownPayment < ActiveRecord::Base
  
   
   validate :valid_contact_id 
-    
+  validate :valid_exchange_id
     
   def self.active_objects
     self

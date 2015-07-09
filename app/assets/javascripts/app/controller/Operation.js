@@ -303,7 +303,54 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
- 
+ 			{ 
+				text:'SalesDownPayment', 
+				viewClass:'AM.view.operation.SalesDownPayment', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sales_down_payments',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'SalesDownPaymentAllocatiom', 
+				viewClass:'AM.view.operation.SalesDownPaymentAllocation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sales_down_payment_allocations',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'PurchaseDownPayment', 
+				viewClass:'AM.view.operation.PurchaseDownPayment', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_down_payments',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'PurchaseDownPaymentAllocatiom', 
+				viewClass:'AM.view.operation.PurchaseDownPaymentAllocation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_down_payment_allocations',
+						action : 'index'
+					}
+				]
+			}, 
 			 
 		]
 	},

@@ -11,10 +11,14 @@ class PurchaseDownPayment < ActiveRecord::Base
  
   
   validate :valid_contact_id 
-    
+  validate :valid_exchange_id
     
   def self.active_objects
     self
+  end
+  
+  def active_children
+    self.purchase_down_payment_allocation_details 
   end
   
   def valid_contact_id
@@ -45,7 +49,7 @@ class PurchaseDownPayment < ActiveRecord::Base
     new_object.due_date = params[:due_date]
     new_object.total_amount = BigDecimal( params[:total_amount] || '0')
     if new_object.save
-    new_object.code = "SDP-" + new_object.id.to_s  
+    new_object.code = "PDP-" + new_object.id.to_s  
     new_object.save
     end
     return new_object
