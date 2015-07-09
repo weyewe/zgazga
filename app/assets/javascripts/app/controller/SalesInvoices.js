@@ -166,9 +166,11 @@ Ext.define('AM.controller.SalesInvoices', {
 	  
 	 downloadObject: function(){
 			var record = this.getList().getSelectedObject();
-			var id = record.get("id")
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'sales_invoices/' + id + '.pdf' );
+				window.open( 'sales_invoices/' + id + '.pdf' + "?auth_token=" +auth_token_value);
 			}
 			
 	},

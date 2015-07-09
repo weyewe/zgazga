@@ -74,6 +74,7 @@ data_entry = User.create_object(
   Account.create_base_objects
   Exchange.create_object_for_base_exchange
   ItemType.create_base_objects
+  Section.create_base_section_actions
 
 if Rails.env.development?
 

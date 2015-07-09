@@ -12,7 +12,13 @@ class ApplicationController < ActionController::Base
   end
 
 
-  
+  def validate_auth_token
+    user = User.find_by_authentication_token params[:auth_token]
+    if user.nil?
+      redirect_to root_url 
+      return
+    end
+  end
 
   protect_from_forgery with: :exception
 end

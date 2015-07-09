@@ -37,10 +37,26 @@ Ext.define('AM.controller.Users', {
 			}	,
 			'userlist textfield[name=searchField]': {
 				change: this.liveSearch
-			}
+			},
+			'userlist button[action=authorizeObject]': {
+        click: this.authorizeObject
+			}	,
+
 		
     });
   },
+  
+ 	authorizeObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			if( record ){
+				window.open( "action_assignments" + "?auth_token=" +auth_token_value + "&user_id=" + id );
+			}
+			
+	},
+
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;

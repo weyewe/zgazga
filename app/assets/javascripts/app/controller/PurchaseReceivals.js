@@ -86,9 +86,11 @@ Ext.define('AM.controller.PurchaseReceivals', {
 	  
 	downloadObject: function(){
 			var record = this.getList().getSelectedObject();
-			var id = record.get("id")
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'purchase_receivals/' + id + '.pdf' );
+				window.open( 'purchase_receivals/' + id + '.pdf' + "?auth_token=" +auth_token_value );
 			}
 			
 	},

@@ -3,7 +3,12 @@ class Api::SalesOrdersController < Api::BaseApiController
   def index
     
     # puts "\n"
-    # puts ">>>>>>>>>>>>>>\n"*5
+    puts ">>>>>>>>>>>>>>\n "*5
+    puts "The action : #{params[:action]}"
+    puts "the controller: #{params[:controller]}"
+    
+#     The action : index
+# the controller: api/sales_orders
     
     # build query
     query =   SalesOrder.active_objects.joins(:contact,:employee,:exchange)

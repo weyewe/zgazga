@@ -197,18 +197,7 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
-			{ 
-				text:'Core', 
-				viewClass:'AM.view.master.Core', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'cores',
-						action : 'index'
-					}
-				]
-			}, 
+ 
 			{ 
 				text:'Roller Type', 
 				viewClass:'AM.view.master.RollerType', 

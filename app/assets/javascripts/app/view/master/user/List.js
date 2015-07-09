@@ -30,6 +30,12 @@ Ext.define('AM.view.master.user.List' ,{
 			disabled: true
 		});
 		
+		this.authorizeObjectButton = new Ext.Button({
+			text: 'Set Authorization',
+			action: 'authorizeObject',
+			disabled: true
+		});
+		
 		this.searchField = new Ext.form.field.Text({
 			name: 'searchField',
 			hideLabel: true,
@@ -40,7 +46,10 @@ Ext.define('AM.view.master.user.List' ,{
 
 
 
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton, this.searchField ];
+		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton, '->', 
+			this.authorizeObjectButton,
+			this.searchField ];
+			
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -60,10 +69,13 @@ Ext.define('AM.view.master.user.List' ,{
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
+		this.authorizeObjectButton.enable();
+		
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
+		this.authorizeObjectButton.disable();
 	}
 });

@@ -16,6 +16,8 @@ Ticketie::Application.routes.draw do
   resources :roller_accessory_details
   resources :blanket_work_processs
   
+  resources :action_assignments 
+  
   namespace :api do
     devise_for :users
     post 'authenticate_auth_token', :to => 'sessions#authenticate_auth_token', :as => :authenticate_auth_token 

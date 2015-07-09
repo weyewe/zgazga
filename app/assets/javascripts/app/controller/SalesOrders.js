@@ -474,11 +474,13 @@ Ext.define('AM.controller.SalesOrders', {
 	},
 	
 	
-		downloadObject: function(){
+	downloadObject: function(){
 			var record = this.getList().getSelectedObject();
-			var id = record.get("id")
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'sales_orders/' + id + '.pdf' );
+				window.open( 'sales_orders/' + id + '.pdf'  + "?auth_token=" +auth_token_value );
 			}
 			
 	},
