@@ -112,51 +112,51 @@ class RollBlanketUsage < ActiveRecord::Base
     
     def create_reject_batch_stock_mutation
         BatchStockMutation.create_object(
-              :source_class => new_object.class.to_s, 
-              :source_id => new_object.id ,  
-              :amount => new_object.reject_amount ,  
+              :source_class => self.class.to_s, 
+              :source_id => self.id ,  
+              :amount => self.reject_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => new_object.blanket_order_detail.finished_at     ,  
-              :item_id =>  new_object.blanket_order_detail.item.id   ,
-              :batch_instance_id => new_object.batch_instance_id,
+              :mutation_date => self.blanket_order_detail.finished_at     ,  
+              :item_id =>  self.blanket_order_detail.item.id   ,
+              :batch_instance_id => self.batch_instance_id,
               :description => "[REJECT] blanket manufacturing"
               )  
     end
     
     def create_defect_batch_stock_mutation
         BatchStockMutation.create_object(
-              :source_class => new_object.class.to_s, 
-              :source_id => new_object.id ,  
-              :amount => new_object.defect_amount ,  
+              :source_class => self.class.to_s, 
+              :source_id => self.id ,  
+              :amount => self.defect_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => new_object.blanket_order_detail.finished_at     ,  
-              :item_id =>  new_object.blanket_order_detail.item.id   ,
-              :batch_instance_id => new_object.batch_instance_id,
+              :mutation_date => self.blanket_order_detail.finished_at     ,  
+              :item_id =>  self.blanket_order_detail.item.id   ,
+              :batch_instance_id => self.batch_instance_id,
               :description => "[DEFECT] blanket manufacturing"
               )  
     end
     
     def create_finish_batch_stock_mutation
         BatchStockMutation.create_object(
-              :source_class => new_object.class.to_s, 
-              :source_id => new_object.id ,  
-              :amount => new_object.finish_amount ,  
+              :source_class => self.class.to_s, 
+              :source_id => self.id ,  
+              :amount => self.finish_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => new_object.blanket_order_detail.finished_at     ,  
-              :item_id =>  new_object.blanket_order_detail.item.id   ,
-              :batch_instance_id => new_object.batch_instance_id,
+              :mutation_date => self.blanket_order_detail.finished_at     ,  
+              :item_id =>  self.blanket_order_detail.item.id   ,
+              :batch_instance_id => self.batch_instance_id,
               :description => "[FINISHG] blanket manufacturing"
               )  
     end
     
-    def self.delete_object
-         new_object.batch_instance.update_amount(   new_object.total_used  )
+    def delete_object
+         self.batch_instance.update_amount(   self.total_used  )
          
          BatchStockMutation.where(
-              :source_class => new_object.class.to_s, 
-              :source_id => new_object.id  
+              :source_class => self.class.to_s, 
+              :source_id => self.id  
               )  .each {|x| x.destroy } 
         
-        
+        self.destroy 
     end
 end

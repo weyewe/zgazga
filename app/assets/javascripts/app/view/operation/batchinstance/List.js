@@ -26,8 +26,16 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 							'<b>Deskripsi</b>: <br />{description}'  + '<br /><br />' 
 			},
 			
+			{
+				xtype : 'templatecolumn',
+				text : "Batch",
+				sortable : false,
+				flex : 1,
+				tpl : 'Kuantitas Total: <br />{total_allocated_amount}' + '<br /><br />' + 
+							'Belum Digunakan: <br />{amount}'  + '<br /><br />' 
+			},
 			
-			{	header: 'Jumlah Tersedia', dataIndex: 'amount', flex: 1 }, 
+			 
 			{	header: 'Tanggal Manufacture', dataIndex: 'manufactured_at', flex: 1 }, 
 			
   

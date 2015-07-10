@@ -13,6 +13,7 @@ json.batch_instances @objects do |object|
 	
 	json.item_type_id            object.item_type.id 
 	json.item_type_name         object.item_type.name 
+	json.total_allocated_amount object.amount
 	  
 
 	

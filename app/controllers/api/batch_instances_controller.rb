@@ -132,18 +132,29 @@ class Api::BatchInstancesController < Api::BaseApiController
           ( description =~ query_value )  
       }
       
-      zero_value = BigDecimal("0")
-      object  = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
-      if not object.nil?
-        query = query.where{
-          ( amount.gt zero_value ) & 
-          ( item_id.eq object.blanket.roll_blanket_item_id )
-        }
+      
+      
+      if params[:blanket_order_detail_id].present?
+        zero_value = BigDecimal("0")
+        
+        object  = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
+        if not object.nil?
+          puts "===================>>\n\n"*5
+          puts "the item_id (roll_blanket) is #{object.blanket.roll_blanket_item_id}"
+          query = query.where{
+            # ( amount.gt zero_value ) & 
+            ( item_id.eq object.blanket.roll_blanket_item_id )
+          }
+        end
       end
+
+      
+      
       
       if params[:item_id].present?
         query = query.where(:item_id => params[:item_id])
       end
+       
       
       
       @objects = query.page(params[:page]).

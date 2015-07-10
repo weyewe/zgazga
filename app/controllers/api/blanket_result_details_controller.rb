@@ -41,7 +41,9 @@ class Api::BlanketResultDetailsController < Api::BaseApiController
   
   def destroy
     @object = RollBlanketUsage.find(params[:id])  
-
+    @parent = @object.blanket_order_detail
+    @object.delete_object 
+    
     if  not @object.persisted? 
       render :json => { :success => true, :total => @parent.active_children.count }  
     else
