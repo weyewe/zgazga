@@ -244,12 +244,12 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Pengalokasian Batch', 
-				viewClass:'AM.view.operation.BatchAllocation', 
+				viewClass:'AM.view.operation.BatchSource', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'batch_allocations',
+						controller : 'batch_sources',
 						action : 'index'
 					}
 				]
@@ -612,8 +612,9 @@ Ext.define("AM.controller.Operation", {
 		
 		me.folderList = [
 			this.logisticFolder,
-			this.manufacturingFolder,
 			this.batchFolder, 
+			this.manufacturingFolder,
+			
  			// this.recoveryFolder,
  			// this.blanketFolder,
  			// this.blendingFolder,

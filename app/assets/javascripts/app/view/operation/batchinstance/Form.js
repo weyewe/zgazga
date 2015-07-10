@@ -12,29 +12,37 @@ Ext.define('AM.view.operation.batchinstance.Form', {
 	
   initComponent: function() {
 	
-		var remoteJsonStore = Ext.create(Ext.data.JsonStore, {
-			storeId : 'role_search',
-			fields	: [
-	 				{
-						name : 'role_name',
-						mapping : "name"
-					},
-					{
-						name : 'role_id',
-						mapping : 'id'
-					}
-			],
-			proxy  	: {
-				type : 'ajax',
-				url : 'api/search_role',
-				reader : {
-					type : 'json',
-					root : 'records', 
-					totalProperty  : 'total'
-				}
-			},
-			autoLoad : false 
-		});
+	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
+		storeId : 'item_search',
+		fields	: [
+		 		{
+					name : 'item_sku',
+					mapping : "sku"
+				}, 
+				{
+					name : 'item_name',
+					mapping : 'name'
+				},
+				{
+					name : 'item_id',
+					mapping : "id"
+				}, 
+	 
+		],
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_items',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
+	remoteJsonStoreItem.getProxy().extraParams.is_batch =  true;
+		
+	
 		
     this.items = [{
       xtype: 'form',
@@ -46,68 +54,55 @@ Ext.define('AM.view.operation.batchinstance.Form', {
 					anchor: '100%'
       },
       items: [
-				{
+      	
+      	   
+		  {
 	        xtype: 'hidden',
 	        name : 'id',
 	        fieldLabel: 'id'
-	      },{
+	      },
+      	  {
+			fieldLabel: 'Item',
+			xtype: 'combo',
+			queryMode: 'remote',
+			forceSelection: true, 
+			displayField : 'item_name',
+			valueField : 'item_id',
+			pageSize : 5,
+			minChars : 1, 
+			allowBlank : false, 
+			triggerAction: 'all',
+			store : remoteJsonStoreItem , 
+			listConfig : {
+				getInnerTpl: function(){
+					return  	'<div data-qtip="{item_name}">' +  
+											'<div class="combo-name">'  + 
+														" ({item_name}) " 		+ "<br />" 	 + 
+														'{item_sku}' 			+  
+											 "</div>" +  
+					 					'</div>';
+				}
+			},
+			name : 'item_id' 
+		},
+	      {
 	        xtype: 'textfield',
 	        name : 'name',
 	        fieldLabel: ' Name'
-	      },{
-					xtype: 'textfield',
-					name : 'id_number',
-					fieldLabel: 'Nomor ID'
-				},
-				{
-					xtype: 'textarea',
-					name : 'address',
-					fieldLabel: 'Alamat'
-				},
-				
-				{
-					xtype: 'numberfield',
-					name : 'rt',
-					fieldLabel: 'RT'
-				},
-				
-				{
-					xtype: 'numberfield',
-					name : 'rw',
-					fieldLabel: 'RW'
-				},
-				
-				{
-					xtype: 'textfield',
-					name : 'village',
-					fieldLabel: 'Kelurahan'
-				},
-				
-				
-				{
-					xtype: 'textfield',
-					name : 'id_card_number',
-					fieldLabel: 'KTP'
-				},
-				
-				
-				
-				{
-					xtype: 'datefield',
-					name : 'birthday_date',
-					fieldLabel: 'Ulang Tahun',
-					format: 'Y-m-d',
-				},
-				
-				
-				
-				
-				{
-					fieldLabel : 'Data Lengkap?',
-					name : 'is_data_complete',
-					xtype : 'checkbox'
-				},
-			]
+	      },
+	      {
+			xtype: 'textfield',
+			name : 'description',
+			fieldLabel: 'Deskripsi'
+		  },
+		  {
+			xtype: 'datefield',
+			name : 'manufactured_at',
+			fieldLabel: 'Tanggal Manufacture',
+			format: 'Y-m-d',
+		  },
+	    
+		]	
     }];
 
     this.buttons = [{
@@ -122,21 +117,26 @@ Ext.define('AM.view.operation.batchinstance.Form', {
     this.callParent(arguments);
   },
 
+
+
 	setComboBoxData : function( record){
-		// console.log("Inside the Form.. edit.. setComboBox data");
-		// var role_id = record.get("role_id");
-		// var comboBox = this.down('form').getForm().findField('role_id'); 
-		// var me = this; 
-		// var store = comboBox.store; 
-		// store.load({
-		// 	params: {
-		// 		selected_id : role_id 
-		// 	},
-		// 	callback : function(records, options, success){
-		// 		me.setLoading(false);
-		// 		comboBox.setValue( role_id );
-		// 	}
-		// });
-	}
+		console.log("inside setComboBoxData")
+		var item_id = record.get("item_id");
+		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		store.load({
+			params: {
+				selected_id : item_id ,
+				is_batch : true 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( item_id );
+			}
+		});
+	},
+	
+ 
 });
 

@@ -251,6 +251,7 @@ Ext.define('AM.controller.BatchInstances', {
 
   addObject: function() {
     var view = Ext.widget('batchinstanceform');
+    view.setComboBoxData( )
     view.show();
   },
 

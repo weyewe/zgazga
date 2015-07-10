@@ -21,8 +21,8 @@ class Api::BlanketResultsController < Api::BaseApiController
    
     else
       puts "In this shite"
-      @objects = BlanketOrderDetail.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = BlanketOrderDetail.count 
+      @objects = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }.page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }.count 
     end
     
     

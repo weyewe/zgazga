@@ -2,6 +2,11 @@ class BatchSource < ActiveRecord::Base
     has_many :batch_source_allocations
     has_many :batch_instances, :through => :batch_source_allocation
     
+    belongs_to :item
+    
+    def self.active_objects
+        self
+    end
     
     def self.create_object( params ) 
       new_object = self.new 

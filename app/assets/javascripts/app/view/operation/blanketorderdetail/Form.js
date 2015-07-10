@@ -102,7 +102,12 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
 				},
 				name : 'blanket_id' 
 			},
-			]
+			{
+		        xtype: 'numberfield',
+		        name : 'quantity',
+		        fieldLabel: 'Quantity'
+		    },
+		]
     }];
 
     this.buttons = [{
@@ -117,18 +122,18 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedItem: function( item_id ){
+	setSelectedBlanket: function( blanket_id ){
 		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var comboBox = this.down('form').getForm().findField('blanket_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : item_id 
+				selected_id : blanket_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( item_id );
+				comboBox.setValue( blanket_id );
 			}
 		});
 	},
@@ -155,8 +160,8 @@ Ext.define('AM.view.operation.blanketorderdetail.Form', {
 		me.setLoading(true);
 		
 		
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedBlanket( record.get("blanket_id")  ) ; 
+		// me.setSelectedStatus( record.get("is_service")  ) ; 
 	},
 	
 	

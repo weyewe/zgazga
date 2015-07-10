@@ -161,8 +161,7 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 	},
 	
 	
-	setComboBoxExtraParams: function( record ) {
-		console.log("inside setComboBoxExtraParams");
+	setComboBoxExtraParams: function( record ) { 
 		
 		console.log( record ) ;
 		var me =this;

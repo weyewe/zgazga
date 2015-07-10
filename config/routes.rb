@@ -220,6 +220,9 @@ Ticketie::Application.routes.draw do
     
     resources :recovery_results
     resources :recovery_result_details 
+    
+    resources :batch_sources
+    resources :batch_source_details
   end
   
   

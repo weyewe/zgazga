@@ -3,31 +3,27 @@ class Api::BlanketsController < Api::BaseApiController
   def index
      
     
-    if params[:livesearch].present? 
+    query_code = Blanket.joins(:machine,:contact)
+    
+    
+    if params[:livesearch].present?  
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = Blanket.joins(:machine,:contact).where{
+      query_code = query_code.where{
           (
             ( contact.name =~ livesearch ) |
-            ( machine.name =~ livesearch ) 
+            ( machine.name =~ livesearch ) | 
+            ( name =~ livesearch ) | 
+            ( sku =~ livesearch )
           )
 
-        }.page(params[:page]).per(params[:limit])
-
-        @total = Blanket.joins(:machine,:contact).where{
-          (
-            ( contact.name =~ livesearch ) |
-            ( machine.name =~ livesearch ) 
-          )
-        }.count
-   
-    else
-      puts "In this shite"
-      @objects = Blanket.page(params[:page]).per(params[:limit])
-      @total = Blanket.count 
+        }  .page(params[:page]).per(params[:limit])
+ 
     end
     
+    @objects =  query_code.page(params[:page]).per(params[:limit])
+    @total = query_code.count 
     
     # render :json => { :blankets => @objects , :total => @total , :success => true }
   end

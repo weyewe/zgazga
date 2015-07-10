@@ -102,21 +102,29 @@ class Api::ItemsController < Api::BaseApiController
     query = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
+    
+    
     if  selected_id.nil?
-      @objects = Item.joins(:exchange, :item_type, :uom).where{ 
-            ( sku  =~ query ) | 
-        ( name =~ query ) | 
-        ( description  =~ query  )  
-                              }.
+      query_code =  Item.joins(:exchange, :item_type, :uom).where{ 
+                   ( sku  =~ query ) | 
+                   ( name =~ query ) | 
+                   ( description  =~ query  )  
+                }
+                
+      if params[:is_batch].present?
+        query_code = query_code.where{
+          
+          item_type.is_batched.eq true 
+        }
+      end
+      
+      
+      @objects = query_code.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.joins(:exchange, :item_type, :uom).where{ 
-               ( sku  =~ query ) | 
-        ( name =~ query ) | 
-        ( description  =~ query  )  
-                              }.count
+      @total = query_code.count
     else
       @objects = Item.where{ (id.eq selected_id)  
                               }.

@@ -10,6 +10,7 @@ namespace :migrate_zga do
     Account.create_base_objects
     Exchange.create_object_for_base_exchange   # will generate 3 IDR account: GBCH, Payable, and Receivable
     ItemType.create_base_objects
+    Section.create_base_section_actions
   end
  
  

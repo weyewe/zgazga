@@ -41,6 +41,10 @@ class BatchInstance < ActiveRecord::Base
         
     end
     
+    def self.active_objects
+        self
+    end
+    
     def item_type 
         self.item.item_type 
     end
