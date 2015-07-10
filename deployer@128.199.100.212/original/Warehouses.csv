@@ -1,8 +1,0 @@
-Id,Code,Name,Description,IsDeleted,CreatedAt,UpdatedAt,DeletedAt
-1,A1,A1,Serpong - produksi roll,False,2014-12-19 10:05:44,2015-01-02 12:21:39,
-2,E15,E15 (Logistik),"Serpong - Logistik 
-",False,2014-12-19 10:05:44,2015-01-02 12:21:18,
-3,E16,E16,Serpong - produksi blanket,False,2014-12-19 10:05:44,2015-01-02 12:21:30,
-4,Sby,Surabaya,Surabaya,False,2014-12-19 10:05:44,,
-5,Smg,Semarang,Semarang,False,2014-12-19 10:05:44,,
-6,GA,GA,"barang2 GA berupa ATK, tisue",False,2015-03-05 16:51:34,,
