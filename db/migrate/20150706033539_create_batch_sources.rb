@@ -9,6 +9,7 @@ class CreateBatchSources < ActiveRecord::Migration
       t.datetime :generated_date 
       t.decimal :amount, :default => 0 , :default => 0,  :precision => 14, :scale => 2
       t.decimal :unallocated_amount, :default => 0 , :default => 0,  :precision => 14, :scale => 2
+      t.text :description 
       
       t.timestamps
     end

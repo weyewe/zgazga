@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.recoveryresultdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.recoveryresultdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Recovery Result Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

@@ -4,6 +4,8 @@ class BlanketOrderDetail < ActiveRecord::Base
   validates_presence_of :blanket_order_id
   validates_presence_of :blanket_id
   
+  has_many :roll_blanket_usages
+  
   has_many :blanket_warehouse_mutation_details 
   
   validate :valid_blanket_order
@@ -13,6 +15,10 @@ class BlanketOrderDetail < ActiveRecord::Base
   
   def self.active_objects
     self
+  end
+  
+  def active_children
+    self.roll_blanket_usages 
   end
   
   def valid_quantity

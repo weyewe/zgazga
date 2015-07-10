@@ -65,6 +65,12 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 				name : 'id',
 				fieldLabel: 'id'
 			},
+			
+			{
+				xtype: 'hidden',
+				name : 'blanket_order_detail_id',
+				fieldLabel: 'blanket_order_detail_id'
+			},
  
 			
 			
@@ -95,8 +101,18 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 				
 			{
     	        xtype: 'textfield',
-    	        name : 'amount',
-    	        fieldLabel: 'Quantity'
+    	        name : 'finish_amount',
+    	        fieldLabel: 'Jumlah Finish (m)'
+    	     },
+    	     {
+    	        xtype: 'textfield',
+    	        name : 'reject_amount',
+    	        fieldLabel: 'Jumlah Reject (m)'
+    	     },
+    	     {
+    	        xtype: 'textfield',
+    	        name : 'defect_amount',
+    	        fieldLabel: 'Jumlah Defect (m)'
     	     },
      
 			
@@ -158,7 +174,7 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 	
 	
 	setParentData: function( record) {
-		// this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('blanket_order_detail_id').setValue(record.get('id')); 
 		// this.down('form').getForm().findField('template_id').setValue(record.get('id'));
 	}
  

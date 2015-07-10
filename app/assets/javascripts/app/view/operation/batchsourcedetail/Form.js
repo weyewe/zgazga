@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.batchsourcedetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Batch Allocation',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,23 +13,10 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 	
   initComponent: function() {
 	
+ 
 	
-    var localJsonStoreStatus = Ext.create(Ext.data.Store, {
-		type : 'array',
-		storeId : 'sales_status_search',
-		fields	: [ 
-			{ name : "is_service"}, 
-			{ name : "is_service_text"}  
-		], 
-		data : [
-			{ is_service : false, is_service_text : "Trading"},
-			{ is_service : true, is_service_text : "Service"}
-		] 
-	});
-	
-	
-	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
+	var remoteJsonStoreBatchInstance = Ext.create(Ext.data.JsonStore, {
+		storeId : 'batch_instance_search',
 		fields	: [
 		 		{
 					name : 'item_sku',
@@ -55,8 +42,7 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 			}
 		},
 		autoLoad : false 
-	});
-		
+	}); 
 	
 	 
 		
@@ -77,58 +63,32 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 	      },
 			{
 	        xtype: 'hidden',
-	        name : 'sales_order_id',
+	        name : 'batch_source_id',
 	        fieldLabel: 'sales_order_id'
 	      },
-	      {
-            xtype: 'displayfield',
-            name : 'sales_order_code',
-            fieldLabel: 'Kode SalesOrder'
-        },
-			{
-				fieldLabel: 'Status',
-				xtype: 'combo',
-				queryMode: 'remote',
-				forceSelection: true, 
-				displayField : 'is_service_text',
-				valueField : 'is_service',
-				pageSize : 5,
-				minChars : 1, 
-				allowBlank : false, 
-				triggerAction: 'all',
-				store : localJsonStoreStatus , 
-				listConfig : {
-					getInnerTpl: function(){
-						return  	'<div data-qtip="{is_service_text}">' +  
-												'<div class="combo-name">{is_service_text}</div>' +  
-						 					'</div>';
-					}
-				},
-				name : 'is_service' 
-			},
+	      
 			{
 				fieldLabel: 'Item',
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'item_name',
-				valueField : 'item_id',
+				displayField : 'batch_instance_name',
+				valueField : 'batch_instance_id',
 				pageSize : 5,
 				minChars : 1, 
 				allowBlank : false, 
 				triggerAction: 'all',
-				store : remoteJsonStoreItem , 
+				store : remoteJsonStoreBatchInstance , 
 				listConfig : {
 					getInnerTpl: function(){
-						return  	'<div data-qtip="{item_name}">' +  
+						return  	'<div data-qtip="{batch_instance_name}">' +  
 												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
+															" ({batch_instance_name}) " 		 +  
 												 "</div>" +  
 						 					'</div>';
 					}
 				},
-				name : 'item_id' 
+				name : 'batch_instance_id' 
 			},
 				
 			{
@@ -136,17 +96,7 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
-    	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
-    	        xtype: 'textfield',
-    	        name : 'price',
-    	        fieldLabel: 'Value per item'
-    	     },
-		
+    	     
 	 
 			
 			
@@ -165,52 +115,35 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
     this.callParent(arguments);
   },
 
-	setSelectedItem: function( item_id ){
+	setSelectedBatchInstance: function( batch_instance_id ){
 		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var comboBox = this.down('form').getForm().findField('batch_instance_id'); 
 		var me = this; 
 		var store = comboBox.store;  
 		store.load({
 			params: {
-				selected_id : item_id 
+				selected_id : batch_instance_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( item_id );
+				comboBox.setValue( batch_instance_id );
 			}
 		});
 	},
-	
-	setSelectedStatus: function( is_service ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('is_service'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : is_service 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( is_service );
-			}
-		});
-	},
-	
+	 
 	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
 		
 		
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedBatchInstance( record.get("batch_instance_id")  ) ;  
 	},
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		// this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('batch_source_id').setValue(record.get('id'));
 	}
  
 });

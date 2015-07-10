@@ -3,7 +3,7 @@ Ext.define('AM.view.master.blendingrecipedetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.blendingrecipedetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Blending Recipe Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

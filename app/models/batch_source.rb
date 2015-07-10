@@ -8,6 +8,10 @@ class BatchSource < ActiveRecord::Base
         self
     end
     
+    def active_children
+        self.batch_source_allocations
+    end
+    
     def self.create_object( params ) 
       new_object = self.new 
 

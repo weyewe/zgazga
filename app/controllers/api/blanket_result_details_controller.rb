@@ -4,30 +4,23 @@ class Api::BlanketResultDetailsController < Api::BaseApiController
     params[:blanket_detail_id] = params[:blanket_result_id]
     
     @parent = BlanketOrderDetail.find_by_id params[:blanket_result_id]
+   
     
-    if not @parent.nil?  and @parent.is_finished?
-      @batch_source = @parent.batch_source
-      query = @batch_source.batch_source_allocations.joins(:batch_instance)
-      
-      @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = query.count
-    else
-      @objects = [] 
-      @total = 0
-    end
+    query = @parent.roll_blanket_usages.joins(:batch_instance)
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
     
   end
 
   def create
   
     @parent = BlanketOrderDetail.find_by_id params[:blanket_result_id]
-    if not @parent.batch_source.nil?
-      params[:batch_source_id] = @parent.batch_source.id 
-    end
+ 
     
     
   
-    @object = BatchSourceAllocation.create_object(params[:blanket_result_detail])
+    @object = RollBlanketUsage.create_object(params[:blanket_result_detail])
     
     
     if @object.errors.size == 0 
@@ -47,9 +40,7 @@ class Api::BlanketResultDetailsController < Api::BaseApiController
   end 
   
   def destroy
-    @object = BatchSourceAllocation.find(params[:id])
-    @parent = @object.batch_source 
-    @object.delete_object 
+    @object = RollBlanketUsage.find(params[:id])  
 
     if  not @object.persisted? 
       render :json => { :success => true, :total => @parent.active_children.count }  
