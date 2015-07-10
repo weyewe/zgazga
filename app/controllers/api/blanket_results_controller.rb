@@ -92,9 +92,9 @@ class Api::BlanketResultsController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blanket_results => [@object],
-                        :total => BlanketOrderDetail.active_objects.count } 
+      # render :json => { :success => true,   
+      #                   :blanket_results => [@object],
+      #                   :total => BlanketOrderDetail.active_objects.count } 
     else
       msg = {
         :success => false, 
@@ -104,16 +104,17 @@ class Api::BlanketResultsController < Api::BaseApiController
       }
       
       render :json => msg
-      
+      return 
       
     end
   end
   
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blanket_results => [@object] , 
-                      :total => BlanketOrderDetail.count }
+    @total = BlanketOrderDetail.count
+    # render :json => { :success => true, 
+    #                   :blanket_results => [@object] , 
+    #                   :total => BlanketOrderDetail.count }
   end
 
   def destroy

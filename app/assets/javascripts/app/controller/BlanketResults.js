@@ -245,11 +245,22 @@ Ext.define('AM.controller.BlanketResults', {
 				params : {
 					finish: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					 
 					
+					var data = new_record.data ; 
+					 for (var k in data) {
+			        if (data.hasOwnProperty(k)) {
+			            
+			            if( k !== "id"){ 
+			            	record.set( k, data[k]);
+			            }
+			        }
+			    }
+			    
+			    
 					list.enableRecordButtons(); 
 					
 					
@@ -297,6 +308,7 @@ Ext.define('AM.controller.BlanketResults', {
 					form.setLoading(false);
 					
 					me.reloadRecord( record ) ; 
+					
 					list.enableRecordButtons(); 
 					
 					win.close();
@@ -371,30 +383,40 @@ Ext.define('AM.controller.BlanketResults', {
 	},
 	
 	reloadRecord: function(record){
+
+		var data = record.data ; 
+		 for (var k in data) {
+        if (data.hasOwnProperty(k)) {
+            
+            if( k !== "id"){ 
+            	record.set( k, data[k]);
+            }
+        }
+    }
 		
-		var list = this.getList();
-		var store = this.getList().getStore();
-		var modifiedId = record.get('id');
+		// var list = this.getList();
+		// var store = this.getList().getStore();
+		// var modifiedId = record.get('id');
 		
-		// console.log("modifiedId:  " + modifiedId);
+		// // console.log("modifiedId:  " + modifiedId);
 		 
-		AM.model.BlanketResult.load( modifiedId , {
-		    scope: list,
-		    failure: function(record, operation) {
-		        //do something if the load failed
-		    },
-		    success: function(new_record, operation) {
-					// console.log("The new record");
-					// 				console.log( new_record);
-					recToUpdate = store.getById(modifiedId);
-					recToUpdate.set(new_record.getData());
-					recToUpdate.commit();
-					list.getView().refreshNode(store.indexOfId(modifiedId));
-		    },
-		    callback: function(record, operation) {
-		        //do something whether the load succeeded or failed
-		    }
-		});
+		// AM.model.BlanketResult.load( modifiedId , {
+		//     scope: list,
+		//     failure: function(record, operation) {
+		//         //do something if the load failed
+		//     },
+		//     success: function(new_record, operation) {
+		// 			// console.log("The new record");
+		// 			// 				console.log( new_record);
+		// 			recToUpdate = store.getById(modifiedId);
+		// 			recToUpdate.set(new_record.getData());
+		// 			recToUpdate.commit();
+		// 			list.getView().refreshNode(store.indexOfId(modifiedId));
+		//     },
+		//     callback: function(record, operation) {
+		//         //do something whether the load succeeded or failed
+		//     }
+		// });
 	},
 
 	

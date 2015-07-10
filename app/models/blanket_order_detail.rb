@@ -262,8 +262,8 @@ class BlanketOrderDetail < ActiveRecord::Base
       return self 
     end
     
-    if self.batch_source.batch_source_allocations.count != 0 
-      self.errors.add(:generic_errors, "Sudah ada alokasi batch")
+    if self.roll_blanket_usages.count != 0 
+      self.errors.add(:generic_errors, "Sudah ada alokasi roll blanket")
       return self
     end
 

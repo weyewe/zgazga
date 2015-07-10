@@ -117,7 +117,7 @@ class RollBlanketUsage < ActiveRecord::Base
               :amount => self.reject_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
               :mutation_date => self.blanket_order_detail.finished_at     ,  
-              :item_id =>  self.blanket_order_detail.item.id   ,
+              :item_id =>  self.blanket_order_detail.blanket.item.id   ,
               :batch_instance_id => self.batch_instance_id,
               :description => "[REJECT] blanket manufacturing"
               )  
@@ -130,7 +130,7 @@ class RollBlanketUsage < ActiveRecord::Base
               :amount => self.defect_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
               :mutation_date => self.blanket_order_detail.finished_at     ,  
-              :item_id =>  self.blanket_order_detail.item.id   ,
+              :item_id =>  self.blanket_order_detail.blanket.item.id   ,
               :batch_instance_id => self.batch_instance_id,
               :description => "[DEFECT] blanket manufacturing"
               )  
@@ -143,7 +143,7 @@ class RollBlanketUsage < ActiveRecord::Base
               :amount => self.finish_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
               :mutation_date => self.blanket_order_detail.finished_at     ,  
-              :item_id =>  self.blanket_order_detail.item.id   ,
+              :item_id =>  self.blanket_order_detail.blanket.item.id   ,
               :batch_instance_id => self.batch_instance_id,
               :description => "[FINISHG] blanket manufacturing"
               )  
