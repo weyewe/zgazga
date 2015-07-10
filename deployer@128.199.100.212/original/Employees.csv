@@ -1,0 +1,7 @@
+Id,Name,Address,ContactNo,Email,Description,IsDeleted,CreatedAt,UpdatedAt,DeletedAt
+1,Dummy Marketing,,,,,False,2015-01-19 13:10:35,,
+2,Catur,,81316441782,carin@zengra.com,,False,2015-02-11 22:45:23,,
+3,Thomas,,82213029277,thomas@zengra.com,,False,2015-02-11 22:46:06,,
+4,Sri,,81316441799,sri@hadiwihono.com,,False,2015-02-11 22:46:54,,
+5,Eka,,82213029288,eka@zengra.com,,False,2015-02-11 22:52:59,,
+6,Subagyo,,82213029263,rsubagyo@zengra.com,,False,2015-02-11 22:53:37,,

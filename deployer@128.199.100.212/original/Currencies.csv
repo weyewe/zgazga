@@ -1,0 +1,7 @@
+Id,Name,Description,IsBase,IsDeleted,CreatedAt,UpdatedAt,DeletedAt
+1,Rupiah,,True,False,2014-12-19 08:56:25,,
+2,USD,,False,False,2014-12-19 08:56:25,,
+3,Euro,,False,False,2014-12-19 08:56:25,,
+4,CHF,,False,False,2014-12-19 08:56:25,,
+5,GBP,Poundsterling : UK currency,False,False,2015-01-14 16:41:08,2015-01-14 16:43:36,
+6,SGD,Singapore Dollar,False,False,2015-01-14 16:41:21,,

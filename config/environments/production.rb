@@ -90,3 +90,8 @@ Ticketie::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 end
+
+
+BASE_MIGRATION_LOCATION = "/var/www/zengra.com/shared/zga_migration"
+BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
+BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
