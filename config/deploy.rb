@@ -17,7 +17,7 @@ set :domain, '128.199.100.212'
 set :deploy_to, '/var/www/zengra.com'
 # https://github.com/weyewe/esman.git
 set :repository, 'git://github.com/weyewe/zgazga.git'
-set :branch, 'master'
+set :branch, 'mergeui'
 set :user , 'deployer'
 set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
