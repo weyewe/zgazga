@@ -7,18 +7,22 @@ Ext.define('AM.view.operation.batchsourcedetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+		  
 			
 			 
-		];
-		
+    		{ header: 'Status',  dataIndex: 'status_text', flex: 1} ,
+    		{ header: 'Jumlah Alokasi',  dataIndex: 'amount', flex: 1} ,
+    		{
+				xtype : 'templatecolumn',
+				text : "Tujuan Alokasi",
+				flex : 3,
+				tpl : 'Batch: <br /><b>{batch_instance_name}</b>' + '<br />' + '<br />' +
+						'Total Tersedia: <b>{batch_instance_total_allocated_amount}</b>' + '<br />' + '<br />' +
+							'Yg belum digunakan:  <b>{batch_instance_amount}</b>'   
+			},
+			
+			 
+		]; 
 
 		this.addObjectButton = new Ext.Button({
 			text: 'Add',
@@ -41,7 +45,7 @@ Ext.define('AM.view.operation.batchsourcedetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [this.addObjectButton,   this.deleteObjectButton ]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,

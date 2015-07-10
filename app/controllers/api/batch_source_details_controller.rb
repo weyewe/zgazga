@@ -1,8 +1,9 @@
 class Api::BatchSourceDetailsController < Api::BaseApiController
   
+  # batch source allocation 
   def index
     @parent = BatchSource.find_by_id params[:batch_source_id]
-    @objects = @parent.active_children.joins(:batch_source, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = @parent.active_children.joins(:batch_source,:batch_instance).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
@@ -11,7 +12,7 @@ class Api::BatchSourceDetailsController < Api::BaseApiController
     @parent = BatchSource.find_by_id params[:batch_source_id]
     
   
-    @object = BatchSourceDetail.create_object(params[:batch_source_detail])
+    @object = BatchSourceAllocation.create_object(params[:batch_source_detail])
     
     
     if @object.errors.size == 0 
@@ -29,34 +30,10 @@ class Api::BatchSourceDetailsController < Api::BaseApiController
       render :json => msg                         
     end
   end
-
-  def update
-    @object = BatchSourceDetail.find_by_id params[:id] 
-    @parent = @object.batch_source 
-    
-    
-    params[:batch_source_detail][:batch_source_id] = @parent.id  
-    
-    @object.update_object( params[:batch_source_detail])
-     
-    if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :batch_source_details => [@object],
-                        :total => @parent.active_children.count  } 
-    else
-      msg = {
-        :success => false, 
-        :message => {
-          :errors => extjs_error_format( @object.errors )  
-        }
-      }
-      
-      render :json => msg 
-    end
-  end
+ 
 
   def destroy
-    @object = BatchSourceDetail.find(params[:id])
+    @object = BatchSourceAllocation.find(params[:id])
     @parent = @object.batch_source 
     @object.delete_object 
 

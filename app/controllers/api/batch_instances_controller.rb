@@ -141,6 +141,10 @@ class Api::BatchInstancesController < Api::BaseApiController
         }
       end
       
+      if params[:item_id].present?
+        query = query.where(:item_id => params[:item_id])
+      end
+      
       
       @objects = query.page(params[:page]).
                         per(params[:limit]).
@@ -160,6 +164,6 @@ class Api::BatchInstancesController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

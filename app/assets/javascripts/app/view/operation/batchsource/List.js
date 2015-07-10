@@ -22,7 +22,14 @@ Ext.define('AM.view.operation.batchsource.List' ,{
 			},
 			
 			{	header: 'Status', dataIndex: 'status_text', flex: 2 },
-			{	header: 'Quantity', dataIndex: 'unallocated_amount', flex: 2 }, 
+		 
+			{
+				xtype : 'templatecolumn',
+				text : "Allocation",
+				flex : 3,
+				tpl : 'Total: <b>{amount}</b>' + '<br />' + '<br />' +
+							'Yg belum di alokasikan:  <b>{unallocated_amount}</b>'   
+			},
 			
 			
 		];

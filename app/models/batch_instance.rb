@@ -65,6 +65,11 @@ class BatchInstance < ActiveRecord::Base
         self.save 
     end
     
+    def update_total_allocated_amount( new_amount ) 
+        self.total_allocated_amount = self.total_allocated_amount + new_amount
+        self.save 
+    end
+    
     def delete_object
         if self.batch_source_allocations.count != 0 
             self.errors.add(:generic_errors, "Sudah ada batch source allocation")

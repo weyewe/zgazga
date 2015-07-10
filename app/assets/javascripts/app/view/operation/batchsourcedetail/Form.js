@@ -13,36 +13,47 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 	
   initComponent: function() {
 	
- 
+  
 	
 	var remoteJsonStoreBatchInstance = Ext.create(Ext.data.JsonStore, {
 		storeId : 'batch_instance_search',
 		fields	: [
 		 		{
-					name : 'item_sku',
-					mapping : "sku"
+					name : 'batch_instance_manufactured_at',
+					mapping : "manufactured_at"
 				}, 
 				{
-					name : 'item_name',
+					name : 'batch_instance_name',
 					mapping : 'name'
 				},
 				{
-					name : 'item_id',
+					name : 'batch_instance_amount',
+					mapping : "amount"
+				}, 
+				{
+					name : 'batch_instance_item_sku',
+					mapping : "item_sku"
+				},
+				{
+					name : 'batch_instance_id',
 					mapping : "id"
 				}, 
+				
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_items',
+			url : 'api/search_batch_instances',
 			reader : {
 				type : 'json',
-				root : 'records', 
+				root : 'batch_instances', 
 				totalProperty  : 'total'
 			}
 		},
 		autoLoad : false 
 	}); 
+	 
+		
 	
 	 
 		
@@ -83,7 +94,10 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 					getInnerTpl: function(){
 						return  	'<div data-qtip="{batch_instance_name}">' +  
 												'<div class="combo-name">'  + 
-															" ({batch_instance_name}) " 		 +  
+															"Nama Batch: <b>{batch_instance_name}</b> " 		 + "<br />" + 
+															"Item: <b>{batch_instance_item_sku}</b> " 		 + "<br />" + 
+															"Manufactured: <b>{batch_instance_manufactured_at}</b> " 		 + "<br />" + 
+															"Jumlah: <b>{batch_instance_amount}</b> " 		 + "<br />" + 
 												 "</div>" +  
 						 					'</div>';
 					}
@@ -131,6 +145,20 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 		});
 	},
 	 
+	 
+	setExtraParamInBatchInstanceIdComboBox: function(item_id){  
+		var comboBox = this.down('form').getForm().findField('batch_instance_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.item_id =  item_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInBatchInstanceIdComboBox( record.get("item_id") ); 
+	},
+	
 	
 	setComboBoxData : function( record){
 		var me = this; 
