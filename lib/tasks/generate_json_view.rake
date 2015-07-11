@@ -28,12 +28,12 @@ task :generate_json_view do
                 
                 puts "gonna generate : #{full_filename_location}"
                 form_template = "#{base_json_template_folder}/#{filename}" 
-                # text = File.open(  form_template ).read 
+                text = File.open(  form_template ).read 
             
                
             
-                # result_filename =  full_filename_location
-                # File.open(result_filename, 'w') { |file| file.write( text ) }  
+                result_filename =  full_filename_location
+                File.open(result_filename, 'w') { |file| file.write( text ) }  
                  
             end
         end
