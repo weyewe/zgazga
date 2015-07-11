@@ -200,8 +200,8 @@ task :fix_controller_respond_in_show do
                    
                    show_block_result << line 
                    
-                   puts show_copy_render
-                   puts line
+                  # puts show_copy_render
+                  # puts line
                    
                    if show_copy_render 
                        
@@ -221,22 +221,22 @@ task :fix_controller_respond_in_show do
                
             end
             
-            puts "show block result:"
-            puts show_block_result
+            # puts "show block result:"
+            # puts show_block_result
             
-            puts "The filename  : #{filename}"
-            puts "the show copy render block"
-            puts show_copy_render_block
-            puts "\n\n\n\n\n\n The total line"
-            puts total_line
+            # puts "The filename  : #{filename}"
+            # puts "the show copy render block"
+            # puts show_copy_render_block
+            # puts "\n\n\n\n\n\n The total line"
+            # puts total_line
             str = total_line
             result = str.gsub(/\s+/m, ' ').strip.split(" ")
-            puts "The result"
-            puts result 
+            # puts "The result"
+            # puts result 
             
             new_line = "    @total = #{result[2]}\n"
-            puts "The new line"
-            puts new_line
+            # puts "The new line"
+            # puts new_line
             
             if show_copy_render_block.length != 0
               result_file_content = base_result.gsub(show_copy_render_block, new_line)
