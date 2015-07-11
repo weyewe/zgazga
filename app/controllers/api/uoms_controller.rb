@@ -66,9 +66,7 @@ class Api::UomsController < Api::BaseApiController
     @object.update_object( params[:uom])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :uoms => [@object],
-                        :total => Uom.active_objects.count  } 
+      @total = Uom.active_objects.count
     else
       msg = {
         :success => false, 

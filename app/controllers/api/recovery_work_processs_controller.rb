@@ -210,41 +210,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :recovery_work_processs => [
-                            :id => @object.id, 
-                          :recovery_order_id => @object.recovery_order_id, 
-                          :roller_identification_form_detail_id => @object.roller_identification_form_detail_id, 
-                          :roller_identification_form_detail_core_sku => @object.roller_identification_form_detail.core_builder.base_sku, 
-                          :roller_identification_form_detail_core_name => @object.roller_identification_form_detail.core_builder.name, 
-                          :roller_builder_id => @object.roller_builder_id, 
-                          :roller_builder_sku => @object.roller_builder.base_sku, 
-                          :roller_builder_name => @object.roller_builder.name, 
-                          :total_cost => @object.total_cost, 
-                          :compound_usage => @object.compound_usage, 
-                          :core_type_case => @object.core_type_case, 
-                          :core_type_case => @object.core_type_case, 
-                          :is_disassembled => @object.is_disassembled, 
-                          :is_stripped_and_glued => @object.is_stripped_and_glued, 
-                          :is_wrapped => @object.is_wrapped, 
-                          :is_vulcanized => @object.is_vulcanized, 
-                          :is_faced_off => @object.is_faced_off, 
-                          :is_conventional_grinded => @object.is_conventional_grinded, 
-                          :is_cnc_grinded => @object.is_cnc_grinded, 
-                          :is_polished_and_gc => @object.is_polished_and_gc, 
-                          :is_packaged => @object.is_packaged, 
-                          :is_rejected => @object.is_rejected, 
-                          :rejected_date => format_date_friendly(@object.rejected_date), 
-                          :is_finished => @object.is_finished, 
-                          :finished_date => format_date_friendly(@object.finished_date), 
-                          :accessories_cost => @object.accessories_cost, 
-                          :core_cost => @object.core_cost, 
-                          :compound_cost => @object.compound_cost, 
-                          :compound_under_layer_id => @object.compound_under_layer_id, 
-                          :compound_under_layer_name => @object.compound_under_layer.name, 
-                          :compound_under_layer_usage => @object.compound_under_layer_usage, 
-                          ],
-                        :total => RecoveryOrderDetail.active_objects.count  } 
+      @total = @object.total_cost,
     else
       
       msg = {

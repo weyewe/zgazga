@@ -61,9 +61,7 @@ class Api::MachinesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :machines => [@object],
-                        :total => Machine.active_objects.count } 
+      @total = Machine.active_objects.count
     else
       msg = {
         :success => false, 

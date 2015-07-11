@@ -63,9 +63,7 @@ class Api::PayablesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :payables => [@object],
-                        :total => Payable.active_objects.count } 
+      @total = Payable.active_objects.count
     else
       msg = {
         :success => false, 

@@ -95,7 +95,6 @@ task :move_index_to_objects_partial do
 end
 
 task :fix_controller_respond_in_update_and_show do 
-    puts "gonna move it"
     base_path = Rails.root.to_s + "/" + "app/controllers/" 
     controller_api_folder =  base_path + "api/*"
     
@@ -143,24 +142,33 @@ task :fix_controller_respond_in_update_and_show do
                
             end
             
-            puts "the update copy render block"
-            puts update_copy_render_block
-            puts "\n\n\n\n\n\n The total line"
-            puts total_line
+            # puts "the update copy render block"
+            # puts update_copy_render_block
+            # puts "\n\n\n\n\n\n The total line"
+            # puts total_line
             str = total_line
             result = str.gsub(/\s+/m, ' ').strip.split(" ")
             new_line = "      @total = #{result[2]}\n"
             
-            puts "the new line"
-            puts new_line
+            # puts "the new line"
+            # puts new_line
             
-            result_file_content = base_result.gsub(update_copy_render_block, new_line)
+            puts "The update_copy_render_block content length : #{update_copy_render_block.length}"
+            puts update_copy_render_block
             
-            puts "\n\n"*10
-            puts "The content of the file:"
-            puts result_file_content
+            if update_copy_render_block.length != 0
+              result_file_content = base_result.gsub(update_copy_render_block, new_line)
+              puts "updating file: #{filename}"
+              File.open(filename, 'w') { |file| file.write( result_file_content ) }
+            else
+              puts ">>>>>>>>>> no matching block"
+            end
             
-            File.open(filename, 'w') { |file| file.write( result_file_content ) }
+            # puts "\n\n"*10
+            # puts "The content of the file:"
+            # puts result_file_content
+            
+            
              
         end  
         

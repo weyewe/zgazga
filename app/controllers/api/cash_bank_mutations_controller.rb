@@ -101,9 +101,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :cash_bank_mutations => [@object],
-                        :total => CashBankMutation.active_objects.count } 
+      @total = CashBankMutation.active_objects.count
     else
       msg = {
         :success => false, 

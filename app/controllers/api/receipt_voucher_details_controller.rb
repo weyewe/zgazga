@@ -41,9 +41,7 @@ class Api::ReceiptVoucherDetailsController < Api::BaseApiController
     @object.update_object( params[:receipt_voucher_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :receipt_voucher_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

@@ -55,9 +55,7 @@ class Api::BlanketsController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blankets => [@object],
-                        :total => Blanket.active_objects.count } 
+      @total = Blanket.active_objects.count
     else
       msg = {
         :success => false, 

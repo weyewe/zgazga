@@ -41,9 +41,7 @@ class Api::ClosingDetailsController < Api::BaseApiController
     @object.update_object( params[:closing_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :closing_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

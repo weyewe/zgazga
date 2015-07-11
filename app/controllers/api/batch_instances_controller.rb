@@ -52,8 +52,7 @@ class Api::BatchInstancesController < Api::BaseApiController
         }
       }
       
-      render :json => msg
-      return                          
+      render :json => msg                         
     end
   end
 
@@ -65,9 +64,7 @@ class Api::BatchInstancesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :batch_instances => [@object],
-                        :total => BatchInstance.active_objects.count } 
+      @total = BatchInstance.active_objects.count
     else
       msg = {
         :success => false, 
@@ -77,7 +74,6 @@ class Api::BatchInstancesController < Api::BaseApiController
       }
       
       render :json => msg
-      return 
       
       
     end
@@ -114,7 +110,6 @@ class Api::BatchInstancesController < Api::BaseApiController
       }
       
       render :json => msg
-      return 
     end
   end
   
@@ -126,46 +121,29 @@ class Api::BatchInstancesController < Api::BaseApiController
       selected_id = nil
     end
     
-    query_value = "%#{search_params}%"
+    query = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      query = BatchInstance.where{
-          ( name =~ query_value ) | 
-          ( description =~ query_value )  
-      }
-      
-      
-      
-      if params[:blanket_order_detail_id].present?
-        zero_value = BigDecimal("0")
-        
-        object  = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
-        if not object.nil?
-          puts "===================>>\n\n"*5
-          puts "the item_id (roll_blanket) is #{object.blanket.roll_blanket_item_id}"
-          query = query.where{
-            # ( amount.gt zero_value ) & 
-            ( item_id.eq object.blanket.roll_blanket_item_id )
-          }
-        end
-      end
-
-      
-      
-      
-      if params[:item_id].present?
-        query = query.where(:item_id => params[:item_id])
-      end
-       
-      
-      
-      @objects = query.page(params[:page]).
+      @objects = BatchInstance.where{ 
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
+                              }.
+                        page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total  = query.count 
-      
+      @total = BatchInstance.where{ 
+          ( name =~  livesearch )  | 
+          ( address =~ livesearch ) | 
+          ( description =~ livesearch ) | 
+          ( contact_no =~ livesearch ) | 
+          ( email =~ livesearch )
+        
+                              }.count
     else
       @objects = BatchInstance.where{ (id.eq selected_id)  
                               }.
@@ -178,6 +156,6 @@ class Api::BatchInstancesController < Api::BaseApiController
     end
     
     
-    # render :json => { :records => @objects , :total => @total, :success => true }
+    render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

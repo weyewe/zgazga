@@ -41,9 +41,7 @@ class Api::PurchaseReceivalDetailsController < Api::BaseApiController
     @object.update_object( params[:purchase_receival_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :purchase_receival_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

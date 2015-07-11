@@ -77,9 +77,7 @@ class Api::SuppliersController < Api::BaseApiController
     @object.update_object( params[:supplier])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :suppliers => [@object],
-                        :total => Contact.active_objects.suppliers.count  } 
+      @total = Contact.active_objects.suppliers.count
     else
       msg = {
         :success => false, 

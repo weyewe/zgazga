@@ -71,9 +71,7 @@ class Api::CoreBuildersController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :core_builders => [@object],
-                        :total => CoreBuilder.active_objects.count } 
+      @total = CoreBuilder.active_objects.count
     else
       msg = {
         :success => false, 

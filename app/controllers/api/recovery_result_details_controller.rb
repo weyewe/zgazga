@@ -41,9 +41,7 @@ class Api::RecoveryResultDetailsController < Api::BaseApiController
     @object.update_object( params[:recovery_result_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :recovery_result_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

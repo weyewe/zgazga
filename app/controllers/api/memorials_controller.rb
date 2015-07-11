@@ -124,16 +124,7 @@ class Api::MemorialsController < Api::BaseApiController
     end
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :memorials => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :description => @object.description , 
-                          :amount => @object.amount  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => Memorial.active_objects.count  } 
+      @total = Memorial.active_objects.count
     else
       
       msg = {

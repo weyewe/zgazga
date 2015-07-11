@@ -62,9 +62,7 @@ class Api::SubTypesController < Api::BaseApiController
     @object.update_object( params[:sub_type])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :sub_types => [@object],
-                        :total => SubType.active_objects.count  } 
+      @total = SubType.active_objects.count
     else
       msg = {
         :success => false, 

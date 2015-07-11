@@ -81,9 +81,7 @@ class Api::AccountsController < Api::BaseApiController
     @object.update_object( params[:account]  )
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :accounts => [@object],
-                        :total => Account.active_accounts.count  } 
+      @total = Account.active_accounts.count
     else
       msg = {
         :success => false, 

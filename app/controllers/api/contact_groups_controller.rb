@@ -59,9 +59,7 @@ class Api::ContactGroupsController < Api::BaseApiController
     @object.update_object( params[:contact_group])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :contact_groups => [@object],
-                        :total => ContactGroup.active_objects.count  } 
+      @total = ContactGroup.active_objects.count
     else
       msg = {
         :success => false, 

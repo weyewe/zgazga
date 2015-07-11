@@ -146,21 +146,7 @@ class Api::PaymentRequestsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :payment_requests => [
-                            :id => @object.id, 
-                            :code => @object.code ,
-                            :account_id => @object.account_id ,
-                            :no_bukti => @object.no_bukti , 
-                            :description => @object.description , 
-                            :amount => @object.amount , 
-                            :contact_name => @object.contact.name,
-                            :request_date => format_date_friendly(@object.request_date)  ,
-                            :due_date => format_date_friendly(@object.due_date)  ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => PaymentRequest.active_objects.count  } 
+      @total = PaymentRequest.active_objects.count
     else
       
       msg = {

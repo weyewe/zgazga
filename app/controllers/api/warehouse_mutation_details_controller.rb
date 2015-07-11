@@ -41,9 +41,7 @@ class Api::WarehouseMutationDetailsController < Api::BaseApiController
     @object.update_object( params[:warehouse_mutation_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :warehouse_mutation_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

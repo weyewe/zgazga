@@ -70,9 +70,7 @@ class Api::ExchangesController < Api::BaseApiController
     @object.update_object( params[:exchange])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :exchanges => [@object],
-                        :total => Exchange.active_objects.count  } 
+      @total = Exchange.active_objects.count
     else
       msg = {
         :success => false, 

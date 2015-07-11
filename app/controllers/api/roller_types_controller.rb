@@ -59,9 +59,7 @@ class Api::RollerTypesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :roller_types => [@object],
-                        :total => RollerType.active_objects.count } 
+      @total = RollerType.active_objects.count
     else
       msg = {
         :success => false, 

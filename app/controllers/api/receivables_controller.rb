@@ -63,9 +63,7 @@ class Api::ReceivablesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :receivables => [@object],
-                        :total => Receivable.active_objects.count } 
+      @total = Receivable.active_objects.count
     else
       msg = {
         :success => false, 

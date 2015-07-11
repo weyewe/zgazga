@@ -108,9 +108,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blending_work_orders => [@object],
-                        :total => BlendingWorkOrder.active_objects.count } 
+      @total = BlendingWorkOrder.active_objects.count
     else
       msg = {
         :success => false, 

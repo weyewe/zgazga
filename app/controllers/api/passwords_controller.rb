@@ -16,10 +16,7 @@ class Api::PasswordsController < Api::BaseApiController
     
     if @user.errors.size == 0 
       render :json => {
-        :success => true, 
-        :message => "Pasword is updated succsesfully",
-        :auth_token => @user.authentication_token
-      }
+      @total = 
     else
       render :json => {
         :success => false, 

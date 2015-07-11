@@ -149,22 +149,7 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :roller_identification_forms => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :warehouse_id => @object.warehouse_id , 
-                          :warehouse_name => @object.warehouse.name , 
-                          :incoming_roll => format_date_friendly(@object.incoming_roll)  ,
-                          :identified_date => format_date_friendly(@object.identified_date)  ,
-                          :is_in_house => @object.is_in_house,
-                          :contact_id => @object.contact_id,
-                          :contact_name => @object.contact.name,
-                          :amount => @object.amount,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => RollerIdentificationForm.active_objects.count  } 
+      @total = RollerIdentificationForm.active_objects.count
     else
       
       msg = {

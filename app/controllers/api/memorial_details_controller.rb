@@ -41,9 +41,7 @@ class Api::MemorialDetailsController < Api::BaseApiController
     @object.update_object( params[:memorial_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :memorial_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 

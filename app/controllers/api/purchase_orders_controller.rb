@@ -142,18 +142,7 @@ class Api::PurchaseOrdersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :purchase_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :description => @object.description ,
-                          :purchase_date => format_date_friendly(@object.purchase_date)  ,
-                          :allow_edit_detail => @object.allow_edit_detail,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => PurchaseOrder.active_objects.count  } 
+      @total = PurchaseOrder.active_objects.count
     else
       
       msg = {

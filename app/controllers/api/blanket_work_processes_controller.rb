@@ -100,9 +100,7 @@ class Api::BlanketWorkProcessesController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blanket_order_details => [@object],
-                        :total => BlanketOrderDetail.active_objects.count } 
+      @total = BlanketOrderDetail.active_objects.count
     else
       msg = {
         :success => false, 

@@ -150,21 +150,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :virtual_delivery_orders => [
-                            :id => @object.id, 
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat ,
-                            :warehouse_id => @object.warehouse_id,
-                            :warehouse_name => @object.warehouse.name, 
-                            :virtual_order_code => @object.virtual_order.code,
-                            :contact_name => @object.virtual_order.contact.name,
-                            :virtual_order_id => @object.virtual_order.id ,
-                            :delivery_date => format_date_friendly(@object.delivery_date)  ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at)
-                          ],
-                        :total => VirtualDeliveryOrder.active_objects.count  } 
+      @total = VirtualDeliveryOrder.active_objects.count
     else
       
       msg = {

@@ -67,9 +67,7 @@ class Api::ItemsController < Api::BaseApiController
     @object.update_object( params[:item])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :items => [@object],
-                        :total => Item.active_objects.count  } 
+      @total = Item.active_objects.count
     else
       msg = {
         :success => false, 

@@ -41,9 +41,7 @@ class Api::RollerAccDetailsController < Api::BaseApiController
     @object.update_object( params[:roller_accessory_details])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :roller_accessory_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 
