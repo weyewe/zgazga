@@ -228,79 +228,66 @@ Ext.define('AM.controller.BlanketResults', {
     var values = form.getValues();
  
 		if(record){
-			var rec_id = record.get("id");
-			var row_index = list.store.indexOf(record);
-			console.log("The row index is : " + row_index);
+		 
 			
 			record.set( 'finished_at' , values['finished_at'] );
-			
-		  
-		  var table = list.getView(); 
-		  console.log("The table");
-		  console.log( table ) ;
-			var row = list.getView().getSelectedNodes();   // getRow(row_index); // Getting HtmlElement here
-			console.log("all the rows");
-			console.log( row ) ;
-			console.log( "The first row");
-			var selected_row = row[0];
-			console.log( selected_row );
-			// Ext.get(selected_row).highlight(); // Getting el
-			var ext_selected_row = Ext.get(selected_row);
-			console.log("the ext selected row");
-			console.log( ext_selected_row);
-			
-			ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
-			// record.set( 'finished_quantity' , values['finished_quantity'] );
-			// record.set( 'rejected_quantity' , values['rejected_quantity'] );
-			// record.set( 'roll_blanket_usage' , values['roll_blanket_usage'] );
-			// record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
-			// record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
+			record.set( 'finished_quantity' , values['finished_quantity'] );
+			record.set( 'rejected_quantity' , values['rejected_quantity'] );
+			record.set( 'roll_blanket_usage' , values['roll_blanket_usage'] );
+			record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
+			record.set( 'roll_blanket_defect' , values['roll_blanket_defect'] );
 			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			// form.setLoading(true);
-			// record.save({
-			// 	params : {
-			// 		finish: true 
-			// 	},
-			// 	success : function(new_record){
-			// 		form.setLoading(false);
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
+			form.setLoading(true);
+			record.save({
+				params : {
+					finish: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
 					
 					 
 					
-			// 		var data = new_record.data ; 
-			// 		 for (var k in data) {
-			//         if (data.hasOwnProperty(k)) {
+					var data = new_record.data ; 
+					 for (var k in data) {
+			        if (data.hasOwnProperty(k)) {
 			            
-			//             if( k !== "id"){ 
-			//             	record.set( k, data[k]);
-			//             }
-			//         }
-			//     }
+			            if( k !== "id"){ 
+			            	record.set( k, data[k]);
+			            }
+			        }
+			    }
 			    
 			    
-			// 		list.enableRecordButtons(); 
+					list.enableRecordButtons(); 
+					
+					AM.view.Constants.highlightSelectedRow( list );
+					// var selected_row = list.getView().getSelectedNodes()[0]; 
+					// var ext_selected_row = Ext.get(selected_row); 
+					// ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
 					
 					
-			// 		win.close();
-			// 	},
-			// 	failure : function(record,op ){
-			// 		// console.log("Fail update");
-			// 		form.setLoading(false);
-			// 		var message  = op.request.scope.reader.jsonData["message"];
-			// 		var errors = message['errors'];
-			// 		form.getForm().markInvalid(errors);
-			// 		record.reject(); 
-			// 		// this.reject(); 
-			// 	}
-			// });
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
 			
 			
 			
 		}
 	},
+	
 	
 	
 	

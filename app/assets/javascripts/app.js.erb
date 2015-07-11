@@ -37,6 +37,8 @@ Ext.application({
 
 
 
+
+
 Ext.override(Ext.Container, {
     removeAll: function() {
         this.items.each(function(childItem){ this.remove(childItem);}, this);
@@ -44,14 +46,6 @@ Ext.override(Ext.Container, {
 });
 
  
-
-
- 
-Ext.override(Ext.Container, {
-    removeAll: function() {
-        this.items.each(function(childItem){ this.remove(childItem);}, this);
-    }
-});
 
  
  
@@ -72,6 +66,12 @@ Ext.define("AM.view.Constants",{
 		group : 1 , 
 		ledger : 2
 	},
+	
+	highlightSelectedRow: function( list) {
+		var selected_row = list.getView().getSelectedNodes()[0]; 
+		var ext_selected_row = Ext.get(selected_row); 
+		ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
+	}
 });
 
 Ext.define("AM.currentUser",{
@@ -206,11 +206,4 @@ Ext.onReady(function(){
 
 
 
-
-Ext.define('AM.weyewe.QueryButton', {
-  extend: 'Ext.button.Button',
-  alias : 'widget.weyewequerybutton',
-  
-  text : "Click me"
  
-})
