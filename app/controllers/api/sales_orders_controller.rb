@@ -159,20 +159,8 @@ class Api::SalesOrdersController < Api::BaseApiController
   
   def show
     @object  = SalesOrder.find params[:id]
-    render :json => { :success => true,   
-                      :sales_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
-                        ],
-                      :total => SalesOrder.active_objects.count  }
+    @total = SalesOrder.active_objects.count 
+ 
   end
 
   def update
@@ -224,19 +212,8 @@ class Api::SalesOrdersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :sales_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
-                          ],
-                        :total => SalesOrder.active_objects.count  } 
+      @total = SalesOrder.active_objects.count 
+ 
     else
       
       msg = {
@@ -247,6 +224,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

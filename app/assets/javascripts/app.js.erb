@@ -49,6 +49,9 @@ Ext.override(Ext.Container, {
 
  
  
+ 
+ 
+ 
 Ext.define("AM.view.Constants",{
 	singleton	: true,
 	
@@ -67,10 +70,25 @@ Ext.define("AM.view.Constants",{
 		ledger : 2
 	},
 	
+	
+	
 	highlightSelectedRow: function( list) {
 		var selected_row = list.getView().getSelectedNodes()[0]; 
 		var ext_selected_row = Ext.get(selected_row); 
 		ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
+	},
+	
+	updateRecord: function( record, new_record){
+	
+		var data = new_record.data ; 
+		for (var k in data) {
+	        if (data.hasOwnProperty(k)) {
+	            
+	            if( k !== "id"){ 
+	            	record.set( k, data[k]);
+	            }
+	        }
+	    }
 	}
 });
 

@@ -89,6 +89,13 @@ class Section < ActiveRecord::Base
     end
     
     
+    
+=begin
+        base_path = Rails.root.to_s + "/" + "app/views/" 
+        view_api_folder =  base_path + "api/*"
+        Dir[ view_api_folder ]
+        
+=end 
     def self.create_base_section_actions
         base_path = Rails.root.to_s + "/" + "app/controllers/" 
         controller_api_folder =  base_path + "api/*"

@@ -112,6 +112,7 @@ class Api::BlanketResultsController < Api::BaseApiController
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
     @total = BlanketOrderDetail.count
+    
     # render :json => { :success => true, 
     #                   :blanket_results => [@object] , 
     #                   :total => BlanketOrderDetail.count }

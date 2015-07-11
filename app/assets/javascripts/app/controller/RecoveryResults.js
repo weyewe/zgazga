@@ -234,12 +234,15 @@ Ext.define('AM.controller.RecoveryResults', {
 				params : {
 					process: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();

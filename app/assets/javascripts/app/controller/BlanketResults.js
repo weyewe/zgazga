@@ -249,26 +249,12 @@ Ext.define('AM.controller.BlanketResults', {
 				success : function(new_record){
 					form.setLoading(false);
 					
-					 
-					
-					var data = new_record.data ; 
-					 for (var k in data) {
-			        if (data.hasOwnProperty(k)) {
-			            
-			            if( k !== "id"){ 
-			            	record.set( k, data[k]);
-			            }
-			        }
-			    }
+		 
 			    
 			    
-					list.enableRecordButtons(); 
-					
-					AM.view.Constants.highlightSelectedRow( list );
-					// var selected_row = list.getView().getSelectedNodes()[0]; 
-					// var ext_selected_row = Ext.get(selected_row); 
-					// ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
-					
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );        
 					
 					win.close();
 				},
@@ -287,7 +273,7 @@ Ext.define('AM.controller.BlanketResults', {
 			
 		}
 	},
-	
+	 
 	
 	
 	
@@ -314,12 +300,14 @@ Ext.define('AM.controller.BlanketResults', {
 				params : {
 					unfinish: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );       
 					
 					win.close();
 				},
