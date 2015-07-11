@@ -87,26 +87,7 @@ class Api::BlanketOrdersController < Api::BaseApiController
   
   def show
     @object  = BlanketOrder.find params[:id]
-    render :json => { :success => true,   
-                      :blanket_orders => [
-                         :id => @object.id, 
-                            :code => @object.code ,
-                            :order_date => format_date_friendly(@object.order_date)  ,
-                            :production_no => @object.production_no,
-                            :contact_id => @object.contact_id,
-                            :contact_name => @object.contact.name,
-                            :warehouse_id => @object.warehouse_id,
-                            :warehouse_name => @object.warehouse.name,
-                            :amount_final => @object.amount_final,
-                            :amount_received => @object.amount_received,
-                            :amount_rejected => @object.amount_rejected,
-                            :has_due_date => @object.has_due_date,
-                            :notes => @object.notes,
-                            :due_date => format_date_friendly(@object.due_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                        ],
-                      :total => BlanketOrder.active_objects.count  }
+    @total = BlanketOrder.active_objects.count
   end
 
   def update

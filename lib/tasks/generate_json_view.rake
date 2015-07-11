@@ -249,6 +249,6 @@ task :fix_controller_respond_in_show do
        
              
         end 
-        break 
+        # break 
     end
 end

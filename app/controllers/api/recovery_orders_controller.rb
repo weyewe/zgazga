@@ -81,26 +81,7 @@ class Api::RecoveryOrdersController < Api::BaseApiController
   
   def show
     @object  = RecoveryOrder.find params[:id]
-    render :json => { :success => true,   
-                      :recovery_orders => [
-                          :id => @object.id, 
-                          :roller_identification_form_id => @object.roller_identification_form_id, 
-                          :roller_identification_form_nomor_disasembly => @object.roller_identification_form.nomor_disasembly, 
-                          :roller_identification_form_code => @object.roller_identification_form.code, 
-                          :warehouse_id => @object.warehouse_id, 
-                          :warehouse_name => @object.warehouse.name, 
-                          :code => @object.code, 
-                          :amount_received => @object.amount_received, 
-                          :amount_rejected => @object.amount_rejected, 
-                          :amount_final => @object.amount_final, 
-                          :is_completed => @object.is_completed, 
-                          :is_confirmed => @object.is_confirmed, 
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) , 
-                          :has_due_date => @object.has_due_date, 
-                          :due_date => format_date_friendly(@object.due_date) ,
-                        
-                        ],
-                      :total => RecoveryOrder.active_objects.count  }
+    @total = RecoveryOrder.active_objects.count
   end
 
   def update

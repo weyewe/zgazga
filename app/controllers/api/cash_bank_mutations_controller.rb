@@ -119,9 +119,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
   
   def show
     @object = CashBankMutation.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :cash_bank_mutations => [@object] , 
-                      :total => CashBankMutation.count }
+    @total = CashBankMutation.count
   end
 
   def destroy

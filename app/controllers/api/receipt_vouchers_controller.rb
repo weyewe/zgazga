@@ -92,30 +92,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
   
   def show
     @object  = ReceiptVoucher.find params[:id]
-    render :json => { :success => true,   
-                      :receipt_vouchers => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :contact_id => @object.contact_id , 
-                          :contact_name => @object.contact.name , 
-                          :cash_bank_id => @object.cash_bank_id,
-                          :cash_bank_name => @object.cash_bank.name,
-                          :status_pembulatan => @object.status_pembulatan,
-                          :receipt_date => format_date_friendly(@object.receipt_date)  ,
-                          :amount => @object.amount ,
-                          :rate_to_idr => @object.rate_to_idr,
-                          :total_pph_23 => @object.total_pph_23,
-                          :biaya_bank => @object.biaya_bank,
-                          :pembulatan => @object.pembulatan,
-                          :no_bukti => @object.no_bukti , 
-                          :gbch_no => @object.gbch_no,
-                          :is_gbch => @object.is_gbch,
-                          :due_date => format_date_friendly(@object.due_date) ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => ReceiptVoucher.active_objects.count  }
+    @total = @object.total_pph_23,
   end
 
   def update

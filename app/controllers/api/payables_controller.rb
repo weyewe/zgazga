@@ -81,9 +81,7 @@ class Api::PayablesController < Api::BaseApiController
   
   def show
     @object = Payable.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :payables => [@object] , 
-                      :total => Payable.count }
+    @total = Payable.count
   end
 
   def destroy

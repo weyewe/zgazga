@@ -29,7 +29,7 @@ class Api::AccountsController < Api::BaseApiController
     end
     
     
-    # render :json => { :accounts => @objects , :total => @total , :success => true }
+    @total = :json
   end
   
   def show
@@ -39,7 +39,7 @@ class Api::AccountsController < Api::BaseApiController
     @objects = @object.children
     @total = @objects.count 
     
-    # render :json => { :accounts => @objects , :total => @total , :success => true }
+    @total = :json
   end
 
   def create

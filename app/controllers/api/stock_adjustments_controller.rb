@@ -73,19 +73,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
   
   def show
     @object  = StockAdjustment.find params[:id]
-    render :json => { :success => true,   
-                      :stock_adjustments => [
-                          :id => @object.id, 
-                          :warehouse_id => @object.warehouse_id, 
-                          :warehouse_name => @object.warehouse_id, 
-                          :code => @object.code ,
-                          :description => @object.description , 
-                          :adjustment_date => format_date_friendly(@object.adjustment_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => StockAdjustment.active_objects.count  }
+    @total = StockAdjustment.active_objects.count
   end
 
   def update

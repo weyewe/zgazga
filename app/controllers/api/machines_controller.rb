@@ -79,9 +79,7 @@ class Api::MachinesController < Api::BaseApiController
   
   def show
     @object = Machine.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :machines => [@object] , 
-                      :total => Machine.count }
+    @total = Machine.count
   end
 
   def destroy

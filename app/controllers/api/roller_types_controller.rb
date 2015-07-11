@@ -77,9 +77,7 @@ class Api::RollerTypesController < Api::BaseApiController
   
   def show
     @object = RollerType.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :roller_types => [@object] , 
-                      :total => RollerType.count }
+    @total = RollerType.count
   end
 
   def destroy

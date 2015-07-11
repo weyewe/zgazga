@@ -126,9 +126,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
   
   def show
     @object = BlendingWorkOrder.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blending_work_orders => [@object] , 
-                      :total => BlendingWorkOrder.count }
+    @total = BlendingWorkOrder.count
   end
 
   def destroy

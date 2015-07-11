@@ -79,21 +79,7 @@ class Api::TemporaryDeliveryOrdersController < Api::BaseApiController
   
   def show
     @object  = TemporaryDeliveryOrder.find params[:id]
-    render :json => { :success => true,   
-                      :temporary_delivery_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :contact_name => @object.delivery_order.sales_order.contact.name , 
-                          :delivery_order_nomor_surat => @object.delivery_order.nomor_surat , 
-                          :warehouse_id => @object.warehouse_id , 
-                          :warehouse_name => @object.warehouse.name , 
-                          :delivery_date => format_date_friendly(@object.delivery_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => TemporaryDeliveryOrder.active_objects.count  }
+    @total = TemporaryDeliveryOrder.active_objects.count
   end
 
   def update

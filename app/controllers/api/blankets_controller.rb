@@ -73,9 +73,7 @@ class Api::BlanketsController < Api::BaseApiController
   
   def show
     @object = Blanket.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blankets => [@object] , 
-                      :total => Blanket.count }
+    @total = Blanket.count
   end
 
   def destroy

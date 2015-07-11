@@ -40,20 +40,7 @@ class Api::BatchSourcesController < Api::BaseApiController
 
   def show
     @object  = BatchSource.find params[:id]
-    render :json => { :success => true,   
-                      :batch_sources => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
-                        ],
-                      :total => BatchSource.active_objects.count  }
+    @total = BatchSource.active_objects.count
   end
 
 

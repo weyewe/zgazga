@@ -81,9 +81,7 @@ class Api::ReceivablesController < Api::BaseApiController
   
   def show
     @object = Receivable.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :receivables => [@object] , 
-                      :total => Receivable.count }
+    @total = Receivable.count
   end
 
   def destroy

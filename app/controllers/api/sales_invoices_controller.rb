@@ -136,19 +136,7 @@ class Api::SalesInvoicesController < Api::BaseApiController
   
   def show
     @object  = SalesInvoice.find params[:id]
-    render :json => { :success => true,   
-                      :sales_invoices => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :description => @object.description ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :invoice_date => format_date_friendly(@object.invoice_date)  ,
-                          :due_date => format_date_friendly(@object.due_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
-                        
-                        ],
-                      :total => SalesInvoice.active_objects.count  }
+    @total = SalesInvoice.active_objects.count
   end
 
   def update

@@ -121,9 +121,7 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
   
   def show
     @object = CashBankAdjustment.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :cash_bank_adjustments => [@object] , 
-                      :total => CashBankAdjustment.count }
+    @total = CashBankAdjustment.count
   end
 
   def destroy

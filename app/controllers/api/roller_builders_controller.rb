@@ -91,9 +91,7 @@ class Api::RollerBuildersController < Api::BaseApiController
   
   def show
     @object = RollerBuilder.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :roller_builders => [@object] , 
-                      :total => RollerBuilder.count }
+    @total = RollerBuilder.count
   end
 
   def destroy

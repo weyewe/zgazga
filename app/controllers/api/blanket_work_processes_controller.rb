@@ -118,9 +118,7 @@ class Api::BlanketWorkProcessesController < Api::BaseApiController
   
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blanket_work_processes => [@object] , 
-                      :total => BlanketOrderDetail.count }
+    @total = BlanketOrderDetail.count
   end
 
   def destroy

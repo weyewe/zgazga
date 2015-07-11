@@ -89,9 +89,7 @@ class Api::CoreBuildersController < Api::BaseApiController
   
   def show
     @object = CoreBuilder.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :core_builders => [@object] , 
-                      :total => CoreBuilder.count }
+    @total = CoreBuilder.count
   end
 
   def destroy

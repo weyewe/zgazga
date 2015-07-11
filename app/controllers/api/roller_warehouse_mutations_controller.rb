@@ -76,23 +76,7 @@ class Api::RollerWarehouseMutationsController < Api::BaseApiController
   
   def show
     @object  = RollerWarehouseMutation.find params[:id]
-    render :json => { :success => true,   
-                      :roller_warehouse_mutations => [
-                          :id => @object.id, 
-                          :recovery_order_id => @object.recovery_order_id, 
-                          :recovery_order_code => @object.recovery_order.code,
-                          :code => @object.code, 
-                          :warehouse_from_id => @object.warehouse_from_id, 
-                          :warehouse_from_name => @object.warehouse_from.name, 
-                          :warehouse_to_id => @object.warehouse_to_id, 
-                          :warehouse_to_name => @object.warehouse_to.name, 
-                          :amount => @object.amount, 
-                          :mutation_date =>format_date_friendly(@object.mutation_date),
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => RollerWarehouseMutation.active_objects.count  }
+    @total = RollerWarehouseMutation.active_objects.count
   end
 
   def update

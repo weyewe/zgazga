@@ -150,22 +150,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
   
   def show
     @object  = DeliveryOrder.find params[:id]
-    render :json => { :success => true,   
-                      :delivery_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :warehouse_id => @object.warehouse_id,
-                          :warehouse_name => @object.warehouse.name, 
-                          :sales_order_code => @object.sales_order.code,
-                          :contact_name => @object.sales_order.contact.name,
-                          :sales_order_id => @object.sales_order.id ,
-                          :delivery_date => format_date_friendly(@object.delivery_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => DeliveryOrder.active_objects.count  }
+    @total = DeliveryOrder.active_objects.count
   end
 
   def update
