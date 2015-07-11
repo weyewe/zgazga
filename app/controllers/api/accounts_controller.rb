@@ -111,6 +111,7 @@ class Api::AccountsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

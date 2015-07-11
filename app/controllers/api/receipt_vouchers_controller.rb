@@ -230,6 +230,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

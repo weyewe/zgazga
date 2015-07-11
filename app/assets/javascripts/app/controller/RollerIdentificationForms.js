@@ -141,6 +141,7 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 	},
 
   updateObject: function(button) {
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 		var me = this; 
@@ -155,10 +156,13 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 			
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
-					store.load();
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					// store.load();
 					win.close();
 					// me.updateChildGrid(record );
 				},

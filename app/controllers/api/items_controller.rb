@@ -56,7 +56,8 @@ class Api::ItemsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -77,7 +78,8 @@ class Api::ItemsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

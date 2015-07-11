@@ -51,7 +51,8 @@ class Api::SubTypesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -72,7 +73,8 @@ class Api::SubTypesController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

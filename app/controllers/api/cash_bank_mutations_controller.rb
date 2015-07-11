@@ -50,7 +50,8 @@ class Api::CashBankMutationsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -112,6 +113,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -148,6 +150,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

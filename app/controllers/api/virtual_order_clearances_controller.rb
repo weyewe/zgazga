@@ -154,6 +154,7 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

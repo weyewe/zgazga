@@ -144,6 +144,7 @@ class Api::MemorialsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

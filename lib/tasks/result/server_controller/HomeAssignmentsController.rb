@@ -154,6 +154,7 @@ class Api::HomeAssignmentsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

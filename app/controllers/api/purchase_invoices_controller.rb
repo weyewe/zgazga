@@ -165,6 +165,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -178,6 +178,7 @@ class Api::VirtualOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -57,7 +57,8 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -119,6 +120,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -155,6 +157,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

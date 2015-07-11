@@ -7,9 +7,9 @@ Ext.define('AM.view.master.rollertype.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Name', dataIndex: 'name'},
-			{ header: 'Description', dataIndex: 'description'},
+			{ header: 'ID', dataIndex: 'id' , flex  : 1},
+			{ header: 'Name', dataIndex: 'name', flex  : 1},
+			{ header: 'Description', dataIndex: 'description', flex  : 1},
 			
 		];
 

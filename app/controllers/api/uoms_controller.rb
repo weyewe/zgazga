@@ -55,7 +55,8 @@ class Api::UomsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -76,7 +77,8 @@ class Api::UomsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

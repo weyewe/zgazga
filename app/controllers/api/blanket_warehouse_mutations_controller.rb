@@ -163,6 +163,7 @@ class Api::BlanketWarehouseMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -26,7 +26,8 @@ class Api::TemporaryDeliveryOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -51,7 +52,8 @@ class Api::TemporaryDeliveryOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

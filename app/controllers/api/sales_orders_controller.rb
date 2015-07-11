@@ -225,6 +225,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       
       render :json => msg
       return 
+      return 
     end
   end
   

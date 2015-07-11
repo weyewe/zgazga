@@ -1,1 +1,9 @@
-"awesome" if true == true 
+
+json.contact_groups objects do |object|
+  
+	json.id 								object.id  			
+    json.name							object.name
+    json.description 						object.description 
+end
+
+

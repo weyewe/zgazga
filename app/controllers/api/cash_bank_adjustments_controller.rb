@@ -52,7 +52,8 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -114,6 +115,7 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -150,6 +152,7 @@ class Api::CashBankAdjustmentsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

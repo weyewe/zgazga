@@ -180,6 +180,7 @@ class Api::RecoveryOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -35,7 +35,8 @@ class Api::BlanketResultDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end 
   

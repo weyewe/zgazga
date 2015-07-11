@@ -61,7 +61,8 @@ class Api::WarehousesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -82,7 +83,8 @@ class Api::WarehousesController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

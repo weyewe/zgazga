@@ -127,6 +127,7 @@ Ext.define('AM.controller.WarehouseMutationDetails', {
   },
 
   updateObject: function(button) {
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 

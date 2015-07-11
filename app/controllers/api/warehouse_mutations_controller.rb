@@ -173,6 +173,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

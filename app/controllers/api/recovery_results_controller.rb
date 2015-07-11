@@ -106,6 +106,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       
       render :json => msg
       return 
+      return 
     end
   end
   

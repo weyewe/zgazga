@@ -157,6 +157,7 @@ class Api::ClosingsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

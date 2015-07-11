@@ -48,7 +48,8 @@ class Api::AppUsersController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -56,11 +57,10 @@ class Api::AppUsersController < Api::BaseApiController
     
     @object = User.find_by_id params[:id] 
     @object.update_object( params[:user])
+    
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :users => [@object],
-                        :total => User.active_objects.count  } 
+      @total = User.active_objects.count 
     else
       msg = {
         :success => false, 
@@ -69,7 +69,9 @@ class Api::AppUsersController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
+      return 
     end
   end
 

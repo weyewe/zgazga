@@ -158,6 +158,7 @@ class Api::StockAdjustmentsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -168,6 +168,7 @@ class Api::TemporaryDeliveryOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

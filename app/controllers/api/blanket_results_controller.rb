@@ -43,7 +43,8 @@ class Api::BlanketResultsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -105,6 +106,7 @@ class Api::BlanketResultsController < Api::BaseApiController
       
       render :json => msg
       return 
+      return 
       
     end
   end
@@ -142,6 +144,7 @@ class Api::BlanketResultsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   
