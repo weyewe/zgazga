@@ -94,7 +94,7 @@ task :move_index_to_objects_partial do
     end
 end
 
-task :fix_controller_respond_in_update_and_show do 
+task :fix_controller_respond_in_update  do 
     base_path = Rails.root.to_s + "/" + "app/controllers/" 
     controller_api_folder =  base_path + "api/*"
     
@@ -153,8 +153,8 @@ task :fix_controller_respond_in_update_and_show do
             # puts "the new line"
             # puts new_line
             
-            puts "The update_copy_render_block content length : #{update_copy_render_block.length}"
-            puts update_copy_render_block
+            # puts "The update_copy_render_block content length : #{update_copy_render_block.length}"
+            # puts update_copy_render_block
             
             if update_copy_render_block.length != 0
               result_file_content = base_result.gsub(update_copy_render_block, new_line)
@@ -164,14 +164,91 @@ task :fix_controller_respond_in_update_and_show do
               puts ">>>>>>>>>> no matching block"
             end
             
-            # puts "\n\n"*10
-            # puts "The content of the file:"
-            # puts result_file_content
-            
-            
+       
              
-        end  
+        end   
+    end
+end
+
+task :fix_controller_respond_in_show do 
+    base_path = Rails.root.to_s + "/" + "app/controllers/" 
+    controller_api_folder =  base_path + "api/*"
+    
+ 
+    Dir[ controller_api_folder ].each do |filename|
         
-        # break
+         
+        if File.exist?(filename)  
+            base_result = ""
+            update_block_result = ""
+            show_block_result = ""  
+            
+            show_copy = false
+            show_copy_render = false 
+            show_copy_render_block = ""
+            total_line = "" 
+            show_copy = false 
+            File.open(filename).each do |line| 
+               base_result << line 
+               show_copy = true if line.include?("def") and line.include?("show")
+               
+               show_copy = false if line.include?("def") and not line.include?("show")
+               
+               if show_copy
+                   show_copy_render  = true if line.include?("success") and line.include?("true")
+                   show_copy_render  = false if line.include?(" end")
+                   
+                   show_block_result << line 
+                   
+                   puts show_copy_render
+                   puts line
+                   
+                   if show_copy_render 
+                       
+                      show_copy_render_block << line 
+                      
+                      if line.include?("total")
+                          total_line << line 
+                      end
+                  end
+                   
+                   
+               end
+               
+               
+               
+               
+               
+            end
+            
+            puts "show block result:"
+            puts show_block_result
+            
+            puts "The filename  : #{filename}"
+            puts "the show copy render block"
+            puts show_copy_render_block
+            puts "\n\n\n\n\n\n The total line"
+            puts total_line
+            str = total_line
+            result = str.gsub(/\s+/m, ' ').strip.split(" ")
+            puts "The result"
+            puts result 
+            
+            new_line = "    @total = #{result[2]}\n"
+            puts "The new line"
+            puts new_line
+            
+            if show_copy_render_block.length != 0
+              result_file_content = base_result.gsub(show_copy_render_block, new_line)
+              puts "updating file: #{filename}"
+              File.open(filename, 'w') { |file| file.write( result_file_content ) }
+            else
+              puts ">>>>>>>>>> no matching block"
+            end
+            
+       
+             
+        end 
+        break 
     end
 end

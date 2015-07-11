@@ -81,9 +81,7 @@ class Api::BatchInstancesController < Api::BaseApiController
   
   def show
     @object = BatchInstance.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :batch_instances => [@object] , 
-                      :total => BatchInstance.count }
+    @total = BatchInstance.count
   end
 
   def destroy
