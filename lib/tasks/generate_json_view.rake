@@ -93,3 +93,77 @@ task :move_index_to_objects_partial do
         end  
     end
 end
+
+task :fix_controller_respond_in_update_and_show do 
+    puts "gonna move it"
+    base_path = Rails.root.to_s + "/" + "app/controllers/" 
+    controller_api_folder =  base_path + "api/*"
+    
+ 
+    Dir[ controller_api_folder ].each do |filename|
+        
+         
+        if File.exist?(filename)  
+            base_result = ""
+            update_block_result = ""
+            show_block_result = ""  
+            
+            update_copy = false
+            update_copy_render = false 
+            update_copy_render_block = ""
+            total_line = "" 
+            show_copy = false 
+            File.open(filename).each do |line| 
+               base_result << line 
+               update_copy = true if line.include?("def") and line.include?("update")
+               
+               update_copy = false if line.include?("def") and not line.include?("update")
+               
+               if update_copy
+                   update_copy_render  = true if line.include?("success") and line.include?("true")
+                   update_copy_render  = false if line.include?("else")
+                   
+                   update_block_result << line 
+                   
+                   if update_copy_render 
+                       
+                      update_copy_render_block << line 
+                      
+                      if line.include?("total")
+                          total_line << line 
+                      end
+                  end
+                   
+                   
+               end
+               
+               
+               
+               
+               
+            end
+            
+            puts "the update copy render block"
+            puts update_copy_render_block
+            puts "\n\n\n\n\n\n The total line"
+            puts total_line
+            str = total_line
+            result = str.gsub(/\s+/m, ' ').strip.split(" ")
+            new_line = "      @total = #{result[2]}\n"
+            
+            puts "the new line"
+            puts new_line
+            
+            result_file_content = base_result.gsub(update_copy_render_block, new_line)
+            
+            puts "\n\n"*10
+            puts "The content of the file:"
+            puts result_file_content
+            
+            File.open(filename, 'w') { |file| file.write( result_file_content ) }
+             
+        end  
+        
+        # break
+    end
+end
