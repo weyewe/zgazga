@@ -252,6 +252,7 @@ Ext.define('AM.controller.BlanketWorkProcesses', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -279,6 +280,7 @@ Ext.define('AM.controller.BlanketWorkProcesses', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

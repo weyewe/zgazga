@@ -302,6 +302,7 @@ Ext.define('AM.controller.Employees', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -329,6 +330,7 @@ Ext.define('AM.controller.Employees', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

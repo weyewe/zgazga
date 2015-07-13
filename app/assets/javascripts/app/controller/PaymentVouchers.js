@@ -172,6 +172,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 	},
 	
   updateObject: function(button) {
+  	button.disable();
   	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
@@ -198,6 +199,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 					// me.updateChildGrid(record );
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -232,6 +234,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

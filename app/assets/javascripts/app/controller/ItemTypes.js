@@ -72,6 +72,7 @@ Ext.define('AM.controller.ItemTypes', {
   },
 
   updateObject: function(button) {
+  	button.disable();
   	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
@@ -96,6 +97,7 @@ Ext.define('AM.controller.ItemTypes', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -123,6 +125,7 @@ Ext.define('AM.controller.ItemTypes', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

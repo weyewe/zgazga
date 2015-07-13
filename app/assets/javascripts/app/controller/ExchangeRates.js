@@ -290,6 +290,7 @@ Ext.define('AM.controller.ExchangeRates', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -322,6 +323,7 @@ Ext.define('AM.controller.ExchangeRates', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
