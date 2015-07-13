@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150710111003) do
+ActiveRecord::Schema.define(version: 20150713043707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -332,6 +332,26 @@ ActiveRecord::Schema.define(version: 20150710111003) do
     t.boolean  "is_year_closing",  default: false
     t.boolean  "is_closed",        default: false
     t.datetime "closed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "compound_underlayer_usages", force: true do |t|
+    t.integer  "recovery_order_detail_id"
+    t.decimal  "defect_amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "finish_amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "reject_amount",            precision: 14, scale: 2, default: 0.0
+    t.integer  "batch_instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "compound_usages", force: true do |t|
+    t.integer  "recovery_order_detail_id"
+    t.decimal  "defect_amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "finish_amount",            precision: 14, scale: 2, default: 0.0
+    t.decimal  "reject_amount",            precision: 14, scale: 2, default: 0.0
+    t.integer  "batch_instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

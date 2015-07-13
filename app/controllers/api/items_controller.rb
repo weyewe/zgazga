@@ -118,6 +118,13 @@ class Api::ItemsController < Api::BaseApiController
         }
       end
       
+      if params[:is_accessory].present?
+        accessory_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:accessory]
+        query_code = query_code.where{
+          
+          item_type.id.eq accessory_item_type.id  
+        }
+      end
       
       @objects = query_code.
                         page(params[:page]).

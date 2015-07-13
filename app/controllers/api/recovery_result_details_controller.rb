@@ -1,17 +1,17 @@
 class Api::RecoveryResultDetailsController < Api::BaseApiController
   
   def index
-    @parent = RecoveryResult.find_by_id params[:recovery_result_id]
-    @objects = @parent.active_children.joins(:recovery_result, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    @parent = RecoveryOrderDetail.find_by_id params[:recovery_result_id]
+    @objects = @parent.active_children.joins(:recovery_order_detail, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
     @total = @parent.active_children.count
   end
 
   def create
    
-    @parent = RecoveryResult.find_by_id params[:recovery_result_id]
+    @parent = RecoveryOrderDetail.find_by_id params[:recovery_result_id]
     
   
-    @object = RecoveryResultDetail.create_object(params[:recovery_result_detail])
+    @object = RecoveryAccessoryDetail.create_object(params[:recovery_result_detail])
     
     
     if @object.errors.size == 0 
@@ -32,11 +32,10 @@ class Api::RecoveryResultDetailsController < Api::BaseApiController
   end
 
   def update
-    @object = RecoveryResultDetail.find_by_id params[:id] 
-    @parent = @object.recovery_result 
+    @object = RecoveryAccessoryDetail.find_by_id params[:id] 
+    @parent = @object.recovery_order_detail 
     
-    
-    params[:recovery_result_detail][:recovery_result_id] = @parent.id  
+     
     
     @object.update_object( params[:recovery_result_detail])
      
@@ -56,8 +55,8 @@ class Api::RecoveryResultDetailsController < Api::BaseApiController
   end
 
   def destroy
-    @object = RecoveryResultDetail.find(params[:id])
-    @parent = @object.recovery_result 
+    @object = RecoveryAccessoryDetail.find(params[:id])
+    @parent = @object.recovery_order_detail
     @object.delete_object 
 
     if  not @object.persisted? 
@@ -71,7 +70,7 @@ class Api::RecoveryResultDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 

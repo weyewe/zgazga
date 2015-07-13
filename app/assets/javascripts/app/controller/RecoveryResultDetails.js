@@ -99,6 +99,7 @@ Ext.define('AM.controller.RecoveryResultDetails', {
     var view = Ext.widget(widgetName , {
 			parentRecord : record 
 		});
+		view.setComboBoxExtraParams(record);
 		view.setParentData( record );
 		
     view.show(); 
@@ -121,6 +122,7 @@ Ext.define('AM.controller.RecoveryResultDetails', {
 
     view.down('form').loadRecord(record);
 		view.setParentData( parentRecord );
+		view.setComboBoxExtraParams(record);
 		// console.log("selected record id: " + record.get('id'));
 		// console.log("The selected poe id: " + record.get('purchase_order_entry_id'));
 		view.setComboBoxData(record); 

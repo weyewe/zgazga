@@ -7,14 +7,21 @@ Ext.define('AM.view.operation.recoveryresultdetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+		 	{
+				xtype : 'templatecolumn',
+				text : "Accessory",
+				flex : 3,
+				tpl : 'SKU: <br /><b>{item_sku}</b>' + '<br />' + '<br />' +
+							' <br /> <b>{item_name}</b>'   
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Quantity",
+				flex : 3,
+				tpl : ' <b>{amount}</b>  {item_uom_name}'   
+			},
+			 
 			
 			 
 		];
