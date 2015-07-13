@@ -95,8 +95,8 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
   end
   
   def show
-    @object  = RecoveryOrderDetail.find params[:id]
-    @total = @object.total_cost,
+    @object  = RecoveryOrderDetail.find params[:id] 
+    @total = RecoveryOrderDetail.active_objects.count
   end
 
   def update
@@ -176,7 +176,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      @total = @object.total_cost,
+      @total = RecoveryOrderDetail.active_objects.count
     else
       
       msg = {

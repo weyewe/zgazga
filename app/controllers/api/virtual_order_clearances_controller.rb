@@ -71,7 +71,7 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
   
   def show
     @object  = VirtualOrderClearance.find params[:id]
-    @total = @object.total_waste_cogs
+    @total = VirtualOrderClearance.active_objects.count
   end
 
   def update
@@ -122,8 +122,8 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
     
     
     
-    if @object.errors.size == 0 
-      @total = @object.total_waste_cogs
+    if @object.errors.size == 0  
+      @total = VirtualOrderClearance.active_objects.count
     else
       
       msg = {

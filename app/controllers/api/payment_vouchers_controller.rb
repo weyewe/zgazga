@@ -93,7 +93,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
   
   def show
     @object  = PaymentVoucher.find params[:id]
-    @total = @object.total_pph_23,
+    @total = PaymentVoucher.active_objects.count
   end
 
   def update
@@ -175,7 +175,8 @@ class Api::PaymentVouchersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      @total = @object.total_pph_23,
+      @total = PaymentVoucher.active_objects.count
+     
     else
       
       msg = {

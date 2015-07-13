@@ -92,7 +92,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
   
   def show
     @object  = ReceiptVoucher.find params[:id]
-    @total = @object.total_pph_23,
+    @total = ReceiptVoucher.active_objects.count
   end
 
   def update
@@ -174,7 +174,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      @total = @object.total_pph_23,
+      @total = ReceiptVoucher.active_objects.count
     else
       
       msg = {

@@ -93,7 +93,7 @@ class Api::BlanketResultsController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      @total = =>
+      @total = BlanketOrderDetail.count
     else
       msg = {
         :success => false, 
@@ -112,8 +112,7 @@ class Api::BlanketResultsController < Api::BaseApiController
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
     @total = BlanketOrderDetail.count
-    
-    @total = =>
+     
   end
 
   def destroy

@@ -38,8 +38,7 @@ class Api::AccountsController < Api::BaseApiController
     @parent = @object
     @objects = @object.children
     @total = @objects.count 
-    
-    @total = :json
+     
   end
 
   def create
