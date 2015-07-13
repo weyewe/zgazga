@@ -36,7 +36,7 @@ class ServiceCost < ActiveRecord::Base
     new_amount = self.amount + params[:added_amount]
     original_avg_price = self.avg_price
     avg_price = 0 
-    if (original_amount + params[:added_amount]) > 0 
+    if (new_amount + params[:added_amount]) > 0 
       a = self.amount * original_avg_price
       b = params[:added_amount] * params[:added_avg_price]
       c = new_amount

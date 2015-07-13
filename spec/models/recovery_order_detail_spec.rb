@@ -208,7 +208,7 @@ describe RecoveryOrderDetail do
     @rif = RollerIdentificationForm.create_object(
       :warehouse_id => @wrh_1.id,
       :contact_id => @ct_1.id,
-      :is_in_house => true,
+      :is_in_house => false,
       :amount => 1,
       :identified_date => DateTime.now,
       :nomor_disasembly => "nomor_disasembly_1"

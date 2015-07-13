@@ -26,13 +26,15 @@ class BankAdministration < ActiveRecord::Base
   end    
   
   def self.create_object(params)
+   
     new_object = self.new
     new_object.cash_bank_id = params[:cash_bank_id]
     new_object.administration_date = params[:administration_date]
     new_object.description = params[:description]
     new_object.no_bukti = params[:no_bukti]
     if new_object.save  
-      new_object.code = "Ba-" + new_object.id.to_s  
+     new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.save
       new_object.save
     end
     return new_object

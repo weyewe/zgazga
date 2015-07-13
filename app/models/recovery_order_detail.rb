@@ -216,16 +216,16 @@ class RecoveryOrderDetail < ActiveRecord::Base
         new_stock_mutation = CustomerStockMutation.create_object(
           :source_class => self.class.to_s, 
           :source_id => self.id ,  
-          :contact_id => self.contact_id,
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
           :customer_item_id => customer_item.id,
           :amount => 1,  
           :status => ADJUSTMENT_STATUS[:addition],  
-          :mutation_date => self.identified_date ,  
-          :warehouse_id => self.warehouse_id ,
+          :mutation_date => self.finished_date ,  
+          :warehouse_id => self.recovery_order.warehouse_id ,
           :warehouse_item_id => item_in_warehouse.id,
           :item_id => roller_id,
           :item_case => ITEM_CASE[:ready],
-          :source_code => self.code
+          :source_code => self.recovery_order.code
           ) 
         Item.find_by_id(roller_id).calculate_customer_avg_price(
           :added_amount => 1,
@@ -289,7 +289,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :added_amount => -1,
           :added_avg_price => total_cost
           )
-        new_stock_mutation.stock_mutate_object
+        # new_stock_mutation.stock_mutate_object
       end
       
       # revese stock_mutation
