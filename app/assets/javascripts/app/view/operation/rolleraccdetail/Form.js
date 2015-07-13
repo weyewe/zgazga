@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.rolleraccdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.rolleraccdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Roller Aksesoris Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

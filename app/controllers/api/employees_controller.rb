@@ -52,7 +52,8 @@ class Api::EmployeesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -64,9 +65,8 @@ class Api::EmployeesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :employees => [@object],
-                        :total => Employee.active_objects.count } 
+      @total = Employee.active_objects.count 
+    
     else
       msg = {
         :success => false, 
@@ -76,16 +76,14 @@ class Api::EmployeesController < Api::BaseApiController
       }
       
       render :json => msg
-      
+      return  
       
     end
   end
   
   def show
     @object = Employee.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :employees => [@object] , 
-                      :total => Employee.count }
+    @total = Employee.count 
   end
 
   def destroy
@@ -112,6 +110,7 @@ class Api::EmployeesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

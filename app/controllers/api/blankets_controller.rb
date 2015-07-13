@@ -3,31 +3,27 @@ class Api::BlanketsController < Api::BaseApiController
   def index
      
     
-    if params[:livesearch].present? 
+    query_code = Blanket.joins(:machine,:contact)
+    
+    
+    if params[:livesearch].present?  
       livesearch = "%#{params[:livesearch]}%"
         
         
-        @objects = Blanket.joins(:machine,:contact).where{
+      query_code = query_code.where{
           (
             ( contact.name =~ livesearch ) |
-            ( machine.name =~ livesearch ) 
+            ( machine.name =~ livesearch ) | 
+            ( name =~ livesearch ) | 
+            ( sku =~ livesearch )
           )
 
-        }.page(params[:page]).per(params[:limit])
-
-        @total = Blanket.joins(:machine,:contact).where{
-          (
-            ( contact.name =~ livesearch ) |
-            ( machine.name =~ livesearch ) 
-          )
-        }.count
-   
-    else
-      puts "In this shite"
-      @objects = Blanket.page(params[:page]).per(params[:limit])
-      @total = Blanket.count 
+        }  .page(params[:page]).per(params[:limit])
+ 
     end
     
+    @objects =  query_code.page(params[:page]).per(params[:limit])
+    @total = query_code.count 
     
     # render :json => { :blankets => @objects , :total => @total , :success => true }
   end
@@ -46,7 +42,8 @@ class Api::BlanketsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -58,9 +55,7 @@ class Api::BlanketsController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blankets => [@object],
-                        :total => Blanket.active_objects.count } 
+      @total = Blanket.active_objects.count
     else
       msg = {
         :success => false, 
@@ -70,6 +65,7 @@ class Api::BlanketsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -77,9 +73,7 @@ class Api::BlanketsController < Api::BaseApiController
   
   def show
     @object = Blanket.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blankets => [@object] , 
-                      :total => Blanket.count }
+    @total = Blanket.count
   end
 
   def destroy
@@ -106,6 +100,7 @@ class Api::BlanketsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

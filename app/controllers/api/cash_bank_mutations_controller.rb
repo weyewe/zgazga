@@ -50,7 +50,8 @@ class Api::CashBankMutationsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -100,9 +101,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :cash_bank_mutations => [@object],
-                        :total => CashBankMutation.active_objects.count } 
+      @total = CashBankMutation.active_objects.count
     else
       msg = {
         :success => false, 
@@ -112,6 +111,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -119,9 +119,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
   
   def show
     @object = CashBankMutation.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :cash_bank_mutations => [@object] , 
-                      :total => CashBankMutation.count }
+    @total = CashBankMutation.count
   end
 
   def destroy
@@ -148,6 +146,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

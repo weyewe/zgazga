@@ -5,26 +5,17 @@ class Api::BatchInstancesController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-        
-        
+         
         @objects = BatchInstance.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( name =~  livesearch )   
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
         @total = BatchInstance.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( name =~  livesearch )   
           )
         }.count
    
@@ -64,9 +55,7 @@ class Api::BatchInstancesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :batch_instances => [@object],
-                        :total => BatchInstance.active_objects.count } 
+      @total = BatchInstance.active_objects.count
     else
       msg = {
         :success => false, 
@@ -83,9 +72,7 @@ class Api::BatchInstancesController < Api::BaseApiController
   
   def show
     @object = BatchInstance.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :batch_instances => [@object] , 
-                      :total => BatchInstance.count }
+    @total = BatchInstance.count
   end
 
   def destroy
@@ -127,25 +114,59 @@ class Api::BatchInstancesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-                              }.
-                        page(params[:page]).
+      
+      zero_value = BigDecimal("0")
+      query_code = BatchInstance.joins(:item).where{ 
+                                 ( name =~  query )   
+       
+                         }
+      
+      if params[:item_id].present? 
+        object = Item.find_by_id params[:item_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+            :item_id => object.id 
+          )
+        end
+      end
+      
+      if params[:blanket_order_detail_id].present? 
+        object = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+            :item_id => object.blanket.item.id 
+          )
+        end
+      end
+      
+      if params[:recovery_order_detail_id].present? 
+        object = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
+        
+        if not object.nil?
+          query_code = query_code.where(
+            :item_id => object.roller_builder.compound_id
+          )
+        end
+      end
+      
+      if params[:recovery_order_detail_underlayer_id].present? 
+        object = Item.find_by_id params[:recovery_order_detail_underlayer_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+             :item_id => object.id 
+          )
+        end
+      end
+       
+      @objects = query_code.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
-                        
-      @total = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-        
-                              }.count
+      @total = query_code.count 
+      
+      
     else
       @objects = BatchInstance.where{ (id.eq selected_id)  
                               }.

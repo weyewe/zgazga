@@ -14,7 +14,9 @@ Ticketie::Application.routes.draw do
   resources :roller_accs
   resources :roller_acc_details
   resources :roller_accessory_details
-  resources :blanket_work_processs
+  
+  
+  resources :action_assignments 
   
   namespace :api do
     devise_for :users
@@ -103,8 +105,14 @@ Ticketie::Application.routes.draw do
     get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
     get 'search_receipt_vouchers' => 'receipt_voucher_details#search', :as => :search_receipt_voucher
     get 'search_receipt_voucher_details' => 'receipt_voucher_details#search', :as => :search_receipt_voucher_detail
+ 
     get 'search_bank_administrations' => 'bank_administrations#search', :as => :search_bank_administration
     get 'search_bank_administration_details' => 'bank_administration_details#search', :as => :search_bank_administration_detail
+ 
+    
+    get 'search_batch_instances' => 'batch_instances#search', :as => :search_batch_instance
+   
+ 
    
     # master data 
     resources :app_users
@@ -226,6 +234,18 @@ Ticketie::Application.routes.draw do
     
     
     resources :batch_instances
+    resources :blanket_work_processes
+    
+    resources :blanket_results 
+    resources :blanket_result_details 
+    
+    resources :recovery_results
+    resources :recovery_result_details 
+    resources :recovery_result_compound_details 
+    resources :recovery_result_underlayer_details 
+    
+    resources :batch_sources
+    resources :batch_source_details
   end
   
   

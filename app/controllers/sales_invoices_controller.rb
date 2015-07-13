@@ -2,6 +2,13 @@ class SalesInvoicesController < ApplicationController
   
  
   def show
+        
+    user = User.find_by_authentication_token params[:auth_token]
+    if user.nil?
+      redirect_to root_url 
+      return
+    end
+    
     @object = SalesInvoice.find(params[:id])
     @contact = @object.delivery_order.sales_order.contact 
     

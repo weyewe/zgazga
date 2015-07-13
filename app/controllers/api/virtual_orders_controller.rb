@@ -84,23 +84,7 @@ class Api::VirtualOrdersController < Api::BaseApiController
   
   def show
     @object  = VirtualOrder.find params[:id]
-    render :json => { :success => true,   
-                      :virtual_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :exchange_id => @object.exchange_id ,
-                          :contact_id => @object.contact_id ,
-                          :contact_name => @object.contact.name ,
-                          :exchange_name => @object.exchange.name ,
-                          :employee_id => @object.employee_id ,
-                          :employee_name => @object.employee.name ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :order_date => format_date_friendly(@object.order_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => VirtualOrder.active_objects.count  }
+    @total = VirtualOrder.active_objects.count
   end
 
   def update
@@ -152,22 +136,7 @@ class Api::VirtualOrdersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :virtual_orders => [
-                            :id => @object.id, 
-                            :code => @object.code ,
-                            :exchange_id => @object.exchange_id ,
-                            :exchange_name => @object.exchange.name ,
-                            :contact_id => @object.contact_id ,
-                            :contact_name => @object.contact.name ,
-                            :employee_id => @object.employee_id ,
-                            :employee_name => @object.employee.name ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :order_date => format_date_friendly(@object.order_date)  ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => VirtualOrder.active_objects.count  } 
+      @total = VirtualOrder.active_objects.count
     else
       
       msg = {
@@ -178,6 +147,7 @@ class Api::VirtualOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

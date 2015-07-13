@@ -73,7 +73,8 @@ class Api::ExchangeRatesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -84,9 +85,7 @@ class Api::ExchangeRatesController < Api::BaseApiController
     @object.update_object( params[:exchange_rate])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :exchange_rates => [@object],
-                        :total => ExchangeRate.active_objects.count  } 
+      @total = ExchangeRate.active_objects.count
     else
       msg = {
         :success => false, 
@@ -95,7 +94,8 @@ class Api::ExchangeRatesController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

@@ -74,6 +74,7 @@ data_entry = User.create_object(
   Account.create_base_objects
   Exchange.create_object_for_base_exchange
   ItemType.create_base_objects
+  Section.create_base_section_actions
 
 if Rails.env.development?
 
@@ -1031,7 +1032,7 @@ if Rails.env.development?
       BlanketOrderDetail.create_object(
           :blanket_order_id => blanket_order.id,
           :blanket_id => selected_blanket.id,
-          :quantity => 1 
+          :quantity => 10 
         )
     end
     if blanket_order.errors.size == 0 

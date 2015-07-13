@@ -3,7 +3,12 @@ class Api::SalesOrdersController < Api::BaseApiController
   def index
     
     # puts "\n"
-    # puts ">>>>>>>>>>>>>>\n"*5
+    puts ">>>>>>>>>>>>>>\n "*5
+    puts "The action : #{params[:action]}"
+    puts "the controller: #{params[:controller]}"
+    
+#     The action : index
+# the controller: api/sales_orders
     
     # build query
     query =   SalesOrder.active_objects.joins(:contact,:employee,:exchange)
@@ -27,10 +32,45 @@ class Api::SalesOrdersController < Api::BaseApiController
        }
     end
     
-    # puts "after livesearch query total: #{query.count}"
+    # puts "after livesearch query total: #{query.count}" 
+    start_confirmation =  parse_date( params[:start_confirmation] )
+    end_confirmation =  parse_date( params[:end_confirmation] )
+    start_sales_date =  parse_date( params[:start_sales_date] )
+    end_sales_date =  parse_date( params[:end_sales_date] )
+    
     
     if params[:is_confirmed].present?
       query = query.where(:is_confirmed => true ) 
+      if start_confirmation.present?
+        query = query.where{ confirmed_at.gte start_confirmation}
+      end
+      
+      if end_confirmation.present?
+        query = query.where{ confirmed_at.lt  end_confirmation}
+      end
+    end
+  
+    if start_sales_date.present?
+      query = query.where{ sales_date.gte start_sales_date}
+    end
+    
+    if end_sales_date.present?
+      query = query.where{ sales_date.lt  end_sales_date}
+    end
+    
+    object = Contact.find_by_id params[:contact_id]
+    if not object.nil? 
+      query = query.where(:contact_id => object.id )
+    end
+    
+    object = Exchange.find_by_id params[:exchange_id]
+    if not object.nil? 
+      query = query.where(:exchange_id => object.id )
+    end
+    
+    object = Employee.find_by_id params[:employee_id]
+    if not object.nil? 
+      query = query.where(:employee_id => object.id )
     end
     
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
@@ -119,20 +159,8 @@ class Api::SalesOrdersController < Api::BaseApiController
   
   def show
     @object  = SalesOrder.find params[:id]
-    render :json => { :success => true,   
-                      :sales_orders => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
-                        ],
-                      :total => SalesOrder.active_objects.count  }
+    @total = SalesOrder.active_objects.count 
+ 
   end
 
   def update
@@ -184,19 +212,8 @@ class Api::SalesOrdersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :sales_orders => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
-                          ],
-                        :total => SalesOrder.active_objects.count  } 
+      @total = SalesOrder.active_objects.count 
+ 
     else
       
       msg = {
@@ -207,6 +224,8 @@ class Api::SalesOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
+      return 
     end
   end
   

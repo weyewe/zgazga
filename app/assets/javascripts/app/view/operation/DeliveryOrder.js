@@ -15,13 +15,13 @@ Ext.define('AM.view.operation.DeliveryOrder', {
 		items : [
 			{
 				xtype : 'deliveryorderlist' ,
-				flex : 1 //,
+				flex : 3 //,
 				// html : 'hahaha'
 			},
 			{
 				xtype :'deliveryorderdetaillist',
 				// html : "This is gonna be the price_rule",
-				flex : 1
+				flex : 2
 			} 
 		],
  

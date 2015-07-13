@@ -26,7 +26,8 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -40,9 +41,7 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
     @object.update_object( params[:sales_order_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :sales_order_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 
@@ -51,7 +50,8 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 
@@ -71,7 +71,7 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -82,22 +82,41 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
+      
+      query = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+                              }
+                              
+      if params[:sales_order_id].present?
+        object = SalesOrder.find_by_id params[:sales_order_id]
+        if not object.nil?  
+          query = query.where(:sales_order_id => object.id )
+        end
+      end    
+      # @objects = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
+      #   ( item.sku  =~ query ) | 
+      #   ( item.name =~ query ) | 
+      #   ( item.description  =~ query  )  | 
+      #   ( code  =~ query  )  
+      # }.
+      # page(params[:page]).
+      # per(params[:limit]).
+      # order("id DESC")
                         
-      @total = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
-      }.count
+      # @total = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
+      #   ( item.sku  =~ query ) | 
+      #   ( item.name =~ query ) | 
+      #   ( item.description  =~ query  )  |
+      #   ( code  =~ query  )  
+      # }.count
+      
+      @objects = query.page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
+      @total = query.count 
     else
       @objects = SalesOrderDetail.where{ 
               (id.eq selected_id)  

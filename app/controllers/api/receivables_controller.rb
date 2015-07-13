@@ -50,7 +50,8 @@ class Api::ReceivablesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -62,9 +63,7 @@ class Api::ReceivablesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :receivables => [@object],
-                        :total => Receivable.active_objects.count } 
+      @total = Receivable.active_objects.count
     else
       msg = {
         :success => false, 
@@ -74,6 +73,7 @@ class Api::ReceivablesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -81,9 +81,7 @@ class Api::ReceivablesController < Api::BaseApiController
   
   def show
     @object = Receivable.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :receivables => [@object] , 
-                      :total => Receivable.count }
+    @total = Receivable.count
   end
 
   def destroy
@@ -110,6 +108,7 @@ class Api::ReceivablesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   
@@ -125,23 +124,42 @@ class Api::ReceivablesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Receivable.joins(:exchange,:contact).where{ 
+      query = Receivable.joins(:exchange,:contact).where{ 
           ( source_class =~  query )  | 
           ( source_code =~ query ) | 
           ( contact.name =~ query ) | 
           ( exchange.name =~ query ) 
-                              }.
-                        page(params[:page]).
-                        per(params[:limit]).
-                        order("id DESC")
+                              }
+                              
+      if params[:contact_id].present?
+        object = Contact.find_by_id params[:contact_id]
+        if not object.nil?  
+          query = query.where(:contact_id => object.id )
+        end
+      end    
+      
+      
+      # @objects = Receivable.joins(:exchange,:contact).where{ 
+      #     ( source_class =~  query )  | 
+      #     ( source_code =~ query ) | 
+      #     ( contact.name =~ query ) | 
+      #     ( exchange.name =~ query ) 
+      #                         }.
+      #                   page(params[:page]).
+      #                   per(params[:limit]).
+      #                   order("id DESC")
                         
-      @total = Receivable.joins(:exchange,:contact).where{ 
-          ( source_class =~  query )  | 
-          ( source_code =~ query ) | 
-          ( contact.name =~ query ) | 
-          ( exchange.name =~ query ) 
+      # @total = Receivable.joins(:exchange,:contact).where{ 
+      #     ( source_class =~  query )  | 
+      #     ( source_code =~ query ) | 
+      #     ( contact.name =~ query ) | 
+      #     ( exchange.name =~ query ) 
         
-                              }.count
+      #                         }.count
+      @objects = query.page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
+      @total = query.count 
     else
       @objects = Receivable.joins(:exchange,:contact).where{ (id.eq selected_id)  
                               }.

@@ -53,7 +53,7 @@ Ext.define("AM.controller.Operation", {
     	expanded	: true,
 		children 	: [
         	{ 
-				text:'SalesOrder', 
+				text:'Sales Order', 
 				viewClass:'AM.view.operation.SalesOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -65,7 +65,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'DeliveryOrder', 
+				text:'Delivery Order', 
 				viewClass:'AM.view.operation.DeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -77,7 +77,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Temporary DeliveryOrder', 
+				text:'Temporary Delivery Order', 
 				viewClass:'AM.view.operation.TemporaryDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -89,7 +89,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'VirtualOrder', 
+				text:'Virtual Order', 
 				viewClass:'AM.view.operation.VirtualOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -101,7 +101,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Delivery VirtualOrder', 
+				text:'Delivery Virtual Order', 
 				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -113,7 +113,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'VirtualOrderClearance', 
+				text:'Virtual Order Clearance', 
 				viewClass:'AM.view.operation.VirtualOrderClearance', 
 				leaf:true, 
 				iconCls:'text',
@@ -244,12 +244,12 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Pengalokasian Batch', 
-				viewClass:'AM.view.operation.BatchAllocation', 
+				viewClass:'AM.view.operation.BatchSource', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'batch_allocations',
+						controller : 'batch_sources',
 						action : 'index'
 					}
 				]
@@ -387,7 +387,7 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Blanket Work Process', 
-				viewClass:'AM.view.operation.BlanketWorkProcess', 
+				viewClass:'AM.view.operation.BlanketResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
@@ -447,12 +447,12 @@ Ext.define("AM.controller.Operation", {
 			}, 
 			{ 
 				text:'Recovery Work Chart (RWC)', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
+				viewClass:'AM.view.operation.RecoveryResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_orders',
+						controller : 'recovery_results',
 						action : 'index'
 					}
 				]
@@ -671,8 +671,9 @@ Ext.define("AM.controller.Operation", {
 		
 		me.folderList = [
 			this.logisticFolder,
-			this.manufacturingFolder,
 			this.batchFolder, 
+			this.manufacturingFolder,
+			
  			// this.recoveryFolder,
  			// this.blanketFolder,
  			// this.blendingFolder,

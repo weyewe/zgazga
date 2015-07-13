@@ -82,10 +82,12 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 			disabled: true
 		});
 		
-		this.checkBoxField = new Ext.form.field.Checkbox({
-			action : "filterPending",
-			boxLabel: 'Pending'
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
 		});
+		
+	  
 		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
@@ -94,7 +96,7 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 					'-',
 					this.downloadButton,
 					'->',
-					this.checkBoxField, 
+					this.filterButton, 
 					'-',
 					this.searchField ];
 	 

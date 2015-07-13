@@ -101,35 +101,34 @@ Ext.define('AM.controller.BlendingWorkOrders', {
     var values = form.getValues();
 
 
-		// console.log("The values");
-		// console.log( values);
-		form.query('checkbox').forEach(function(checkbox){
-						// 
-						// record.set( checkbox['name']  ,checkbox['checked'] ) ;
-						// console.log("the checkbox name: " +  checkbox['name']   );
-						// console.log("the checkbox value: " + checkbox['checked']  );
-			values[checkbox['name']] = checkbox['checked'];
-		});
-		
+	 
 		
 		
 		if( record ){
 			record.set( values );
+			
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
 			 
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
 					
 					// store.getProxy().extraParams = {
 					//     livesearch: ''
 					// };
 	 
-					store.load();
+					// store.load();
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -157,6 +156,7 @@ Ext.define('AM.controller.BlendingWorkOrders', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -213,12 +213,15 @@ Ext.define('AM.controller.BlendingWorkOrders', {
 				params : {
 					confirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();
@@ -261,11 +264,14 @@ Ext.define('AM.controller.BlendingWorkOrders', {
 				params : {
 					unconfirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
-					list.enableRecordButtons(); 
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					win.close();
 				},

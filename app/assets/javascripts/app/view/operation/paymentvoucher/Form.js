@@ -170,10 +170,16 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
         	     fieldLabel: 'GBCH ?'
     	      },
     	      {
-							xtype: 'textfield',
-							fieldLabel : 'GBCH no',
-							name : 'gbch_no'
+								xtype: 'textfield',
+								fieldLabel : 'GBCH no',
+								name : 'gbch_no'
 						}, 
+						{
+							xtype: 'datefield',
+							name : 'due_date',
+							fieldLabel: 'Due Date',
+							format: 'Y-m-d',
+						},
 				]
 			};
 		
@@ -223,12 +229,7 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 						anchor : '-10'
 					},
 					items : [ 
-						{
-							xtype: 'datefield',
-							name : 'due_date',
-							fieldLabel: 'Due Date',
-							format: 'Y-m-d',
-						},
+						
 						{
 							xtype: 'numberfield',
 							fieldLabel : 'Pembulatan',

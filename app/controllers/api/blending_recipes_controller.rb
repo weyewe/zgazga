@@ -78,15 +78,7 @@ class Api::BlendingRecipesController < Api::BaseApiController
   
   def show
     @object  = BlendingRecipe.find params[:id]
-    render :json => { :success => true,   
-                      :blending_recipes => [
-                          :id => @object.id, 
-                          :name => @object.name ,
-                          :description => @object.description , 
-                          :target_item_id => @object.target_item_id  ,
-                          :target_amount => @object.target_amount,
-                        ],
-                      :total => BlendingRecipe.active_objects.count  }
+    @total = BlendingRecipe.active_objects.count
   end
 
   def update
@@ -136,15 +128,7 @@ class Api::BlendingRecipesController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blending_recipes => [
-                        :id => @object.id, 
-                        :name => @object.name ,
-                        :description => @object.description , 
-                        :target_item_id => @object.target_item_id  ,
-                        :target_amount => @object.target_amount,
-                        ],
-                        :total => BlendingRecipe.active_objects.count  } 
+      @total = BlendingRecipe.active_objects.count
     else
       
       msg = {
@@ -155,6 +139,7 @@ class Api::BlendingRecipesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -46,7 +46,7 @@ Ext.define('AM.view.operation.blanketworkprocess.Form', {
 					anchor: '100%'
       },
       items: [
-				{
+		{
 	        xtype: 'hidden',
 	        name : 'id',
 	        fieldLabel: 'id'

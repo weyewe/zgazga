@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.salesinvoicedetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Sales Invoice Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -162,6 +162,19 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 	},
 	
 	
+	
+	setExtraParamInDeliveryOrderDetailIdComboBox: function(delivery_order_id){  
+		var comboBox = this.down('form').getForm().findField('delivery_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.delivery_order_id =  delivery_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInDeliveryOrderDetailIdComboBox( record.get("delivery_order_id") ); 
+	},
 	
 	
 	setComboBoxData : function( record){

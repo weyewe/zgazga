@@ -26,7 +26,8 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -40,9 +41,7 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
     @object.update_object( params[:virtual_order_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :virtual_order_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 
@@ -51,7 +50,8 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

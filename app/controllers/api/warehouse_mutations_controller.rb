@@ -77,24 +77,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
   
   def show
     @object  = WarehouseMutation.find params[:id]
-    render :json => { :success => true,   
-                      :warehouse_mutations => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :description => @object.description , 
-                          
-                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
-                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
-                          	
-                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
-                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
-                          	
-                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => WarehouseMutation.active_objects.count  }
+    @total = WarehouseMutation.active_objects.count
   end
 
   def update
@@ -146,23 +129,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :warehouse_mutations => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :description => @object.description , 
-                          
-                          :warehouse_from_name 	=>		@object.warehouse_from.name ,
-                          :warehouse_from_id 		=>		@object.warehouse_from.id ,
-                          	
-                          :warehouse_to_name 	=>		@object.warehouse_to.name ,
-                          :warehouse_to_id 		=>		@object.warehouse_to.id ,
-                          	
-                          :mutation_date => format_date_friendly(@object.mutation_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => WarehouseMutation.active_objects.count  } 
+      @total = WarehouseMutation.active_objects.count
     else
       
       msg = {
@@ -173,6 +140,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

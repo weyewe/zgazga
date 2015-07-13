@@ -72,18 +72,7 @@ class Api::ClosingsController < Api::BaseApiController
   
   def show
     @object  = Closing.find params[:id]
-    render :json => { :success => true,   
-                      :closings => [
-                          :id => @object.id, 
-                          :period => @object.period ,
-                          :year_period => @object.year_period , 
-                          :beginning_period => format_date_friendly(@object.beginning_period)  ,
-                          :end_date_period => format_date_friendly(@object.end_date_period)  ,
-                          :is_year_closing => @object.is_year_closing ,
-                          :is_closed => @object.is_closed , 
-                          :closed_at => format_date_friendly(@object.closed_at) 
-                        ],
-                      :total => Closing.active_objects.count  }
+    @total = Closing.active_objects.count
   end
 
   def update
@@ -135,18 +124,7 @@ class Api::ClosingsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :closings => [
-                            :id => @object.id, 
-                            :period => @object.period ,
-                            :year_period => @object.year_period , 
-                            :beginning_period => format_date_friendly(@object.beginning_period)  ,
-                            :end_date_period => format_date_friendly(@object.end_date_period)  ,
-                            :is_year_closing => @object.is_year_closing ,
-                            :is_closed => @object.is_closed , 
-                            :closed_at => format_date_friendly(@object.closed_at)
-                          ],
-                        :total => Closing.active_objects.count  } 
+      @total = Closing.active_objects.count
     else
       
       msg = {
@@ -157,6 +135,7 @@ class Api::ClosingsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -76,17 +76,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
   
   def show
     @object  = PurchaseReceival.find params[:id]
-    render :json => { :success => true,   
-                      :purchase_receivals => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :receival_date => format_date_friendly(@object.receival_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
-                        
-                        ],
-                      :total => PurchaseReceival.active_objects.count  }
+    @total = PurchaseReceival.active_objects.count
   end
 
   def update
@@ -138,16 +128,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :purchase_receivals => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat ,
-                          :receival_date => format_date_friendly(@object.receival_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at)
-                          ],
-                        :total => PurchaseReceival.active_objects.count  } 
+      @total = PurchaseReceival.active_objects.count
     else
       
       msg = {
@@ -158,6 +139,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

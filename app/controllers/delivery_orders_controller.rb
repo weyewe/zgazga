@@ -2,6 +2,14 @@ class DeliveryOrdersController < ApplicationController
   
  
   def show
+    
+    
+    user = User.find_by_authentication_token params[:auth_token]
+    if user.nil?
+      redirect_to root_url 
+      return
+    end
+    
     @object = DeliveryOrder.find(params[:id])
     @contact = @object.sales_order.contact 
     

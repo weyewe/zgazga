@@ -62,7 +62,7 @@ class Exchange < ActiveRecord::Base
     end
     self.name = params[:name]
     self.description = params[:description]    
-    if self.save
+    if self.save 
       self.account_payable.name = "Account Payable " + self.name.to_s
       self.account_payable.save
       self.account_receivable.name = "Account Receivable " + self.name.to_s
@@ -70,6 +70,7 @@ class Exchange < ActiveRecord::Base
       self.gbch_payable.name = "GBCH Payable " + self.name.to_s
       self.gbch_payable.save
       self.gbch_receivable.name = "GBCH Receivable " + self.name.to_s
+ 
       self.gbch_receivable.save
     end
     return self

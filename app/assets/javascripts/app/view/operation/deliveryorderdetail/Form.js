@@ -153,6 +153,20 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 	
 	
 	
+	setExtraParamInSalesOrderComboBox: function(sales_order_id){
+		var comboBox = this.down('form').getForm().findField('sales_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.sales_order_id =  sales_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) { 
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInSalesOrderComboBox( record.get("sales_order_id") ); 
+	},
 	
 	setComboBoxData : function( record){
 		var me = this; 

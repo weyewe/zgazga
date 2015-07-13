@@ -34,7 +34,8 @@ Ext.define('AM.model.BlanketWorkProcess', {
     	    { name: 'adhesive_cost', type: 'string' },
     	    { name: 'roll_blanket_cost', type: 'string' },
     	    { name: 'roll_blanket_usage', type: 'string' },
-    	    { name: 'roll_blanket_defect', type: 'string' },			
+    	    { name: 'roll_blanket_defect', type: 'string' },		
+    	    { name: 'quantity', type: 'int' },	
   	],
 
 	 
@@ -44,12 +45,12 @@ Ext.define('AM.model.BlanketWorkProcess', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/blanket_work_processs',
+			url: 'api/blanket_work_processes',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'blanket_work_processs',
+				root: 'blanket_work_processes',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},

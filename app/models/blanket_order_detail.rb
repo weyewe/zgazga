@@ -4,6 +4,8 @@ class BlanketOrderDetail < ActiveRecord::Base
   validates_presence_of :blanket_order_id
   validates_presence_of :blanket_id
   
+  has_many :roll_blanket_usages
+  
   has_many :blanket_warehouse_mutation_details 
   
   validate :valid_blanket_order
@@ -13,6 +15,10 @@ class BlanketOrderDetail < ActiveRecord::Base
   
   def self.active_objects
     self
+  end
+  
+  def active_children
+    self.roll_blanket_usages 
   end
   
   def valid_quantity
@@ -48,19 +54,32 @@ class BlanketOrderDetail < ActiveRecord::Base
     end
   end
   
+  def batch_source
+    BatchSource.where(
+        :source_class => self.class.to_s,
+        :source_id => self.id 
+      ).first 
+  end
+  
   def self.create_object(params)
+ 
+    
     new_object = self.new
+     
+    new_object.blanket_order_id = params[:blanket_order_id]
+    new_object.blanket_id = params[:blanket_id]
+    new_object.quantity = params[:quantity]
+    
     blanket_order = BlanketOrder.find_by_id(params[:blanket_order_id])
     if not blanket_order.nil?
       if blanket_order.is_confirmed == true
-        new_object.errors.add(:generic,"Sudah di confirm")
+        new_object.errors.add(:generic_errors,"Sudah di confirm")
+ 
         return new_object
       end
     end
     
-    new_object.blanket_order_id = params[:blanket_order_id]
-    new_object.blanket_id = params[:blanket_id]
-    new_object.quantity = 1
+  
     if new_object.save
       # add blanket_order.amount_received
       new_object.update_blanket_order_amount_received(
@@ -149,7 +168,7 @@ class BlanketOrderDetail < ActiveRecord::Base
       :warehouse_id => self.blanket_order.warehouse_id,
       :item_id => self.blanket.roll_blanket_item_id
       )
-    if item.amount < params[:roll_blanket_usage] 
+    if item.amount < BigDecimal( params[:roll_blanket_usage] ) 
       self.errors.add(:roll_blanket_defect,"Stock quantity Roll Blanket kurang dari #{params[:roll_blanket_usage]}")
       return self
     end
@@ -169,6 +188,17 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.finished_at = params[:finished_at]
  
     if self.save
+      
+      BatchSource.create_object( 
+          :item_id  => self.blanket.item.id,
+          :status   =>  ADJUSTMENT_STATUS[:deduction], 
+          :source_class => self.class.to_s, 
+          :source_id => self.id , 
+          :generated_date => self.finished_at , 
+          :amount => self.roll_blanket_usage
+        )
+        
+        
       self.undelivered_quantity = self.finished_quantity
       self.save 
       
@@ -218,6 +248,7 @@ class BlanketOrderDetail < ActiveRecord::Base
   end
   
   def unfinish_object
+    
     if self.blanket_order.is_confirmed == false
       self.errors.add(:generic,"Belum di confirm")
       return self
@@ -230,6 +261,11 @@ class BlanketOrderDetail < ActiveRecord::Base
     if self.blanket_warehouse_mutation_details.count != 0 
       self.errors.add(:generic_errors, "Sudah ada perpindahan gudang ")
       return self 
+    end
+    
+    if self.roll_blanket_usages.count != 0 
+      self.errors.add(:generic_errors, "Sudah ada alokasi roll blanket")
+      return self
     end
 
     # set all cost to 0
@@ -248,6 +284,14 @@ class BlanketOrderDetail < ActiveRecord::Base
     #   )
     
     if self.save
+      
+      BatchSource.where( 
+          :item_id  => self.blanket.item.id, 
+          :source_class => self.class.to_s, 
+          :source_id => self.id  
+        ).each {|x| x.destroy } 
+        
+        
       self.undelivered_quantity =  0
       self.save 
       

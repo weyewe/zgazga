@@ -57,7 +57,8 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -107,9 +108,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blending_work_orders => [@object],
-                        :total => BlendingWorkOrder.active_objects.count } 
+      @total = BlendingWorkOrder.active_objects.count
     else
       msg = {
         :success => false, 
@@ -119,6 +118,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -126,9 +126,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
   
   def show
     @object = BlendingWorkOrder.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :blending_work_orders => [@object] , 
-                      :total => BlendingWorkOrder.count }
+    @total = BlendingWorkOrder.count
   end
 
   def destroy
@@ -155,6 +153,7 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

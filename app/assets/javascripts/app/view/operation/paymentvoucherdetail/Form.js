@@ -177,6 +177,22 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 		});
 	},
 	
+	setExtraParamInPayableComboBox: function(contact_id){
+		var comboBox = this.down('form').getForm().findField('payable_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.contact_id =  contact_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {
+		console.log("inside setComboBoxExtraParams");
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInPayableComboBox( record.get("contact_id") ); 
+	},
+	
 	
 	setComboBoxData : function( record){
 		var me = this; 

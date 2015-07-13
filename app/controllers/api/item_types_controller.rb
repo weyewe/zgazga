@@ -56,7 +56,8 @@ class Api::ItemTypesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -66,9 +67,7 @@ class Api::ItemTypesController < Api::BaseApiController
     @object.update_object( params[:item_type])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :item_types => [@object],
-                        :total => ItemType.active_objects.count  } 
+      @total = ItemType.active_objects.count
     else
       msg = {
         :success => false, 
@@ -77,7 +76,8 @@ class Api::ItemTypesController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

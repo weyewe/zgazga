@@ -61,7 +61,8 @@ class Api::WarehousesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -71,9 +72,7 @@ class Api::WarehousesController < Api::BaseApiController
     @object.update_object( params[:warehouse])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :warehouses => [@object],
-                        :total => Warehouse.active_objects.count  } 
+      @total = Warehouse.active_objects.count
     else
       msg = {
         :success => false, 
@@ -82,7 +81,8 @@ class Api::WarehousesController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

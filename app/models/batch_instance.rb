@@ -41,6 +41,10 @@ class BatchInstance < ActiveRecord::Base
         
     end
     
+    def self.active_objects
+        self
+    end
+    
     def item_type 
         self.item.item_type 
     end
@@ -58,6 +62,11 @@ class BatchInstance < ActiveRecord::Base
     
     def update_amount( new_amount )
         self.amount = self.amount + new_amount
+        self.save 
+    end
+    
+    def update_total_allocated_amount( new_amount ) 
+        self.total_allocated_amount = self.total_allocated_amount + new_amount
         self.save 
     end
     

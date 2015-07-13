@@ -93,31 +93,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
   
   def show
     @object  = PaymentVoucher.find params[:id]
-    render :json => { :success => true,   
-                      :payment_vouchers => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :contact_id => @object.contact_id , 
-                          :contact_name => @object.contact.name , 
-                          :cash_bank_id => @object.cash_bank_id,
-                          :cash_bank_name => @object.cash_bank.name,
-                          :status_pembulatan => @object.status_pembulatan,
-                          :payment_date => format_date_friendly(@object.payment_date)  ,
-                          :amount => @object.amount ,
-                          :rate_to_idr => @object.rate_to_idr,
-                          :total_pph_23 => @object.total_pph_23,
-                          :total_pph_21 => @object.total_pph_21,
-                          :biaya_bank => @object.biaya_bank,
-                          :pembulatan => @object.pembulatan,
-                          :no_bukti => @object.no_bukti , 
-                          :gbch_no => @object.gbch_no,
-                          :is_gbch => @object.is_gbch,
-                          :due_date => format_date_friendly(@object.due_date) ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        
-                        ],
-                      :total => PaymentVoucher.active_objects.count  }
+    @total = PaymentVoucher.active_objects.count
   end
 
   def update
@@ -199,30 +175,8 @@ class Api::PaymentVouchersController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :payment_vouchers => [
-                            :id => @object.id, 
-                            :code => @object.code ,
-                            :contact_id => @object.contact_id , 
-                            :contact_name => @object.contact.name , 
-                            :cash_bank_id => @object.cash_bank_id,
-                            :cash_bank_name => @object.cash_bank.name,
-                            :status_pembulatan => @object.status_pembulatan,
-                            :payment_date => format_date_friendly(@object.payment_date)  ,
-                            :amount => @object.amount ,
-                            :rate_to_idr => @object.rate_to_idr,
-                            :total_pph_23 => @object.total_pph_23,
-                            :total_pph_21 => @object.total_pph_21,
-                            :biaya_bank => @object.biaya_bank,
-                            :pembulatan => @object.pembulatan,
-                            :no_bukti => @object.no_bukti , 
-                            :gbch_no => @object.gbch_no,
-                            :is_gbch => @object.is_gbch,
-                            :due_date => format_date_friendly(@object.due_date) ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => PaymentVoucher.active_objects.count  } 
+      @total = PaymentVoucher.active_objects.count
+     
     else
       
       msg = {
@@ -233,6 +187,7 @@ class Api::PaymentVouchersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

@@ -100,6 +100,7 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 			parentRecord : record 
 		});
 		view.setParentData( record );
+		view.setComboBoxExtraParams( record ) ;
 		
     view.show(); 
   },
@@ -124,9 +125,13 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 		// console.log("selected record id: " + record.get('id'));
 		// console.log("The selected poe id: " + record.get('purchase_order_entry_id'));
 		view.setComboBoxData(record); 
+		
+		view.setComboBoxExtraParams( parentRecord ) ;
   },
 
   updateObject: function(button) {
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 
@@ -163,6 +168,7 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -207,6 +213,7 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 					win.close();
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

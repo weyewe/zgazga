@@ -20,7 +20,7 @@ Ext.application({
      appFolder: '/assets/app',
      autoCreateViewport: true,
 });
-
+ 
 Ext.override(Ext.Container, {
     removeAll: function() {
         this.items.each(function(childItem){ this.remove(childItem);}, this);
@@ -29,14 +29,9 @@ Ext.override(Ext.Container, {
 
  
 
-
  
-Ext.override(Ext.Container, {
-    removeAll: function() {
-        this.items.each(function(childItem){ this.remove(childItem);}, this);
-    }
-});
-
+ 
+ 
  
  
 Ext.define("AM.view.Constants",{
@@ -56,6 +51,26 @@ Ext.define("AM.view.Constants",{
 		group : 1 , 
 		ledger : 2
 	},
+	
+	
+	highlightSelectedRow: function( list) {
+		var selected_row = list.getView().getSelectedNodes()[0]; 
+		var ext_selected_row = Ext.get(selected_row); 
+		ext_selected_row.addCls('x-grid-row-selected x-grid-row-focused');
+	},
+	
+	updateRecord: function( record, new_record){
+	
+		var data = new_record.data ; 
+		for (var k in data) {
+	        if (data.hasOwnProperty(k)) {
+	            
+	            if( k !== "id"){ 
+	            	record.set( k, data[k]);
+	            }
+	        }
+	    }
+	}
 });
 
 Ext.define("AM.currentUser",{
@@ -190,6 +205,4 @@ Ext.onReady(function(){
 
 
 
-
  
-

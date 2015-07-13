@@ -74,20 +74,7 @@ class Api::BlanketWarehouseMutationsController < Api::BaseApiController
   
   def show
     @object  = BlanketWarehouseMutation.find params[:id]
-    render :json => { :success => true,   
-                      :blanket_warehouse_mutations => [
-                          :id => @object.id, 
-                          :blanket_order_id => @object.blanket_order_id, 
-                          :blanket_order_production_no => @object.blanket_order.production_no, 
-                          :code => @object.code, 
-                          :warehouse_from_id => @object.warehouse_from_id, 
-                          :warehouse_from_name => @object.warehouse_from.name, 
-                          :warehouse_to_id => @object.warehouse_to_id, 
-                          :mutation_date =>format_date_friendly(@object.mutation_date),
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        ],
-                      :total => BlanketWarehouseMutation.active_objects.count  }
+    @total = BlanketWarehouseMutation.active_objects.count
   end
 
   def update
@@ -139,20 +126,7 @@ class Api::BlanketWarehouseMutationsController < Api::BaseApiController
     
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :blanket_warehouse_mutations => [
-                            :id => @object.id, 
-                            :blanket_order_id => @object.blanket_order_id, 
-                            :blanket_order_production_no => @object.blanket_order.production_no, 
-                            :code => @object.code, 
-                            :warehouse_from_id => @object.warehouse_from_id, 
-                            :warehouse_from_name => @object.warehouse_from.name, 
-                            :warehouse_to_id => @object.warehouse_to_id, 
-                            :mutation_date =>format_date_friendly(@object.mutation_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => BlanketWarehouseMutation.active_objects.count  } 
+      @total = BlanketWarehouseMutation.active_objects.count
     else
       
       msg = {
@@ -163,6 +137,7 @@ class Api::BlanketWarehouseMutationsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

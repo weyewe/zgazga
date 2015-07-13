@@ -49,7 +49,8 @@ class Api::CashBanksController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -59,9 +60,7 @@ class Api::CashBanksController < Api::BaseApiController
     @object.update_object( params[:cash_bank])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :cash_banks => [@object],
-                        :total => CashBank.active_objects.count  } 
+      @total = CashBank.active_objects.count
     else
       msg = {
         :success => false, 
@@ -70,7 +69,8 @@ class Api::CashBanksController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

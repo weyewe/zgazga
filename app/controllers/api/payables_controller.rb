@@ -50,7 +50,8 @@ class Api::PayablesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -62,9 +63,7 @@ class Api::PayablesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :payables => [@object],
-                        :total => Payable.active_objects.count } 
+      @total = Payable.active_objects.count
     else
       msg = {
         :success => false, 
@@ -74,6 +73,7 @@ class Api::PayablesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -81,9 +81,7 @@ class Api::PayablesController < Api::BaseApiController
   
   def show
     @object = Payable.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :payables => [@object] , 
-                      :total => Payable.count }
+    @total = Payable.count
   end
 
   def destroy
@@ -110,6 +108,7 @@ class Api::PayablesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   
@@ -125,23 +124,48 @@ class Api::PayablesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Payable.joins(:exchange,:contact).where{ 
+      
+      query = Payable.joins(:exchange,:contact).where{ 
         ( source_class =~  query )  | 
         ( source_code =~ query ) | 
         ( contact.name =~ query ) | 
         ( exchange.name =~ query ) 
-                              }.
-                        page(params[:page]).
+                              }
+                              
+      if params[:contact_id].present?
+        object = Contact.find_by_id params[:contact_id]
+        if not object.nil?  
+          puts "banzaiii!!!! contact_id : #{object.id}\n"*5
+          query = query.where(:contact_id => object.id )
+        end
+      end
+      
+      
+      # @objects = Payable.joins(:exchange,:contact).where{ 
+      #   ( source_class =~  query )  | 
+      #   ( source_code =~ query ) | 
+      #   ( contact.name =~ query ) | 
+      #   ( exchange.name =~ query ) 
+      #                         }.
+      #                   page(params[:page]).
+      #                   per(params[:limit]).
+      #                   order("id DESC")
+      
+      
+    
+                        
+      # @total = Payable.joins(:exchange,:contact).where{ 
+      #   ( source_class =~  query )  | 
+      #   ( source_code =~ query ) | 
+      #   ( contact.name =~ query ) | 
+      #   ( exchange.name =~ query ) 
+        
+      #                         }.count
+                              
+      @objects = query.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
-                        
-      @total = Payable.joins(:exchange,:contact).where{ 
-        ( source_class =~  query )  | 
-        ( source_code =~ query ) | 
-        ( contact.name =~ query ) | 
-        ( exchange.name =~ query ) 
-        
-                              }.count
+      @total = query.count 
     else
       @objects = Payable.joins(:exchange,:contact).where{ (id.eq selected_id)  
                               }.

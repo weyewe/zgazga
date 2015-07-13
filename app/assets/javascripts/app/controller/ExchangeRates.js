@@ -269,9 +269,12 @@ Ext.define('AM.controller.ExchangeRates', {
 			 
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
 					
 					// store.getProxy().extraParams = {
 					//     livesearch: ''
@@ -287,6 +290,7 @@ Ext.define('AM.controller.ExchangeRates', {
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -319,6 +323,7 @@ Ext.define('AM.controller.ExchangeRates', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

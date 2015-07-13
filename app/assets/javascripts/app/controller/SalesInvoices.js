@@ -7,6 +7,7 @@ Ext.define('AM.controller.SalesInvoices', {
   views: [
     'operation.salesinvoice.List',
     'operation.salesinvoice.Form',
+    'operation.salesinvoice.FilterForm',
 		'operation.salesinvoicedetail.List',
 		'Viewport'
   ],
@@ -79,18 +80,97 @@ Ext.define('AM.controller.SalesInvoices', {
       
       'salesinvoiceProcess salesinvoicelist button[action=downloadObject]': {
 			    click: this.downloadObject
-			}	
+			},
+	    'salesinvoiceProcess salesinvoicelist button[action=filterObject]': {
+	        click: this.filterObject
+	    },
+	    'filtersalesinvoiceform button[action=save]' : {
+	    	click : this.executeFilterObject  
+	    },
+	    
+	    'filtersalesinvoiceform button[action=reset]' : {
+	    	click : this.executeResetFilterObject  
+	    },
+	    
 			
 
 		
     });
   },
+  
+
+      
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filtersalesinvoiceform');
+		
+		view.setPreviousValue( me.getSalesInvoicesStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesInvoicesStore().getProxy().extraParams["livesearch"]
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getSalesInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getSalesInvoicesStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getSalesInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getSalesInvoicesStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getSalesInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getSalesInvoicesStore().load();
+		win.close();
+  },
 	  
 	 downloadObject: function(){
 			var record = this.getList().getSelectedObject();
-			var id = record.get("id")
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'sales_invoices/' + id + '.pdf' );
+				window.open( 'sales_invoices/' + id + '.pdf' + "?auth_token=" +auth_token_value);
 			}
 			
 	},
@@ -156,6 +236,8 @@ Ext.define('AM.controller.SalesInvoices', {
 	},
 
   updateObject: function(button) {
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 		var me = this; 
@@ -170,14 +252,18 @@ Ext.define('AM.controller.SalesInvoices', {
 			
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
-					store.load();
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					// store.load();
 					win.close();
 					// me.updateChildGrid(record );
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -212,6 +298,7 @@ Ext.define('AM.controller.SalesInvoices', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -254,12 +341,15 @@ Ext.define('AM.controller.SalesInvoices', {
 				params : {
 					confirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();
@@ -302,11 +392,14 @@ Ext.define('AM.controller.SalesInvoices', {
 				params : {
 					unconfirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
-					list.enableRecordButtons(); 
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					win.close();
 				},

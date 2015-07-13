@@ -58,7 +58,8 @@ class Api::CoreBuildersController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -70,9 +71,7 @@ class Api::CoreBuildersController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :core_builders => [@object],
-                        :total => CoreBuilder.active_objects.count } 
+      @total = CoreBuilder.active_objects.count
     else
       msg = {
         :success => false, 
@@ -82,6 +81,7 @@ class Api::CoreBuildersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -89,9 +89,7 @@ class Api::CoreBuildersController < Api::BaseApiController
   
   def show
     @object = CoreBuilder.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :core_builders => [@object] , 
-                      :total => CoreBuilder.count }
+    @total = CoreBuilder.count
   end
 
   def destroy
@@ -118,6 +116,7 @@ class Api::CoreBuildersController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

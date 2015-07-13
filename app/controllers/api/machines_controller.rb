@@ -48,7 +48,8 @@ class Api::MachinesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -60,9 +61,7 @@ class Api::MachinesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :machines => [@object],
-                        :total => Machine.active_objects.count } 
+      @total = Machine.active_objects.count
     else
       msg = {
         :success => false, 
@@ -72,6 +71,7 @@ class Api::MachinesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -79,9 +79,7 @@ class Api::MachinesController < Api::BaseApiController
   
   def show
     @object = Machine.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :machines => [@object] , 
-                      :total => Machine.count }
+    @total = Machine.count
   end
 
   def destroy
@@ -108,6 +106,7 @@ class Api::MachinesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

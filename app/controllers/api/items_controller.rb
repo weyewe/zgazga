@@ -56,7 +56,8 @@ class Api::ItemsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -66,9 +67,7 @@ class Api::ItemsController < Api::BaseApiController
     @object.update_object( params[:item])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :items => [@object],
-                        :total => Item.active_objects.count  } 
+      @total = Item.active_objects.count
     else
       msg = {
         :success => false, 
@@ -77,7 +76,8 @@ class Api::ItemsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 
@@ -102,21 +102,36 @@ class Api::ItemsController < Api::BaseApiController
     query = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
+    
+    
     if  selected_id.nil?
-      @objects = Item.joins(:exchange, :item_type, :uom).where{ 
-            ( sku  =~ query ) | 
-        ( name =~ query ) | 
-        ( description  =~ query  )  
-                              }.
+      query_code =  Item.joins(:exchange, :item_type, :uom).where{ 
+                   ( sku  =~ query ) | 
+                   ( name =~ query ) | 
+                   ( description  =~ query  )  
+                }
+                
+      if params[:is_batch].present?
+        query_code = query_code.where{
+          
+          item_type.is_batched.eq true 
+        }
+      end
+      
+      if params[:is_accessory].present?
+        accessory_item_type = ItemType.find_by_name BASE_ITEM_TYPE[:accessory]
+        query_code = query_code.where{
+          
+          item_type.id.eq accessory_item_type.id  
+        }
+      end
+      
+      @objects = query_code.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.joins(:exchange, :item_type, :uom).where{ 
-               ( sku  =~ query ) | 
-        ( name =~ query ) | 
-        ( description  =~ query  )  
-                              }.count
+      @total = query_code.count
     else
       @objects = Item.where{ (id.eq selected_id)  
                               }.

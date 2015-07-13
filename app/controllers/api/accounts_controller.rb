@@ -29,7 +29,7 @@ class Api::AccountsController < Api::BaseApiController
     end
     
     
-    # render :json => { :accounts => @objects , :total => @total , :success => true }
+    @total = :json
   end
   
   def show
@@ -38,8 +38,7 @@ class Api::AccountsController < Api::BaseApiController
     @parent = @object
     @objects = @object.children
     @total = @objects.count 
-    
-    # render :json => { :accounts => @objects , :total => @total , :success => true }
+     
   end
 
   def create
@@ -81,9 +80,7 @@ class Api::AccountsController < Api::BaseApiController
     @object.update_object( params[:account]  )
     
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :accounts => [@object],
-                        :total => Account.active_accounts.count  } 
+      @total = Account.active_accounts.count
     else
       msg = {
         :success => false, 
@@ -111,6 +108,7 @@ class Api::AccountsController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

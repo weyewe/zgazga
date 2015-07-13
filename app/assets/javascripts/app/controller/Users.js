@@ -37,10 +37,26 @@ Ext.define('AM.controller.Users', {
 			}	,
 			'userlist textfield[name=searchField]': {
 				change: this.liveSearch
-			}
+			},
+			'userlist button[action=authorizeObject]': {
+        click: this.authorizeObject
+			}	,
+
 		
     });
   },
+  
+ 	authorizeObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			if( record ){
+				window.open( "action_assignments" + "?auth_token=" +auth_token_value + "&user_id=" + id );
+			}
+			
+	},
+
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
@@ -72,26 +88,31 @@ Ext.define('AM.controller.Users', {
   },
 
   updateObject: function(button) {
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 
     var store = this.getUsersStore();
     var record = form.getRecord();
     var values = form.getValues();
-
-		
+ 
 		if( record ){
 			record.set( values );
 			 
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
-					store.load();
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					// store.load();
 					win.close();
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -119,6 +140,7 @@ Ext.define('AM.controller.Users', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];

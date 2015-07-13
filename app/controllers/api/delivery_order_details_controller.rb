@@ -26,7 +26,8 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -40,9 +41,7 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
     @object.update_object( params[:delivery_order_detail])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :delivery_order_details => [@object],
-                        :total => @parent.active_children.count  } 
+      @total = @parent.active_children.count
     else
       msg = {
         :success => false, 
@@ -51,7 +50,8 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 
@@ -82,22 +82,42 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
+      
+      query = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
           ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+                              }
+                              
+      if params[:delivery_order_id].present?
+        object = DeliveryOrder.find_by_id params[:delivery_order_id]
+        if not object.nil?  
+          query = query.where(:delivery_order_id => object.id )
+        end
+      end    
+      
+      # @objects = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
+      #     ( item.sku  =~ query ) | 
+      #   ( item.name =~ query ) | 
+      #   ( item.description  =~ query  )  | 
+      #   ( code  =~ query  )  
+      # }.
+      # page(params[:page]).
+      # per(params[:limit]).
+      # order("id DESC")
                         
-      @total = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
-          ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
-      }.count
+      # @total = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
+      #     ( item.sku  =~ query ) | 
+      #   ( item.name =~ query ) | 
+      #   ( item.description  =~ query  )  | 
+      #   ( code  =~ query  )  
+      # }.count
+      
+      @objects = query.page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
+      @total = query.count 
     else
       @objects = DeliveryOrderDetail.where{ 
               (id.eq selected_id)  

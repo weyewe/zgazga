@@ -66,7 +66,8 @@ class Api::CustomersController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -76,9 +77,7 @@ class Api::CustomersController < Api::BaseApiController
     @object.update_object( params[:customer])
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :customers => [@object],
-                        :total => Contact.active_objects.customers.count  } 
+      @total = Contact.active_objects.customers.count
     else
       msg = {
         :success => false, 
@@ -87,7 +86,8 @@ class Api::CustomersController < Api::BaseApiController
         }
       }
       
-      render :json => msg 
+      render :json => msg
+      return  
     end
   end
 

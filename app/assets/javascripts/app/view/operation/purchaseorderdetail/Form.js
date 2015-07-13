@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.purchaseorderdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit Purchase Order Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

@@ -3,6 +3,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
   belongs_to :roller_identification_form_detail
   belongs_to :roller_builder
   has_many  :recovery_accessory_details
+  has_many :compound_usages 
   validates_presence_of :roller_identification_form_detail_id
   validates_presence_of :roller_builder_id
   validates_presence_of :core_type_case
@@ -15,6 +16,10 @@ class RecoveryOrderDetail < ActiveRecord::Base
   
   def active_children
     self.recovery_accessory_details 
+  end 
+  
+  def active_compound_children
+    self.compound_usages
   end 
     
   def valid_roller_identification_form_detail_id
@@ -103,7 +108,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
-    self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
+    # self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
     return self if self.errors.size != 0 
      
     self.compound_usage = BigDecimal( params[:compound_usage] || '0')
@@ -128,7 +133,15 @@ class RecoveryOrderDetail < ActiveRecord::Base
 
   
   def finish_object(params)
+    if self.is_rejected?   
+      self.errors.add(:generic_errors, "Sudah reject")
+      return self 
+    end
     
+    if self.is_finished?   
+      self.errors.add(:generic_errors, "Sudah selesai")
+      return self 
+    end
     # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
     
@@ -249,6 +262,16 @@ class RecoveryOrderDetail < ActiveRecord::Base
   
   def unfinish_object
     
+    if self.is_rejected? 
+      self.errors.add(:generic_errors, "Sudah reject")
+      return self 
+    end
+    
+    if not self.is_finished? 
+      self.errors.add(:generic_errors, "Belum selesai")
+      return self 
+    end
+    
     self.is_finished = false
     self.finished_date = nil
     if self.save
@@ -305,7 +328,23 @@ class RecoveryOrderDetail < ActiveRecord::Base
     end
   end
   
+   
+  
+  
+  
   def reject_object(params)
+    
+    if self.is_rejected?  
+      self.errors.add(:generic_errors, "Sudah reject")
+      return self 
+    end
+    
+    if self.is_finished?
+      self.errors.add(:generic_errors, "Sudah finish")
+      return self 
+    end
+    
+    
     # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
     
@@ -354,6 +393,16 @@ class RecoveryOrderDetail < ActiveRecord::Base
   end
   
   def unreject_object
+    if not self.is_rejected?
+      self.errors.add(:generic_errors, "Belum reject")
+      return self 
+    end
+    
+    if self.is_finished?
+      self.errors.add(:generic_errors, "Sudah finish")
+      return self 
+    end
+    
     self.is_rejected = false
     self.rejected_date = nil
     if self.save

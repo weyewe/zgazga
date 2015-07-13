@@ -13,8 +13,9 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 				text : "Item",
 				sortable : false,
 				flex : 1,
-				tpl :  '<b>Item SKU</b>: <br />{item_sku}'  + '<br /><br />' + 
-							'<b>Item Type</b>: <br />{item_type_name}'  + '<br /><br />'  
+				tpl :  '<b>Item SKU</b>: <br />{item_sku}'  + '<br />' +    '<br />' +  
+						'<b>Item Name</b>: <br />{item_name}'  + '<br />' +  '<br />' + 
+							'<b>Item Type</b>: <br />{item_type_name}'   
 			},
 			
 			{
@@ -26,8 +27,16 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 							'<b>Deskripsi</b>: <br />{description}'  + '<br /><br />' 
 			},
 			
+			{
+				xtype : 'templatecolumn',
+				text : "Batch",
+				sortable : false,
+				flex : 1,
+				tpl : 'Kuantitas Total: <br />{total_allocated_amount}' + '<br /><br />' + 
+							'Belum Digunakan: <br />{amount}'  + '<br /><br />' 
+			},
 			
-			{	header: 'Jumlah Tersedia', dataIndex: 'amount', flex: 1 }, 
+			 
 			{	header: 'Tanggal Manufacture', dataIndex: 'manufactured_at', flex: 1 }, 
 			
   

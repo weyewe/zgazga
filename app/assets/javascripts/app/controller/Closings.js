@@ -141,6 +141,8 @@ Ext.define('AM.controller.Closings', {
 	},
 
   updateObject: function(button) {
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 		var me = this; 
@@ -151,18 +153,27 @@ Ext.define('AM.controller.Closings', {
  
 		if( record ){
 			record.set( values );
+		
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			  
 			  
 			
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
-					store.load();
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					// store.load();
 					win.close();
 					// me.updateChildGrid(record );
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -197,6 +208,7 @@ Ext.define('AM.controller.Closings', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -239,12 +251,15 @@ Ext.define('AM.controller.Closings', {
 				params : {
 					confirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();
@@ -287,11 +302,14 @@ Ext.define('AM.controller.Closings', {
 				params : {
 					unconfirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
-					list.enableRecordButtons(); 
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					win.close();
 				},

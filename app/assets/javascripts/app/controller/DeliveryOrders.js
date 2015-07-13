@@ -7,6 +7,7 @@ Ext.define('AM.controller.DeliveryOrders', {
   views: [
     'operation.deliveryorder.List',
     'operation.deliveryorder.Form',
+    'operation.deliveryorder.FilterForm',
 		'operation.deliveryorderdetail.List',
 		'Viewport'
   ],
@@ -81,14 +82,100 @@ Ext.define('AM.controller.DeliveryOrders', {
         click: this.downloadObject
 			}	,
 		
+      'deliveryorderProcess deliveryorderlist button[action=filterObject]': {
+        click: this.filterObject
+      },
+			'filterdeliveryorderform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterdeliveryorderform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+		
     });
+  },
+  
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterdeliveryorderform');
+		
+		view.setPreviousValue( me.getDeliveryOrdersStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getDeliveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getDeliveryOrdersStore().getProxy().extraParams = extraParams;
+		
+
+
+ 
+	 
+		me.getDeliveryOrdersStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getDeliveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues();
+    // console.log("The values");
+    // console.log( values ) ;
+
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		 
+	 
+		 
+		me.getDeliveryOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getDeliveryOrdersStore().load();
+		win.close();
   },
   
 	downloadObject: function(){
 			var record = this.getList().getSelectedObject();
-			var id = record.get("id")
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'delivery_orders/' + id + '.pdf' );
+				window.open( 'delivery_orders/' + id + '.pdf' + "?auth_token=" +auth_token_value);
 			}
 			
 	},
@@ -154,6 +241,8 @@ Ext.define('AM.controller.DeliveryOrders', {
 	},
 
   updateObject: function(button) {
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
 		var me = this; 
@@ -168,14 +257,18 @@ Ext.define('AM.controller.DeliveryOrders', {
 			
 			form.setLoading(true);
 			record.save({
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					//  since the grid is backed by store, if store changes, it will be updated
-					store.load();
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					// store.load();
 					win.close();
 					// me.updateChildGrid(record );
 				},
 				failure : function(record,op ){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -210,6 +303,7 @@ Ext.define('AM.controller.DeliveryOrders', {
 					
 				},
 				failure: function( record, op){
+					button.enable();
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
@@ -252,12 +346,15 @@ Ext.define('AM.controller.DeliveryOrders', {
 				params : {
 					confirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();
@@ -300,11 +397,14 @@ Ext.define('AM.controller.DeliveryOrders', {
 				params : {
 					unconfirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
-					list.enableRecordButtons(); 
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					win.close();
 				},

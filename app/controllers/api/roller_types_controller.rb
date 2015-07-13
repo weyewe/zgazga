@@ -46,7 +46,8 @@ class Api::RollerTypesController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg
+      return                          
     end
   end
 
@@ -58,9 +59,7 @@ class Api::RollerTypesController < Api::BaseApiController
     
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :roller_types => [@object],
-                        :total => RollerType.active_objects.count } 
+      @total = RollerType.active_objects.count
     else
       msg = {
         :success => false, 
@@ -70,6 +69,7 @@ class Api::RollerTypesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
       
       
     end
@@ -77,9 +77,7 @@ class Api::RollerTypesController < Api::BaseApiController
   
   def show
     @object = RollerType.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :roller_types => [@object] , 
-                      :total => RollerType.count }
+    @total = RollerType.count
   end
 
   def destroy
@@ -106,6 +104,7 @@ class Api::RollerTypesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   

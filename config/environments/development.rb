@@ -41,3 +41,7 @@ config.assets.digest = false
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 end
+
+BASE_MIGRATION_LOCATION = "#{Rails.root}/zga_migration"
+BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
+BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'

@@ -71,17 +71,7 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
   
   def show
     @object  = VirtualOrderClearance.find params[:id]
-    render :json => { :success => true,   
-                      :virtual_order_clearances => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :virtual_delivery_order_id => @object.virtual_delivery_order_id , 
-                          :total_waste_cogs => @object.total_waste_cogs , 
-                          :clearance_date => format_date_friendly(@object.clearance_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                        ],
-                      :total => VirtualOrderClearance.active_objects.count  }
+    @total = VirtualOrderClearance.active_objects.count
   end
 
   def update
@@ -132,18 +122,8 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
     
     
     
-    if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :virtual_order_clearances => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :virtual_delivery_order_id => @object.virtual_delivery_order_id , 
-                          :total_waste_cogs => @object.total_waste_cogs , 
-                          :clearance_date => format_date_friendly(@object.clearance_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ],
-                        :total => VirtualOrderClearance.active_objects.count  } 
+    if @object.errors.size == 0  
+      @total = VirtualOrderClearance.active_objects.count
     else
       
       msg = {
@@ -154,6 +134,7 @@ class Api::VirtualOrderClearancesController < Api::BaseApiController
       }
       
       render :json => msg
+      return 
     end
   end
   
