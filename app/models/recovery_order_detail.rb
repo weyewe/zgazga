@@ -148,6 +148,8 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     
     self.is_finished = true
+    
+    puts "\n\n\n\n\n\n\n\n> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The finished date: #{params[:finished_date]}"
     self.finished_date = params[:finished_date]
     if self.save
       # create batch stock mutation

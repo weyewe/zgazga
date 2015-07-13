@@ -183,7 +183,8 @@ Ext.define('AM.controller.RecoveryResults', {
 					//  since the grid is backed by store, if store changes, it will be updated
 					var list = me.getList();
 					AM.view.Constants.updateRecord( record, new_record );  
-					AM.view.Constants.highlightSelectedRow( list );         
+					AM.view.Constants.highlightSelectedRow( list );       
+					 
 					// store.load();
 					win.close();
 					// me.updateChildGrid(record );
@@ -193,6 +194,7 @@ Ext.define('AM.controller.RecoveryResults', {
 					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
+					AM.view.Constants.highlightSelectedRow( list );       
 					form.getForm().markInvalid(errors);
 					me.reject();
 				}
@@ -267,11 +269,11 @@ Ext.define('AM.controller.RecoveryResults', {
 					form.setLoading(false);
 					
 					// me.reloadRecord( record ) ; 
-					
+					console.log("process object. in the SUCCESS block");
+					console.log( list ) ;
 					list.enableRecordButtons();  
 					AM.view.Constants.updateRecord( record, new_record );  
-					AM.view.Constants.highlightSelectedRow( list );      
-					AM.view.Constants.highlightSelectedRow( list );     
+					AM.view.Constants.highlightSelectedRow( list );        
 					
 					
 					win.close();
@@ -279,10 +281,14 @@ Ext.define('AM.controller.RecoveryResults', {
 				failure : function(record,op ){
 					// console.log("Fail update");
 					form.setLoading(false);
+					console.log("process object. in the FAIL block");
+					console.log( list ) ;
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
+					
 					form.getForm().markInvalid(errors);
 					record.reject(); 
+					AM.view.Constants.highlightSelectedRow( list );       
 					// this.reject(); 
 				}
 			});
@@ -427,7 +433,7 @@ Ext.define('AM.controller.RecoveryResults', {
 		if(record){
 		 
 			
-			record.set( 'finished_at' , values['finished_at'] ); 
+			record.set( 'finished_date' , values['finished_date'] ); 
 			 
 			form.query('checkbox').forEach(function(checkbox){
 				record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -446,7 +452,8 @@ Ext.define('AM.controller.RecoveryResults', {
 			    
 					list.enableRecordButtons();  
 					AM.view.Constants.updateRecord( record, new_record );  
-					AM.view.Constants.highlightSelectedRow( list );        
+					AM.view.Constants.highlightSelectedRow( list );      
+					list.enableRecordButtons();
 					
 					win.close();
 				},
@@ -509,6 +516,8 @@ Ext.define('AM.controller.RecoveryResults', {
 					list.enableRecordButtons();  
 					AM.view.Constants.updateRecord( record, new_record );  
 					AM.view.Constants.highlightSelectedRow( list );       
+					
+					list.enableRecordButtons();
 					
 					win.close();
 				},

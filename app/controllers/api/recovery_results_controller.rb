@@ -46,7 +46,8 @@ class Api::RecoveryResultsController < Api::BaseApiController
   end
 
   def update
-    params[:recovery_result][:transaction_datetime] =  parse_date( params[:recovery_result][:transaction_datetime] )
+    params[:recovery_result][:finished_date] =  parse_date( params[:recovery_result][:finished_date] )
+    params[:recovery_result][:rejected_date] =  parse_date( params[:recovery_result][:rejected_date] )
     params[:recovery_result][:confirmed_at] =  parse_date( params[:recovery_result][:confirmed_at] )
     
     @object = RecoveryOrderDetail.find(params[:id])
@@ -91,7 +92,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.finish_object(:finished_at => params[:recovery_result][:finished_at] ) 
+          @object.finish_object(  params[:recovery_result] ) 
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -134,8 +135,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       }
       
       render :json => msg
-      return 
-      return 
+      return  
     end
   end
   

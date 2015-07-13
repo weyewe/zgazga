@@ -41,10 +41,10 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 				text : "Status ",
 				flex : 3,
 				tpl : 'Finish : <br /><b>{is_finished}</b>' + '<br />' +  
-						'Tanggal Finish : <br /><b>{finished_at}</b>' + '<br />' +  '<br />' +  
+						'Tanggal Finish : <br /><b>{finished_date}</b>' + '<br />' +  '<br />' +  
 						
 					 'Reject : <br /><b>{is_rejected}</b>' + '<br />' +  
-						'Tanggal Reject : <br /><b>{rejected_at}</b>'  
+						'Tanggal Reject : <br /><b>{rejected_date}</b>'  
 					 
 							
 							
@@ -107,14 +107,14 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 		});
 		
 		this.unfinishObjectButton = new Ext.Button({
-			text: 'Unfinisih',
+			text: 'Cancel Finish',
 			action: 'unfinishObject',
 			disabled: true,
 			hidden : true
 		});
 		
 		this.unrejectObjectButton = new Ext.Button({
-			text: 'Unreject',
+			text: 'Cancel Reject',
 			action: 'unrejectObject',
 			disabled: true,
 			hidden : true
@@ -152,20 +152,42 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 	enableRecordButtons: function() {
 		this.processObjectButton.enable();  
  
-		selectedObject = this.getSelectedObject();
+		var selectedObject = this.getSelectedObject();
 		
 		if( selectedObject && selectedObject.get("is_finished") == false  && selectedObject.get("is_rejected") == false ){  
 			this.finishObjectButton.show(); 
 			this.rejectObjectButton.show();  
 			
+			this.unfinishObjectButton.hide(); 
+			this.unrejectObjectButton.hide();
+
 			this.finishObjectButton.enable(); 
 			this.rejectObjectButton.enable();  
+			
+ 
 		} 
 		
 
-		if( selectedObject && selectedObject.get("is_finished") == true  && selectedObject.get("is_rejected") == false ){  
+		if( selectedObject && selectedObject.get("is_finished") == true   ){  
 			this.unfinishObjectButton.show(); 
-			this.unfinishObjectButton.enable();  
+			this.rejectObjectButton.show();  
+			
+			this.finishObjectButton.hide(); 
+			this.unrejectObjectButton.hide();
+
+			this.unfinishObjectButton.enable(); 
+			this.rejectObjectButton.disable();  
+		} 
+		
+		if( selectedObject && selectedObject.get("is_rejected") == true   ){  
+			this.finishObjectButton.show(); 
+			this.unrejectObjectButton.show();  
+			
+			this.unfinishObjectButton.hide(); 
+			this.rejectObjectButton.hide();
+
+			this.finishObjectButton.disable(); 
+			this.unrejectObjectButton.enable();  
 		} 
 	},
 
