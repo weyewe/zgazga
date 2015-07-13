@@ -34,6 +34,9 @@ Ext.define('AM.model.RecoveryResult', {
 	         { name: 'compound_under_layer_id', type: 'int' },	
 	         { name: 'compound_under_layer_name', type: 'string' },	
 	         { name: 'compound_under_layer_usage', type: 'string' },
+	         
+	         { name: 'roller_builder_compound_name', type: 'string' },
+	         { name: 'roller_builder_compound_sku', type: 'string' },
 			
 			
   	],

@@ -37,7 +37,7 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_batch_instances',
+			url : 'api/records',
 			reader : {
 				type : 'json',
 				root : 'batch_instances', 

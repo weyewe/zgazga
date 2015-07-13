@@ -42,7 +42,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
   
   def show
     @object  = RecoveryOrderDetail.find params[:id]
-  
+    @total = RecoveryOrderDetail.joins(:recovery_order).where{ recovery_order.is_confirmed.eq true }
   end
 
   def update
@@ -82,6 +82,35 @@ class Api::RecoveryResultsController < Api::BaseApiController
       rescue ActiveRecord::ActiveRecordError  
       else
       end
+    elsif params[:finish].present?    
+      
+      if not current_user.has_role?( :recovery_results, :finish)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.finish_object(:finished_at => params[:recovery_result][:finished_at] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+    elsif params[:unfinish].present?    
+      
+      if not current_user.has_role?( :recovery_results, :unfinish)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unfinish_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end 
       
       
     else
@@ -92,7 +121,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
     
     
     
-    
+    @total = RecoveryOrderDetail.joins(:recovery_order).where{ recovery_order.is_confirmed.eq true }
     if @object.errors.size == 0 
     
     else

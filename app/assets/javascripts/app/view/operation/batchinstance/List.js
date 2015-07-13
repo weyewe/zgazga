@@ -13,8 +13,9 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 				text : "Item",
 				sortable : false,
 				flex : 1,
-				tpl :  '<b>Item SKU</b>: <br />{item_sku}'  + '<br /><br />' + 
-							'<b>Item Type</b>: <br />{item_type_name}'  + '<br /><br />'  
+				tpl :  '<b>Item SKU</b>: <br />{item_sku}'  + '<br />' +    '<br />' +  
+						'<b>Item Name</b>: <br />{item_name}'  + '<br />' +  '<br />' + 
+							'<b>Item Type</b>: <br />{item_type_name}'   
 			},
 			
 			{

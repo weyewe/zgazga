@@ -15,7 +15,7 @@ Ext.define('AM.view.operation.RecoveryResult', {
 		items : [
 			{
 				xtype : 'recoveryresultlist' ,
-				flex : 1 //,
+				flex : 2 //,
 				// html : 'hahaha'
 			},
 			// {
@@ -25,7 +25,7 @@ Ext.define('AM.view.operation.RecoveryResult', {
 			// },
 			{
 				xtype : 'container',
-				flex: 3 ,
+				flex: 1 ,
 				layout : {
 					type : 'vbox',
 					align : 'stretch'

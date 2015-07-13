@@ -5,26 +5,17 @@ class Api::BatchInstancesController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-        
-        
+         
         @objects = BatchInstance.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( name =~  livesearch )   
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
         @total = BatchInstance.where{
           (
-            ( name =~  livesearch )  | 
-            ( address =~ livesearch ) | 
-            ( description =~ livesearch ) | 
-            ( contact_no =~ livesearch ) | 
-            ( email =~ livesearch )
+            ( name =~  livesearch )   
           )
         }.count
    
@@ -126,9 +117,19 @@ class Api::BatchInstancesController < Api::BaseApiController
       
       zero_value = BigDecimal("0")
       query_code = BatchInstance.joins(:item).where{ 
-                                 ( name =~  query )  & 
-                                 ( amount.gt zero_value)
-                              }
+                                 ( name =~  query )   
+       
+                         }
+      
+      if params[:item_id].present? 
+        object = Item.find_by_id params[:item_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+            :item_id => object.id 
+          )
+        end
+      end
       
       if params[:blanket_order_detail_id].present? 
         object = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]

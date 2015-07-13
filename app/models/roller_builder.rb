@@ -192,6 +192,10 @@ class RollerBuilder < ActiveRecord::Base
     self.destroy
     return self
   end
+  
+  def compound
+    Item.find_by_id self.compound_id
+  end
     
     
 end

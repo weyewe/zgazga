@@ -46,7 +46,7 @@ Ext.define('AM.view.operation.batchsourcedetail.Form', {
 			url : 'api/search_batch_instances',
 			reader : {
 				type : 'json',
-				root : 'batch_instances', 
+				root : 'records', 
 				totalProperty  : 'total'
 			}
 		},

@@ -9,6 +9,7 @@ json.batch_instances @objects do |object|
 	
 	json.item_id object.item_id 
 	json.item_sku object.item.sku
+	json.item_name object.item.name
 	
 	
 	json.item_type_id            object.item_type.id 

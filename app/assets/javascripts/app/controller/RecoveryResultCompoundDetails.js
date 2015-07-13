@@ -143,6 +143,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 		console.log( values ) 
 		
 		if( record ){
+			console.log("we have the record => it is an update");
 			record.set( values );
 			 
 			form.query('checkbox').forEach(function(checkbox){
@@ -179,6 +180,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 				
 			 
 		}else{
+			console.log("we don't have the record => it is create");
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
 		

@@ -37,4 +37,7 @@ json.recovery_results  objects do |object|
     end
     json.compound_under_layer_usage 	object.compound_under_layer_usage
     
+    json.roller_builder_compound_sku object.roller_builder.compound.sku 
+    json.roller_builder_compound_name object.roller_builder.compound.name 
+    
 end

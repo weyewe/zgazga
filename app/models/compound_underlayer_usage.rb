@@ -37,7 +37,7 @@ class CompoundUnderlayerUsage < ActiveRecord::Base
         end
         
         if not object.is_finished?
-            self.errors.add(:recovery_order_detail_id, "Harus finished")
+            self.errors.add(:generic_errors, "Recovery Order Detail Harus finished")
             return self 
         end
          

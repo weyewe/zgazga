@@ -126,20 +126,7 @@ Ext.define('AM.controller.BlanketResults', {
     view.setComboBoxData( record ) ;
   },
 
-	finishObject: function(){
-		// console.log("the startObject callback function");
-		console.log("clicked the finishObject");
-		var record = this.getList().getSelectedObject();
-		if(record){
-			var view = Ext.widget('finishblanketresultform');
 
-			view.setParentData( record );
-	    view.show();
-		}
-		
-		
-		// this.reloadRecordView( record, view ) ; 
-	},
 
   updateObject: function(button) {
   	button.disable();
@@ -214,6 +201,18 @@ Ext.define('AM.controller.BlanketResults', {
 			});
 		} 
   },
+  
+	finishObject: function(){
+		// console.log("the startObject callback function");
+		console.log("clicked the finishObject");
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('finishblanketresultform');
+
+			view.setParentData( record );
+	    view.show();
+		} 
+	},
 
 	unfinishObject: function(){
 		// console.log("the startObject callback function");

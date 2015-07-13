@@ -27,7 +27,25 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 				tpl : 'Compound Underlayer : <br /><b>{compound_under_layer_name}</b>' + '<br />' +  
 					'Penggunaan Underlayer: <br /> <b>{compound_under_layer_usage}</b>'   + '<br />' + '<br />' +
 							
-							'Penggunaan Compound: <br /> <b>{compound_usage}</b>'  
+							
+							'Compound  : <br /><b>{roller_builder_compound_name}</b>' + '<br />' +  
+					'Penggunaan : <br /> <b>{compound_usage}</b>'   
+							
+							
+							
+							
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Status ",
+				flex : 3,
+				tpl : 'Finish : <br /><b>{is_finished}</b>' + '<br />' +  
+						'Tanggal Finish : <br /><b>{finished_at}</b>' + '<br />' +  '<br />' +  
+						
+					 'Reject : <br /><b>{is_rejected}</b>' + '<br />' +  
+						'Tanggal Reject : <br /><b>{rejected_at}</b>'  
+					 
 							
 							
 							
@@ -136,18 +154,18 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
  
 		selectedObject = this.getSelectedObject();
 		
-		if( selectedObject && selectedObject.get("is_finished") == false &&  selectedObject.get("is_rejected") == false){ 
-			// show the unfinish
-		 
+		if( selectedObject && selectedObject.get("is_finished") == false  && selectedObject.get("is_rejected") == false ){  
 			this.finishObjectButton.show(); 
-			this.rejectObjectButton.show(); 
+			this.rejectObjectButton.show();  
+			
+			this.finishObjectButton.enable(); 
+			this.rejectObjectButton.enable();  
 		} 
 		
-		if( selectedObject && selectedObject.get("is_finished") == true ){ 
-			// show the unfinish
-		 
+
+		if( selectedObject && selectedObject.get("is_finished") == true  && selectedObject.get("is_rejected") == false ){  
 			this.unfinishObjectButton.show(); 
-			this.unfinishObjectButton.enable(); 
+			this.unfinishObjectButton.enable();  
 		} 
 	},
 

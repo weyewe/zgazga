@@ -93,7 +93,7 @@ class Api::BlanketResultsController < Api::BaseApiController
      
      
     if @object.errors.size == 0 
-      @total = BlanketOrderDetail.count
+      @total = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }
     else
       msg = {
         :success => false, 
@@ -111,7 +111,7 @@ class Api::BlanketResultsController < Api::BaseApiController
   
   def show
     @object = BlanketOrderDetail.find_by_id params[:id]
-    @total = BlanketOrderDetail.count
+    @total = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }
      
   end
 
