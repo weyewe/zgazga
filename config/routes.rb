@@ -103,7 +103,8 @@ Ticketie::Application.routes.draw do
     get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
     get 'search_receipt_vouchers' => 'receipt_voucher_details#search', :as => :search_receipt_voucher
     get 'search_receipt_voucher_details' => 'receipt_voucher_details#search', :as => :search_receipt_voucher_detail
-   
+    get 'search_bank_administrations' => 'bank_administrations#search', :as => :search_bank_administration
+    get 'search_bank_administration_details' => 'bank_administration_details#search', :as => :search_bank_administration_detail
    
     # master data 
     resources :app_users
@@ -211,6 +212,8 @@ Ticketie::Application.routes.draw do
     resources :roller_warehouse_mutations
     resources :roller_warehouse_mutation_details
     
+    resources :bank_administrations
+    resources :bank_administration_details
     resources :closings
     resources :closing_details
     resources :sales_down_payments

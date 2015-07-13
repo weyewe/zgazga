@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.memorialdetail.List' ,{
+Ext.define('AM.view.operation.bankadministrationdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.memorialdetaillist',
+  	alias : 'widget.bankadministrationdetaillist',
 
-  	store: 'MemorialDetails', 
+  	store: 'BankAdministrationDetails', 
  
 
 	initComponent: function() {
@@ -12,7 +12,8 @@ Ext.define('AM.view.operation.memorialdetail.List' ,{
 			{ header: 'Account Code',  dataIndex: 'account_code', flex: 1},
     		{ header: 'Account',  dataIndex: 'account_name', flex: 1},
     		{ header: 'Status',  dataIndex: 'status', flex: 1},
-			{ header: 'Amount', dataIndex: 'amount', flex: 1 } ,
+			{	header: 'Amount', dataIndex: 'amount', flex: 1 } ,
+			{	header: 'Keterangan', dataIndex: 'description', flex: 1 } ,
 			
 			 
 		];
@@ -76,6 +77,6 @@ Ext.define('AM.view.operation.memorialdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("Memorial: " + record.get("code"));
+		this.setTitle("BankAdministration: " + record.get("code"));
 	}
 });

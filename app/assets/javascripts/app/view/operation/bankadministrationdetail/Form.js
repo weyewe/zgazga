@@ -1,7 +1,7 @@
 
-Ext.define('AM.view.operation.memorialdetail.Form', {
+Ext.define('AM.view.operation.bankadministrationdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.memorialdetailform',
+  alias : 'widget.bankadministrationdetailform',
 
   title : 'Add / Edit Memorial Detail',
   layout: 'fit',
@@ -13,8 +13,7 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 	
   initComponent: function() {
 	
-	
-  var localJsonStoreStatus = Ext.create(Ext.data.Store, {
+	var localJsonStoreStatus = Ext.create(Ext.data.Store, {
 		type : 'array',
 		storeId : 'sales_status_search',
 		fields	: [ 
@@ -57,6 +56,8 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 		autoLoad : false 
 	});
 		
+	
+	 
 		
     this.items = [{
       xtype: 'form',
@@ -75,35 +76,14 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 	      },
 				{
 	        xtype: 'hidden',
-	        name : 'memorial_id',
-	        fieldLabel: 'memorial_id'
+	        name : 'bank_administration_id',
+	        fieldLabel: 'bank_administration_id'
 	      },
 	      {
-          xtype: 'displayfield',
-          name : 'memorial_code',
-          fieldLabel: 'Kode Memorial'
-        },
-				{
-					fieldLabel: 'Status',
-					xtype: 'combo',
-					queryMode: 'remote',
-					forceSelection: true, 
-					displayField : 'status_text',
-					valueField : 'status',
-					pageSize : 5,
-					minChars : 1, 
-					allowBlank : false, 
-					triggerAction: 'all',
-					store : localJsonStoreStatus , 
-					listConfig : {
-						getInnerTpl: function(){
-							return  	'<div data-qtip="{status_text}">' +  
-													'<div class="combo-name">{status_text}</div>' +  
-							 					'</div>';
-						}
-					},
-					name : 'status' 
-				},
+	        xtype: 'displayfield',
+	        name : 'code',
+	        fieldLabel: 'Code'
+  	    },
 				{
 					fieldLabel: 'Account',
 					xtype: 'combo',
@@ -127,10 +107,36 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 					name : 'account_id' 
 				},
 				{
+					fieldLabel: 'Status',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'status_text',
+					valueField : 'status',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : localJsonStoreStatus , 
+					listConfig : {
+						getInnerTpl: function(){
+							return  	'<div data-qtip="{status_text}">' +  
+													'<div class="combo-name">{status_text}</div>' +  
+							 					'</div>';
+						}
+					},
+					name : 'status' 
+				},
+				{
 	        xtype: 'numberfield',
 	        name : 'amount',
 	        fieldLabel: 'Amount'
   	    },
+				{
+				  xtype: 'textarea',
+				  name : 'description',
+				  fieldLabel: 'Keterangan'
+				},
 			]
     }];
 
@@ -190,8 +196,7 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 	
 	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('memorial_code').setValue(record.get('code')); 
-		this.down('form').getForm().findField('memorial_id').setValue(record.get('id'));
+		this.down('form').getForm().findField('bank_administration_id').setValue(record.get('id'));
 	}
  
 });

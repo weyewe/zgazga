@@ -120,6 +120,7 @@ describe VirtualDeliveryOrder do
     
    @vo_1 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+       :employee_id => @ep_1.id,
       :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_1",
       :exchange_id => @exc_1.id
@@ -135,6 +136,7 @@ describe VirtualDeliveryOrder do
     
    @vo_2 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+      :employee_id => @ep_1.id,
       :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_2",
       :exchange_id => @exc_1.id

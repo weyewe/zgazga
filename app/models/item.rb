@@ -187,7 +187,7 @@ class Item < ActiveRecord::Base
     self.exchange_id = params[:exchange_id]
     self.price_list =  BigDecimal( params[:price_list] || '0') 
     
-    if batched_stock_mutations.count != 0 
+    if self.batched_stock_mutations.count != 0 
       self.errors.add(:item_type_id, "Tidak bisa mengubah item type karena sudah ada batch stock mutation")
       return self 
     end

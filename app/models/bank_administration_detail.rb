@@ -7,6 +7,10 @@ class BankAdministrationDetail < ActiveRecord::Base
   validate :valid_status
   validate :valid_amount
   
+  def self.active_objects
+    self
+  end
+  
   def valid_status
     return if status.nil?
     if not [1,2].include?( status.to_i ) 
@@ -41,6 +45,13 @@ class BankAdministrationDetail < ActiveRecord::Base
   end 
     
   def self.create_object(params)
+    bank_administration = BankAdministration.find_by_id(params[:bank_administration_id])
+    if not bank_administration.nil?
+      if bank_administration.is_confirmed == true
+        new_object.errors.add(:generic,"Sudah di confirm")
+        return new_object
+      end
+    end
     new_object = self.new 
     new_object.bank_administration_id = params[:bank_administration_id]
     new_object.account_id = params[:account_id]
@@ -48,12 +59,18 @@ class BankAdministrationDetail < ActiveRecord::Base
     new_object.status = params[:status]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save
+      new_object.code = "Bad-" + new_object.id.to_s  
+      new_object.save
       new_object.calculateTotalAmount
     end
     return new_object
   end
   
   def update_object(params)
+    if self.bank_administration.is_confirmed == true
+      self.errors.add(:generic,"Sudah di confirm")
+      return self
+    end
     self.bank_administration_id = params[:bank_administration_id]
     self.account_id = params[:account_id]
     self.description = params[:description]
@@ -66,6 +83,10 @@ class BankAdministrationDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.bank_administration.is_confirmed == true
+      self.errors.add(:generic,"Sudah di confirm")
+      return self
+    end
     self.destroy
     calculateTotalAmount
     return self

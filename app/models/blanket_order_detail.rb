@@ -49,15 +49,15 @@ class BlanketOrderDetail < ActiveRecord::Base
   end
   
   def self.create_object(params)
-    
+    new_object = self.new
     blanket_order = BlanketOrder.find_by_id(params[:blanket_order_id])
     if not blanket_order.nil?
       if blanket_order.is_confirmed == true
-        self.errors.add(:generic,"Sudah di confirm")
-        return self
+        new_object.errors.add(:generic,"Sudah di confirm")
+        return new_object
       end
     end
-    new_object = self.new
+    
     new_object.blanket_order_id = params[:blanket_order_id]
     new_object.blanket_id = params[:blanket_id]
     new_object.quantity = 1

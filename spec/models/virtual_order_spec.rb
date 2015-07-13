@@ -2,6 +2,22 @@ require 'spec_helper'
 
 describe VirtualOrder do
   before(:each) do  
+  @ep_1 = Employee.create_object(
+    :name => "name1",
+    :description => "description_1",
+    :contact_no => "contact_no_1",
+    :address => "address_1",
+    :email => "email_1",
+    ) 
+    
+  @ep_2 = Employee.create_object(
+    :name => "name_2",
+    :description => "description_2",
+    :contact_no => "contact_no_2",
+    :address => "address_2",
+    :email => "email_2",
+    )
+    
   @cg_1 = ContactGroup.create_object(
     :name => "Group1" ,
     :description => "Description1"
@@ -100,6 +116,7 @@ describe VirtualOrder do
   it "should not create VirtualOrder if contact_id is not valid" do
     vo = VirtualOrder.create_object(
       :contact_id => 123123,
+      :employee_id => @ep_1.id,
       :order_date => @order_date_1,
       :nomor_surat => @nomor_surat_1,
       :exchange_id => @exc_1.id
@@ -111,6 +128,7 @@ describe VirtualOrder do
   it "should not create VirtualOrder if order_date is not valid" do
     vo = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+       :employee_id => @ep_1.id,
       :order_date => nil,
       :nomor_surat => @nomor_surat_1,
       :exchange_id => @exc_1.id
@@ -122,6 +140,7 @@ describe VirtualOrder do
   it "should not create VirtualOrder if nomor_surat is not valid" do
     vo = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+       :employee_id => @ep_1.id,
       :order_date => @order_date_1,
       :nomor_surat => nil,
       :exchange_id => @exc_1.id
@@ -133,6 +152,7 @@ describe VirtualOrder do
   it "should not create VirtualOrder if exchange_id is not valid" do
     vo = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+       :employee_id => @ep_1.id,
       :order_date => @order_date_1,
       :nomor_surat => @nomor_surat_1,
       :exchange_id => nil
@@ -146,6 +166,7 @@ describe VirtualOrder do
     before(:each) do
       @vo = VirtualOrder.create_object(
         :contact_id => @ct_1.id,
+         :employee_id => @ep_1.id,
         :order_date => @order_date_1,
         :nomor_surat => @nomor_surat_1,
         :exchange_id => @exc_1.id
@@ -153,6 +174,7 @@ describe VirtualOrder do
     end
     
     it "should create VirtualOrder" do
+      puts @vo.errors.messages
       @vo.errors.size.should == 0
       @vo.should be_valid
     end
@@ -160,6 +182,7 @@ describe VirtualOrder do
     it "should update VirtualOrder" do
       @vo.update_object(
         :contact_id => @ct_2.id,
+         :employee_id => @ep_1.id,
         :order_date => @order_date_2,
         :nomor_surat => @nomor_surat_2,
         :exchange_id => @exc_2.id
@@ -173,6 +196,7 @@ describe VirtualOrder do
     it "should not update VirtualOrder if contact_id is not valid" do
       @vo.update_object(
         :contact_id => 123123,
+         :employee_id => @ep_1.id,
         :order_date => @order_date_2,
         :nomor_surat => @nomor_surat_2,
         :exchange_id => @exc_2.id
@@ -184,6 +208,7 @@ describe VirtualOrder do
     it "should not update VirtualOrder if order_date is not valid" do
       @vo.update_object(
         :contact_id => @ct_2.id,
+         :employee_id => @ep_1.id,
         :order_date => nil,
         :nomor_surat => @nomor_surat_2,
         :exchange_id => @exc_2.id
@@ -195,6 +220,7 @@ describe VirtualOrder do
     it "should not update VirtualOrder if nomor_surat is not valid" do
       @vo.update_object(
         :contact_id => @ct_2.id,
+         :employee_id => @ep_1.id,
         :order_date => @order_date_2,
         :nomor_surat => nil,
         :exchange_id => @exc_2.id
@@ -206,6 +232,7 @@ describe VirtualOrder do
     it "should not update VirtualOrder if exchange_id is not valid" do
       @vo.update_object(
         :contact_id => @ct_2.id,
+         :employee_id => @ep_1.id,
         :order_date => @order_date_2,
         :nomor_surat => @nomor_surat_2,
         :exchange_id => 123213

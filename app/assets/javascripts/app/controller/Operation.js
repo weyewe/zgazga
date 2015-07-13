@@ -525,6 +525,18 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
+				text:'BankAdministration', 
+				viewClass:'AM.view.operation.BankAdministration', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'bank_administrations',
+						action : 'index'
+					}
+				]
+			},
+			{ 
 				text:'Closing', 
 				viewClass:'AM.view.operation.Closing', 
 				leaf:true, 

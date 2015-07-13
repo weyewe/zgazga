@@ -27,7 +27,7 @@ module AccountingService
     virtual_order_clearance.virtual_order_clearance_details.each do |dod|
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
-        :account_id          => dod.item.item_type.account_id ,
+        :account_id          => dod.virtual_delivery_order_detail.item.item_type.account_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (dod.waste_cogs).round(2),
         :description => "Credit Raw"

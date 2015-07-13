@@ -8,6 +8,14 @@ class BankAdministration < ActiveRecord::Base
  
   validate :valid_cash_bank_id
   
+  def self.active_objects
+    self
+  end
+  
+  def active_children
+    self.bank_administration_details 
+  end
+  
   def valid_cash_bank_id
     return if cash_bank_id.nil?
     cb = CashBank.find_by_id cash_bank_id
@@ -24,7 +32,7 @@ class BankAdministration < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.no_bukti = params[:no_bukti]
     if new_object.save  
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "Ba-" + new_object.id.to_s  
       new_object.save
     end
     return new_object

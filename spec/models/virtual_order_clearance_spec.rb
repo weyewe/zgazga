@@ -120,6 +120,7 @@ describe VirtualOrderClearance do
     
    @vo_1 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+      :employee_id => @ep_1.id,
       :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_1",
       :exchange_id => @exc_1.id
@@ -127,6 +128,7 @@ describe VirtualOrderClearance do
   
    @vod_1 = VirtualOrderDetail.create_object(
       :virtual_order_id => @vo_1.id,
+      
       :item_id => @item_1.id,
       :amount => BigDecimal("10"),
       :price => BigDecimal("10000"),
@@ -135,6 +137,7 @@ describe VirtualOrderClearance do
     
    @vo_2 = VirtualOrder.create_object(
       :contact_id => @ct_1.id,
+      :employee_id => @ep_1.id,
       :order_date => DateTime.now,
       :nomor_surat => "nomor_surat_2",
       :exchange_id => @exc_1.id
