@@ -10,6 +10,8 @@ Ext.define('AM.model.RecoveryResultDetail', {
     	    { name: 'item_name', type: 'string' },
     	    { name: 'amount', type: 'string' }, 
     	    { name: 'item_uom_name', type: 'string' }, 
+    	    
+    	    
 			
   	],
 

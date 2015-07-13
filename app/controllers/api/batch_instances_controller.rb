@@ -123,25 +123,49 @@ class Api::BatchInstancesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-                              }.
-                        page(params[:page]).
+      
+      zero_value = BigDecimal("0")
+      query_code = BatchInstance.joins(:item).where{ 
+                                 ( name =~  query )  & 
+                                 ( amount.gt zero_value)
+                              }
+      
+      if params[:blanket_order_detail_id].present? 
+        object = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+            :item_id => object.blanket.item.id 
+          )
+        end
+      end
+      
+      if params[:recovery_order_detail_id].present? 
+        object = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
+        
+        if not object.nil?
+          query_code = query_code.where(
+            :item_id => object.roller_builder.compound_id
+          )
+        end
+      end
+      
+      if params[:recovery_order_detail_underlayer_id].present? 
+        object = Item.find_by_id params[:recovery_order_detail_underlayer_id]
+        
+        if not object.nil?
+         query_code = query_code.where(
+             :item_id => object.id 
+          )
+        end
+      end
+       
+      @objects = query_code.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
-                        
-      @total = BatchInstance.where{ 
-          ( name =~  livesearch )  | 
-          ( address =~ livesearch ) | 
-          ( description =~ livesearch ) | 
-          ( contact_no =~ livesearch ) | 
-          ( email =~ livesearch )
-        
-                              }.count
+      @total = query_code.count 
+      
+      
     else
       @objects = BatchInstance.where{ (id.eq selected_id)  
                               }.

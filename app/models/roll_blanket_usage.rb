@@ -59,7 +59,9 @@ class RollBlanketUsage < ActiveRecord::Base
      end
     
     def total_amount_not_zero
-        return if not finish_amount.present? or defect_amount.present?
+        return if not finish_amount.present? or 
+            not defect_amount.present? or 
+            not reject_amount.present? 
         
         if finish_amount < BigDecimal("0")
             self.errors.add(:finish_amount, "Tidak boleh negative")
@@ -145,7 +147,7 @@ class RollBlanketUsage < ActiveRecord::Base
               :mutation_date => self.blanket_order_detail.finished_at     ,  
               :item_id =>  self.blanket_order_detail.blanket.item.id   ,
               :batch_instance_id => self.batch_instance_id,
-              :description => "[FINISHG] blanket manufacturing"
+              :description => "[FINISH] blanket manufacturing"
               )  
     end
     

@@ -20,6 +20,10 @@ Ext.define('AM.controller.RecoveryResults', {
 			ref : 'recoveryResultDetailList',
 			selector : 'recoveryresultdetaillist'
 		},
+		{
+			ref : 'recoveryResultCompoundDetailList',
+			selector : 'recoveryresultcompounddetaillist'
+		},
 		
 		{
 			ref : 'form',
@@ -292,9 +296,9 @@ Ext.define('AM.controller.RecoveryResults', {
 		
 		
 		me.updateChildGrid(record );
+		me.updateCompoundChildGrid(record);
 		
-		
-		
+		 
 
     if (selections.length > 0) {
       grid.enableRecordButtons();
@@ -305,6 +309,26 @@ Ext.define('AM.controller.RecoveryResults', {
 
 	updateChildGrid: function(record){
 		var templateDetailGrid = this.getRecoveryResultDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
+		
+		// console.log("record id: " + record.get("id"));
+		
+		templateDetailGrid.getStore().getProxy().extraParams.recovery_result_id =  record.get('id') ;
+		 
+		templateDetailGrid.getStore().load({
+			params : {
+				recovery_result_id : record.get('id')
+			},
+			callback : function(records, options, success){
+				templateDetailGrid.enableAddButton(); 
+			}
+		});
+		
+	},
+	
+	updateCompoundChildGrid: function(record){
+		var templateDetailGrid = this.getRecoveryResultCompoundDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
 		templateDetailGrid.setObjectTitle( record ) ;
 		

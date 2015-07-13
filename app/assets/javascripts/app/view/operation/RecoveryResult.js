@@ -18,11 +18,31 @@ Ext.define('AM.view.operation.RecoveryResult', {
 				flex : 1 //,
 				// html : 'hahaha'
 			},
+			// {
+			// 	xtype :'recoveryresultdetaillist',
+			// 	// html : "This is gonna be the price_rule",
+			// 	flex : 1
+			// },
 			{
-				xtype :'recoveryresultdetaillist',
-				// html : "This is gonna be the price_rule",
-				flex : 1
-			} 
+				xtype : 'container',
+				flex: 3 ,
+				layout : {
+					type : 'vbox',
+					align : 'stretch'
+				},
+				items : [
+					{
+						xtype : 'recoveryresultdetaillist',
+						flex : 1
+					},
+
+					{
+						xtype : 'recoveryresultcompounddetaillist',
+						flex : 2
+					},
+				]
+				
+			},
 		],
  
 });

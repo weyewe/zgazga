@@ -1,27 +1,16 @@
-Ext.define('AM.view.operation.recoveryresultdetail.List' ,{
+Ext.define('AM.view.operation.recoveryresultcompounddetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.recoveryresultdetaillist',
+  	alias : 'widget.recoveryresultcompounddetaillist',
 
-  	store: 'RecoveryResultDetails', 
+  	store: 'RecoveryResultCompoundDetails', 
  
 
 	initComponent: function() {
 		this.columns = [
-		 	{
-				xtype : 'templatecolumn',
-				text : "Accessory",
-				flex : 3,
-				tpl : 'SKU: <br /><b>{item_sku}</b>' + '<br />' + '<br />' +
-							'<br /> <b>{item_name}</b>'   
-			},
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Quantity",
-				flex : 3,
-				tpl : ' <b>{amount}</b>  {item_uom_name}'   
-			},
-			 
+			{ header: 'RollBlanket Batch', dataIndex: 'batch_instance_name', flex: 1},
+			{ header: 'Finish (meter)',  dataIndex: 'finish_amount', flex: 1},
+    		{ header: 'Reject (meter)',  dataIndex: 'reject_amount', flex: 1},
+    		{ header: 'Defect (meter)',  dataIndex: 'defect_amount', flex: 2}, 
 			
 			 
 		];
@@ -48,7 +37,7 @@ Ext.define('AM.view.operation.recoveryresultdetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [this.addObjectButton, this.deleteObjectButton ]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,

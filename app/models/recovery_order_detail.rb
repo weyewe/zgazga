@@ -3,6 +3,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
   belongs_to :roller_identification_form_detail
   belongs_to :roller_builder
   has_many  :recovery_accessory_details
+  has_many :compound_usages 
   validates_presence_of :roller_identification_form_detail_id
   validates_presence_of :roller_builder_id
   validates_presence_of :core_type_case
@@ -15,6 +16,10 @@ class RecoveryOrderDetail < ActiveRecord::Base
   
   def active_children
     self.recovery_accessory_details 
+  end 
+  
+  def active_compound_children
+    self.compound_usages
   end 
     
   def valid_roller_identification_form_detail_id

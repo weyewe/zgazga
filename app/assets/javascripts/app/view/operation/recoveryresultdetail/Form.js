@@ -125,7 +125,7 @@ Ext.define('AM.view.operation.recoveryresultdetail.Form', {
 		var comboBox = this.down('form').getForm().findField('item_id'); 
 		var store = comboBox.store;
 		
-		store.getProxy().extraParams.is_accessory =  true;
+		store.getProxy().extraParams.is_compound =  true;
 	},
 	
 	
