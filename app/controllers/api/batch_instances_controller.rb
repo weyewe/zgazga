@@ -132,7 +132,11 @@ class Api::BatchInstancesController < Api::BaseApiController
       end
       
       if params[:blanket_order_detail_id].present? 
+        puts "inside blanket order detail id. id : #{params[:blanket_order_detail_id]}"
         object = BlanketOrderDetail.find_by_id params[:blanket_order_detail_id]
+        
+        puts "The object : #{object}"
+        puts "The item: #{object.blanket.item.id }"
         
         if not object.nil?
          query_code = query_code.where(
