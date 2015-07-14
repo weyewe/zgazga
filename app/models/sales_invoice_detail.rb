@@ -75,7 +75,7 @@ class SalesInvoiceDetail < ActiveRecord::Base
     
     if new_object.save
       new_object.price = (new_object.delivery_order_detail.sales_order_detail.price * new_object.amount).round(2)
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "SID-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
     end

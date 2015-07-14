@@ -84,6 +84,10 @@ class PurchaseDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if Closing.is_date_closed(self.down_payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
@@ -94,6 +98,7 @@ class PurchaseDownPayment < ActiveRecord::Base
           :exchange_id => self.exchange_id
           )
         self.exchange_rate_amount = latest_exchange_rate.rate
+        self.exchange_rate_id = latest_exchange_rate.id
       else
         self.exchange_rate_amount = 1
       end
@@ -116,7 +121,10 @@ class PurchaseDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Payable tidak boleh sudah diuangkan")
       return self
     end
-    
+    if Closing.is_date_closed(self.down_payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save

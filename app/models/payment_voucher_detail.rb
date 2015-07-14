@@ -49,12 +49,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
       return self 
        end
     end
-    
-    
-    
   end 
-  
-  
   
   def calculateTotalAmount
     amount = 0

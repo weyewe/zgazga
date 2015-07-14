@@ -49,7 +49,7 @@ class PurchaseOrder < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.allow_edit_detail = params[:allow_edit_detail]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "PO-" + new_object.id.to_s  
     new_object.save
     
     return new_object
@@ -89,7 +89,10 @@ class PurchaseOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-   
+    if Closing.is_date_closed(self.purchase_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -104,7 +107,14 @@ class PurchaseOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if Closing.is_date_closed(self.purchase_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    if PurchaseReceival.where(:purchase_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "PurchaseOrder sudah terpakai di PurchaseReceival")
+      return self
+    end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

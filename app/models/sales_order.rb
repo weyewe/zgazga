@@ -61,7 +61,7 @@ class SalesOrder < ActiveRecord::Base
     new_object.nomor_surat = params[:nomor_surat]
     new_object.exchange_id = params[:exchange_id]
     if new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "SO-" + new_object.id.to_s  
     new_object.save
     end
     
@@ -101,7 +101,12 @@ class SalesOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-   
+    
+    if Closing.is_date_closed(self.sales_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -116,7 +121,14 @@ class SalesOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if DeliveryOrder.where(:sales_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "SalesOrder sudah terpakai di DeliveryOrder")
+      return self
+    end
+    if Closing.is_date_closed(self.sales_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

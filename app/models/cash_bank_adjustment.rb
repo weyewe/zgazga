@@ -55,7 +55,7 @@ class CashBankAdjustment < ActiveRecord::Base
     new_object.adjustment_date = params[:adjustment_date]
     new_object.description = params[:description]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "CADJ-" + new_object.id.to_s  
     new_object.save
     return new_object
   end

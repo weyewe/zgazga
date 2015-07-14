@@ -76,7 +76,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     
     if new_object.save
       new_object.price = new_object.purchase_receival_detail.purchase_order_detail.price * new_object.amount
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "PID-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
     end

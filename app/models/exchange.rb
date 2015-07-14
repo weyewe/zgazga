@@ -70,7 +70,6 @@ class Exchange < ActiveRecord::Base
       self.gbch_payable.name = "GBCH Payable " + self.name.to_s
       self.gbch_payable.save
       self.gbch_receivable.name = "GBCH Receivable " + self.name.to_s
- 
       self.gbch_receivable.save
     end
     return self
@@ -81,14 +80,33 @@ class Exchange < ActiveRecord::Base
       self.errors.add(:generic_errors, "Tidak dapat menghapus base currency")
       return self
     end
-    
     if TransactionDataDetail.where(:account_id => self.account_payable_id).count > 0 or 
       TransactionDataDetail.where(:account_id => self.account_receivable_id).count > 0 or 
       TransactionDataDetail.where(:account_id => self.gbch_receivable_id).count > 0 or 
       TransactionDataDetail.where(:account_id => self.gbch_payable_id).count > 0 
       self.errors.add(:generic_errors, "Currency sudah terpakai")
+      return self
     end
-    
+    if PurchaseOrder.where(:exchange_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai di PurchaseOrder")
+      return self
+    end
+    if SalesOrder.where(:exchange_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai di SalesOrder")
+      return self
+    end
+    if Payable.where(:exchange_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai di CashBank")
+      return self
+    end
+    if Receivable.where(:exchange_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai di CashBank")
+      return self
+    end
+    if CashBank.where(:exchange_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Currency sudah terpakai di CashBank")
+      return self
+    end
     self.destroy
     return self
   end

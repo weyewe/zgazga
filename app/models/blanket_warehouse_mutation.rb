@@ -59,7 +59,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     new_object.warehouse_to_id = params[:warehouse_to_id]
     new_object.mutation_date = params[:mutation_date] 
     if new_object.save
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "BWM-" + new_object.id.to_s  
       new_object.save
     end
     return new_object

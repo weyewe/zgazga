@@ -66,6 +66,46 @@ class Contact < ActiveRecord::Base
   end
   
   def delete_object
+    if BlanketOrder.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di BlanketOrder")
+      return self
+    end
+    if RollerIdentificationForm.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di RollerIdentificationForm")
+      return self
+    end
+    if SalesOrder.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesOrder")
+      return self
+    end
+    if VirtualOrder.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di VirtualOrder")
+      return self
+    end
+    if PurchaseOrder.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseOrder")
+      return self
+    end
+    if PaymentRequest.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PaymentRequest")
+      return self
+    end
+    if SalesDownPayment.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesDownPayment")
+      return self
+    end
+    if PurchaseDownPayment.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseDownPayment")
+      return self
+    end
+    if SalesDownPaymentAllocation.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesDownPaymentAllocation")
+      return self
+    end
+    if PurchaseDownPaymentAllocation.where(:contact_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseDownPaymentAllocation")
+      return self
+    end
     self.destroy
   end
   

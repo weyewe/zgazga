@@ -18,6 +18,17 @@ class Closing < ActiveRecord::Base
     return self.closing_details
   end
   
+  def self.is_date_closed(check_date)
+    begin_date = check_date
+    end_date = check_date + 1.days
+    return Closing.where{
+      (is_closed.eq true) &&
+      (beginning_period.lte begin_date) &&
+      (end_date_period.gt end_date)
+    }
+    
+  end
+  
   def end_period_must_be_later_than_any_start_period
     return if not end_date_period.present? 
     current_end_period = self.end_date_period 

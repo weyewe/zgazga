@@ -69,7 +69,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
     new_object.amount = BigDecimal( params[:amount] || '0')
     new_object.pending_invoiced_amount = BigDecimal( params[:amount] || '0')
     if new_object.save
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "PRED-" + new_object.id.to_s  
       new_object.item_id = new_object.purchase_order_detail.item_id
       new_object.save
     end

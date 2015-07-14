@@ -28,6 +28,14 @@ class Employee < ActiveRecord::Base
   end
   
   def delete_object
+    if SalesOrder.where(:employee_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesOrder")
+      return self
+    end
+     if VirtualOrder.where(:employee_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Sudah terpakai di VirtualOrder")
+      return self
+    end
     self.destroy
   end
   

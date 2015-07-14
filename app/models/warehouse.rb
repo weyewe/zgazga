@@ -23,11 +23,26 @@ class Warehouse < ActiveRecord::Base
     self.description = params[:description]
     self.code = params[:code]
     self.save
-    self.save
     return self
   end
   
   def delete_object
+    warehouse_id = self.id
+     if WarehouseItem.where{
+      (warehouse_id == warehouse_id) && 
+      (amount.gt 0)
+      }.count > 0
+      self.errors.add(:generic_errors, "Item diwarehouse harus 0")
+      return self
+    end
+    if RollerIdentificationForm.where(:warehouse_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Warehouse sudah terpakai di RollerIdentificationForm")
+      return self
+    end
+    if BlanketOrder.where(:warehouse_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Warehouse sudah terpakai di BlanketOrder")
+      return self
+    end
     self.destroy
   end
 

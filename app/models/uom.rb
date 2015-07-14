@@ -21,6 +21,10 @@ class Uom < ActiveRecord::Base
   end
   
   def delete_object
+    if Item.where(:uom_id => self.id).count > 0
+      self.errors.add(:generic_errors, "UoM sudah terpakai")
+      return self
+    end
     self.destroy
   end
   

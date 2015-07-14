@@ -48,11 +48,18 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    virtual_delivery_order = VirtualDeliveryOrder.find_by_id(params[:virtual_delivery_order_id])
+    if not virtual_delivery_order.nil?
+      if virtual_delivery_order.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.virtual_delivery_order_id = params[:virtual_delivery_order_id]
     new_object.virtual_order_detail_id = params[:virtual_order_detail_id]
     new_object.amount = params[:amount]
     if new_object.save  
-    new_object.code = "Vdo-d" + new_object.id.to_s  
+    new_object.code = "VDOD-" + new_object.id.to_s  
     new_object.item_id = new_object.virtual_order_detail.item_id
     new_object.save
     end
@@ -60,6 +67,10 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.virtual_delivery_order.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.virtual_delivery_order_id = params[:virtual_delivery_order_id]
     self.virtual_order_detail_id = params[:virtual_order_detail_id]
     self.amount = params[:amount]
@@ -70,6 +81,10 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.virtual_delivery_order.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
   end
   

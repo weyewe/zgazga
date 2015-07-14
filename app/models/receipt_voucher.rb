@@ -56,7 +56,7 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.amount = BigDecimal("0")
     new_object.save
     if new_object.save
-      new_object.code = "Rv-" + new_object.id.to_s
+      new_object.code = "RV-" + new_object.id.to_s
       new_object.save
     end
     return new_object
@@ -184,6 +184,10 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
+    if Closing.is_date_closed(self.receipt_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.receipt_voucher_details.count == 0
       self.errors.add(:generic_errors, "Tidak memiliki detail")
       return self 
@@ -212,6 +216,10 @@ class ReceiptVoucher < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    if Closing.is_date_closed(self.receipt_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     if not self.is_gbch
@@ -254,10 +262,12 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di reconcile")
       return self 
     end
-    
-    
     self.is_reconciled = true
     self.reconciliation_date = params[:reconciliation_date]
+    if Closing.is_date_closed(self.reconciliation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.save
       self.reconciled_detail
       biaya_pembulatan = 0 
@@ -289,6 +299,10 @@ class ReceiptVoucher < ActiveRecord::Base
     end
     if self.amount > self.cash_bank.amount 
       self.errors.add(:generic_errors, "Dana tidak mencukupi")
+      return self 
+    end
+    if Closing.is_date_closed(self.reconciliation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     self.is_reconciled = false

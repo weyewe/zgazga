@@ -57,7 +57,7 @@ class PaymentVoucher < ActiveRecord::Base
     new_object.amount = BigDecimal("0")
     new_object.save
     if new_object.save
-      new_object.code = "Pv-" + new_object.id.to_s
+      new_object.code = "PV-" + new_object.id.to_s
       if new_object.cash_bank.exchange.is_base == true
         new_object.rate_to_idr = 1
       end
@@ -199,6 +199,10 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Tidak memiliki detail")
       return self 
     end 
+    if Closing.is_date_closed(self.payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.amount > self.cash_bank.amount 
       self.errors.add(:generic_errors, "Dana tidak mencukupi")
       return self 
@@ -226,6 +230,10 @@ class PaymentVoucher < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    if Closing.is_date_closed(self.payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     self.is_confirmed = false
@@ -265,9 +273,12 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Dana tidak mencukupi")
       return self 
     end
-    
     self.is_reconciled = true
     self.reconciliation_date = params[:reconciliation_date]
+    if Closing.is_date_closed(self.reconciliation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.save
       self.reconciled_detail
       biaya_pembulatan = 0 
@@ -295,6 +306,10 @@ class PaymentVoucher < ActiveRecord::Base
     end
     if not self.is_reconciled?
       self.errors.add(:generic_errors, "belum di reconcile")
+      return self 
+    end
+    if Closing.is_date_closed(self.reconciliation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     self.is_reconciled = false

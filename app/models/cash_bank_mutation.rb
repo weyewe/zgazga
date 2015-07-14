@@ -56,7 +56,7 @@ class CashBankMutation < ActiveRecord::Base
     new_object.mutation_date = params[:mutation_date]   
     new_object.no_bukti = params[:no_bukti]
     new_object.save
-    new_object.code = "Cmt-" + new_object.id.to_s  
+    new_object.code = "CBM-" + new_object.id.to_s  
     new_object.save
     return new_object
   end

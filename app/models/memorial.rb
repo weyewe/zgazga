@@ -15,7 +15,7 @@ class Memorial < ActiveRecord::Base
     new_object.no_bukti = params[:no_bukti]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save  
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "MEM-" + new_object.id.to_s  
       new_object.save
     end
     return new_object

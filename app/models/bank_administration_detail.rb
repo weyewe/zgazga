@@ -59,7 +59,7 @@ class BankAdministrationDetail < ActiveRecord::Base
     new_object.status = params[:status]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save
-      new_object.code = "Bad-" + new_object.id.to_s  
+      new_object.code = "BADMD-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
     end

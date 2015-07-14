@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe TenantReportsController do
+# describe TenantReportsController do
 
-end
+# end

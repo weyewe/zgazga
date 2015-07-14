@@ -37,11 +37,18 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    temporary_delivery_order = TemporaryDeliveryOrder.find_by_id(params[:temporary_delivery_order_id])
+    if not temporary_delivery_order.nil?
+      if temporary_delivery_order.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.temporary_delivery_order_id = params[:temporary_delivery_order_id]
     new_object.sales_order_detail_id = params[:sales_order_detail_id]
     new_object.amount = params[:amount]
     if new_object.save  
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "TDOD-" + new_object.id.to_s  
     new_object.item_id = new_object.sales_order_detail.item_id
     new_object.save
     end
@@ -49,6 +56,10 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.temporary_delivery_order.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.temporary_delivery_order_id = params[:temporary_delivery_order_id]
     self.sales_order_detail_id = params[:sales_order_detail_id]
     self.amount = params[:amount]
@@ -59,7 +70,12 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.temporary_delivery_order.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
+    return self
   end
   
   

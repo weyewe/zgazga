@@ -197,9 +197,9 @@ module AccountingService
     end
     
     def CreateReceiptVoucherJournal.create_reconcile_journal(receipt_voucher) 
-      message = "Payment Request"
+      message = "Receipt Voucher"
         ta = TransactionData.create_object({
-          :transaction_datetime => receipt_voucher.receipt_date,
+          :transaction_datetime => receipt_voucher.reconciliation_date,
           :description =>  message,
           :transaction_source_id => receipt_voucher.id , 
           :transaction_source_type => receipt_voucher.class.to_s ,

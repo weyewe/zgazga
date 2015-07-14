@@ -45,7 +45,7 @@ class DeliveryOrder < ActiveRecord::Base
     new_object.nomor_surat = params[:nomor_surat]
     new_object.sales_order_id = params[:sales_order_id]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "DO-" + new_object.id.to_s  
     new_object.save
     
     return new_object

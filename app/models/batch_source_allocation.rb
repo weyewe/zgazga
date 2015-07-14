@@ -116,8 +116,8 @@ class BatchSourceAllocation < ActiveRecord::Base
       multiplier = 1 
       multiplier = -1 if self.status == ADJUSTMENT_STATUS[:addition]
       
-      batch_instance.update_amount( multiplier*self.amount )
-      batch_instance.update_total_allocated_amount( multiplier * new_object.amount  )
+      batch_instance.update_amount( multiplier * self.amount )
+      batch_instance.update_total_allocated_amount( multiplier * self.amount  )
       
       batch_source.update_unallocated_amount(   amount )
       
