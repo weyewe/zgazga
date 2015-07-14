@@ -68,32 +68,48 @@ Ext.define('AM.controller.RecoveryResults', {
 				click : this.executeProcess
 			},
 			
-			'recoveryresultProcess recoveryresultlist button[action=finishObject]': {
-        click: this.finishObject
-      },
+	'recoveryresultProcess recoveryresultlist button[action=finishObject]': {
+		click: this.finishObject
+	},
 
 		 
-			'finishrecoveryresultform button[action=finish]' : {
-				click : this.executeFinish
-			},
+	'finishrecoveryresultform button[action=finish]' : {
+		click : this.executeFinish
+	},
 			
-			'recoveryresultProcess recoveryresultlist button[action=unfinishObject]': {
-        click: this.unfinishObject
-      },
+	'recoveryresultProcess recoveryresultlist button[action=unfinishObject]': {
+	    click: this.unfinishObject
+	},
 
 		 
-			'unfinishrecoveryresultform button[action=unfinish]' : {
-				click : this.executeUnfinish
-			},
+	'unfinishrecoveryresultform button[action=unfinish]' : {
+		click : this.executeUnfinish
+	}, 
+	
+	'recoveryresultProcess recoveryresultlist button[action=rejectObject]': {
+		click: this.rejectObject
+	},
+		 
+	'rejectrecoveryresultform button[action=reject]' : {
+		click : this.executeReject
+	},
 			
-	 
+	'recoveryresultProcess recoveryresultlist button[action=unrejectObject]': {
+	    click: this.unrejectObject
+	},
 
-			'recoveryresultProcess recoveryresultlist textfield[name=searchField]': {
-				change: this.liveSearch
-			},
-			'recoveryresultform button[action=save]': {
+		 
+	'unrejectrecoveryresultform button[action=unreject]' : {
+		click : this.executeUnreject
+	}, 
+	
+	'recoveryresultProcess recoveryresultlist textfield[name=searchField]': {
+		change: this.liveSearch
+	},
+	
+	'recoveryresultform button[action=save]': {
         click: this.updateObject
-      }
+	}	
 		
     });
   },
@@ -241,12 +257,12 @@ Ext.define('AM.controller.RecoveryResults', {
 	executeProcess: function(button){
 		var me = this; 
 		var win = button.up('window');
-    var form = win.down('form');
+    	var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryResultsStore();
+    	var store = this.getRecoveryResultsStore();
 		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
+    	var values = form.getValues();
  
 		if(record){
 			var rec_id = record.get("id");
@@ -288,8 +304,7 @@ Ext.define('AM.controller.RecoveryResults', {
 					
 					form.getForm().markInvalid(errors);
 					record.reject(); 
-					AM.view.Constants.highlightSelectedRow( list );       
-					// this.reject(); 
+					AM.view.Constants.highlightSelectedRow( list );     
 				}
 			});
 		}
@@ -411,24 +426,17 @@ Ext.define('AM.controller.RecoveryResults', {
 		} 
 	},
 
-	unfinishObject: function(){
-		// console.log("the startObject callback function");
-		var view = Ext.widget('unfinishrecoveryresultform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-    view.show();
-		// this.reloadRecordView( record, view ) ; 
-	},
+ 
 	
 	executeFinish: function(button){
 		var me = this; 
 		var win = button.up('window');
-    var form = win.down('form');
+    	var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryResultsStore();
+    	var store = this.getRecoveryResultsStore();
 		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
+    	var values = form.getValues();
  
 		if(record){
 		 
@@ -488,12 +496,12 @@ Ext.define('AM.controller.RecoveryResults', {
 	executeUnfinish: function(button){
 		var me = this; 
 		var win = button.up('window');
-    var form = win.down('form');
+    	var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryResultsStore();
+    	var store = this.getRecoveryResultsStore();
 		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
+    	var values = form.getValues();
  
 		if(record){
 			var rec_id = record.get("id");
@@ -507,6 +515,130 @@ Ext.define('AM.controller.RecoveryResults', {
 			record.save({
 				params : {
 					unfinish: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
+					
+					// me.reloadRecord( record ) ; 
+					
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );       
+					
+					list.enableRecordButtons();
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+
+	rejectObject: function(){ 
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('rejectrecoveryresultform'); 
+			view.setParentData( record );
+			view.show();
+		} 
+	},
+
+ 
+	
+	executeReject: function(button){
+		var me = this; 
+		var win = button.up('window');
+    	var form = win.down('form');
+		var list = this.getList();
+
+    	var store = this.getRecoveryResultsStore();
+		var record = this.getList().getSelectedObject();
+    	var values = form.getValues();
+ 
+		if(record){
+		 
+			
+			record.set( 'rejected_date' , values['rejected_date'] ); 
+			 
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
+			form.setLoading(true);
+			record.save({
+				params : {
+					reject: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
+					
+		 
+			    
+			    
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					list.enableRecordButtons();
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+			
+			
+			
+		}
+	},
+	 
+	
+
+	unrejectObject: function(){ 
+		var view = Ext.widget('unrejectrecoveryresultform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+		view.show(); 
+	},
+	
+	
+	executeUnreject: function(button){
+		var me = this; 
+		var win = button.up('window');
+    	var form = win.down('form');
+		var list = this.getList();
+
+    	var store = this.getRecoveryResultsStore();
+		var record = this.getList().getSelectedObject();
+    	var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			// record.set( 'finished_at' , values['finished_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unreject: true 
 				},
 				success : function(new_record){
 					form.setLoading(false);

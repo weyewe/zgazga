@@ -114,6 +114,37 @@ class Api::RecoveryResultsController < Api::BaseApiController
       end 
       
       
+    elsif params[:reject].present?    
+      
+      if not current_user.has_role?( :recovery_results, :reject)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.reject_object(  params[:recovery_result] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
+      
+    elsif params[:unreject].present?    
+      
+      if not current_user.has_role?( :recovery_results, :unreject)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.unreject_object
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end 
+      
+      
     else
       @object.process_object(params[:recovery_result])
     end

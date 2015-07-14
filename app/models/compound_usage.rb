@@ -36,8 +36,8 @@ class CompoundUsage < ActiveRecord::Base
             return self 
         end
         
-        if not object.is_finished?
-            self.errors.add(:generic_errors, "Recovery Detail Harus finished")
+        if not object.is_finished? and not object.is_rejected? 
+            self.errors.add(:generic_errors, "Recovery Detail Harus finished atau Rejected")
             return self 
         end
          

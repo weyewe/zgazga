@@ -4,6 +4,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
   belongs_to :roller_builder
   has_many  :recovery_accessory_details
   has_many :compound_usages 
+  has_many :compound_underlayer_usages 
   validates_presence_of :roller_identification_form_detail_id
   validates_presence_of :roller_builder_id
   validates_presence_of :core_type_case
@@ -143,13 +144,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     # self.ensure_compound_batch_and_amount_is_valid
+
     return self if self.errors.size != 0 
     
     
     
-    self.is_finished = true
-    
-    puts "\n\n\n\n\n\n\n\n> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> The finished date: #{params[:finished_date]}"
+    self.is_finished = true 
     self.finished_date = params[:finished_date]
     if self.save
       # create batch stock mutation
@@ -274,6 +274,17 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
+    if self.compound_usages.count != 0
+      self.errors.add(:generic_errors, "Sudah ada pengalokasian penggunaan compound")
+      return self 
+    end
+    
+    if self.compound_underlayer_usages.count != 0 
+      self.errors.add(:generic_errors, "Sudah ada pengalokasian penggunaan compound underlayer")
+      return self 
+    end
+    
+    
     self.is_finished = false
     self.finished_date = nil
     if self.save
@@ -346,6 +357,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
+
     
     # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
@@ -404,6 +416,16 @@ class RecoveryOrderDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah finish")
       return self 
     end
+    
+    if self.compound_usages.count != 0
+      self.errors.add(:generic_errors, "Sudah ada pengalokasian penggunaan compound")
+    end
+    
+    if self.compound_underlayer_usages.count != 0 
+      self.errors.add(:generic_errors, "Sudah ada pengalokasian penggunaan compound underlayer")
+    end
+    
+    return self if self.errors.size != 0 
     
     self.is_rejected = false
     self.rejected_date = nil

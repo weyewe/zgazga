@@ -21,7 +21,11 @@ Ext.define('AM.view.operation.recoveryresult.UnrejectForm', {
 					anchor: '100%'
       },
       items: [
-
+         {
+    		        xtype: 'displayfield',
+    		        name : 'rejected_date',
+    		        fieldLabel: 'Tanggal Reject'
+    		  	  },
 			]
     }];
 
@@ -38,5 +42,6 @@ Ext.define('AM.view.operation.recoveryresult.UnrejectForm', {
   },
 
 	setParentData: function( record ) {
+	  this.down('form').getForm().findField('rejected_date').setValue(record.get('rejected_date')); 
 	}
 });

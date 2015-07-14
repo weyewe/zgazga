@@ -21,7 +21,11 @@ Ext.define('AM.view.operation.recoveryresult.UnfinishForm', {
 					anchor: '100%'
       },
       items: [
-
+         {
+    		        xtype: 'displayfield',
+    		        name : 'finished_date',
+    		        fieldLabel: 'Tanggal Finish'
+    		  	  },
 			]
     }];
 
@@ -38,5 +42,6 @@ Ext.define('AM.view.operation.recoveryresult.UnfinishForm', {
   },
 
 	setParentData: function( record ) {
+	  this.down('form').getForm().findField('finished_date').setValue(record.get('finished_date')); 
 	}
 });

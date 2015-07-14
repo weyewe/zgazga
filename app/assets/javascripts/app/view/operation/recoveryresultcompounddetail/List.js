@@ -74,6 +74,6 @@ Ext.define('AM.view.operation.recoveryresultcompounddetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("RecoveryResult: " + record.get("code"));
+		this.setTitle("RecoveryResult from RIF: " + record.get("roller_identification_form_detail_id"));
 	}
 });
