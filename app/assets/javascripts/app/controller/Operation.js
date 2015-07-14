@@ -557,8 +557,20 @@ Ext.define("AM.controller.Operation", {
 		iconCls		: 'text-folder', 
     	expanded	: true,
 		children 	: [
+			{ 
+				text:'Identification (RIF)', 
+				viewClass:'AM.view.operation.RollerIdentificationForm', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'roller_identification_forms',
+						action : 'index'
+					}
+				]
+			}, 
         	{ 
-				text:'Recovery Order', 
+				text:'WO (RCN)', 
 				viewClass:'AM.view.operation.RecoveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -570,25 +582,25 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Clearance', 
-				viewClass:'AM.view.operation.RecoveryOrderClearance', 
+				text:'Process (RWC)', 
+				viewClass:'AM.view.operation.RecoveryResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_order_clearances',
+						controller : 'recovery_results',
 						action : 'index'
 					}
 				]
 			}, 
 			{ 
 				text:'Pindah Gudang', 
-				viewClass:'AM.view.operation.RecoveryWarehouseMutation', 
+				viewClass:'AM.view.operation.RollerWarehouseMutation', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'recovery_warehouse_mutations',
+						controller : 'roller_warehouse_mutations',
 						action : 'index'
 					}
 				]
@@ -603,7 +615,7 @@ Ext.define("AM.controller.Operation", {
     	expanded	: true,
 		children 	: [
         	{ 
-				text:'Blanket Order', 
+				text:'WO', 
 				viewClass:'AM.view.operation.BlanketOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -615,13 +627,13 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Clearance', 
-				viewClass:'AM.view.operation.BlanketOrderClearance', 
+				text:'Process', 
+				viewClass:'AM.view.operation.BlanketResult', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'blankety_order_clearances',
+						controller : 'blanket_results',
 						action : 'index'
 					}
 				]
@@ -649,12 +661,12 @@ Ext.define("AM.controller.Operation", {
 		children 	: [
         	{ 
 				text:'Blending Order', 
-				viewClass:'AM.view.operation.BlendingOrder', 
+				viewClass:'AM.view.operation.BlendingWorkOrder', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'blending_orders',
+						controller : 'blending_work_orders',
 						action : 'index'
 					}
 				]
@@ -672,11 +684,11 @@ Ext.define("AM.controller.Operation", {
 		me.folderList = [
 			this.logisticFolder,
 			this.batchFolder, 
-			this.manufacturingFolder,
+			// this.manufacturingFolder,
 			
- 			// this.recoveryFolder,
- 			// this.blanketFolder,
- 			// this.blendingFolder,
+ 			this.recoveryFolder,
+ 			this.blanketFolder,
+ 			this.blendingFolder,
 			this.salesFolder,
 			this.purchaseFolder,
  			this.financeFolder,
