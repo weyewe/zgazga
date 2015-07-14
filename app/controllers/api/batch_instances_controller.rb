@@ -140,7 +140,7 @@ class Api::BatchInstancesController < Api::BaseApiController
         
         if not object.nil?
          query_code = query_code.where(
-            :item_id => object.blanket.item.id 
+            :item_id => object.blanket.roll_blanket_item_id
           )
         end
       end
