@@ -61,7 +61,7 @@ class VirtualOrder < ActiveRecord::Base
     new_object.nomor_surat = params[:nomor_surat]
     new_object.exchange_id = params[:exchange_id]
     new_object.save
-    new_object.code = "Vo-" + new_object.id.to_s  
+    new_object.code = "VO-" + new_object.id.to_s  
     new_object.save
     
     return new_object

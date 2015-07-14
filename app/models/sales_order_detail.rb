@@ -70,7 +70,7 @@ class SalesOrderDetail < ActiveRecord::Base
     new_object.pending_delivery_amount = BigDecimal( params[:amount] || '0')
     new_object.price = BigDecimal( params[:price] || '0')
     if new_object.save
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "SOD-" + new_object.id.to_s  
       new_object.pending_delivery_amount  = new_object.amount
       new_object.save
     end

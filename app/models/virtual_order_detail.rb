@@ -61,15 +61,13 @@ class VirtualOrderDetail < ActiveRecord::Base
         return new_object 
       end
     end
-    
-   
     new_object.virtual_order_id = params[:virtual_order_id]
     new_object.item_id = params[:item_id]
     new_object.amount = BigDecimal( params[:amount] || '0')
     new_object.pending_delivery_amount = BigDecimal( params[:amount] || '0')
     new_object.price = BigDecimal( params[:price] || '0')
     if new_object.save
-      new_object.code = "Vo-D" + new_object.id.to_s  
+      new_object.code = "VOD-" + new_object.id.to_s  
       new_object.save
     end
     return new_object

@@ -48,7 +48,7 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     new_object.rate_to_idr = BigDecimal( params[:rate_to_idr] || '0')
     new_object.total_amount = 0
     if new_object.save
-    new_object.code = "PDA-" + new_object.id.to_s  
+    new_object.code = "PDPA-" + new_object.id.to_s  
     new_object.save
     end
     return new_object
@@ -92,6 +92,10 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if Closing.is_date_closed(self.allocation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
@@ -108,6 +112,10 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "Belum di konfirmasi")
       return self
+    end
+    if Closing.is_date_closed(self.allocation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
     end
     self.is_confirmed = false
     self.confirmed_at = nil

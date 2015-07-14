@@ -136,6 +136,10 @@ class ItemType < ActiveRecord::Base
   end
   
   def delete_object
+    if Item.where(:item_type_id => self.id).count > 0
+      self.errors.add(:generic_errors, "ItemType sudah terpakai")
+      return self
+    end
     self.destroy
   end
   

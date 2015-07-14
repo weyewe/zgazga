@@ -46,7 +46,7 @@ class VirtualDeliveryOrder < ActiveRecord::Base
     new_object.warehouse_id = params[:warehouse_id]
     new_object.delivery_date = params[:delivery_date]
     if new_object.save  
-    new_object.code = "Vdo-" + new_object.id.to_s  
+    new_object.code = "VDO-" + new_object.id.to_s  
     new_object.save
     end
     return new_object

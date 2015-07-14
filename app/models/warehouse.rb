@@ -23,7 +23,6 @@ class Warehouse < ActiveRecord::Base
     self.description = params[:description]
     self.code = params[:code]
     self.save
-    self.save
     return self
   end
   

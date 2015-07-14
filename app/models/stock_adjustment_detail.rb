@@ -95,7 +95,7 @@ class StockAdjustmentDetail < ActiveRecord::Base
     new_object.amount = params[:amount]
     new_object.status = params[:status]
     if new_object.save
-      new_object.code = "SadjD-" + new_object.id.to_s  
+      new_object.code = "SADJD-" + new_object.id.to_s  
       new_object.calculateTotalAmount
       new_object.save
     end

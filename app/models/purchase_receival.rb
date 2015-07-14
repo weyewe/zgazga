@@ -45,7 +45,7 @@ class PurchaseReceival < ActiveRecord::Base
     new_object.nomor_surat = params[:nomor_surat]
     new_object.purchase_order_id = params[:purchase_order_id]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "PRE-" + new_object.id.to_s  
     new_object.save
     
     return new_object
@@ -83,7 +83,10 @@ class PurchaseReceival < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-   
+    if Closing.is_date_closed(self.receival_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.purchase_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.receival_date,
@@ -111,7 +114,10 @@ class PurchaseReceival < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if Closing.is_date_closed(self.receival_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     item_id_list = self.purchase_receival_details.map{|x| x.item_id  } 
     if BatchSourceAllocation.joins(:batch_source).where{
       batch_sources.item_id.in item_id_list

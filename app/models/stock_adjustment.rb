@@ -44,7 +44,7 @@ class StockAdjustment < ActiveRecord::Base
     new_object.adjustment_date = params[:adjustment_date]
     new_object.description = params[:description]
     new_object.save
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "SADJ-" + new_object.id.to_s  
     new_object.save
     
     return new_object

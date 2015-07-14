@@ -80,6 +80,10 @@ class SalesDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if Closing.is_date_closed(self.down_payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
@@ -112,6 +116,10 @@ class SalesDownPayment < ActiveRecord::Base
     if self.receivable.remaining_amount < self.receivable.amount
       self.errors.add(:generic_errors, "Receivable tidak boleh sudah diuangkan")
       return self
+    end
+    if Closing.is_date_closed(self.down_payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
     end
     self.is_confirmed = false
     self.confirmed_at = nil

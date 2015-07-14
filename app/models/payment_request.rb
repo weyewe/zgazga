@@ -44,7 +44,7 @@ class PaymentRequest < ActiveRecord::Base
     new_object.due_date = params[:due_date]
     new_object.account_id = params[:account_id]
     if new_object.save
-      new_object.code = "Pr-" + new_object.id.to_s
+      new_object.code = "PR-" + new_object.id.to_s
       new_object.exchange_id = new_object.account.exchange.id
       new_object.save
     end
@@ -105,13 +105,15 @@ class PaymentRequest < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
-    
+    if Closing.is_date_closed(self.request_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.payment_request_details.count == 0
       self.errors.add(:generic_errors, "Tidak memiliki detail")
       return self 
     end
-    
-    
+   
     if self.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.request_date,
@@ -134,6 +136,10 @@ class PaymentRequest < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    if Closing.is_date_closed(self.request_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     prclass = self.class.to_s

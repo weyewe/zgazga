@@ -34,7 +34,12 @@ class SubType < ActiveRecord::Base
   end
   
   def delete_object
+    if Item.where(:sub_type_id => self.id).count > 0
+      self.errors.add(:generic_errors, "SubType sudah terpakai")
+      return self
+    end
     self.destroy
+    return self
   end
   
 end

@@ -26,6 +26,18 @@ class Machine < ActiveRecord::Base
   end
   
   def delete_object
+    if RollerIdentificationFormDetail.where(:machine_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Machine sudah terpakai")
+      return self
+    end
+    if RollerBuilder.where(:machine_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Machine sudah terpakai")
+      return self
+    end
+    if Blanket.where(:machine_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Machine sudah terpakai")
+      return self
+    end
     self.destroy
   end
 end

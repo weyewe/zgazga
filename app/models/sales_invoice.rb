@@ -50,7 +50,7 @@ class SalesInvoice < ActiveRecord::Base
     new_object.due_date = params[:due_date]
     if new_object.save  
       new_object.exchange_id = new_object.delivery_order.sales_order.exchange_id
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "SI-" + new_object.id.to_s  
       new_object.save
     end
     return new_object
@@ -92,7 +92,10 @@ class SalesInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-    
+    if Closing.is_date_closed(self.invoice_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.delivery_order.sales_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.invoice_date,
@@ -120,7 +123,10 @@ class SalesInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if Closing.is_date_closed(self.invoice_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     siclass = self.class.to_s
     siid = self.id
     receipt_voucher_count = ReceiptVoucherDetail.joins(:receivable).where{

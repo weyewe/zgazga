@@ -51,7 +51,7 @@ class PurchaseInvoice < ActiveRecord::Base
     if new_object.save  
     new_object.exchange_id = new_object.purchase_receival.purchase_order.exchange_id
     new_object.is_taxable =  new_object.purchase_receival.purchase_order.contact.is_taxable   
-    new_object.code = "Cadj-" + new_object.id.to_s  
+    new_object.code = "PI-" + new_object.id.to_s  
     new_object.save
     end
     return new_object
@@ -95,7 +95,10 @@ class PurchaseInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-    
+    if Closing.is_date_closed(self.invoice_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if self.purchase_receival.purchase_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.invoice_date,
@@ -124,7 +127,10 @@ class PurchaseInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if Closing.is_date_closed(self.invoice_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     piclass = self.class.to_s
     piid = self.id
     payment_voucher_count = PaymentVoucherDetail.joins(:payable).where{

@@ -47,7 +47,7 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
     new_object.warehouse_id = params[:warehouse_id]
     new_object.delivery_date = params[:delivery_date]
     if new_object.save  
-    new_object.code = "Tdo-" + new_object.id.to_s  
+    new_object.code = "TDO-" + new_object.id.to_s  
     new_object.save
     end
     return new_object

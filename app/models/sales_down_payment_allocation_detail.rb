@@ -56,7 +56,7 @@ class SalesDownPaymentAllocationDetail < ActiveRecord::Base
     new_object.rate = BigDecimal( params[:rate] )
     new_object.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
     if new_object.save
-    new_object.code = "SDAd-" + new_object.id.to_s  
+    new_object.code = "SDPAD-" + new_object.id.to_s  
     new_object.save
     new_object.calculateTotalAmount
     end
