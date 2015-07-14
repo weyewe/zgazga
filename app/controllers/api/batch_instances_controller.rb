@@ -141,7 +141,7 @@ class Api::BatchInstancesController < Api::BaseApiController
         end
       end
       
-      if params[:recovery_order_detail_id].present? 
+      if   params[:recovery_order_detail_id].present? 
         object = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
         
         if not object.nil?
@@ -151,7 +151,8 @@ class Api::BatchInstancesController < Api::BaseApiController
         end
       end
       
-      if params[:recovery_order_detail_underlayer_id].present? 
+      
+      if params[:is_underlayer].present?  
         object = Item.find_by_id params[:recovery_order_detail_underlayer_id]
         
         if not object.nil?

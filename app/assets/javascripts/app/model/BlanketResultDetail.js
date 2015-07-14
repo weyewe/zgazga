@@ -4,9 +4,9 @@ Ext.define('AM.model.BlanketResultDetail', {
  
     	    { name: 'id', type: 'int' },
     	    { name: 'blanket_order_detail_id', type: 'int' },
-    	    { name: 'finish_amount', type: 'int' },
-    	    { name: 'defect_amount', type: 'int' },
-    	    { name: 'reject_amount', type: 'int' },
+    	    { name: 'finish_amount', type: 'string' },
+    	    { name: 'defect_amount', type: 'string' },
+    	    { name: 'reject_amount', type: 'string' },
 			{ name: 'batch_instance_id', type: 'int' } ,
 			{ name: 'batch_instance_name', type: 'string' } ,
 		 

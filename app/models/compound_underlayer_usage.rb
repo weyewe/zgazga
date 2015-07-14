@@ -36,8 +36,8 @@ class CompoundUnderlayerUsage < ActiveRecord::Base
             return self 
         end
         
-        if not object.is_finished?
-            self.errors.add(:generic_errors, "Recovery Order Detail Harus finished")
+        if not object.is_finished? and not object.is_rejected? 
+            self.errors.add(:generic_errors, "Recovery Detail Harus finished atau Rejected")
             return self 
         end
          
@@ -108,13 +108,18 @@ class CompoundUnderlayerUsage < ActiveRecord::Base
         return new_object
     end
     
+    def mutation_date
+        return self.recovery_order_detail.finished_date   if self.recovery_order_detail.is_finished? 
+        return self.recovery_order_detail.rejected_date   if self.recovery_order_detail.is_rejected?
+    end
+    
     def create_reject_batch_stock_mutation
         BatchStockMutation.create_object(
               :source_class => self.class.to_s, 
               :source_id => self.id ,  
               :amount => self.reject_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => self.recovery_order_detail.finished_date     ,  
+              :mutation_date => self.mutation_date  ,  
               :item_id =>  self.recovery_order_detail.compound_under_layer_id  ,
               :batch_instance_id => self.batch_instance_id,
               :description => "[REJECT] recovery manufacturing"
@@ -127,7 +132,7 @@ class CompoundUnderlayerUsage < ActiveRecord::Base
               :source_id => self.id ,  
               :amount => self.defect_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => self.recovery_order_detail.finished_date     ,  
+              :mutation_date =>  self.mutation_date    ,  
               :item_id =>  self.recovery_order_detail.compound_under_layer_id  ,
               :batch_instance_id => self.batch_instance_id,
               :description => "[DEFECT] recovery manufacturing"
@@ -140,10 +145,10 @@ class CompoundUnderlayerUsage < ActiveRecord::Base
               :source_id => self.id ,  
               :amount => self.finish_amount ,  
               :status => ADJUSTMENT_STATUS[:deduction],  
-              :mutation_date => self.recovery_order_detail.finished_date     ,  
+              :mutation_date =>  self.mutation_date     ,  
               :item_id =>  self.recovery_order_detail.compound_under_layer_id   ,
               :batch_instance_id => self.batch_instance_id,
-              :description => "[FINISHG] recovery manufacturing"
+              :description => "[FINISH] recovery manufacturing"
               )  
     end
     

@@ -37,9 +37,9 @@ class Api::RecoveryResultCompoundDetailsController < Api::BaseApiController
     @object.delete_object 
 
     if  not @object.persisted? 
-      render :json => { :success => true, :total => @parent.active_children.count }  
+      render :json => { :success => true, :total => @parent.active_compound_children.count }  
     else
-      render :json => { :success => false, :total =>@parent.active_children.count ,
+      render :json => { :success => false, :total => @parent.active_compound_children.count ,
             :message => {
               :errors => extjs_error_format( @object.errors )  
             }

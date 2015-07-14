@@ -1,18 +1,16 @@
-Ext.define('AM.view.operation.recoveryresultcompounddetail.List' ,{
+Ext.define('AM.view.operation.recoveryresultunderlayerdetail.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.recoveryresultcompounddetaillist',
+  	alias : 'widget.recoveryresultunderlayerdetaillist',
 
-  	store: 'RecoveryResultCompoundDetails', 
+  	store: 'RecoveryResultUnderlayerDetails', 
  
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'RollBlanket Batch', dataIndex: 'batch_instance_name', flex: 1},
+			{ header: 'Underlayer Batch', dataIndex: 'batch_instance_name', flex: 1},
 			{ header: 'Finish (meter)',  dataIndex: 'finish_amount', flex: 1},
     		{ header: 'Reject (meter)',  dataIndex: 'reject_amount', flex: 1},
-    		{ header: 'Defect (meter)',  dataIndex: 'defect_amount', flex: 2}, 
-			
-			 
+    		{ header: 'Defect (meter)',  dataIndex: 'defect_amount', flex: 2},  
 		];
 		
 
@@ -74,6 +72,6 @@ Ext.define('AM.view.operation.recoveryresultcompounddetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("Alokasi batch compound untuk  RIF: "  + record.get("roller_identification_form_detail_id"));
+		this.setTitle("Alokasi batch underlayer untuk  RIF: "  + record.get("roller_identification_form_detail_id"));
 	}
 });

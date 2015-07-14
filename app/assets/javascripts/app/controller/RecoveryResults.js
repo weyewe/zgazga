@@ -24,6 +24,10 @@ Ext.define('AM.controller.RecoveryResults', {
 			ref : 'recoveryResultCompoundDetailList',
 			selector : 'recoveryresultcompounddetaillist'
 		},
+		{
+			ref : 'recoveryResultUnderlayerDetailList',
+			selector : 'recoveryresultunderlayerdetaillist'
+		},
 		
 		{
 			ref : 'form',
@@ -336,6 +340,7 @@ Ext.define('AM.controller.RecoveryResults', {
 		
 		me.updateChildGrid(record );
 		me.updateCompoundChildGrid(record);
+		me.updateUnderlayerChildGrid(record);
 		
 		 
 
@@ -385,7 +390,25 @@ Ext.define('AM.controller.RecoveryResults', {
 		});
 		
 	},
-	
+	updateUnderlayerChildGrid: function(record){
+		var templateDetailGrid = this.getRecoveryResultUnderlayerDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
+		
+		// console.log("record id: " + record.get("id"));
+		
+		templateDetailGrid.getStore().getProxy().extraParams.recovery_result_id =  record.get('id') ;
+		 
+		templateDetailGrid.getStore().load({
+			params : {
+				recovery_result_id : record.get('id')
+			},
+			callback : function(records, options, success){
+				templateDetailGrid.enableAddButton(); 
+			}
+		});
+		
+	},
 	reloadRecord: function(record){
 		
 		var list = this.getList();

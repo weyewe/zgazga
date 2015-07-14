@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.blanketresultdetail.Form', {
+Ext.define('AM.view.operation.recoveryresultunderlayerdetail.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.blanketresultdetailform',
+  alias : 'widget.recoveryresultunderlayerdetailform',
 
-  title : 'Add / Edit Blanket Batch Allocation',
+  title : 'Alokasi Penggunaan batch underlayer',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -12,10 +12,7 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 // if autoShow == true.. on instantiation, will automatically be called 
 	
   initComponent: function() {
-	
-	
-   
-	
+	 
 	
 	var remoteJsonStoreBatchInstance = Ext.create(Ext.data.JsonStore, {
 		storeId : 'batch_instance_search',
@@ -40,24 +37,25 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 			url : 'api/search_batch_instances',
 			reader : {
 				type : 'json',
-				root : 'batch_instances', 
+				root : 'records', 
 				totalProperty  : 'total'
 			}
 		},
 		autoLoad : false 
 	});
-		
 	
 	 
 		
+	
+		
     this.items = [{
-      xtype: 'form',
-			msgTarget	: 'side',
-			border: false,
-      bodyPadding: 10,
-			fieldDefaults: {
-          labelWidth: 165,
-					anchor: '100%'
+	 	xtype: 'form',
+		msgTarget	: 'side',
+		border: false,
+	    bodyPadding: 10,
+		fieldDefaults: {
+  		labelWidth: 165,
+		anchor: '100%'
       },
       items: [
 			{
@@ -68,8 +66,8 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 			
 			{
 				xtype: 'hidden',
-				name : 'blanket_order_detail_id',
-				fieldLabel: 'blanket_order_detail_id'
+				name : 'recovery_order_detail_id',
+				fieldLabel: 'recovery_order_detail_id'
 			},
  
 			
@@ -120,6 +118,7 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 		]
     }];
 
+
     this.buttons = [{
       text: 'Save',
       action: 'save'
@@ -131,12 +130,13 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 
     this.callParent(arguments);
   },
-  
-	setExtraParamInBatchInstanceComboBox: function( blanket_order_detail_id ){
+
+	setExtraParamInBatchInstanceComboBox: function( recovery_order_detail_underlayer_id ){
 		var comboBox = this.down('form').getForm().findField('batch_instance_id'); 
 		var store = comboBox.store;
-		
-		store.getProxy().extraParams.blanket_order_detail_id =  blanket_order_detail_id;
+		 
+		store.getProxy().extraParams.recovery_order_detail_underlayer_id = recovery_order_detail_underlayer_id; 
+		store.getProxy().extraParams.is_underlayer = true; 
 	},
 	
 	
@@ -144,7 +144,7 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 		
 		console.log( record ) ;
 		var me =this;
-		me.setExtraParamInBatchInstanceComboBox( record.get("id") ); 
+		me.setExtraParamInBatchInstanceComboBox( record.get("compound_under_layer_id") ); 
 	},
 
 	setSelectedBatchInstance: function( batch_instance_id ){
@@ -173,9 +173,10 @@ Ext.define('AM.view.operation.blanketresultdetail.Form', {
 	},
 	
 	
+	
 	setParentData: function( record) {
-		this.down('form').getForm().findField('blanket_order_detail_id').setValue(record.get('id')); 
-		// this.down('form').getForm().findField('template_id').setValue(record.get('id'));
+		// this.down('form').getForm().findField('template_code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('recovery_order_detail_id').setValue(record.get('id'));
 	}
  
 });

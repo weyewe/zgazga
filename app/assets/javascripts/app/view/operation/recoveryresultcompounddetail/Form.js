@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.recoveryresultcompounddetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.recoveryresultcompounddetailform',
 
-  title : 'Add / Edit Recovery Result Compound Usage Detail',
+  title : 'Alokasi penggunaan compound',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -135,7 +135,7 @@ Ext.define('AM.view.operation.recoveryresultcompounddetail.Form', {
 		var comboBox = this.down('form').getForm().findField('batch_instance_id'); 
 		var store = comboBox.store;
 		
-		store.getProxy().extraParams.recovery_order_detail_id =  recovery_order_detail_id;
+		store.getProxy().extraParams.recovery_order_detail_id =  recovery_order_detail_id; 
 	},
 	
 	

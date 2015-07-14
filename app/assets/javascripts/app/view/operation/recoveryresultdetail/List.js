@@ -85,6 +85,6 @@ Ext.define('AM.view.operation.recoveryresultdetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("RecoveryResult from RIF: " + record.get("roller_identification_form_detail_id"));
+		this.setTitle("Tambah Aksesoris untuk  RIF: " + record.get("roller_identification_form_detail_id"));
 	}
 });

@@ -38,7 +38,11 @@ Ext.define('AM.view.operation.RecoveryResult', {
 
 					{
 						xtype : 'recoveryresultcompounddetaillist',
-						flex : 2
+						flex : 1
+					},
+					{
+						xtype : 'recoveryresultunderlayerdetaillist',
+						flex : 1
 					},
 				]
 				

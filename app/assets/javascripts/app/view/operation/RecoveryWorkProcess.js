@@ -22,7 +22,7 @@ Ext.define('AM.view.operation.RecoveryWorkProcess', {
 				xtype :'recoveryworkprocessdetaillist',
 				// html : "This is gonna be the price_rule",
 				flex : 1
-			} 
+			}  
 		],
  
 });

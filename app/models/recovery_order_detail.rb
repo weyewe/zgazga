@@ -22,6 +22,10 @@ class RecoveryOrderDetail < ActiveRecord::Base
   def active_compound_children
     self.compound_usages
   end 
+  
+  def active_underlayer_children
+    self.compound_underlayer_usages
+  end 
     
   def valid_roller_identification_form_detail_id
     return if roller_identification_form_detail_id.nil?

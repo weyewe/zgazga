@@ -1,19 +1,19 @@
-Ext.define('AM.controller.RecoveryResultCompoundDetails', {
+Ext.define('AM.controller.RecoveryResultUnderlayerDetails', {
   extend: 'Ext.app.Controller',
 
-  stores: ['RecoveryResultCompoundDetails', 'RecoveryResults'],
-  models: ['RecoveryResultCompoundDetail'],
+  stores: ['RecoveryResultUnderlayerDetails', 'RecoveryResults'],
+  models: ['RecoveryResultUnderlayerDetail'],
 
   views: [
-    'operation.recoveryresultcompounddetail.List',
-    'operation.recoveryresultcompounddetail.Form',
+    'operation.recoveryresultunderlayerdetail.List',
+    'operation.recoveryresultunderlayerdetail.Form',
 		'operation.recoveryresult.List'
   ],
 
   refs: [
 		{
 			ref: 'list',
-			selector: 'recoveryresultcompounddetaillist'
+			selector: 'recoveryresultunderlayerdetaillist'
 		},
 		{
 			ref : 'parentList',
@@ -23,29 +23,29 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 
   init: function() {
     this.control({
-      'recoveryresultcompounddetaillist': {
+      'recoveryresultunderlayerdetaillist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange ,
 				afterrender : this.loadObjectList
       },
-      'recoveryresultcompounddetailform button[action=save]': {
+      'recoveryresultunderlayerdetailform button[action=save]': {
         click: this.updateObject
       },
 
 	 
-      'recoveryresultcompounddetaillist button[action=addObject]': {
+      'recoveryresultunderlayerdetaillist button[action=addObject]': {
         click: this.addObject
       },
 
-			'recoveryresultcompounddetaillist button[action=repeatObject]': {
+			'recoveryresultunderlayerdetaillist button[action=repeatObject]': {
         click: this.addObject
       },
 
 
-      'recoveryresultcompounddetaillist button[action=editObject]': {
+      'recoveryresultunderlayerdetaillist button[action=editObject]': {
         click: this.editObject
       },
-      'recoveryresultcompounddetaillist button[action=deleteObject]': {
+      'recoveryresultunderlayerdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
  
@@ -65,7 +65,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 
 	reloadStore : function(record){
 		var list = this.getList();
-		var store = this.getRecoveryResultCompoundDetailsStore();
+		var store = this.getRecoveryResultUnderlayerDetailsStore();
 		
 		store.load({
 			params : {
@@ -78,7 +78,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 	
 	cleanList : function(){
 		var list = this.getList();
-		var store = this.getRecoveryResultCompoundDetailsStore();
+		var store = this.getRecoveryResultUnderlayerDetailsStore();
 		
 		list.setTitle('');
 		// store.removeAll(); 
@@ -94,7 +94,13 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 			return; 
 		}
 		 
-		var widgetName = 'recoveryresultcompounddetailform'; 
+		
+		if( record.get("compound_under_layer_id") == undefined){
+			Ext.Msg.alert("Gagal",  "Tidak memilih underlayer di recovery");
+			return ; 
+		} 
+		 
+		var widgetName = 'recoveryresultunderlayerdetailform'; 
 		
     var view = Ext.widget(widgetName , {
 			parentRecord : record 
@@ -114,7 +120,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 		}
 
 
-		var widgetName = 'recoveryresultcompounddetailform';
+		var widgetName = 'recoveryresultunderlayerdetailform';
 		 
     var view = Ext.widget(widgetName, {
 			parentRecord : parentRecord
@@ -136,7 +142,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 
 		var parentRecord = this.getParentList().getSelectedObject();
 	
-    var store = this.getRecoveryResultCompoundDetailsStore();
+    var store = this.getRecoveryResultUnderlayerDetailsStore();
     var record = form.getRecord();
     var values = form.getValues();
 		// console.log("The values: " );
@@ -184,7 +190,7 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
 		
-			var newObject = new AM.model.RecoveryResultCompoundDetail( values ) ;
+			var newObject = new AM.model.RecoveryResultUnderlayerDetail( values ) ;
 			
 		 
 			

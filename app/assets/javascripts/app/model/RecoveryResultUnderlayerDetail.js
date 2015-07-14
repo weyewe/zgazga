@@ -1,4 +1,4 @@
-Ext.define('AM.model.RecoveryResultCompoundDetail', {
+Ext.define('AM.model.RecoveryResultUnderlayerDetail', {
   	extend: 'Ext.data.Model',
   	fields: [
  
@@ -21,19 +21,19 @@ Ext.define('AM.model.RecoveryResultCompoundDetail', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/recovery_result_compound_details',
+			url: 'api/recovery_result_underlayer_details',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'recovery_result_compound_details',
+				root: 'recovery_result_underlayer_details',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},
 
 			writer: {
 				getRecordData: function(record) {
-					return { recovery_result_compound_detail : record.data };
+					return { recovery_result_underlayer_detail : record.data };
 				}
 			}
 		}
