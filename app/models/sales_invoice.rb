@@ -99,6 +99,7 @@ class SalesInvoice < ActiveRecord::Base
         :exchange_id => self.exchange_id
         )
       self.exchange_rate_amount = latest_exchange_rate.rate
+      self.exchange_rate_id = latest_exchange_rate.id
     else
       self.exchange_rate_amount = 1
     end
@@ -120,18 +121,18 @@ class SalesInvoice < ActiveRecord::Base
       return self 
     end
     
-#     piclass = self.class.to_s
-#     piid = self.id
-#     payment_voucher_count = PaymentVoucherDetail.joins(:receivable).where{
-#       (
-#         (receivable.source_class.eq piclass) &
-#         (receivable.source_id.eq piid) &
-#       )
-#       }.count
-#     if payment_voucher_count > 0
-#       self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
-#       return self
-#     end
+    siclass = self.class.to_s
+    siid = self.id
+    receipt_voucher_count = ReceiptVoucherDetail.joins(:receivable).where{
+      ( 
+        (receivable.source_class.eq siclass) &
+        (receivable.source_id.eq siid) 
+      )
+      }.count
+    if receipt_voucher_count > 0
+      self.errors.add(:generic_errors, "Sudah terpakai di ReceiptVoucher")
+      return self
+    end
     
     
     self.is_confirmed = false

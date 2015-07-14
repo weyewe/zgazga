@@ -59,7 +59,7 @@ class BlanketOrder < ActiveRecord::Base
     end
     new_object.notes = params[:notes]
     if new_object.save
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "BO-" + new_object.id.to_s  
       new_object.save
     end
     return new_object
@@ -122,6 +122,10 @@ class BlanketOrder < ActiveRecord::Base
   def unconfirm_object
     if self.is_confirmed == false 
       self.errors.add(:generic,"Belum di confirm")
+      return self
+    end
+    if BlanketWarehouseMutation.where(:blanket_order_id => self.id).count > 0
+      self.errors.add(:generic,"Sudah di pakai di BlanketWarehouseMutation")
       return self
     end
     self.confirmed_at = nil

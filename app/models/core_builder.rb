@@ -88,6 +88,14 @@ class CoreBuilder < ActiveRecord::Base
   end
   
   def update_object(params)
+    if RollerBuilder.where(:core_builder_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di RollerBuilder")
+      return self 
+    end
+    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di RollerIdentificationForm")
+      return self 
+    end
     self.base_sku = params[:base_sku]
     self.name = params[:name]
     self.description = params[:description]
@@ -110,6 +118,14 @@ class CoreBuilder < ActiveRecord::Base
   end
   
   def delete_object
+    if RollerBuilder.where(:core_builder_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di RollerBuilder")
+      return self 
+    end
+    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di RollerIdentificationForm")
+      return self 
+    end
     self.used_core_item.delete_object
     self.new_core_item.delete_object
     self.destroy

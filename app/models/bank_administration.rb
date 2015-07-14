@@ -33,7 +33,7 @@ class BankAdministration < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.no_bukti = params[:no_bukti]
     if new_object.save  
-     new_object.code = "Cadj-" + new_object.id.to_s  
+     new_object.code = "BADM-" + new_object.id.to_s  
       new_object.save
       new_object.save
     end

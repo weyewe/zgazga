@@ -66,6 +66,46 @@ class ExchangeRate < ActiveRecord::Base
   end
   
   def update_object( params ) 
+    if PaymentRequest.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PaymentRequest")
+      return self
+    end
+    if PurchaseInvoice.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseInvoice")
+      return self
+    end
+    if PurchaseReceival.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseReceival")
+      return self
+    end
+    if SalesInvoice.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesInvoice")
+      return self
+    end
+    if PurchaseDownPayment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseDownPayment")
+      return self
+    end
+    if CashBankAdjustment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di CashbankAdjustment")
+      return self
+    end
+    if CashBankMutation.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di CashBankMutation")
+      return self
+    end
+    if SalesDownPayment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesDownPayment")
+      return self
+    end
+    if BankAdministration.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di BankAdministration")
+      return self
+    end
+    if DeliveryOrder.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di DeliveryOrder")
+      return self
+    end
     self.exchange_id = params[:exchange_id]
     self.ex_rate_date = params[:ex_rate_date]
     self.rate = BigDecimal( params[:rate] || '0')
@@ -74,6 +114,46 @@ class ExchangeRate < ActiveRecord::Base
   end
   
   def delete_object
+    if PaymentRequest.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PaymentRequest")
+      return self
+    end
+    if PurchaseInvoice.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseInvoice")
+      return self
+    end
+    if PurchaseReceival.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseReceival")
+      return self
+    end
+    if SalesInvoice.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesInvoice")
+      return self
+    end
+    if PurchaseDownPayment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di PurchaseDownPayment")
+      return self
+    end
+    if CashBankAdjustment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di CashbankAdjustment")
+      return self
+    end
+    if CashBankMutation.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di CashBankMutation")
+      return self
+    end
+    if SalesDownPayment.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di SalesDownPayment")
+      return self
+    end
+    if BankAdministration.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di BankAdministration")
+      return self
+    end
+    if DeliveryOrder.where(:exchange_rate_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Sudah terpakai di DeliveryOrder")
+      return self
+    end
     self.destroy
     return self
   end

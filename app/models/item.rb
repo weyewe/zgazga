@@ -5,7 +5,7 @@ class Item < ActiveRecord::Base
   belongs_to :uom 
   belongs_to :sub_type
   has_many :stock_mutations 
-  has_many :batched_stock_mutations
+  has_many :batch_stock_mutations
   has_many :batch_instances
   
    
@@ -187,7 +187,7 @@ class Item < ActiveRecord::Base
     self.exchange_id = params[:exchange_id]
     self.price_list =  BigDecimal( params[:price_list] || '0') 
     
-    if self.batched_stock_mutations.count != 0 
+    if self.batch_stock_mutations.count != 0 
       self.errors.add(:item_type_id, "Tidak bisa mengubah item type karena sudah ada batch stock mutation")
       return self 
     end
@@ -197,6 +197,54 @@ class Item < ActiveRecord::Base
   end
   
   def delete_object
+    if self.item_type.is_legacy == true
+      self.errors.add(:generic_errors, "Tidak bisa menghapus legacy Item")
+      return self
+    end
+    if Blanket.where(:roll_blanket_item_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if Blanket.where(:left_bar_item_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if Blanket.where(:right_bar_item_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if Blanket.where(:adhesive_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end 
+    if Blanket.where(:adhesive2_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end 
+    if StockMutation.where(:item_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if PurchaseOrderDetail.where(:item_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if SalesOrderDetail.where(:item_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    if StockAdjustmentDetail.where(:item_id => self.id).count > 0
+      self.errors.add(:generic_errors, "Item sudah terpakai")
+      return self
+    end
+    item_id = self.id
+    if WarehouseItem.where{
+      (item_id == item_id) && 
+      (amount.gt 0)
+    }.count > 0
+      self.errors.add(:generic_errors, "Item diwarehouse harus 0")
+      return self
+    end
     self.destroy
   end
   

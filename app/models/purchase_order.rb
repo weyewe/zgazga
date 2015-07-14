@@ -104,7 +104,10 @@ class PurchaseOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if PurchaseReceival.where(:purchase_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "PurchaseOrder sudah terpakai di PurchaseReceival")
+      return self
+    end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

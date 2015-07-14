@@ -74,7 +74,6 @@ class BlanketOrderDetail < ActiveRecord::Base
     if not blanket_order.nil?
       if blanket_order.is_confirmed == true
         new_object.errors.add(:generic_errors,"Sudah di confirm")
- 
         return new_object
       end
     end

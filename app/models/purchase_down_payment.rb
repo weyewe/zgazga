@@ -94,6 +94,7 @@ class PurchaseDownPayment < ActiveRecord::Base
           :exchange_id => self.exchange_id
           )
         self.exchange_rate_amount = latest_exchange_rate.rate
+        self.exchange_rate_id = latest_exchange_rate.id
       else
         self.exchange_rate_amount = 1
       end

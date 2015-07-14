@@ -11,9 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
- 
-ActiveRecord::Schema.define(version: 20150709145340) do
- 
+ActiveRecord::Schema.define(version: 20150713043707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +102,7 @@ ActiveRecord::Schema.define(version: 20150709145340) do
     t.datetime "generated_date"
     t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
     t.decimal  "unallocated_amount", precision: 14, scale: 2, default: 0.0
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1139,6 +1138,7 @@ ActiveRecord::Schema.define(version: 20150709145340) do
     t.string   "code"
     t.string   "nomor_surat"
     t.integer  "exchange_id"
+    t.integer  "exchange_rate_id"
     t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
     t.decimal  "total_cos",            precision: 14, scale: 2,  default: 0.0
     t.decimal  "amount_receivable",    precision: 14, scale: 2,  default: 0.0

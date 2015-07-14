@@ -59,8 +59,13 @@ class CashBank < ActiveRecord::Base
         self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
         return self
       end
+      if BankAdministration.where(:cash_bank_id => self.id).count > 0
+        self.errors.add(:generic_errors, "Sudah terpakai di BankAdministration")
+        return self
+      end
       if TransactionDataDetail.where(:account_id => self.account_id).count > 0 
         self.errors.add(:generic_errors,"Account CashBank sudah terpakai")
+        return self
       end
     end
     self.name = params[:name]
@@ -95,8 +100,13 @@ class CashBank < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
       return self
     end
+    if BankAdministration.where(:cash_bank_id => self.id).count > 0
+        self.errors.add(:generic_errors, "Sudah terpakai di BankAdministration")
+        return self
+    end
     if TransactionDataDetail.where(:account_id => self.account_id).count > 0 
       self.errors.add(:generic_errors,"Account CashBank sudah terpakai")
+      return self
     end
     Account.where(:id => self.account_id).first.delete_object
     self.destroy

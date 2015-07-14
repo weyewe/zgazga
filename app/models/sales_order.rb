@@ -116,7 +116,10 @@ class SalesOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
+    if DeliveryOrder.where(:sales_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "SalesOrder sudah terpakai di DeliveryOrder")
+      return self
+    end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

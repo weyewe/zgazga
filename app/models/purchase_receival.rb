@@ -90,7 +90,7 @@ class PurchaseReceival < ActiveRecord::Base
         :exchange_id => self.purchase_order.exchange_id
         )
       self.exchange_rate_amount = latest_exchange_rate.rate
-      self.exchange_rate_id =   latest_exchange_rate.id   
+      self.exchange_rate_id =  latest_exchange_rate.id   
     else
       self.exchange_rate_amount = 1
     end
@@ -219,7 +219,8 @@ class PurchaseReceival < ActiveRecord::Base
     self.purchase_receival_details.each do |prd|
       
       amount = prd.amount * -1
-      prd.item.calculate_avg_price(:added_amount => (amount),:added_avg_price => prd.item.avg_price)
+      item_price = (self.exchange_rate_amount * prd.purchase_order_detail.price).round(2)    
+      prd.item.calculate_avg_price(:added_amount => (amount),:added_avg_price => item_price)
       stock_mutation = StockMutation.where(
         :source_class => self.class.to_s, 
         :source_id => self.id,

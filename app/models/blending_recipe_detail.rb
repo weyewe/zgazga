@@ -30,6 +30,10 @@ class BlendingRecipeDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    if BlendingWorkOrder.where(:blending_recipe_id => params[:blending_recipe_id]).count > 0
+      new_object.errors.add(:generic_errors,"Sudah digunakan di BlendingWorkOrder")
+      return new_object
+    end
     new_object.blending_recipe_id = params[:blending_recipe_id]
     new_object.item_id = params[:item_id]
     new_object.amount = BigDecimal( params[:amount] || '0')
@@ -39,7 +43,10 @@ class BlendingRecipeDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    self.blending_recipe_id = params[:blending_recipe_id]
+    if BlendingWorkOrder.where(:blending_recipe_id => self.blending_recipe_id).count > 0
+      self.errors.add(:generic_errors,"Sudah digunakan di BlendingWorkOrder")
+      return self
+    end
     self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
@@ -48,6 +55,10 @@ class BlendingRecipeDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if BlendingWorkOrder.where(:blending_recipe_id => self.blending_recipe_id).count > 0
+      self.errors.add(:generic_errors,"Sudah digunakan di BlendingWorkOrder")
+      return self
+    end
     self.destroy
     return self
   end  

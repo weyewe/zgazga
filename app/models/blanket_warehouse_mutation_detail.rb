@@ -61,7 +61,7 @@ class BlanketWarehouseMutationDetail < ActiveRecord::Base
     new_object.quantity  = params[:quantity]
     if new_object.save
       new_object.item_id = new_object.blanket_order_detail.blanket.item.id
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "BWMD-" + new_object.id.to_s  
       new_object.save
     end
     return new_object

@@ -90,6 +90,7 @@ class SalesDownPayment < ActiveRecord::Base
           :exchange_id => self.exchange_id
           )
         self.exchange_rate_amount = latest_exchange_rate.rate
+        self.exchange_rate_id = latest_exchange_rate.id
       else
         self.exchange_rate_amount = 1
       end
@@ -112,7 +113,6 @@ class SalesDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Receivable tidak boleh sudah diuangkan")
       return self
     end
-    
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save

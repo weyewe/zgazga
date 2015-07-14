@@ -43,6 +43,10 @@ class BlendingRecipe < ActiveRecord::Base
       self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
+    if BlendingWorkOrder.where(:blending_recipe_id => self.id).count > 0
+      self.errors.add(:generic_errors,"Sudah digunakan di BlendingWorkOrder")
+      return self
+    end
     self.name = params[:name]
     self.description = params[:description]
     self.target_item_id = params[:target_item_id]
@@ -54,7 +58,11 @@ class BlendingRecipe < ActiveRecord::Base
   
   def delete_object
     if self.blending_recipe_details.count > 0 
-      self.errors.add(:generic_errorsB,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
+      return self
+    end
+    if BlendingWorkOrder.where(:blending_recipe_id => self.id).count > 0
+      self.errors.add(:generic_errors,"Sudah digunakan di BlendingWorkOrder")
       return self
     end
     self.destroy

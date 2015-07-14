@@ -6,6 +6,7 @@ class CreateSalesInvoices < ActiveRecord::Migration
       t.string :code
       t.string :nomor_surat
       t.integer :exchange_id
+      t.integer :exchange_rate_id
       t.decimal :exchange_rate_amount, :default => 0,  :precision => 18, :scale => 11
       t.decimal :total_cos, :default => 0,  :precision => 14, :scale => 2
       t.decimal :amount_receivable,  :default => 0,  :precision => 14, :scale => 2

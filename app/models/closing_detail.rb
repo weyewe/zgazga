@@ -34,7 +34,7 @@ class ClosingDetail < ActiveRecord::Base
     closing = Closing.find_by_id(params[:closing_id])
     if not closing.nil?
       if closing.is_closed?
-        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        new_object.errors.add(:generic_errors, "Sudah di closing")
         return new_object 
       end
     end
@@ -48,7 +48,7 @@ class ClosingDetail < ActiveRecord::Base
   
   def update_object(params)
     if self.closing.is_closed?
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      self.errors.add(:generic_errors, "Sudah di closing")
       return self 
     end
     self.rate = BigDecimal( params[:rate] || '0')
@@ -59,7 +59,7 @@ class ClosingDetail < ActiveRecord::Base
   
   def delete_object
     if self.closing.is_closed?
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      self.errors.add(:generic_errors, "Sudah di closing")
       return self 
     end
     self.destroy
