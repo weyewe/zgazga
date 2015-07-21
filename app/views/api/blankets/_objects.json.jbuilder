@@ -30,7 +30,7 @@ json.blankets objects do |object|
 		json.left_bar_item_name ""
 	end
 	if not object.right_bar_item_id == 0
-		json.right_bar_item_name object.right_bar_item_id.name 
+		json.right_bar_item_name object.right_bar_item.name 
 	else 
 		json.right_bar_item_name ""
 	end
