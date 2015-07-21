@@ -38,7 +38,7 @@ Ext.define('AM.view.operation.paymentvoucher.List' ,{
 				text : "Pembayaran",
 				flex : 3,
 				tpl : 	'CashBank:  <br /><b>{cash_bank_name}</b>'  + '<br />' + '<br />' +
-							'Payment Date: <br /><b>{rate_to_idr}</b>' + '<br />' + '<br />' +
+							'Payment Date: <br /><b>{payment_date}</b>' + '<br />' + '<br />' +
 							'GBCH: <br /><b>{is_gbch}</b>' + '<br />' + '<br />' +
 							'GBCH No: <br /><b>{gbch_no}</b>' + '<br />' + '<br />' +
 							'GBCH Due Date: <br /><b>{due_date}</b>' 

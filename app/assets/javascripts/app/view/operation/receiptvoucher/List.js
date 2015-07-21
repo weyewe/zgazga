@@ -7,35 +7,86 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'No Bukti',  dataIndex: 'no_bukti', flex: 1},
-			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'CashBank', dataIndex: 'cash_bank_name', flex: 2 },
-			{	header: 'Payment Date', dataIndex: 'payment_date', flex: 2 },
-			{	header: 'Is GBCH', dataIndex: 'is_gbch', flex: 2 },
-			{	header: 'GBCH No', dataIndex: 'gbch_no', flex: 2 },
-			{	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
-			{	header: 'Total Amount', dataIndex: 'amount', flex: 2 },
-			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
-			{	header: 'Rate', dataIndex: 'rate_to_idr', flex: 2 },
-			{	header: 'PPh23', dataIndex: 'total_pph_23', flex: 2 },
-			{	header: 'Biaya Bank', dataIndex: 'biaya_bank', flex: 2 },
-			{	header: 'Pembulatan', dataIndex: 'pembulatan', flex: 2 },
+			
+			
+						{
+				xtype : 'templatecolumn',
+				text : "Info",
+				flex : 3,
+				tpl : 	'Kode:  <br /><b>{code}</b>'  + '<br />' + '<br />' +
+							'Dari: <br /><b>{contact_name}</b>' + '<br />' + '<br />' +
+							'No Bukti: <br /><b>{no_bukti}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Pembayaran",
+				flex : 3,
+				tpl : 	'CashBank:  <br /><b>{cash_bank_name}</b>'  + '<br />' + '<br />' +
+							'Receipt Date: <br /><b>{receipt_date}</b>' + '<br />' + '<br />' +
+							'GBCH: <br /><b>{is_gbch}</b>' + '<br />' + '<br />' +
+							'GBCH No: <br /><b>{gbch_no}</b>' + '<br />' + '<br />' +
+							'GBCH Due Date: <br /><b>{due_date}</b>' 
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Jumlah",
+				flex : 3,
+				tpl : 	'Total:  <br /><b>{amount} {cash_bank_exchange_name}</b>'  + '<br />' + '<br />' +
+							'Exchange Rate: <br /><b>{rate_to_idr}</b>' + '<br />' + '<br />' +
+							// 'PPh21: <br /><b>{total_pph_21}</b>' + '<br />' + '<br />' +
+							'PPh23: <br /><b>{total_pph_23}</b>' + '<br />' + '<br />' +
+							'Biaya Bank: <br /><b>{biaya_bank}</b>' + '<br />' + '<br />' + 
+							'Pembulatan: <br /><b>{pembulatan}</b>' 
+			},
+			
+			
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
 				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+							'Tanggal Konfirmasi: <br /><b>{confirmed_at}</b>' 
 			},
 			{
 				xtype : 'templatecolumn',
 				text : "Reconcile",
 				flex : 3,
 				tpl : 	'Status Reconcile:  <b>{is_reconciled}</b>'  + '<br />' + '<br />' +
-							'Tanggal Reconcile: <b>{reconciliation_date}</b>' 
+							'Tanggal Reconcile: <br /> <b>{reconciliation_date}</b>' 
 			},
+			
+			
+			
+			// { header: 'ID', dataIndex: 'id'},
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+			// { header: 'No Bukti',  dataIndex: 'no_bukti', flex: 1},
+			// {	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			// {	header: 'CashBank', dataIndex: 'cash_bank_name', flex: 2 },
+			// {	header: 'Payment Date', dataIndex: 'receipt_date', flex: 2 },
+			// {	header: 'Is GBCH', dataIndex: 'is_gbch', flex: 2 },
+			// {	header: 'GBCH No', dataIndex: 'gbch_no', flex: 2 },
+			// {	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
+			// {	header: 'Total Amount', dataIndex: 'amount', flex: 2 },
+			// {	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
+			// {	header: 'Rate', dataIndex: 'rate_to_idr', flex: 2 },
+			// {	header: 'PPh23', dataIndex: 'total_pph_23', flex: 2 },
+			// {	header: 'Biaya Bank', dataIndex: 'biaya_bank', flex: 2 },
+			// {	header: 'Pembulatan', dataIndex: 'pembulatan', flex: 2 },
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Konfirmasi",
+			// 	flex : 3,
+			// 	tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+			// 				'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+			// },
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Reconcile",
+			// 	flex : 3,
+			// 	tpl : 	'Status Reconcile:  <b>{is_reconciled}</b>'  + '<br />' + '<br />' +
+			// 				'Tanggal Reconcile: <b>{reconciliation_date}</b>' 
+			// },
 			
 			
 		];

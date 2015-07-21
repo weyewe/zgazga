@@ -8,7 +8,7 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'No Bukti', dataIndex: 'nomor_surat', flex: 2 },
+			{ header: 'No Bukti', dataIndex: 'no_bukti', flex: 2 },
 			{ header: 'Code',  dataIndex: 'code', flex: 1},
 		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
 		 	{ header: 'Description',  dataIndex: 'description', flex: 2},
