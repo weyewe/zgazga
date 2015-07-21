@@ -15,19 +15,20 @@ class Api::BlanketOrdersController < Api::BaseApiController
            ( warehouse.name =~  livesearch) | 
            ( notes =~  livesearch)
          )
-        }
-         
-        @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
-        @total = query.count    
-     else
-       @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = query.count
+        } 
      end
      
- 
-     
-     
-     
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count   
+    
+    
+    # contact_id_list = BlanketOrder.all.map{|x| x.contact_id } 
+    # warehouse_id_list = BlanketOrder.all.map{|x| x.warehouse_id } 
+    
+    # contact_id_list.uniq!
+    # warehouse_id_list.uniq!
+    
+    
   end
 
   def create

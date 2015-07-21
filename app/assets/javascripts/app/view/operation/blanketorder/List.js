@@ -8,18 +8,51 @@ Ext.define('AM.view.operation.blanketorder.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Order No.',  dataIndex: 'code', flex: 1},
-			{	header: 'Production No', dataIndex: 'production_no', flex: 2 },
-			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
-			{	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
-			{	header: 'QTY', dataIndex: 'amount_received', flex: 2 },
-			{	header: 'QTY Finished', dataIndex: 'amount_final', flex: 2 },
-			{	header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
-			{	header: 'Order Date', dataIndex: 'order_date', flex: 2 },
-			{	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
-			{	header: 'Notes', dataIndex: 'notes', flex: 2 },
-			{	header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			// { header: 'Order No.',  dataIndex: 'code', flex: 1},
+			// {	header: 'Production No', dataIndex: 'production_no', flex: 2 },
+			// {	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			// {	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
+			// {	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
+			// {	header: 'QTY', dataIndex: 'amount_received', flex: 2 },
+			// {	header: 'QTY Finished', dataIndex: 'amount_final', flex: 2 },
+			// {	header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
+			// {	header: 'Order Date', dataIndex: 'order_date', flex: 2 },
+			// {	header: 'Due Date', dataIndex: 'due_date', flex: 2 },
+			// {	header: 'Notes', dataIndex: 'notes', flex: 2 },
+			// {	header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Order",
+				flex : 3,
+				tpl : 	'Order No: <br /> <b>{code}</b>'  + '<br />' +  '<br />' +  
+						'Production No: <br /> <b>{production_no}</b>'  + '<br />' +  '<br />' +  	
+						'Warehouse: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+						
+						'Tanggal Order: <br /> <b>{order_date}</b>'  + '<br />' + '<br />' +
+						'Due Date: <br /> <b>{due_date}</b>'  + '<br />' + '<br />' +
+						'Catatan: <br /> <b>{notes}</b>'   
+			},
+ 
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Tujuan",
+				flex : 3,
+				tpl :  'Customer: <br />  <b>{contact_name}</b>'  	
+			},
+			
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Qty",
+			// 	flex : 3,
+			// 	tpl : 	'Penugasan:  <b>{amount_received}</b>'  + '<br />' + '<br />' +  
+			// 			'Selesai:  <b>{amount_final}</b>'  + '<br />' +  
+			// 			'Reject:  <b>{amount_rejected}</b>'  + '<br />' + '<br />' +	
+			// 			'Complete?:  <b>{is_completed}</b>'  
+			// },
+			
+			
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

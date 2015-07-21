@@ -7,13 +7,20 @@ Ext.define('AM.view.operation.purchasereceival.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
+			
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
 			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			{ header: 'Tanggal Receival', dataIndex: 'receival_date', flex: 2 },
-		 	{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
-			{ header: 'PurchaseOrder',  dataIndex: 'purchase_order_code', flex: 1},
 			
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Tanggal Receival: <br />  <b>{receival_date}</b>'  + '<br />' + '<br />' +
+							'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+							'SalesOrder: <br /><b>{purchase_order_nomor_surat}</b>'
+			},
+			
+		
 			
 			
  
@@ -21,9 +28,13 @@ Ext.define('AM.view.operation.purchasereceival.List' ,{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
+			
+			
+			
+ 
 		];
 
 		this.addObjectButton = new Ext.Button({

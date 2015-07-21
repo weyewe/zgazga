@@ -7,26 +7,69 @@ Ext.define('AM.view.operation.purchaseinvoice.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
+			
+			
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Contact',  dataIndex: 'purchase_receival_purchase_order_contact_name', flex: 1},
-		 	{ header: 'Nomor Surat',  dataIndex: 'nomor_surat', flex: 2},
-			{ header: 'PurchaseReceival',  dataIndex: 'purchase_receival_code', flex: 1},
-			{ header: 'Description', dataIndex: 'description', flex: 2 },
-			{ header: 'Tax(%)',  dataIndex: 'tax_value', flex: 1},
-			{ header: 'Currency',  dataIndex: 'purchase_receival_purchase_order_exchange_name', flex: 1},
-			{ header: 'Rate',  dataIndex: 'exchange_rate_amount', flex: 1},
-			{ header: 'Amount',  dataIndex: 'amount_payable', flex: 1},
-			{ header: 'Tanggal Invoice', dataIndex: 'invoice_date', flex: 2 },
-			{ header: 'Due Date', dataIndex: 'due_date', flex: 1 },
  
+
+
+			{
+				xtype : 'templatecolumn',
+				text : "Deskripsi",
+				flex : 3,
+				tpl : 	'Supplier:  <b>{purchase_receival_purchase_order_contact_name}</b>'  + '<br />' + '<br />' +
+						'Nomor Surat:  <b>{nomor_surat}</b>'  + '<br />' + '<br />' +
+						 
+						'Description:  <b>{description}</b>'  
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Receivable",
+				flex : 3,
+				tpl : 	'Total:  <br /> <b>{amount_payable} {purchase_receival_purchase_order_exchange_name}</b>'  + '<br />' + '<br />' +
+						'Exchange Rate:  <b>{exchange_rate_amount}</b>'  + '<br />' + '<br />' +
+						'Tax (%):  <b>{tax_value}</b>'  
+			},
+ 
+  
+			{
+				xtype : 'templatecolumn',
+				text : "Invoice",
+				flex : 3,
+				tpl : 	'Tanggal Invoice:  <br /><b>{invoice_date}</b>'  + '<br />' + '<br />' +
+							'Due: <br /> <b>{due_date}</b>' 
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'   
+				tpl : 	'Status Konfirmasi:  <br /> <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
+			
+			
+			
+			// { header: 'ID', dataIndex: 'id'},
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+			// { header: 'Contact',  dataIndex: 'purchase_receival_purchase_order_contact_name', flex: 1},
+		 //	{ header: 'Nomor Surat',  dataIndex: 'nomor_surat', flex: 2},
+			// { header: 'PurchaseReceival',  dataIndex: 'purchase_receival_code', flex: 1},
+			// { header: 'Description', dataIndex: 'description', flex: 2 },
+			// { header: 'Tax(%)',  dataIndex: 'tax_value', flex: 1},
+			// { header: 'Currency',  dataIndex: 'purchase_receival_purchase_order_exchange_name', flex: 1},
+			// { header: 'Rate',  dataIndex: 'exchange_rate_amount', flex: 1},
+			// { header: 'Amount',  dataIndex: 'amount_payable', flex: 1},
+			// { header: 'Tanggal Invoice', dataIndex: 'invoice_date', flex: 2 },
+			// { header: 'Due Date', dataIndex: 'due_date', flex: 1 },
+ 
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Konfirmasi",
+			// 	flex : 3,
+			// 	tpl : 'Tanggal Konfirmasi: <b>{confirmed_at}</b>' + '<br />' + '<br />' +
+			// 				'Status Konfirmasi:  <b>{is_confirmed}</b>'   
+			// },
 			
 			
 		];

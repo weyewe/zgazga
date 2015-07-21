@@ -13,6 +13,7 @@ Ext.define('AM.model.PurchaseReceival', {
     	    
     	    { name: 'purchase_order_id', type: 'int' },
     	    { name: 'purchase_order_code', type: 'string' },
+    	    { name: 'purchase_order_nomor_surat', type: 'string' },
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
