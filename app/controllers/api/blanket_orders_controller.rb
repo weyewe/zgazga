@@ -2,10 +2,12 @@ class Api::BlanketOrdersController < Api::BaseApiController
   
   def index
      
+     query = BlanketOrder.active_objects.joins(:contact, :warehouse)
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = BlanketOrder.active_objects.joins(:contact,:warehouse).where{
+       
+        query = query.where{
          (
            ( code =~ livesearch)  | 
            ( production_no =~ livesearch)  | 
@@ -13,25 +15,16 @@ class Api::BlanketOrdersController < Api::BaseApiController
            ( warehouse.name =~  livesearch) | 
            ( notes =~  livesearch)
          )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = BlanketOrder.active_objects.joins(:contact,:warehouse).where{
-         (
-           ( code =~ livesearch)  | 
-           ( production_no =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( warehouse.name =~  livesearch) | 
-           ( notes =~  livesearch)
-         )
-       }.count
- 
-
+        }
+         
+        @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+        @total = query.count    
      else
-       @objects = BlanketOrder.active_objects.joins(:contact,:warehouse).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = BlanketOrder.active_objects.count
+       @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = query.count
      end
      
+ 
      
      
      

@@ -8,13 +8,22 @@ Ext.define('AM.view.operation.recoveryorder.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'No. Diss',  dataIndex: 'roller_identification_form_nomor_disasembly', flex: 1},
-			{ header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
-			{ header: 'QTY Received', dataIndex: 'amount_received', flex: 2 },
-			{ header: 'QTY Final', dataIndex: 'amount_final', flex: 2 },
-			{ header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
-			{ header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+			// { header: 'No. Diss',  dataIndex: 'roller_identification_form_nomor_disasembly', flex: 1},
+			// { header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
+			// { header: 'QTY Received', dataIndex: 'amount_received', flex: 2 },
+			// { header: 'QTY Final', dataIndex: 'amount_final', flex: 2 },
+			// { header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
+			// { header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Order",
+				flex : 3,
+				tpl : 	'Kode :  <b>{code}</b>'  + '<br />' + '<br />' +
+							'RIF:  <b>{roller_identification_form_nomor_disasembly}</b>'  + '<br />' + '<br />' +
+							'Gudang: <br /> <b>{warehouse_name}</b>' 
+			},
  
 			{
 				xtype : 'templatecolumn',
@@ -22,6 +31,23 @@ Ext.define('AM.view.operation.recoveryorder.List' ,{
 				flex : 3,
 				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
 							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			},
+			
+			
+			// 			{ header: 'QTY Received', dataIndex: 'amount_received', flex: 2 },
+			// { header: 'QTY Final', dataIndex: 'amount_final', flex: 2 },
+			// { header: 'QTY Rejected', dataIndex: 'amount_rejected', flex: 2 },
+			// { header: 'Is Completed', dataIndex: 'is_completed', flex: 2 },
+			
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Pengerjaan",
+				flex : 3,
+				tpl : 	'QTY Received:  <b>{amount_received}</b>'  + '<br />' +  
+						'QTY Final:  <b>{amount_final}</b>'  + '<br />' + 
+						'QTY Rejected:  <b>{amount_rejected}</b>'  + '<br />' + '<br />' +
+							'Complete? : <br /> <b>{is_completed}</b>' 
 			},
 			
 		];

@@ -9,14 +9,41 @@ Ext.define('AM.view.operation.rolleridentificationform.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'No.Diss', dataIndex: 'nomor_disasembly', flex: 2 },
+			// {	header: 'No.Diss', dataIndex: 'nomor_disasembly', flex: 2 },
 			
-			{	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
-			{	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
-			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'QTY', dataIndex: 'amount', flex: 2 },
-			{	header: 'Identified Date', dataIndex: 'identified_date', flex: 2 },
-			{	header: 'Incoming Roll Date', dataIndex: 'incoming_roll', flex: 2 },
+			// {	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
+			// {	header: 'InHouse', dataIndex: 'is_in_house', flex: 2 },
+			// {	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			// {	header: 'QTY', dataIndex: 'amount', flex: 2 },
+			// {	header: 'Identified Date', dataIndex: 'identified_date', flex: 2 },
+			// {	header: 'Incoming Roll Date', dataIndex: 'incoming_roll', flex: 2 },
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Deskripsi",
+				flex : 3,
+				tpl : 	'No. Diss: <br /> <b>{nomor_disasembly}</b>'  + '<br />' + '<br />' +
+							'Gudang: <br /> <b>{warehouse_name}</b>' 
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Order",
+				flex : 3,
+				tpl : 	'In-House: <br /> <b>{is_in_house}</b>'  + '<br />' + '<br />' +
+							'Customer: <br /> <b>{contact_name}</b>'   
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Identifikasi",
+				flex : 3,
+				tpl : 	'Quantity: <br /> <b>{amount}</b>'  + '<br />' + '<br />' +
+							'Incoming Roll Date: <br /> <b>{incoming_roll}</b>'  + '<br />' + '<br />' +
+							'Identified Date: <br /> <b>{identified_date}</b>' 
+			},
+			
+			
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

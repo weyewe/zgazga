@@ -5,7 +5,7 @@ Ext.define('AM.view.operation.rolleridentificationformdetail.Form', {
   title : 'Add / Edit RollerIdentificationForm Detail',
   layout: 'fit',
 	width	: 960, 
-  height : 500,
+  height : 300,
   autoShow: true,  // does it need to be called?
 	modal : true, 
 // win.show() 

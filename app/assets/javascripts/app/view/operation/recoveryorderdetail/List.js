@@ -8,10 +8,20 @@ Ext.define('AM.view.operation.recoveryorderdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-			{ header: 'RIF Id', dataIndex: 'roller_identification_form_detail_id', flex: 1},
-			{ header: 'Sku Roller',  dataIndex: 'roller_builder_sku', flex: 1},
-    		{ header: 'Roller',  dataIndex: 'roller_builder_name', flex: 1},
-    		{ header: 'Core Type',  dataIndex: 'core_type_case_text', flex: 2},
+		 //	{
+			// 	xtype : 'templatecolumn',
+			// 	text : "Order",
+			// 	flex : 3,
+			// 	tpl : 	'Kode :  <b>{code}</b>'  + '<br />' + '<br />' +
+			// 				'RIF:  <b>{roller_identification_form_nomor_disasembly}</b>'  + '<br />' + '<br />' +
+			// 				'Gudang: <br /> <b>{warehouse_name}</b>' 
+			// },
+			
+			
+			{ header: 'Identification', dataIndex: 'roller_identification_form_detail_detail_id', flex: 1},
+			{ header: 'Sku Roller',  dataIndex: 'roller_builder_sku', flex: 2},
+    		{ header: 'Roller',  dataIndex: 'roller_builder_name', flex: 3},
+    		{ header: 'Core Type',  dataIndex: 'core_type_case_text', flex: 1},
 			 
 		];
 		

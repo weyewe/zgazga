@@ -9,11 +9,19 @@ Ext.define('AM.view.operation.stockadjustment.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Description', dataIndex: 'description', flex: 2 },
-			{ header: 'Tanggal Penyesuaian', dataIndex: 'adjustment_date', flex: 2 },
-		 	{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
+			// { header: 'Description', dataIndex: 'description', flex: 2 },
+			// { header: 'Tanggal Penyesuaian', dataIndex: 'adjustment_date', flex: 2 },
+		 //	{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
 			
-			
+			{
+				xtype : 'templatecolumn',
+				text : "Deskripsi",
+				flex : 3,
+				tpl :  	'Tanggal Penyesuaian: <br /> <b>{adjustment_date}</b>' + '<br />' + '<br />' +
+							'Gudang:  <br /> <b>{warehouse_name}</b>'   + '<br />' + '<br />' +
+							
+							'{description}'   
+			},
 			
 			
  

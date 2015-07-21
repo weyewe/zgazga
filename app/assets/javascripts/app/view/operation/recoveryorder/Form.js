@@ -129,7 +129,7 @@ Ext.define('AM.view.operation.recoveryorder.Form', {
 		    				xtype: 'combo',
 		    				queryMode: 'remote',
 		    				forceSelection: true, 
-		    				displayField : 'rif_code',
+		    				displayField : 'rif_nomor_disasembly',
 		    				valueField : 'roller_identification_form_id',
 		    				pageSize : 5,
 		    				minChars : 1, 
