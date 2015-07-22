@@ -118,7 +118,8 @@ Ext.define('AM.controller.DeliveryOrders', {
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"]
+			livesearch: me.getDeliveryOrdersStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
 		};
 		 
 		for (var k in values) {

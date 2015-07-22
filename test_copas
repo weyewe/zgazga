@@ -1,13 +1,84 @@
-'receiptvoucherProcess receiptvoucherlist button[action=downloadObject]': {
-    click: this.downloadObject
-}	
+	'purchaseorderProcess purchaseorderlist button[action=filterObject]': {
+		click: this.filterObject
+	},
+	'filterpurchaseorderform button[action=save]' : {
+		click : this.executeFilterObject  
+	},
+	
+	'filterpurchaseorderform button[action=reset]' : {
+		click : this.executeResetFilterObject  
+	},
+	
+	
+	
+	
+	<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	
 
-
-downloadObject: function(){
-		var record = this.getList().getSelectedObject();
-		var id = record.get("id")
-		if( record ){
-			window.open( 'receipt_vouchers/' + id + '.pdf' );
-		}
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterpurchaseorderform');
 		
-},
+		view.setPreviousValue( me.getPurchaseOrdersStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseOrdersStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getPurchaseOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseOrdersStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getPurchaseOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseOrdersStore().load();
+		win.close();
+  },
+  
+  
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

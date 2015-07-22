@@ -58,35 +58,41 @@ class Api::SalesInvoicesController < Api::BaseApiController
     end
     
     # puts "after livesearch query total: #{query.count}" 
-    start_confirmation =  parse_date( params[:start_confirmation] )
-    end_confirmation =  parse_date( params[:end_confirmation] )
-    start_invoice_date =  parse_date( params[:start_invoice_date] )
-    end_invoice_date =  parse_date( params[:end_invoice_date] )
     
-     
+    if params[:is_filter].present?
+        
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_invoice_date =  parse_date( params[:start_invoice_date] )
+      end_invoice_date =  parse_date( params[:end_invoice_date] )
+      
+       
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if  start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation }
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
     
-    if params[:is_confirmed].present?
-      query = query.where(:is_confirmed => true ) 
-      if  start_confirmation.present?
-        query = query.where{ confirmed_at.gte start_confirmation }
+      if start_invoice_date.present?
+        query = query.where{ invoice_date.gte start_invoice_date}
       end
       
-      if end_confirmation.present?
-        query = query.where{ confirmed_at.lt  end_confirmation }
+      if end_invoice_date.present?
+        query = query.where{ invoice_date.lt end_invoice_date}
       end
-    end
-  
-    if start_invoice_date.present?
-      query = query.where{ invoice_date.gte start_invoice_date}
-    end
-    
-    if end_invoice_date.present?
-      query = query.where{ invoice_date.lt end_invoice_date}
-    end
-    
-    object = DeliveryOrder.find_by_id params[:delivery_order_id]
-    if not object.nil? 
-      query = query.where(:delivery_order_id => object.id )
+      
+      object = DeliveryOrder.find_by_id params[:delivery_order_id]
+      if not object.nil? 
+        query = query.where(:delivery_order_id => object.id )
+      end
     end
     
    
