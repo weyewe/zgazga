@@ -20,7 +20,7 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 			
 			{	header: 'Customer', dataIndex: 'contact_name', flex: 2 },
 			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
-			{	header: 'Employee', dataIndex: 'employee_name', flex: 2 },
+			{	header: 'Marketing', dataIndex: 'employee_name', flex: 2 },
 		 
 			
 			

@@ -3,9 +3,13 @@ class Api::PurchaseOrdersController < Api::BaseApiController
   def index
      
      
+     query  = PurchaseOrder.active_objects.joins(:contact,:exchange)
+     
+     
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PurchaseOrder.active_objects.joins(:contact,:exchange).where{
+       
+       query = query.where{
          (
            ( description =~  livesearch ) | 
            ( code =~ livesearch)  | 
@@ -14,25 +18,58 @@ class Api::PurchaseOrdersController < Api::BaseApiController
            ( exchange.name =~  livesearch)
          )
 
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = PurchaseOrder.active_objects.joins(:contact,:exchange).where{
-         (
-           ( description =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-       }.count
- 
-
-     else
-       @objects = PurchaseOrder.active_objects.joins(:contact,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = PurchaseOrder.active_objects.count
+       }
+        
      end
+    
      
+    if params[:is_filter].present?
+      
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_purchase_date =  parse_date( params[:start_purchase_date] )
+      end_purchase_date =  parse_date( params[:end_purchase_date] )
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation}
+        end
+      else
+        query = query.where(:is_confirmed => false ) 
+      end
+    
+      if start_purchase_date.present?
+        query = query.where{ purchase_date.gte start_purchase_date}
+      end
+      
+      if end_purchase_date.present?
+        query = query.where{ purchase_date.lt  end_purchase_date}
+      end
+      
+      object = Contact.find_by_id params[:contact_id]
+      if not object.nil? 
+        query = query.where(:contact_id => object.id )
+      end
+      
+      object = Exchange.find_by_id params[:exchange_id]
+      if not object.nil? 
+        query = query.where(:exchange_id => object.id )
+      end
+      
+      object = Employee.find_by_id params[:employee_id]
+      if not object.nil? 
+        query = query.where(:employee_id => object.id )
+      end
+    end
      
+     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+     @total = query.count 
      
      
   end

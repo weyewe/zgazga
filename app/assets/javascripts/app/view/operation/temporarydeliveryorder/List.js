@@ -7,20 +7,56 @@ Ext.define('AM.view.operation.temporarydeliveryorder.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
+			
+			
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Nomor Surat DeliveryOrder', dataIndex: 'delivery_order_nomor_surat', flex: 2 },
-			{	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
-			{	header: 'Tanggal Delivery', dataIndex: 'delivery_date', flex: 2 },
-		 	{
+			// { header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Deskripsi",
+				flex : 3,
+				tpl : 	'No Surat: <br />  <b>{nomor_surat}</b>'  + '<br />' + '<br />' +
+							'No Surat DO: <br /> <b>{delivery_order_nomor_surat}</b>'  + '<br />' + '<br />' +
+							'Tujuan: <br /><b>{contact_name}</b>'
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Pengiriman",
+				flex : 3,
+				tpl : 	'Customer: <br />  <b>{contact_name}</b>'  + '<br />' + '<br />' +
+							'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+							'Tanggal Delivery: <br /><b>{delivery_date}</b>'
+			},
+			
+		
+			
+			
+ 
+			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
 				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
+			
+			
+			// { header: 'ID', dataIndex: 'id'},
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+			// {	header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
+			// {	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
+			// {	header: 'Nomor Surat DeliveryOrder', dataIndex: 'delivery_order_nomor_surat', flex: 2 },
+			// {	header: 'Warehouse', dataIndex: 'warehouse_name', flex: 2 },
+			// {	header: 'Tanggal Delivery', dataIndex: 'delivery_date', flex: 2 },
+		 //	{
+			// 	xtype : 'templatecolumn',
+			// 	text : "Konfirmasi",
+			// 	flex : 3,
+			// 	tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+			// 				'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+			// },
 			
 			
 			

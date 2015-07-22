@@ -79,9 +79,88 @@ Ext.define('AM.controller.PurchaseInvoices', {
       
       'purchaseinvoiceProcess purchaseinvoicelist button[action=downloadObject]': {
 			    click: this.downloadObject
-			}	
+			}	,
+					
+			'purchaseinvoiceProcess purchaseinvoicelist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterpurchaseinvoiceform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterpurchaseinvoiceform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+			
 		
     });
+  },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterpurchaseinvoiceform');
+		
+		view.setPreviousValue( me.getPurchaseInvoicesStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseInvoicesStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseInvoicesStore().load();
+		win.close();
   },
   
 downloadObject: function(){

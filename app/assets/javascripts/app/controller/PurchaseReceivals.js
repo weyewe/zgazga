@@ -79,10 +79,91 @@ Ext.define('AM.controller.PurchaseReceivals', {
 				      
 				'purchasereceivalProcess purchasereceivallist button[action=downloadObject]': {
 				    click: this.downloadObject
-				}
+				},
+						
+			'purchasereceivalProcess purchasereceivallist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterpurchasereceivalform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterpurchasereceivalform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+			
 		
     });
   },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterpurchasereceivalform');
+		
+		view.setPreviousValue( me.getPurchaseReceivalsStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseReceivalsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseReceivalsStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getPurchaseReceivalsStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseReceivalsStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getPurchaseReceivalsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getPurchaseReceivalsStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getPurchaseReceivalsStore().getProxy().extraParams = extraParams;
+		 
+		me.getPurchaseReceivalsStore().load();
+		win.close();
+  },
+  
+  
 	  
 	downloadObject: function(){
 			var record = this.getList().getSelectedObject();

@@ -19,7 +19,7 @@ Ext.define('AM.view.operation.purchaseorder.List' ,{
 				xtype : 'templatecolumn',
 				text : "Description",
 				flex : 3,
-				tpl : 	'Sales Date: <br />  <b>{purchase_date}</b>'  + '<br />' + '<br />' +
+				tpl : 	'Purchase Date: <br />  <b>{purchase_date}</b>'  + '<br />' + '<br />' +
 							'No Surat: <b>{nomor_surat}</b>' + '<br />' + '<br />' +
 							'Quantity Editable: <b>{allow_edit_detail}</b>' 
 			},

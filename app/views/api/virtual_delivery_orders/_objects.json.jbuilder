@@ -8,6 +8,7 @@ json.virtual_delivery_orders objects do |object|
 	json.warehouse_id 				object.warehouse.id 
 	
 	json.virtual_order_code 			object.virtual_order.code 
+	json.virtual_order_nomor_surat 			object.virtual_order.nomor_surat 
 	json.virtual_order_id 				object.virtual_order.id 
 	
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 

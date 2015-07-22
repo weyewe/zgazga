@@ -2,10 +2,12 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
   
   def index
      
+     query = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order)
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).where{
+       
+       query  = query.where{
          (
            ( nomor_surat =~  livesearch ) | 
            ( code =~ livesearch)  | 
@@ -13,26 +15,53 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
            ( purchase_order.code =~  livesearch) |
            ( purchase_order.nomor_surat =~  livesearch)
          )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).where{
-         (
-           ( nomor_surat =~  livesearch ) | 
-           ( code =~ livesearch)  | 
-           ( warehouse.name =~  livesearch) |
-           ( purchase_order.code =~  livesearch) |
-           ( purchase_order.nomor_surat =~  livesearch)
-         )
-       }.count
- 
-
-     else
-       @objects = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = PurchaseReceival.active_objects.count
+       }
+  
      end
      
+    if params[:is_filter].present?
+    # puts "after livesearch query total: #{query.count}" 
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_receival_date =  parse_date( params[:start_receival_date] )
+      end_receival_date =  parse_date( params[:end_receival_date] )
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
+    
+      if start_receival_date.present?
+        query = query.where{ receival_date.gte start_receival_date}
+      end
+      
+      if end_receival_date.present?
+        query = query.where{ receival_date.lt end_receival_date}
+      end
+      
+      object = Warehouse.find_by_id params[:warehouse_id]
+      if not object.nil? 
+        query = query.where(:warehouse_id => object.id )
+      end
+      
+      object = PurchaseOrder.find_by_id params[:purchase_order_id]
+      if not object.nil? 
+        query = query.where(:purchase_order_id => object.id )
+      end
+    end
      
+     
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
      
      
   end

@@ -17,7 +17,7 @@ Ext.define('AM.view.operation.purchasereceival.List' ,{
 				flex : 3,
 				tpl : 	'Tanggal Receival: <br />  <b>{receival_date}</b>'  + '<br />' + '<br />' +
 							'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
-							'SalesOrder: <br /><b>{purchase_order_nomor_surat}</b>'
+							'PO: <br /><b>{purchase_order_nomor_surat}</b>'
 			},
 			
 		
@@ -81,12 +81,19 @@ Ext.define('AM.view.operation.purchasereceival.List' ,{
 			checkChangeBuffer: 300
 		});
 		
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
+		});
+		 
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
 					this.downloadButton, 
 					'->',
+					this.filterButton, 
 					this.searchField ];
 	 
 
