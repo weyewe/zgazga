@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.salesorder.FilterForm', {
+Ext.define('AM.view.operation.purchaseorder.FilterForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.filtersalesorderform',
+  alias : 'widget.filterpurchaseorderform',
 
-  title : 'Filter SalesOrder',
+  title : 'Filter PurchaseOrder',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,21 +13,21 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 	
   initComponent: function() {
 			var me = this; 
-	
-	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
-		storeId : 'contact_search',
+
+	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search',
 		fields	: [
 		 		{
-					name : 'contact_name',
+					name : 'warehouse_name',
 					mapping : "name"
 				} ,
 				{
-					name : 'contact_description',
+					name : 'warehouse_description',
 					mapping : "description"
 				} ,
 		 
 				{
-					name : 'contact_id',
+					name : 'warehouse_id',
 					mapping : 'id'
 				}  
 		],
@@ -35,7 +35,7 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_customers',
+			url : 'api/search_warehouses',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
-		storeId : 'employee_search',
+	var remoteJsonStorePurchaseOrder = Ext.create(Ext.data.JsonStore, {
+		storeId : 'sales_order_search',
 		fields	: [
 		 		{
-					name : 'employee_name',
-					mapping : "name"
+					name : 'sales_order_code',
+					mapping : "code"
 				} ,
 				{
-					name : 'employee_description',
-					mapping : "description"
+					name : 'sales_order_nomor_surat',
+					mapping : "nomor_surat"
 				} ,
 		 
 				{
-					name : 'employee_id',
+					name : 'sales_order_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,7 +66,7 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_employees',
+			url : 'api/search_sales_orders',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -75,38 +75,6 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 		},
 		autoLoad : false 
 	});
-	
-	var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
-		storeId : 'exchange_search',
-		fields	: [
-		 		{
-					name : 'exchange_name',
-					mapping : "name"
-				} ,
-				{
-					name : 'exchange_description',
-					mapping : "description"
-				} ,
-		 
-				{
-					name : 'exchange_id',
-					mapping : 'id'
-				}  
-		],
-		
-	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_exchanges',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
-	 
 		
     this.items = [{
       xtype: 'form',
@@ -118,7 +86,7 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 					anchor: '100%'
       },
       items: [
-   			 
+      	
     		    {
     					xtype: 'checkboxfield',
     					name : 'is_confirmed',
@@ -138,92 +106,71 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
     					format: 'Y-m-d',
 				},
  
-    		    {
-    					xtype: 'datefield',
-    					name : 'start_sales_date',
-    					fieldLabel: 'Mulai Penjualan',
-    					format: 'Y-m-d',
-				},
  
     		    {
     					xtype: 'datefield',
-    					name : 'end_sales_date',
-    					fieldLabel: 'Akhir Penjualan',
+    					name : 'start_delivery_date',
+    					fieldLabel: 'Mulai Delivery',
     					format: 'Y-m-d',
-				},
- 
+    			},
+    			{
+    					xtype: 'datefield',
+    					name : 'end_delivery_date',
+    					fieldLabel: 'Akhir Delivery',
+    					format: 'Y-m-d',
+    			}, 
+    	 
     	        
-    	      {
-	    				fieldLabel: 'Contact',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: false, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : true, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
-    				
-    				{
-	    				fieldLabel: 'Marketing',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: false, 
-	    				displayField : 'employee_name',
-	    				valueField : 'employee_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : true, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreEmployee , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{employee_name}">' + 
-	    												'<div class="combo-name">{employee_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {employee_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'employee_id' 
+    	    {
+    				fieldLabel: 'Warehouse',
+    				xtype: 'combo',
+    				queryMode: 'remote',
+    				forceSelection: true, 
+    				displayField : 'warehouse_name',
+    				valueField : 'warehouse_id',
+    				pageSize : 5,
+    				minChars : 1, 
+    				allowBlank : false, 
+    				triggerAction: 'all',
+    				store : remoteJsonStoreWarehouse , 
+    				listConfig : {
+    					getInnerTpl: function(){
+    						return  	'<div data-qtip="{warehouse_name}">' + 
+    												'<div class="combo-name">{warehouse_name}</div>' + 
+    												'<div class="combo-name">Deskripsi: {warehouse_description}</div>' + 
+    						 					'</div>';
+    					}
     				},
-    				
-    				{
-	    				fieldLabel: 'Currency',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: false, 
-	    				displayField : 'exchange_name',
-	    				valueField : 'exchange_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : true, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreExchange , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{exchange_name}">' + 
-	    												'<div class="combo-name">{exchange_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'exchange_id' 
+    				name : 'warehouse_id' 
+    			},
+    			
+    			{
+    				fieldLabel: 'PurchaseOrder',
+    				xtype: 'combo',
+    				queryMode: 'remote',
+    				forceSelection: true, 
+    				displayField : 'sales_order_code',
+    				valueField : 'sales_order_id',
+    				pageSize : 5,
+    				minChars : 1, 
+    				allowBlank : false, 
+    				triggerAction: 'all',
+    				store : remoteJsonStorePurchaseOrder , 
+    				listConfig : {
+    					getInnerTpl: function(){
+    						return  	'<div data-qtip="{sales_order_code}">' + 
+    												'<div class="combo-name">{sales_order_code}</div>' + 
+    												'<div class="combo-name">NomorSurat: {sales_order_nomor_surat}</div>' + 
+    						 					'</div>';
+    					}
     				},
+    				name : 'sales_order_id' 
+    			},
+			
 			]
     }];
-
+    
+    
     this.buttons = [{
       text: 'Save',
       action: 'save'
@@ -308,14 +255,6 @@ Ext.define('AM.view.operation.salesorder.FilterForm', {
 	}
  
 });
-
-
-
-
-
-
-
-
 
 
 

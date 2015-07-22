@@ -32,46 +32,52 @@ class Api::SalesOrdersController < Api::BaseApiController
        }
     end
     
+    if params[:is_filter].present?
     # puts "after livesearch query total: #{query.count}" 
-    start_confirmation =  parse_date( params[:start_confirmation] )
-    end_confirmation =  parse_date( params[:end_confirmation] )
-    start_sales_date =  parse_date( params[:start_sales_date] )
-    end_sales_date =  parse_date( params[:end_sales_date] )
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_sales_date =  parse_date( params[:start_sales_date] )
+      end_sales_date =  parse_date( params[:end_sales_date] )
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation}
+        end
+      else
+        query = query.where(:is_confirmed => false ) 
+      end
     
-    
-    if params[:is_confirmed].present?
-      query = query.where(:is_confirmed => true ) 
-      if start_confirmation.present?
-        query = query.where{ confirmed_at.gte start_confirmation}
+      if start_sales_date.present?
+        query = query.where{ sales_date.gte start_sales_date}
       end
       
-      if end_confirmation.present?
-        query = query.where{ confirmed_at.lt  end_confirmation}
+      if end_sales_date.present?
+        query = query.where{ sales_date.lt  end_sales_date}
+      end
+      
+      object = Contact.find_by_id params[:contact_id]
+      if not object.nil? 
+        query = query.where(:contact_id => object.id )
+      end
+      
+      object = Exchange.find_by_id params[:exchange_id]
+      if not object.nil? 
+        query = query.where(:exchange_id => object.id )
+      end
+      
+      object = Employee.find_by_id params[:employee_id]
+      if not object.nil? 
+        query = query.where(:employee_id => object.id )
       end
     end
+    
   
-    if start_sales_date.present?
-      query = query.where{ sales_date.gte start_sales_date}
-    end
-    
-    if end_sales_date.present?
-      query = query.where{ sales_date.lt  end_sales_date}
-    end
-    
-    object = Contact.find_by_id params[:contact_id]
-    if not object.nil? 
-      query = query.where(:contact_id => object.id )
-    end
-    
-    object = Exchange.find_by_id params[:exchange_id]
-    if not object.nil? 
-      query = query.where(:exchange_id => object.id )
-    end
-    
-    object = Employee.find_by_id params[:employee_id]
-    if not object.nil? 
-      query = query.where(:employee_id => object.id )
-    end
     
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
     @total = query.count 
