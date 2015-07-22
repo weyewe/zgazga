@@ -420,485 +420,6 @@ if Rails.env.development?
     end
   end
   
-  stock_adjustment_array =[]
-  # (1.upto 10).each do |x|
-  Warehouse.all.each do |selected_warehouse| 
-    stock_adjustment = StockAdjustment.create_object(
-      :warehouse_id => selected_warehouse.id , 
-      :adjustment_date => DateTime.now 
-      )
-    Item.all.each do |selected_item| 
-      StockAdjustmentDetail.create_object(
-        :stock_adjustment_id => stock_adjustment.id,
-        :item_id => selected_item.id,
-        :price => BigDecimal("1000"),
-        :amount => 1000,
-        :status => ADJUSTMENT_STATUS[:addition],
-        )
-    end
- 
-      stock_adjustment.confirm_object(:confirmed_at => DateTime.now )
-      puts "Fark stock adjustment is not confirmed " if not stock_adjustment.is_confirmed?
-      stock_adjustment.errors.messages.each {|x| puts "error in stock adjustment: #{x}" }
-      stock_adjustment_array << stock_adjustment
- 
-  end
-  
-  # warehouse_mutation_array = []
-  # (1.upto 10).each do |x|
-  #   selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
-  #   selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
-  #   warehouse_mutation = WarehouseMutation.create_object(
-  #     :warehouse_from_id => selected_warehouse_from.id,
-  #     :warehouse_to_id => selected_warehouse_to.id,
-  #     :mutation_date => DateTime.now
-  #     )
-  #   (1.upto 10).each do |y| 
-  #     selected_item = item_array[rand( 0..(item_array.length - 1 ))]
-  #     WarehouseMutationDetail.create_object(
-  #       :warehouse_mutation_id => warehouse_mutation.id,
-  #       :item_id => selected_item.id,
-  #       :amount => 1
-  #       )
-  #   end
-  #   if not warehouse_mutation.errors.size == 0
-  #     warehouse_mutation.confirm_object(:confirmed_at =>DateTime.now)
-  #     puts "farkk. warehouse mutation is not confirmed" if not warehouse_mutation.is_confirmed? 
-  #     warehouse_mutation_array << warehouse_mutation
-  #   end
-  # end
-  
-  cashbank_adjustment_array = []
-  (1.upto 10).each do |x|
-    selected_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 1))]
-    cashbank_adjustment = CashBankAdjustment.create_object(
-      :cash_bank_id => selected_cashbank.id,
-      :amount => BigDecimal("1000000"),
-      :status => ADJUSTMENT_STATUS[:addition],
-      :adjustment_date => DateTime.now,
-      :description => "The description  #{x}"
-      )
-    if cashbank_adjustment.errors.size == 0 
-      cashbank_adjustment.confirm_object(:confirmed_at => DateTime.now)
-    end
-    cashbank_adjustment_array << cashbank_adjustment
-  end
-  
-  cash_bank_mutation_array = []
-  (1.upto 10).each do |x|
-    selected_target_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 6))]
-    selected_source_cashbank = cashbank_array[rand( 6..(cashbank_array.length - 1))]
-    cash_bank_mutation = CashBankMutation.create_object(
-      :target_cash_bank_id => selected_target_cashbank.id,
-      :source_cash_bank_id => selected_source_cashbank.id,
-      :amount => BigDecimal("1000"),
-      :description => "The Description #{x}",
-      :mutation_date => DateTime.now
-      )
-    if cash_bank_mutation.errors.size == 0 
-      cash_bank_mutation.confirm_object(:confirmed_at => DateTime.now)
-    end
-    cash_bank_mutation_array << cash_bank_mutation
-  end
-  
-  payment_request_array = []
-  (1.upto 10).each do |x|
-    selected_contact = supplier_array[rand( 0..(supplier_array.length - 1))]
-    selected_exchange = exchange_array[rand( 0..(supplier_array.length - 1))]
-    selected_ledger_account = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
-    payment_request = PaymentRequest.create_object(
-      :contact_id => selected_contact.id,
-      :request_date => DateTime.now,
-      :due_date => DateTime.now,
-      :exchange_id => selected_exchange.id,
-      :account_id => selected_ledger_account.id,
-      )
-    (1.upto 5).each do |y|
-    selected_ledger_account_detail = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
-    PaymentRequestDetail.create_object(
-      :payment_request_id => payment_request.id,
-      :account_id => selected_ledger_account_detail.id,
-      :status => NORMAL_BALANCE[:debit],
-      :amount => BigDecimal("1000"),
-      )
-    end
-    payment_request.reload
-    payment_request.confirm_object(payment_request)
-    payment_request_array << payment_request
-  end
-  
-  purchase_order_array = []
-  (1.upto 10).each do |x|
-    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
-    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
-    purchase_order = PurchaseOrder.create_object(
-      :contact_id => selected_contact.id,
-      :purchase_date => DateTime.now,
-      :exchange_id => selected_exchange.id,
-      :description => "The description #{x}",
-      :nomor_surat => "nomor_surat #{x}",
-      :allow_edit_detail => false
-      )
-    (1.upto 10).each do |y|
-      selected_item = item_array[rand(0..(item_array.length - 1))]
-      PurchaseOrderDetail.create_object(
-        :purchase_order_id => purchase_order.id,
-        :item_id => selected_item.id,
-        :amount => BigDecimal("1"),
-        :price => BigDecimal("1000"),
-        )
-    end
-    if purchase_order.errors.size == 0 
-      purchase_order.reload
-      purchase_order.confirm_object(:confirmed_at => DateTime.now)
-    end
-    purchase_order_array << purchase_order
-  end
-  
-  purchase_receival_array = []
-  (1.upto 10).each do |x|
-    selected_purchase_order = purchase_order_array[rand(0..(purchase_order_array.length - 1))]
-    selected_warehouse = warehouse_array[rand(0..(purchase_order_array.length - 1))]
-    purchase_receival = PurchaseReceival.create_object(
-      :purchase_order_id => selected_purchase_order.id,
-      :warehouse_id => selected_warehouse.id,
-      :receival_date => DateTime.now,
-      :nomor_surat => "nomor_surat #{x}",
-      )
-    (1.upto 3).each do |y|
-      selected_purchase_order_detail =
-      selected_purchase_order.purchase_order_details[rand(0..
-      (selected_purchase_order.purchase_order_details.length - 1))]
-      PurchaseReceivalDetail.create_object(
-        :purchase_receival_id => purchase_receival.id,
-        :purchase_order_detail_id => selected_purchase_order_detail.id,
-        :amount => BigDecimal("1"),
-        )
-    end
-    if purchase_receival.errors.size == 0
-      purchase_receival.reload
-      purchase_receival.confirm_object(:confirmed_at => DateTime.now)
-      purchase_receival_array << purchase_receival 
-    end
-  end
-  
-  purchase_invoice_array = []
-  (1.upto 10).each do |x|
-    selected_purchase_receival = purchase_receival_array[rand(0..(purchase_receival_array.length - 1))]
-    purchase_invoice = PurchaseInvoice.create_object(
-      :purchase_receival_id => selected_purchase_receival.id,
-      :invoice_date => DateTime.now,
-      :nomor_surat => "nomor_surat #{x}",
-      :description => "the description #{x}",
-      :due_date => DateTime.now
-      )
-    (1.upto 4).each do |y|
-      selected_purchase_receival_detail = 
-      selected_purchase_receival.purchase_receival_details[rand(0..
-      (selected_purchase_receival.purchase_receival_details.length - 1))]
-      PurchaseInvoiceDetail.create_object(
-        :purchase_invoice_id => purchase_invoice.id,
-        :purchase_receival_detail_id => selected_purchase_receival_detail.id,
-        :amount => BigDecimal("1")
-        )
-    end
-    if purchase_invoice.errors.size == 0 
-      purchase_invoice.confirm_object(:confirmed_at => DateTime.now)
-      purchase_invoice_array << purchase_invoice
-    end
-    
-  end
-  
-  payable_array = []
-  Payable.all.each do |payable|
-    payable_array << payable 
-  end
-  
-  payment_voucher_array = []
-  (1.upto 10).each do |x|
-    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
-    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
-    payment_voucher = PaymentVoucher.create_object(
-      :no_bukti => "no_bukti #{x}",
-      :is_gbch => false,
-      :due_date => DateTime.now,
-      :pembulatan => BigDecimal("0"),
-      :biaya_bank => BigDecimal("0"),
-      :rate_to_idr => BigDecimal("1"),
-      :payment_date => DateTime.now,
-      :contact_id => selected_contact.id,
-      :cash_bank_id => selected_cashbank.id,
-      )
-    (1.upto 4).each do |y|
-      selected_payable = payable_array[rand(0..(payable_array.length - 1))]
-      PaymentVoucherDetail.create_object(
-        :payment_voucher_id => payment_voucher.id,
-        :payable_id => selected_payable.id,
-        :amount_paid => BigDecimal("100"),
-        :pph_21 => BigDecimal("0"),
-        :pph_23 => BigDecimal("0"),
-        :rate => BigDecimal("1")
-        )
-    end
-    if payment_voucher.errors.size == 0 
-      payment_voucher.confirm_object(:confirmed_at => DateTime.now)
-    end
-  end
-  
-  sales_order_array = []
-  (1.upto 10).each do |x|
-    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
-    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
-    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
-    sales_order = SalesOrder.create_object(
-      :contact_id => selected_contact.id,
-      :employee_id => selected_employee.id,
-      :sales_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :exchange_id => selected_exchange.id
-      )
-    (1.upto 4).each do |y|
-      selected_item = item_array[rand(0..(item_array.length - 1))]
-      SalesOrderDetail.create_object(
-        :sales_order_id => sales_order.id,
-        :item_id => selected_item.id,
-        :is_service => false,
-        :amount => BigDecimal("2"),
-        :price => BigDecimal("1000")
-        )
-    end
-    if sales_order.errors.size == 0 
-      sales_order.reload
-      sales_order.confirm_object(:confirmed_at => DateTime.now)
-      puts "Fark sales order is not confirmed " if not sales_order.is_confirmed?
-      sales_order_array << sales_order
-    end
-  end
-  
-  delivery_order_array = []
-  counter  = 0 
-  (1.upto 2).each do |x|
-    counter = counter + 1 
-    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 6))]
-    delivery_order = DeliveryOrder.create_object(
-      :warehouse_id => selected_warehouse.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :sales_order_id => selected_sales_order.id
-      )
-    # (1.upto 4).each do |y| 
-    detail_counter = 0
-    selected_sales_order.sales_order_details.each do |selected_sales_order_detail|
-      detail_counter = detail_counter + 1 
-      selected_item = item_array[rand(0..(item_array.length - 1))]
-      # selected_sales_order_detail = 
-      # selected_sales_order.sales_order_details[rand(0..(selected_sales_order.sales_order_details.length - 1))]
-      DeliveryOrderDetail.create_object(
-        :delivery_order_id => delivery_order.id,
-        :sales_order_detail_id => selected_sales_order_detail.id,
-        :order_code => "Order #{selected_sales_order_detail.id}",
-        :amount => BigDecimal("2"),
-        )
-    end
-    if delivery_order.errors.size == 0 
-      delivery_order.reload
-      delivery_order.confirm_object(:confirmed_at => DateTime.now)
-      delivery_order.errors.messages.each {|x| puts "the delivery order confirm error: #{x}" }
-      if not delivery_order.is_confirmed?
-        puts "Fark delivery order is not confirmed "
-        delivery_order.delivery_order_details.each do |x|
-          puts "item requested: #{x.item.sku}, ready quantity : #{x.item.amount}. Requested quantity :#{x.amount}"
-        end
-      end
-      delivery_order_array << delivery_order
-    end
-  end
-  
-  delivery_order_non_detail_array = []
-  (1.upto 5).each do |x|
-    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    selected_sales_order = sales_order_array[rand(6..(sales_order_array.length - 1))]
-    delivery_order = DeliveryOrder.create_object(
-      :warehouse_id => selected_warehouse.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :sales_order_id => selected_sales_order.id
-      )
-      delivery_order.confirm_object(:confirmed_at => DateTime.now)
-      delivery_order_non_detail_array << delivery_order
-  end
-  
-  temporary_delivery_order_array = []
-  (1.upto 5).each do |x|
-    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    selected_delivery_order = delivery_order_non_detail_array[rand(0..(delivery_order_non_detail_array.length - 1))]
-    temporary_delivery_order = TemporaryDeliveryOrder.create_object(
-      :warehouse_id => selected_warehouse.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :delivery_order_id => selected_delivery_order.id
-      )
-    (1.upto 4).each do |y|
-      selected_sales_order_detail = 
-      selected_delivery_order.sales_order.sales_order_details[rand(0..(selected_delivery_order.sales_order.sales_order_details.length - 1))]
-      TemporaryDeliveryOrderDetail.create_object(
-        :temporary_delivery_order_id => temporary_delivery_order.id,
-        :sales_order_detail_id => selected_sales_order_detail.id,
-        :amount => BigDecimal("2"),
-        )
-    end
-    if temporary_delivery_order.errors.size == 0 
-      temporary_delivery_order.reload
-      temporary_delivery_order.confirm_object(:confirmed_at => DateTime.now)
-      temporary_delivery_order_array << temporary_delivery_order
-    end
-  end
-  
-   
-  virtual_order_array = []
-  (1.upto 10).each do |x|
-    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
-    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
-    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
-    virtual_order = VirtualOrder.create_object(
-      :contact_id => selected_contact.id,
-      :employee_id => selected_employee.id,
-      :exchange_id => selected_exchange.id,
-      :order_date => DateTime.now,
-      :order_type => ORDER_TYPE_CASE[:trial_order],
-      :nomor_surat => "Nomor surat #{x}"
-      )
-    (1.upto 4).each do |y|
-      selected_item = item_array[rand(0..(item_array.length - 1))]
-      VirtualOrderDetail.create_object(
-        :virtual_order_id => virtual_order.id,
-        :item_id => selected_item.id,
-        :amount => BigDecimal("10"),
-        :price => BigDecimal("1000")
-        )
-    end
-    if virtual_order.errors.size == 0 
-      virtual_order.reload
-      virtual_order.confirm_object(:confirmed_at => DateTime.now)
-      virtual_order_array << virtual_order
-    end
-  end
-  
-  virtual_delivery_order_array = []
-  (1.upto 10).each do |x|
-    selected_virtual_order = virtual_order_array[rand(0..(virtual_order_array.length - 1))]
-    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
-    virtual_delivery_order = VirtualDeliveryOrder.create_object(
-      :virtual_order_id => selected_virtual_order.id,
-      :warehouse_id => selected_warehouse.id,
-      :delivery_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :order_type => ORDER_TYPE_CASE[:trial_order]
-      )
-    (1.upto 4).each do |y|
-      selected_virtual_order_detail = 
-      selected_virtual_order.virtual_order_details[rand(0..(selected_virtual_order.virtual_order_details.length - 1))]
-      vd = VirtualDeliveryOrderDetail.create_object(
-        :virtual_delivery_order_id => virtual_delivery_order.id,
-        :virtual_order_detail_id => selected_virtual_order_detail.id,
-        :amount => BigDecimal("2")
-        )
-    end
-    if virtual_delivery_order.errors.size == 0 
-      virtual_delivery_order.reload
-      virtual_delivery_order.confirm_object(:confirmed_at => DateTime.now)
-      virtual_delivery_order_array << virtual_delivery_order
-    end
-  end
-  
-  virtual_order_clearance_array = []
-  (1.upto 10).each do |x|
-    selected_virtual_delivery_order = virtual_delivery_order_array[rand(0..(virtual_delivery_order_array.length - 1))]
-    virtual_order_clearance = VirtualOrderClearance.create_object(
-      :virtual_delivery_order_id => selected_virtual_delivery_order.id,
-      :clearance_date => DateTime.now,
-      )
-    (1.upto 4).each do |y|
-      selected_virtual_delivery_order_detail = 
-      selected_virtual_delivery_order.virtual_delivery_order_details[rand(0..(selected_virtual_delivery_order.virtual_delivery_order_details.length - 1))]
-      VirtualOrderClearanceDetail.create_object(
-        :virtual_order_clearance_id => virtual_order_clearance.id,
-        :virtual_delivery_order_detail_id => selected_virtual_delivery_order_detail.id,
-        :amount => BigDecimal("2")
-        )
-    end
-    if virtual_order_clearance.errors.size == 0 
-      virtual_order_clearance.reload
-      virtual_order_clearance.confirm_object(:confirmed_at => DateTime.now)
-      virtual_order_clearance_array << virtual_order_clearance
-    end
-  end
-  
-  # puts "virtual_order_clearance_array: #{virtual_order_clearance_array}"
-  
-  sales_invoice_array = []
-  (1.upto 10).each do |x|
-    selected_delivery_order = delivery_order_array[rand(0..(delivery_order_array.length - 1))]
-    sales_invoice = SalesInvoice.create_object(
-      :description => "the description #{x}",
-      :due_date => DateTime.now,
-      :invoice_date => DateTime.now,
-      :nomor_surat => "Nomor surat #{x}",
-      :delivery_order_id => selected_delivery_order.id
-      )
-    (1.upto 4).each do |y|
-      selected_delivery_order_detail = 
-      selected_delivery_order.delivery_order_details[rand(0..(selected_delivery_order.delivery_order_details.length - 1))]
-      SalesInvoiceDetail.create_object(
-        :sales_invoice_id => sales_invoice.id,
-        :delivery_order_detail_id => selected_delivery_order_detail.id,
-        :amount => BigDecimal("2"),
-        )
-    end
-    if sales_invoice.errors.size == 0 
-      sales_invoice.reload
-      sales_invoice.confirm_object(:confirmed_at => DateTime.now)
-      sales_invoice_array << sales_invoice
-    end
-  end
-  
-  receivable_array = []
-  Receivable.all.each do |receivable|
-    receivable_array << receivable 
-  end
-  receipt_voucher_array = []
-  (1.upto 10).each do |x|
-    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
-    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
-    receipt_voucher = ReceiptVoucher.create_object(
-      :no_bukti => "no_bukti #{x}",
-      :is_gbch => false,
-      :due_date => DateTime.now,
-      :pembulatan => BigDecimal("0"),
-      :biaya_bank => BigDecimal("0"),
-      :rate_to_idr => BigDecimal("10"),
-      :receipt_date => DateTime.now,
-      :contact_id => selected_contact.id,
-      :cash_bank_id => selected_cashbank.id,
-      )
-    (1.upto 4).each do |y|
-      selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))]
-      ReceiptVoucherDetail.create_object(
-        :receipt_voucher_id => receipt_voucher.id,
-        :receivable_id => selected_receivable.id,
-        :amount_paid => BigDecimal("100"),
-        :pph_23 => BigDecimal("0"),
-        :rate => BigDecimal("10")
-        )
-    end
-    if receipt_voucher.errors.size == 0 
-      receipt_voucher.reload
-      receipt_voucher.confirm_object(:confirmed_at => DateTime.now)
-      receipt_voucher_array << receipt_voucher
-    end
-  end
-  
   core_builder_array = []
   (1.upto 10).each do |x|
     selected_machine = machine_array[rand(0..(machine_array.length - 1))]
@@ -1014,6 +535,886 @@ if Rails.env.development?
     end
   end
   
+  # Confirmed StockAdjustment
+  stock_adjustment_array =[]
+  # (1.upto 10).each do |x|
+  Warehouse.all.each do |selected_warehouse| 
+    stock_adjustment = StockAdjustment.create_object(
+      :warehouse_id => selected_warehouse.id , 
+      :adjustment_date => DateTime.now 
+      )
+    Item.all.each do |selected_item| 
+      StockAdjustmentDetail.create_object(
+        :stock_adjustment_id => stock_adjustment.id,
+        :item_id => selected_item.id,
+        :price => BigDecimal("1000"),
+        :amount => 1000,
+        :status => ADJUSTMENT_STATUS[:addition],
+        )
+    end
+ 
+      stock_adjustment.confirm_object(:confirmed_at => DateTime.now )
+      puts "Fark stock adjustment is not confirmed " if not stock_adjustment.is_confirmed?
+      stock_adjustment.errors.messages.each {|x| puts "error in stock adjustment: #{x}" }
+      stock_adjustment_array << stock_adjustment
+ 
+  end
+  
+  # Not Confirmed StockAdjustment
+  Warehouse.all.each do |selected_warehouse| 
+    stock_adjustment = StockAdjustment.create_object(
+      :warehouse_id => selected_warehouse.id , 
+      :adjustment_date => DateTime.now 
+      )
+    Item.all.each do |selected_item| 
+      StockAdjustmentDetail.create_object(
+        :stock_adjustment_id => stock_adjustment.id,
+        :item_id => selected_item.id,
+        :price => BigDecimal("1000"),
+        :amount => 1000,
+        :status => ADJUSTMENT_STATUS[:addition],
+        )
+    end
+  end
+  
+  # NotConfirmed WarehouseMutation
+  warehouse_mutation_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
+    selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
+    warehouse_mutation = WarehouseMutation.create_object(
+      :warehouse_from_id => selected_warehouse_from.id,
+      :warehouse_to_id => selected_warehouse_to.id,
+      :mutation_date => DateTime.now
+      )
+    (1.upto 10).each do |y| 
+      selected_item = item_array[rand( 0..(item_array.length - 1 ))]
+      WarehouseMutationDetail.create_object(
+        :warehouse_mutation_id => warehouse_mutation.id,
+        :item_id => selected_item.id,
+        :amount => 1
+        )
+    end
+  end
+  
+  # Confirmed WarehouseMutation
+  warehouse_mutation_array = []
+  (1.upto 10).each do |x|
+    selected_warehouse_from = warehouse_array[rand( 0..(warehouse_array.length - 6 ))]
+    selected_warehouse_to = warehouse_array[rand( 6..(warehouse_array.length - 1 ))]
+    warehouse_mutation = WarehouseMutation.create_object(
+      :warehouse_from_id => selected_warehouse_from.id,
+      :warehouse_to_id => selected_warehouse_to.id,
+      :mutation_date => DateTime.now
+      )
+    (1.upto 10).each do |y| 
+      selected_item = item_array[rand( 0..(item_array.length - 1 ))]
+      WarehouseMutationDetail.create_object(
+        :warehouse_mutation_id => warehouse_mutation.id,
+        :item_id => selected_item.id,
+        :amount => 1
+        )
+    end
+    if warehouse_mutation.errors.size == 0
+      warehouse_mutation.confirm_object(:confirmed_at =>DateTime.now)
+      warehouse_mutation_array << warehouse_mutation
+    end
+  end
+  
+  # Confirmed CashBankAdjustment
+  cashbank_adjustment_array = []
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 1))]
+    cashbank_adjustment = CashBankAdjustment.create_object(
+      :cash_bank_id => selected_cashbank.id,
+      :amount => BigDecimal("1000000"),
+      :status => ADJUSTMENT_STATUS[:addition],
+      :adjustment_date => DateTime.now,
+      :description => "The description  #{x}"
+      )
+    if cashbank_adjustment.errors.size == 0 
+      cashbank_adjustment.confirm_object(:confirmed_at => DateTime.now)
+    end
+    cashbank_adjustment_array << cashbank_adjustment
+  end
+  
+  # NotConfirmed CashBankAdjustment
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 1))]
+    cashbank_adjustment = CashBankAdjustment.create_object(
+      :cash_bank_id => selected_cashbank.id,
+      :amount => BigDecimal("1000000"),
+      :status => ADJUSTMENT_STATUS[:addition],
+      :adjustment_date => DateTime.now,
+      :description => "The description  #{x}"
+      )
+  end
+  
+  # Confirmed CashBankMutation
+  cash_bank_mutation_array = []
+  (1.upto 10).each do |x|
+    selected_target_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 6))]
+    selected_source_cashbank = cashbank_array[rand( 6..(cashbank_array.length - 1))]
+    cash_bank_mutation = CashBankMutation.create_object(
+      :target_cash_bank_id => selected_target_cashbank.id,
+      :source_cash_bank_id => selected_source_cashbank.id,
+      :amount => BigDecimal("1000"),
+      :description => "The Description #{x}",
+      :mutation_date => DateTime.now
+      )
+    if cash_bank_mutation.errors.size == 0 
+      cash_bank_mutation.confirm_object(:confirmed_at => DateTime.now)
+    end
+    cash_bank_mutation_array << cash_bank_mutation
+  end
+  
+  # Not Confirmed CashBankMutation
+  (1.upto 10).each do |x|
+    selected_target_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 6))]
+    selected_source_cashbank = cashbank_array[rand( 6..(cashbank_array.length - 1))]
+    cash_bank_mutation = CashBankMutation.create_object(
+      :target_cash_bank_id => selected_target_cashbank.id,
+      :source_cash_bank_id => selected_source_cashbank.id,
+      :amount => BigDecimal("1000"),
+      :description => "The Description #{x}",
+      :mutation_date => DateTime.now
+      )
+  end
+  
+  # Confirmed PaymentRequest
+  payment_request_array = []
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand( 0..(supplier_array.length - 1))]
+    selected_exchange = exchange_array[rand( 0..(supplier_array.length - 1))]
+    selected_ledger_account = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+    payment_request = PaymentRequest.create_object(
+      :contact_id => selected_contact.id,
+      :request_date => DateTime.now,
+      :due_date => DateTime.now,
+      :exchange_id => selected_exchange.id,
+      :account_id => selected_ledger_account.id,
+      )
+    (1.upto 5).each do |y|
+    selected_ledger_account_detail = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+    PaymentRequestDetail.create_object(
+      :payment_request_id => payment_request.id,
+      :account_id => selected_ledger_account_detail.id,
+      :status => NORMAL_BALANCE[:debit],
+      :amount => BigDecimal("1000"),
+      )
+    end
+    payment_request.reload
+    payment_request.confirm_object(payment_request)
+    payment_request_array << payment_request
+  end
+  
+  # Not Confirmed PaymentRequest
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand( 0..(supplier_array.length - 1))]
+    selected_exchange = exchange_array[rand( 0..(supplier_array.length - 1))]
+    selected_ledger_account = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+    payment_request = PaymentRequest.create_object(
+      :contact_id => selected_contact.id,
+      :request_date => DateTime.now,
+      :due_date => DateTime.now,
+      :exchange_id => selected_exchange.id,
+      :account_id => selected_ledger_account.id,
+      )
+    (1.upto 5).each do |y|
+    selected_ledger_account_detail = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+    PaymentRequestDetail.create_object(
+      :payment_request_id => payment_request.id,
+      :account_id => selected_ledger_account_detail.id,
+      :status => NORMAL_BALANCE[:debit],
+      :amount => BigDecimal("1000"),
+      )
+    end
+  end
+  
+  # NotConfirmed PurchaseOrder
+  (1.upto 10).each do |x|
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    purchase_order = PurchaseOrder.create_object(
+      :contact_id => selected_contact.id,
+      :purchase_date => DateTime.now,
+      :exchange_id => selected_exchange.id,
+      :description => "The description #{x}",
+      :nomor_surat => "nomor_surat #{x}",
+      :allow_edit_detail => false
+      )
+    (1.upto 10).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      PurchaseOrderDetail.create_object(
+        :purchase_order_id => purchase_order.id,
+        :item_id => selected_item.id,
+        :amount => BigDecimal("1"),
+        :price => BigDecimal("1000"),
+        )
+    end
+  end
+  
+  # Confirmed PurchaseOrder
+  purchase_order_array = []
+  (1.upto 10).each do |x|
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    purchase_order = PurchaseOrder.create_object(
+      :contact_id => selected_contact.id,
+      :purchase_date => DateTime.now,
+      :exchange_id => selected_exchange.id,
+      :description => "The description #{x}",
+      :nomor_surat => "nomor_surat #{x}",
+      :allow_edit_detail => false
+      )
+    (1.upto 10).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      PurchaseOrderDetail.create_object(
+        :purchase_order_id => purchase_order.id,
+        :item_id => selected_item.id,
+        :amount => BigDecimal("1"),
+        :price => BigDecimal("1000"),
+        )
+    end
+    if purchase_order.errors.size == 0 
+      purchase_order.reload
+      purchase_order.confirm_object(:confirmed_at => DateTime.now)
+    end
+    purchase_order_array << purchase_order
+  end
+  
+  # Not Confirmed PurchaseReceival
+  (1.upto 10).each do |x|
+    selected_purchase_order = purchase_order_array[rand(0..(purchase_order_array.length - 1))]
+    selected_warehouse = warehouse_array[rand(0..(purchase_order_array.length - 1))]
+    purchase_receival = PurchaseReceival.create_object(
+      :purchase_order_id => selected_purchase_order.id,
+      :warehouse_id => selected_warehouse.id,
+      :receival_date => DateTime.now,
+      :nomor_surat => "nomor_surat #{x}",
+      )
+    (1.upto 3).each do |y|
+      selected_purchase_order_detail =
+      selected_purchase_order.purchase_order_details[rand(0..
+      (selected_purchase_order.purchase_order_details.length - 1))]
+      PurchaseReceivalDetail.create_object(
+        :purchase_receival_id => purchase_receival.id,
+        :purchase_order_detail_id => selected_purchase_order_detail.id,
+        :amount => BigDecimal("1"),
+        )
+    end
+  end
+  
+  # Confirmed PurchaseReceival
+  purchase_receival_array = []
+  (1.upto 10).each do |x|
+    selected_purchase_order = purchase_order_array[rand(0..(purchase_order_array.length - 1))]
+    selected_warehouse = warehouse_array[rand(0..(purchase_order_array.length - 1))]
+    purchase_receival = PurchaseReceival.create_object(
+      :purchase_order_id => selected_purchase_order.id,
+      :warehouse_id => selected_warehouse.id,
+      :receival_date => DateTime.now,
+      :nomor_surat => "nomor_surat #{x}",
+      )
+    (1.upto 3).each do |y|
+      selected_purchase_order_detail =
+      selected_purchase_order.purchase_order_details[rand(0..
+      (selected_purchase_order.purchase_order_details.length - 1))]
+      PurchaseReceivalDetail.create_object(
+        :purchase_receival_id => purchase_receival.id,
+        :purchase_order_detail_id => selected_purchase_order_detail.id,
+        :amount => BigDecimal("1"),
+        )
+    end
+    if purchase_receival.errors.size == 0
+      purchase_receival.reload
+      purchase_receival.confirm_object(:confirmed_at => DateTime.now)
+      purchase_receival_array << purchase_receival 
+    end
+  end
+  
+  # Not Confirmed PurchaseInvoice
+  (1.upto 10).each do |x|
+    selected_purchase_receival = purchase_receival_array[rand(0..(purchase_receival_array.length - 1))]
+    purchase_invoice = PurchaseInvoice.create_object(
+      :purchase_receival_id => selected_purchase_receival.id,
+      :invoice_date => DateTime.now,
+      :nomor_surat => "nomor_surat #{x}",
+      :description => "the description #{x}",
+      :due_date => DateTime.now
+      )
+    (1.upto 4).each do |y|
+      selected_purchase_receival_detail = 
+      selected_purchase_receival.purchase_receival_details[rand(0..
+      (selected_purchase_receival.purchase_receival_details.length - 1))]
+      PurchaseInvoiceDetail.create_object(
+        :purchase_invoice_id => purchase_invoice.id,
+        :purchase_receival_detail_id => selected_purchase_receival_detail.id,
+        :amount => BigDecimal("1")
+        )
+    end
+  end
+  
+  # Confirmed PurchaseInvoice
+  purchase_invoice_array = []
+  (1.upto 10).each do |x|
+    selected_purchase_receival = purchase_receival_array[rand(0..(purchase_receival_array.length - 1))]
+    purchase_invoice = PurchaseInvoice.create_object(
+      :purchase_receival_id => selected_purchase_receival.id,
+      :invoice_date => DateTime.now,
+      :nomor_surat => "nomor_surat #{x}",
+      :description => "the description #{x}",
+      :due_date => DateTime.now
+      )
+    (1.upto 4).each do |y|
+      selected_purchase_receival_detail = 
+      selected_purchase_receival.purchase_receival_details[rand(0..
+      (selected_purchase_receival.purchase_receival_details.length - 1))]
+      PurchaseInvoiceDetail.create_object(
+        :purchase_invoice_id => purchase_invoice.id,
+        :purchase_receival_detail_id => selected_purchase_receival_detail.id,
+        :amount => BigDecimal("1")
+        )
+    end
+    if purchase_invoice.errors.size == 0 
+      purchase_invoice.confirm_object(:confirmed_at => DateTime.now)
+      purchase_invoice_array << purchase_invoice
+    end
+    
+  end
+  
+  payable_array = []
+  Payable.all.each do |payable|
+    payable_array << payable 
+  end
+  
+  # NotConfirmed PaymentVoucher
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    payment_voucher = PaymentVoucher.create_object(
+      :no_bukti => "no_bukti #{x}",
+      :is_gbch => false,
+      :due_date => DateTime.now,
+      :pembulatan => BigDecimal("0"),
+      :biaya_bank => BigDecimal("0"),
+      :rate_to_idr => BigDecimal("1"),
+      :payment_date => DateTime.now,
+      :contact_id => selected_contact.id,
+      :cash_bank_id => selected_cashbank.id,
+      )
+    (1.upto 4).each do |y|
+      selected_payable = payable_array[rand(0..(payable_array.length - 1))]
+      PaymentVoucherDetail.create_object(
+        :payment_voucher_id => payment_voucher.id,
+        :payable_id => selected_payable.id,
+        :amount_paid => BigDecimal("100"),
+        :pph_21 => BigDecimal("0"),
+        :pph_23 => BigDecimal("0"),
+        :rate => BigDecimal("1")
+        )
+    end
+  end
+  
+  # Confirmed PaymentVoucher
+  payment_voucher_array = []
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    payment_voucher = PaymentVoucher.create_object(
+      :no_bukti => "no_bukti #{x}",
+      :is_gbch => false,
+      :due_date => DateTime.now,
+      :pembulatan => BigDecimal("0"),
+      :biaya_bank => BigDecimal("0"),
+      :rate_to_idr => BigDecimal("1"),
+      :payment_date => DateTime.now,
+      :contact_id => selected_contact.id,
+      :cash_bank_id => selected_cashbank.id,
+      )
+    (1.upto 4).each do |y|
+      selected_payable = payable_array[rand(0..(payable_array.length - 1))]
+      PaymentVoucherDetail.create_object(
+        :payment_voucher_id => payment_voucher.id,
+        :payable_id => selected_payable.id,
+        :amount_paid => BigDecimal("100"),
+        :pph_21 => BigDecimal("0"),
+        :pph_23 => BigDecimal("0"),
+        :rate => BigDecimal("1")
+        )
+    end
+    if payment_voucher.errors.size == 0 
+      payment_voucher.confirm_object(:confirmed_at => DateTime.now)
+    end
+  end
+  
+  # NotConfirmed SalesOrder
+  (1.upto 10).each do |x|
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    sales_order = SalesOrder.create_object(
+      :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
+      :sales_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :exchange_id => selected_exchange.id
+      )
+    (1.upto 4).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      SalesOrderDetail.create_object(
+        :sales_order_id => sales_order.id,
+        :item_id => selected_item.id,
+        :is_service => false,
+        :amount => BigDecimal("2"),
+        :price => BigDecimal("1000")
+        )
+    end
+  end
+  
+  # Confirmed SalesOrder
+  sales_order_array = []
+  (1.upto 10).each do |x|
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    sales_order = SalesOrder.create_object(
+      :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
+      :sales_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :exchange_id => selected_exchange.id
+      )
+    (1.upto 4).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      SalesOrderDetail.create_object(
+        :sales_order_id => sales_order.id,
+        :item_id => selected_item.id,
+        :is_service => false,
+        :amount => BigDecimal("2"),
+        :price => BigDecimal("1000")
+        )
+    end
+    if sales_order.errors.size == 0 
+      sales_order.reload
+      sales_order.confirm_object(:confirmed_at => DateTime.now)
+      puts "Fark sales order is not confirmed " if not sales_order.is_confirmed?
+      sales_order_array << sales_order
+    end
+  end
+  
+  # NotConfirmed DeliveryOrder
+  (1.upto 2).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 6))]
+    delivery_order = DeliveryOrder.create_object(
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :sales_order_id => selected_sales_order.id
+      )
+    selected_sales_order.sales_order_details.each do |selected_sales_order_detail|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      DeliveryOrderDetail.create_object(
+        :delivery_order_id => delivery_order.id,
+        :sales_order_detail_id => selected_sales_order_detail.id,
+        :order_code => "Order #{selected_sales_order_detail.id}",
+        :amount => BigDecimal("2"),
+        )
+    end
+  end
+  
+  # Confirmed DeliveryOrder
+  delivery_order_array = []
+  counter  = 0 
+  (1.upto 2).each do |x|
+    counter = counter + 1 
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_sales_order = sales_order_array[rand(0..(sales_order_array.length - 6))]
+    delivery_order = DeliveryOrder.create_object(
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :sales_order_id => selected_sales_order.id
+      )
+    # (1.upto 4).each do |y| 
+    detail_counter = 0
+    selected_sales_order.sales_order_details.each do |selected_sales_order_detail|
+      detail_counter = detail_counter + 1 
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      # selected_sales_order_detail = 
+      # selected_sales_order.sales_order_details[rand(0..(selected_sales_order.sales_order_details.length - 1))]
+      DeliveryOrderDetail.create_object(
+        :delivery_order_id => delivery_order.id,
+        :sales_order_detail_id => selected_sales_order_detail.id,
+        :order_code => "Order #{selected_sales_order_detail.id}",
+        :amount => BigDecimal("2"),
+        )
+    end
+    if delivery_order.errors.size == 0 
+      delivery_order.reload
+      delivery_order.confirm_object(:confirmed_at => DateTime.now)
+      delivery_order.errors.messages.each {|x| puts "the delivery order confirm error: #{x}" }
+      if not delivery_order.is_confirmed?
+        puts "Fark delivery order is not confirmed "
+        delivery_order.delivery_order_details.each do |x|
+          puts "item requested: #{x.item.sku}, ready quantity : #{x.item.amount}. Requested quantity :#{x.amount}"
+        end
+      end
+      delivery_order_array << delivery_order
+    end
+  end
+  
+  delivery_order_non_detail_array = []
+  (1.upto 5).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_sales_order = sales_order_array[rand(6..(sales_order_array.length - 1))]
+    delivery_order = DeliveryOrder.create_object(
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :sales_order_id => selected_sales_order.id
+      )
+      delivery_order.confirm_object(:confirmed_at => DateTime.now)
+      delivery_order_non_detail_array << delivery_order
+  end
+  
+  # NotConfirmed TemporaryDeliveryOrder
+  (1.upto 5).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_delivery_order = delivery_order_non_detail_array[rand(0..(delivery_order_non_detail_array.length - 1))]
+    temporary_delivery_order = TemporaryDeliveryOrder.create_object(
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :delivery_order_id => selected_delivery_order.id
+      )
+    (1.upto 4).each do |y|
+      selected_sales_order_detail = 
+      selected_delivery_order.sales_order.sales_order_details[rand(0..(selected_delivery_order.sales_order.sales_order_details.length - 1))]
+      TemporaryDeliveryOrderDetail.create_object(
+        :temporary_delivery_order_id => temporary_delivery_order.id,
+        :sales_order_detail_id => selected_sales_order_detail.id,
+        :amount => BigDecimal("2"),
+        )
+    end
+  end
+  
+  # Confirmed TemporaryDeliveryOrder
+  temporary_delivery_order_array = []
+  (1.upto 5).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_delivery_order = delivery_order_non_detail_array[rand(0..(delivery_order_non_detail_array.length - 1))]
+    temporary_delivery_order = TemporaryDeliveryOrder.create_object(
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :delivery_order_id => selected_delivery_order.id
+      )
+    (1.upto 4).each do |y|
+      selected_sales_order_detail = 
+      selected_delivery_order.sales_order.sales_order_details[rand(0..(selected_delivery_order.sales_order.sales_order_details.length - 1))]
+      TemporaryDeliveryOrderDetail.create_object(
+        :temporary_delivery_order_id => temporary_delivery_order.id,
+        :sales_order_detail_id => selected_sales_order_detail.id,
+        :amount => BigDecimal("2"),
+        )
+    end
+    if temporary_delivery_order.errors.size == 0 
+      temporary_delivery_order.reload
+      temporary_delivery_order.confirm_object(:confirmed_at => DateTime.now)
+      temporary_delivery_order_array << temporary_delivery_order
+    end
+  end
+  
+  # NotConfirmed VirtualOrder
+  (1.upto 10).each do |x|
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    virtual_order = VirtualOrder.create_object(
+      :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
+      :exchange_id => selected_exchange.id,
+      :order_date => DateTime.now,
+      :order_type => ORDER_TYPE_CASE[:trial_order],
+      :nomor_surat => "Nomor surat #{x}"
+      )
+    (1.upto 4).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      VirtualOrderDetail.create_object(
+        :virtual_order_id => virtual_order.id,
+        :item_id => selected_item.id,
+        :amount => BigDecimal("10"),
+        :price => BigDecimal("1000")
+        )
+    end
+  end
+  
+  # Confirmed VirtualOrder
+  virtual_order_array = []
+  (1.upto 10).each do |x|
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_employee = employee_array[rand(0..(employee_array.length - 1))]
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))]
+    virtual_order = VirtualOrder.create_object(
+      :contact_id => selected_contact.id,
+      :employee_id => selected_employee.id,
+      :exchange_id => selected_exchange.id,
+      :order_date => DateTime.now,
+      :order_type => ORDER_TYPE_CASE[:trial_order],
+      :nomor_surat => "Nomor surat #{x}"
+      )
+    (1.upto 4).each do |y|
+      selected_item = item_array[rand(0..(item_array.length - 1))]
+      VirtualOrderDetail.create_object(
+        :virtual_order_id => virtual_order.id,
+        :item_id => selected_item.id,
+        :amount => BigDecimal("10"),
+        :price => BigDecimal("1000")
+        )
+    end
+    if virtual_order.errors.size == 0 
+      virtual_order.reload
+      virtual_order.confirm_object(:confirmed_at => DateTime.now)
+      virtual_order_array << virtual_order
+    end
+  end
+  
+  # NotConfirmed VirtualDeliveryOrder
+  (1.upto 10).each do |x|
+    selected_virtual_order = virtual_order_array[rand(0..(virtual_order_array.length - 1))]
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    virtual_delivery_order = VirtualDeliveryOrder.create_object(
+      :virtual_order_id => selected_virtual_order.id,
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :order_type => ORDER_TYPE_CASE[:trial_order]
+      )
+    (1.upto 4).each do |y|
+      selected_virtual_order_detail = 
+      selected_virtual_order.virtual_order_details[rand(0..(selected_virtual_order.virtual_order_details.length - 1))]
+      vd = VirtualDeliveryOrderDetail.create_object(
+        :virtual_delivery_order_id => virtual_delivery_order.id,
+        :virtual_order_detail_id => selected_virtual_order_detail.id,
+        :amount => BigDecimal("2")
+        )
+    end
+  end
+  
+  # Confirmed VirtualDeliveryOrder
+  virtual_delivery_order_array = []
+  (1.upto 10).each do |x|
+    selected_virtual_order = virtual_order_array[rand(0..(virtual_order_array.length - 1))]
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    virtual_delivery_order = VirtualDeliveryOrder.create_object(
+      :virtual_order_id => selected_virtual_order.id,
+      :warehouse_id => selected_warehouse.id,
+      :delivery_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :order_type => ORDER_TYPE_CASE[:trial_order]
+      )
+    (1.upto 4).each do |y|
+      selected_virtual_order_detail = 
+      selected_virtual_order.virtual_order_details[rand(0..(selected_virtual_order.virtual_order_details.length - 1))]
+      vd = VirtualDeliveryOrderDetail.create_object(
+        :virtual_delivery_order_id => virtual_delivery_order.id,
+        :virtual_order_detail_id => selected_virtual_order_detail.id,
+        :amount => BigDecimal("2")
+        )
+    end
+    if virtual_delivery_order.errors.size == 0 
+      virtual_delivery_order.reload
+      virtual_delivery_order.confirm_object(:confirmed_at => DateTime.now)
+      virtual_delivery_order_array << virtual_delivery_order
+    end
+  end
+  
+  # NotConfirmed VirtualOrderClearance
+  (1.upto 10).each do |x|
+    selected_virtual_delivery_order = virtual_delivery_order_array[rand(0..(virtual_delivery_order_array.length - 1))]
+    virtual_order_clearance = VirtualOrderClearance.create_object(
+      :virtual_delivery_order_id => selected_virtual_delivery_order.id,
+      :clearance_date => DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_virtual_delivery_order_detail = 
+      selected_virtual_delivery_order.virtual_delivery_order_details[rand(0..(selected_virtual_delivery_order.virtual_delivery_order_details.length - 1))]
+      VirtualOrderClearanceDetail.create_object(
+        :virtual_order_clearance_id => virtual_order_clearance.id,
+        :virtual_delivery_order_detail_id => selected_virtual_delivery_order_detail.id,
+        :amount => BigDecimal("2")
+        )
+    end
+  end
+  
+  
+  # Confirmed VirtualOrderClearance
+  virtual_order_clearance_array = []
+  (1.upto 10).each do |x|
+    selected_virtual_delivery_order = virtual_delivery_order_array[rand(0..(virtual_delivery_order_array.length - 1))]
+    virtual_order_clearance = VirtualOrderClearance.create_object(
+      :virtual_delivery_order_id => selected_virtual_delivery_order.id,
+      :clearance_date => DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_virtual_delivery_order_detail = 
+      selected_virtual_delivery_order.virtual_delivery_order_details[rand(0..(selected_virtual_delivery_order.virtual_delivery_order_details.length - 1))]
+      VirtualOrderClearanceDetail.create_object(
+        :virtual_order_clearance_id => virtual_order_clearance.id,
+        :virtual_delivery_order_detail_id => selected_virtual_delivery_order_detail.id,
+        :amount => BigDecimal("2")
+        )
+    end
+    if virtual_order_clearance.errors.size == 0 
+      virtual_order_clearance.reload
+      virtual_order_clearance.confirm_object(:confirmed_at => DateTime.now)
+      virtual_order_clearance_array << virtual_order_clearance
+    end
+  end
+  
+  # puts "virtual_order_clearance_array: #{virtual_order_clearance_array}"
+  
+  # NotConfirmed SalesInvoice
+  (1.upto 10).each do |x|
+    selected_delivery_order = delivery_order_array[rand(0..(delivery_order_array.length - 1))]
+    sales_invoice = SalesInvoice.create_object(
+      :description => "the description #{x}",
+      :due_date => DateTime.now,
+      :invoice_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :delivery_order_id => selected_delivery_order.id
+      )
+    (1.upto 4).each do |y|
+      selected_delivery_order_detail = 
+      selected_delivery_order.delivery_order_details[rand(0..(selected_delivery_order.delivery_order_details.length - 1))]
+      SalesInvoiceDetail.create_object(
+        :sales_invoice_id => sales_invoice.id,
+        :delivery_order_detail_id => selected_delivery_order_detail.id,
+        :amount => BigDecimal("2"),
+        )
+    end
+  end
+  
+  # Confirmed SalesInvoice
+  sales_invoice_array = []
+  (1.upto 10).each do |x|
+    selected_delivery_order = delivery_order_array[rand(0..(delivery_order_array.length - 1))]
+    sales_invoice = SalesInvoice.create_object(
+      :description => "the description #{x}",
+      :due_date => DateTime.now,
+      :invoice_date => DateTime.now,
+      :nomor_surat => "Nomor surat #{x}",
+      :delivery_order_id => selected_delivery_order.id
+      )
+    (1.upto 4).each do |y|
+      selected_delivery_order_detail = 
+      selected_delivery_order.delivery_order_details[rand(0..(selected_delivery_order.delivery_order_details.length - 1))]
+      SalesInvoiceDetail.create_object(
+        :sales_invoice_id => sales_invoice.id,
+        :delivery_order_detail_id => selected_delivery_order_detail.id,
+        :amount => BigDecimal("2"),
+        )
+    end
+    if sales_invoice.errors.size == 0 
+      sales_invoice.reload
+      sales_invoice.confirm_object(:confirmed_at => DateTime.now)
+      sales_invoice_array << sales_invoice
+    end
+  end
+  
+  receivable_array = []
+  Receivable.all.each do |receivable|
+    receivable_array << receivable 
+  end
+  
+  # NotConfirmed ReceiptVoucher
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    receipt_voucher = ReceiptVoucher.create_object(
+      :no_bukti => "no_bukti #{x}",
+      :is_gbch => false,
+      :due_date => DateTime.now,
+      :pembulatan => BigDecimal("0"),
+      :biaya_bank => BigDecimal("0"),
+      :rate_to_idr => BigDecimal("10"),
+      :receipt_date => DateTime.now,
+      :contact_id => selected_contact.id,
+      :cash_bank_id => selected_cashbank.id,
+      )
+    (1.upto 4).each do |y|
+      selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))]
+      ReceiptVoucherDetail.create_object(
+        :receipt_voucher_id => receipt_voucher.id,
+        :receivable_id => selected_receivable.id,
+        :amount_paid => BigDecimal("100"),
+        :pph_23 => BigDecimal("0"),
+        :rate => BigDecimal("10")
+        )
+    end
+  end
+  
+  # Confirmed ReceiptVoucher
+  receipt_voucher_array = []
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))]
+    receipt_voucher = ReceiptVoucher.create_object(
+      :no_bukti => "no_bukti #{x}",
+      :is_gbch => false,
+      :due_date => DateTime.now,
+      :pembulatan => BigDecimal("0"),
+      :biaya_bank => BigDecimal("0"),
+      :rate_to_idr => BigDecimal("10"),
+      :receipt_date => DateTime.now,
+      :contact_id => selected_contact.id,
+      :cash_bank_id => selected_cashbank.id,
+      )
+    (1.upto 4).each do |y|
+      selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))]
+      ReceiptVoucherDetail.create_object(
+        :receipt_voucher_id => receipt_voucher.id,
+        :receivable_id => selected_receivable.id,
+        :amount_paid => BigDecimal("100"),
+        :pph_23 => BigDecimal("0"),
+        :rate => BigDecimal("10")
+        )
+    end
+    if receipt_voucher.errors.size == 0 
+      receipt_voucher.reload
+      receipt_voucher.confirm_object(:confirmed_at => DateTime.now)
+      receipt_voucher_array << receipt_voucher
+    end
+  end
+  
+  
+  
+  # NotConfirmed BlanketOrder
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+   
+    blanket_order = BlanketOrder.create_object(
+        :contact_id => selected_contact.id,
+        :warehouse_id => selected_warehouse.id,
+        :order_date => DateTime.now,
+        :production_no => "Produc #{x}",
+        :has_due_date => true,
+        :due_date =>DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_blanket = blanket_array[rand(0..(blanket_array.length - 1))]
+      BlanketOrderDetail.create_object(
+          :blanket_order_id => blanket_order.id,
+          :blanket_id => selected_blanket.id,
+          :quantity => 10 
+        )
+    end
+  end
+  
+  # Confirmed BlanketOrder
   blanket_order_array = []
   (1.upto 10).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
@@ -1042,6 +1443,45 @@ if Rails.env.development?
     end
   end
   
+  # NotConfirmed RollerIdentificationForm
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+   
+    roller_identification = RollerIdentificationForm.create_object(
+        :warehouse_id =>selected_warehouse.id,
+        :contact_id => selected_contact.id,
+        :is_in_house => true,
+        :amount => 4,
+        :identified_date => DateTime.now,
+        :nomor_disasembly => "no diss #{x}"
+      )
+    (1.upto 4).each do |y|
+      selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]
+      selected_roller_type = roller_type_array[rand(0..(roller_type_array.length - 1))]
+      selected_machine = machine_array[rand(0..(machine_array.length - 1))]
+      RollerIdentificationFormDetail.create_object(
+          :roller_identification_form_id => roller_identification.id,
+          :detail_id => y,
+          :material_case => MATERIAL_CASE[:new],
+          :core_builder_id => selected_core_builder.id,
+          :roller_type_id => selected_roller_type.id,
+          :machine_id => selected_machine.id,
+          :repair_request_case => REPAIR_REQUEST_CASE[:all],
+          :roller_no => "rollerNo #{x} #{y}",
+          :rd => BigDecimal("10"),
+          :cd => BigDecimal("10"),
+          :rl => BigDecimal("10"),
+          :wl => BigDecimal("10"),
+          :tl => BigDecimal("10"),
+          :gl => BigDecimal("10"),
+          :groove_amount => BigDecimal("10"),
+          :groove_length => BigDecimal("10"), 
+        )
+    end
+  end
+  
+  # Confirmed RollerIdentificationForm
   roller_identification_array = []
   (1.upto 10).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
@@ -1085,6 +1525,33 @@ if Rails.env.development?
     end
   end
   
+  # NotConfirmed RecoveryOrder
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))]
+    selected_roller_identification = roller_identification_array[rand(0..(roller_identification_array.length - 1))]
+   
+    recovery_order = RecoveryOrder.create_object(
+        :roller_identification_form_id => selected_roller_identification.id,
+        :warehouse_id => selected_warehouse.id,
+        :code => "Code RIF #{x}",
+        :has_due_date => true,
+        :due_date => DateTime.now,
+      )
+    (1.upto 4).each do |y|
+      selected_roller_identification_detail = 
+      selected_roller_identification.roller_identification_form_details[rand(0..(selected_roller_identification.roller_identification_form_details.length - 1))]
+      selected_roller_builder = roller_builder_array[rand(0..(roller_builder_array.length - 1))]
+      RecoveryOrderDetail.create_object(
+          :recovery_order_id => recovery_order.id,
+          :roller_identification_form_detail_id => selected_roller_identification_detail.id,
+          :roller_builder_id => selected_roller_builder.id,
+          :core_type_case => CORE_TYPE_CASE[:r],
+        )
+    end
+  end
+  
+  # Confirmed RecoveryOrder
   recovery_order_array = []
   (1.upto 10).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
@@ -1116,6 +1583,21 @@ if Rails.env.development?
     end
   end
   
+  # NotConfirmed BlendingWorkOrder
+  (1.upto 10).each do |x|
+    selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
+    selected_blending_recipe = blending_recipe_array[rand(0..(blending_recipe_array.length - 1))]
+    blending_work_order = BlendingWorkOrder.create_object(
+        :blending_recipe_id => selected_blending_recipe.id,
+        :warehouse_id => selected_warehouse.id,
+        :description => "desc #{x}",
+        :blending_date => DateTime.now,
+        :code => "Code Bwo #{x}"
+      )
+  end
+  
+  
+  # Confirmed BlendingWorkOrder
   blending_work_order_array = []
   (1.upto 10).each do |x|
     selected_warehouse = warehouse_array[rand(0..(warehouse_array.length - 1))]
@@ -1134,6 +1616,286 @@ if Rails.env.development?
     end
   end
   
+  # NotConfirmed Memorial
+  (1.upto 10).each do |x|
+    memorial = Memorial.create_object(
+        :description => "Description #{x}",
+        :no_bukti => "Memo#{x}",
+        :amount => BigDecimal("10000")
+      )
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      MemorialDetail.create_object(
+          :memorial_id => memorial.id,
+          :account_id => selected_account.id,
+          :amount => BigDecimal("5000"),
+          :status => NORMAL_BALANCE[:debet]
+        )
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      MemorialDetail.create_object(
+          :memorial_id => memorial.id,
+          :account_id => selected_account.id,
+          :amount => BigDecimal("5000"),
+          :status => NORMAL_BALANCE[:credit]
+        )
+  end
+  
+  # Confirmed Memorial
+  memorial_array = []
+  (1.upto 10).each do |x|
+    memorial = Memorial.create_object(
+        :description => "Description #{x}",
+        :no_bukti => "Memo#{x}",
+        :amount => BigDecimal("10000")
+      )
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      MemorialDetail.create_object(
+          :memorial_id => memorial.id,
+          :account_id => selected_account.id,
+          :amount => BigDecimal("5000"),
+          :status => NORMAL_BALANCE[:debit]
+        )
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      MemorialDetail.create_object(
+          :memorial_id => memorial.id,
+          :account_id => selected_account.id,
+          :amount => BigDecimal("5000"),
+          :status => NORMAL_BALANCE[:credit]
+        )
+    if memorial.errors.size == 0 
+      memorial.confirm_object(:confirmed_at => DateTime.now)
+      memorial.reload
+      memorial_array << memorial
+    end
+  end
+  
+  # NotConfirmed BankAdministration
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
+    bank_administration = BankAdministration.create_object(
+        :cash_bank_id => selected_cashbank.id,
+        :administration_date => DateTime.now,
+        :description => "Description #{x}",
+        :no_bukti => "BA#{x}",
+        :exchange_rate_amount => BigDecimal("1")
+      )
+    (1.upto 4).each do |y|
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      BankAdministrationDetail.create_object(
+        :bank_administration_id => bank_administration.id,
+        :account_id => selected_account.id,
+        :description => "Description #{y}",
+        :status => rand(1..2),
+        :amount => BigDecimal("10000"),
+        )
+    end
+  end
+  
+  # Confirmed BankAdministration
+  bank_administration_array = []
+  (1.upto 10).each do |x|
+    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
+    bank_administration = BankAdministration.create_object(
+        :cash_bank_id => selected_cashbank.id,
+        :administration_date => DateTime.now,
+        :description => "Description #{x}",
+        :no_bukti => "BA#{x}",
+      )
+    (1.upto 4).each do |y|
+      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+      BankAdministrationDetail.create_object(
+        :bank_administration_id => bank_administration.id,
+        :account_id => selected_account.id,
+        :description => "Description #{y}",
+        :status => rand(1..2),
+        :amount => BigDecimal("10000"),
+        )
+    end
+    if bank_administration.errors.size == 0 
+      bank_administration.reload
+      bank_administration.confirm_object(:confirmed_at => DateTime.now)
+      bank_administration_array << bank_administration
+    end
+  end
+  
+  # NotConfirmed SalesDownPayment
+  (1.upto 10).each do |x|
+    selected_customer = customer_array[rand(0..(customer_array.length - 1))] 
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))] 
+    sales_down_payment = SalesDownPayment.create_object(
+        :contact_id => selected_customer.id,
+        :exchange_id => selected_exchange.id,
+        :down_payment_date => DateTime.now,
+        :due_date => DateTime.now,
+        :total_amount => BigDecimal("10000")
+      )
+  end
+  
+  # Confirmed SalesDownPayment
+  sales_down_payment_array = []
+  (1.upto 10).each do |x|
+    selected_customer = customer_array[rand(0..(customer_array.length - 1))] 
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))] 
+    sales_down_payment = SalesDownPayment.create_object(
+        :contact_id => selected_customer.id,
+        :exchange_id => selected_exchange.id,
+        :down_payment_date => DateTime.now,
+        :due_date => DateTime.now,
+        :total_amount => BigDecimal("10000")
+      )
+    if sales_down_payment.errors.size == 0 
+      sales_down_payment.reload
+      sales_down_payment.confirm_object(:confirmed_at => DateTime.now)
+      sales_down_payment_array << sales_down_payment
+    end
+  end
+  
+  # NotConfirmed SalesDownPaymentAllocation
+  (1.upto 10).each do |x|
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))] 
+    selected_payable = payable_array[rand(0..(payable_array.length - 1))] 
+    sales_down_payment_allocation = SalesDownPaymentAllocation.create_object(
+        :contact_id => selected_contact.id,
+        :payable_id => selected_payable.id,
+        :allocation_date => DateTime.now,
+        :rate_to_idr => BigDecimal("1"),
+        :description => "Description #{x}",
+      )
+    (1.upto 2).each do |y|
+      selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))] 
+      SalesDownPaymentAllocationDetail.create_object(
+        :sales_down_payment_allocation_id => sales_down_payment_allocation.id,
+        :receivable_id => selected_receivable.id,
+        :description => "Description #{y}",
+        :amount_paid => BigDecimal("100"),
+        :rate => BigDecimal("1"),
+        )
+    end
+  end
+  
+  # Confirmed SalesDownPaymentAllocation
+  sales_down_payment_allocation_array = []
+  (1.upto 10).each do |x|
+    selected_contact = customer_array[rand(0..(customer_array.length - 1))] 
+    selected_payable = payable_array[rand(0..(payable_array.length - 1))] 
+    sales_down_payment_allocation = SalesDownPaymentAllocation.create_object(
+        :contact_id => selected_contact.id,
+        :payable_id => selected_payable.id,
+        :allocation_date => DateTime.now,
+        :rate_to_idr => BigDecimal("1"),
+        :description => "Description #{x}",
+      )
+    (1.upto 2).each do |y|
+      selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))] 
+      SalesDownPaymentAllocationDetail.create_object(
+        :sales_down_payment_allocation_id => sales_down_payment_allocation.id,
+        :receivable_id => selected_receivable.id,
+        :description => "Description #{y}",
+        :amount_paid => BigDecimal("100"),
+        :rate => BigDecimal("1"),
+        )
+    end
+    if sales_down_payment_allocation.errors.size == 0 
+      sales_down_payment_allocation.reload
+      sales_down_payment_allocation.confirm_object(:confirmed_at => DateTime.now)
+      sales_down_payment_allocation_array << sales_down_payment_allocation
+    end
+  end
+  
+  
+  
+  # NotConfirmed PurchaseDownPayment
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))] 
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))] 
+    purchase_down_payment = PurchaseDownPayment.create_object(
+        :contact_id => selected_contact.id,
+        :exchange_id => selected_exchange.id,
+        :down_payment_date => DateTime.now,
+        :due_date => DateTime.now,
+        :total_amount => BigDecimal("10000")
+      )
+  end
+  
+  
+  # Confirmed PurchaseDownPayment
+  purchase_down_payment_array = []
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))] 
+    selected_exchange = exchange_array[rand(0..(exchange_array.length - 1))] 
+    purchase_down_payment = PurchaseDownPayment.create_object(
+        :contact_id => selected_contact.id,
+        :exchange_id => selected_exchange.id,
+        :down_payment_date => DateTime.now,
+        :due_date => DateTime.now,
+        :total_amount => BigDecimal("10000")
+      )
+    if purchase_down_payment.errors.size == 0 
+      purchase_down_payment.reload
+      purchase_down_payment.confirm_object(:confirmed_at => DateTime.now)
+      purchase_down_payment_array << purchase_down_payment
+    end
+  end
+  
+  # NotConfirmed PurchaseDownPaymentAllocation
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))] 
+    selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))] 
+    purchase_down_payment_allocation = PurchaseDownPaymentAllocation.create_object(
+        :contact_id => selected_contact.id,
+        :receivable_id => selected_receivable.id,
+        :allocation_date => DateTime.now,
+        :rate_to_idr => BigDecimal("1"),
+        :description => "Description #{x}",
+      )
+    (1.upto 2).each do |y|
+      selected_payable = payable_array[rand(0..(payable_array.length - 1))] 
+      PurchaseDownPaymentAllocationDetail.create_object(
+        :purchase_down_payment_allocation_id => purchase_down_payment_allocation.id,
+        :payable_id => selected_payable.id,
+        :description => "Description #{y}",
+        :amount_paid => BigDecimal("100"),
+        :rate => BigDecimal("1"),
+        )
+    end
+  end
+  
+  # Confirmed PurchaseDownPaymentAllocation
+  purchase_down_payment_allocation_array = []
+  (1.upto 10).each do |x|
+    selected_contact = supplier_array[rand(0..(supplier_array.length - 1))] 
+    selected_receivable = receivable_array[rand(0..(receivable_array.length - 1))] 
+    purchase_down_payment_allocation = PurchaseDownPaymentAllocation.create_object(
+        :contact_id => selected_contact.id,
+        :receivable_id => selected_receivable.id,
+        :allocation_date => DateTime.now,
+        :rate_to_idr => BigDecimal("1"),
+        :description => "Description #{x}",
+      )
+    (1.upto 2).each do |y|
+      selected_payable = payable_array[rand(0..(payable_array.length - 1))] 
+      PurchaseDownPaymentAllocationDetail.create_object(
+        :purchase_down_payment_allocation_id => purchase_down_payment_allocation.id,
+        :payable_id => selected_payable.id,
+        :description => "Description #{y}",
+        :amount_paid => BigDecimal("100"),
+        :rate => BigDecimal("1"),
+        )
+    end
+    if purchase_down_payment_allocation.errors.size == 0 
+      purchase_down_payment_allocation.reload
+      purchase_down_payment_allocation.confirm_object(:confirmed_at => DateTime.now)
+      purchase_down_payment_allocation_array << purchase_down_payment_allocation
+    end
+  end
+  
+  
+  closing =  Closing.create_object(
+        :period => DateTime.now.month,
+        :year_period => DateTime.now.year,
+        :beginning_period => DateTime.now.beginning_of_month  ,
+        :end_date_period => DateTime.now.end_of_month ,
+        :is_year_closing => true
+      )
   
   
 end

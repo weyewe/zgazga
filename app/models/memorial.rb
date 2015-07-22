@@ -70,7 +70,7 @@ class Memorial < ActiveRecord::Base
     debit = 0
     credit = 0
     self.memorial_details.each do |md|
-      if md.status == NORMAL_BALANCE[:debet]
+      if md.status == NORMAL_BALANCE[:debit]
         debit += md.amount
       else
         credit += md.amount

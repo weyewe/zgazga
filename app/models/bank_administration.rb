@@ -33,8 +33,7 @@ class BankAdministration < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.no_bukti = params[:no_bukti]
     if new_object.save  
-     new_object.code = "BADM-" + new_object.id.to_s  
-      new_object.save
+      new_object.code = "BADM-" + new_object.id.to_s  
       new_object.save
     end
     return new_object
@@ -51,7 +50,6 @@ class BankAdministration < ActiveRecord::Base
     end
     self.cash_bank_id = params[:cash_bank_id]
     self.administration_date = params[:administration_date]
-    self.code = params[:code]
     self.description = params[:description]
     self.no_bukti = params[:no_bukti]
     if self.save 
