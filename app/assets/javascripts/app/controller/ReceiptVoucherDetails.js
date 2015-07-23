@@ -31,6 +31,14 @@ Ext.define('AM.controller.ReceiptVoucherDetails', {
       'receiptvoucherdetailform button[action=save]': {
         click: this.updateObject
       },
+      
+      'receiptvoucherdetailform numberfield[name=amount_paid] ': { 
+        change: this.changeAmountPaid
+      },
+      
+      'receiptvoucherdetailform numberfield[name=rate] ': { 
+        change: this.changeRate
+      },
 
 	 
       'receiptvoucherdetaillist button[action=addObject]': {
@@ -57,6 +65,36 @@ Ext.define('AM.controller.ReceiptVoucherDetails', {
 			}
 		
     });
+  },
+  
+  changeAmountPaid: function( field, newValue, oldValue, eOpts ){
+ 
+  	var amount_paid = parseFloat(newValue); 
+  	var rate = field.up('form').getForm().findField('rate').getValue() ; 
+  	rate = parseFloat( rate ); 
+  
+  	if (rate !== null && rate > 0 && amount_paid !== null  ) {
+  		 
+  		var amount = amount_paid/rate ;  
+	  	amount = amount.toFixed(2);
+	  	  
+	  	field.up('form').getForm().findField('amount').setValue( amount );
+  	}  
+  },
+  
+  changeRate: function( field, newValue, oldValue, eOpts ){
+  
+  	var rate = parseFloat(newValue); 
+  	var amount_paid = field.up('form').getForm().findField('amount_paid').getValue() ; 
+  	amount_paid = parseFloat( amount_paid ); 
+  
+  	if (rate !== null && rate > 0 && amount_paid !== null  ) {
+  		 
+  		var amount = amount_paid/rate ;  
+	  	amount = amount.toFixed(2);
+	  	  
+	  	field.up('form').getForm().findField('amount').setValue( amount );
+  	}  
   },
 
 	loadObjectList : function(me){

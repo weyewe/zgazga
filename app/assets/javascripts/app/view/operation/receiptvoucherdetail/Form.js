@@ -119,7 +119,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 				{
 	        xtype: 'numberfield',
 	        name : 'rate',
-	        fieldLabel: 'Rate'
+	        fieldLabel: 'Rate Invoice to Cashbank'
 	      },
 	      {
 	        xtype: 'numberfield',
@@ -232,9 +232,9 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 		var me = this; 
 		me.setLoading(true);
 		
-		me.setSelectedReceivable( record.get("item_id")  ) ; 
-		me.setSelectedItem( record.get("item_id")  ) ; 
-		me.setSelectedStatus( record.get("is_service")  ) ; 
+		me.setSelectedReceivable( record.get("receivable_id")  ) ; 
+		// me.setSelectedItem( record.get("item_id")  ) ; 
+		// me.setSelectedStatus( record.get("is_service")  ) ; 
 	},
 	
 	

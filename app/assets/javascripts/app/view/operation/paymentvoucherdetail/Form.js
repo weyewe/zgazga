@@ -120,7 +120,7 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 				{
 	        xtype: 'numberfield',
 	        name : 'rate',
-	        fieldLabel: 'Rate'
+	        fieldLabel: 'Rate Invoice to CashBank'
 	      },
 	      {
 	        xtype: 'numberfield',

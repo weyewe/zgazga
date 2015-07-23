@@ -11,7 +11,7 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 			{ header: 'Payable Code',  dataIndex: 'payable_source_code', flex: 1},
 			{ header: 'Currency',  dataIndex: 'payable_exchange_name', flex: 1},
 			{ header: 'Amount Paid',  dataIndex: 'amount_paid', flex: 1},
-			{ header: 'Rate',  dataIndex: 'rate', flex: 1},
+			{ header: 'Rate Invoice to CashBank',  dataIndex: 'rate', flex: 1},
 			{ header: 'Actual Amount',  dataIndex: 'amount', flex: 1},
 			{ header: 'PPh 23',  dataIndex: 'pph_23', flex: 1},
 			{ header: 'PPh 21',  dataIndex: 'pph_21', flex: 1},
