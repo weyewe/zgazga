@@ -145,7 +145,7 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
     			},
     			
     			{
-    				fieldLabel: 'DeliveryOrder',
+    				fieldLabel: 'Sales Order',
     				xtype: 'combo',
     				queryMode: 'remote',
     				forceSelection: true, 

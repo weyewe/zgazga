@@ -5,6 +5,8 @@ Ticketie::Application.routes.draw do
   resources :sales_orders
   resources :delivery_orders
   resources :sales_invoices
+  get 'print_csv_sales_invoices' => 'sales_invoices#print_csv', :as => :print_csv_sales_invoices, :method => :get
+  
   resources :purchase_orders
   resources :purchase_receivals
   resources :purchase_invoices

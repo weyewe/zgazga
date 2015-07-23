@@ -77,7 +77,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Temporary Delivery Order', 
+				text:'Temporary DO', 
 				viewClass:'AM.view.operation.TemporaryDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',

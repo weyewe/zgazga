@@ -98,12 +98,18 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 			action: 'filterObject' 
 		});
 		
+		this.printCsvButton  = new Ext.Button({
+			text: 'CSV',
+			action: 'printCsvObject' 
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
 					this.downloadButton, 
 					'->',
+					this.printCsvButton, 
 					this.filterButton ,
 					this.searchField ];
 	 

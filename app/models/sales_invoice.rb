@@ -15,6 +15,16 @@ class SalesInvoice < ActiveRecord::Base
   validate :valid_delivery_order_id
   
   
+  
+  def self.to_csv
+    CSV.generate  do |csv| 
+      all.each do |product|
+        csv << product.attributes.values_at(*column_names)
+      end
+    end
+  end
+  
+  
   def self.active_objects
     self
   end
