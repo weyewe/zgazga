@@ -93,7 +93,7 @@ class SalesInvoicesController < ApplicationController
     
    
     
-    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @objects = query.order("id DESC")
     @total = query.count 
       
     respond_to do |format|
