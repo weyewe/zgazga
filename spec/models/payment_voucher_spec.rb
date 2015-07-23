@@ -349,6 +349,13 @@ describe PaymentVoucher do
         @pvd.should be_valid
       end
       
+      it "should delete PaymentVoucherDetail" do
+        @pvd.delete_object
+        @pvd.errors.size.should == 0
+        @pv.reload
+        @pv.amount.should == 0
+      end
+      
       it "should have detail and payment_voucher.amount == 100000" do
         @pv.payment_voucher_details.count.should == 1
         @pv.amount.should == BigDecimal("100000")

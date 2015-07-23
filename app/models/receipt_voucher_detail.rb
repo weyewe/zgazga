@@ -113,6 +113,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
       return self 
     end
     self.destroy
+    self.calculateTotalAmount
     return self
   end
   

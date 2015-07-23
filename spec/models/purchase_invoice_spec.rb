@@ -281,6 +281,7 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
         @pid_1.errors.size.should == 0
       end
       
+      
       it "should not update PurchaseInvoice if have details" do
         @pi.update_object(
           :purchase_receival_id => @pr_1.id,

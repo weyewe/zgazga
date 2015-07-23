@@ -80,6 +80,17 @@ class PurchaseDownPaymentAllocationDetail < ActiveRecord::Base
   
   end
   
+   def delete_object
+    if self.purchase_down_payment_allocation.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
+    self.destroy
+    self.calculateTotalAmount
+    return self
+  end
+  
+  
   def calculateTotalAmount
     amount = 0
     PurchaseDownPaymentAllocationDetail.where(:purchase_down_payment_allocation_id => purchase_down_payment_allocation_id).each do |pdad|
