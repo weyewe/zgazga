@@ -236,6 +236,8 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
+    
+    
     self.is_confirmed = false
     self.confirmed_at = nil
      if self.save

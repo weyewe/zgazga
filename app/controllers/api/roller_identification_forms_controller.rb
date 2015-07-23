@@ -2,37 +2,68 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
   
   def index
      
-     
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{
+    
+    query =   RollerIdentificationForm.active_objects.joins(:contact,:warehouse) 
+    
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
+      query = query.where{
          (
            ( code =~ livesearch)  | 
            ( nomor_disasembly =~ livesearch)  | 
            ( contact.name =~  livesearch) | 
            ( warehouse.name =~  livesearch) 
-         )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{
-         (
-           ( code =~ livesearch)  | 
-           ( nomor_disasembly =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( warehouse.name =~  livesearch) 
-         )
-       }.count
- 
-
-     else
-       @objects = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = RollerIdentificationForm.active_objects.count
-     end
-     
-     
-     
-     
+         ) 
+       }
+    end
+    
+    if params[:is_filter].present? 
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_identified_date =  parse_date( params[:start_identified_date] )
+      end_identified_date =  parse_date( params[:end_identified_date] )
+      
+      
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
+    
+      if start_identified_date.present?
+        query = query.where{ identified_date.gte start_identified_date}
+      end
+      
+      if end_identified_date.present?
+        query = query.where{ identified_date.lt end_identified_date}
+      end
+      
+      object = Warehouse.find_by_id params[:warehouse_id]
+      if not object.nil? 
+        query = query.where(:warehouse_id => object.id )
+      end
+      
+      if params[:is_in_house].present?
+        query = query.where(:is_in_house => true )
+  
+        object = Contact.find_by_id params[:contact_id]
+        if not object.nil? 
+          query = query.where(:contact_id => object.id )
+        end   
+      end 
+    end 
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count   
   end
 
   def create

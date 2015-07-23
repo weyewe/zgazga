@@ -1,48 +1,13 @@
 class Api::DeliveryOrdersController < Api::BaseApiController
   
   def index
-      # "livesearch"=>"", "is_confirmed"=>"on", "start_confirmation"=>"2015-07-01", "end_confirmation"=>"2015-07-04", "start_delivery_date"=>"2015-07-08", "end_delivery_date"=>"2015-07-11", "warehouse_id"=>"7", "sales_order_id"=>"8",
-     
-    # if params[:livesearch].present? 
-    #   livesearch = "%#{params[:livesearch]}%"
-    #   @objects = DeliveryOrder.active_objects.joins(:warehouse,:sales_order).where{
-    #     (
-    #       ( nomor_surat =~  livesearch ) | 
-    #       ( code =~ livesearch)  | 
-    #       ( warehouse.name =~  livesearch) |
-    #       ( sales_order.code =~  livesearch) |
-    #       ( sales_order.contact.name =~  livesearch) |
-    #       ( sales_order.nomor_surat =~  livesearch)
-    #     )
-    #   }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-    #   @total = DeliveryOrder.active_objects.joins(:warehouse,:sales_order).where{
-    #     (
-    #       ( nomor_surat =~  livesearch ) | 
-    #       ( code =~ livesearch)  | 
-    #       ( warehouse.name =~  livesearch) |
-    #       ( sales_order.code =~  livesearch) |
-    #       ( sales_order.contact.name =~  livesearch) |
-    #       ( sales_order.nomor_surat =~  livesearch)
-    #     )
-    #   }.count
- 
-
-    # else
-    #   @objects = DeliveryOrder.active_objects.joins(:warehouse,:sales_order).page(params[:page]).per(params[:limit]).order("id DESC")
-    #   @total = DeliveryOrder.active_objects.count
-    # end
-     
-     
-     
-     
-    query =   DeliveryOrder.active_objects.joins(:warehouse, :sales_order)
-    # puts "The query : #{query}"
-    # puts "initial query total: #{query.count}"
     
-    if params[:livesearch].present?
-      
-      # livesearch = params[:livesearch]
+     
+     
+     
+    query =   DeliveryOrder.active_objects.joins(:warehouse, :sales_order) 
+    
+    if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
       query = query.where{
          (
@@ -57,8 +22,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
        }
     end
     
-    if params[:is_filter].present?
-    # puts "after livesearch query total: #{query.count}" 
+    if params[:is_filter].present? 
       start_confirmation =  parse_date( params[:start_confirmation] )
       end_confirmation =  parse_date( params[:end_confirmation] )
       start_delivery_date =  parse_date( params[:start_delivery_date] )

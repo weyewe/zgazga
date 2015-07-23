@@ -3,38 +3,29 @@ class Api::BatchSourcesController < Api::BaseApiController
   def index
      
      
-     query = BatchSource.active_objects.joins(:item )
+    query = BatchSource.active_objects.joins(:item )
      
-     if params[:livesearch].present? 
+    if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
        
        query = query.where{
-         (
-           
+         ( 
            ( item.sku =~ livesearch)  | 
            ( item.name =~ livesearch) 
-         )
-
-       }
-       
-       
-       @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = query.count
+         ) 
+       } 
+    end
+     
+     
+    if params[:is_filter].present?  
+      object = Item.find_by_id params[:item_id]
+      if not object.nil? 
+        query = query.where(:item_id => object.id )
+      end       
+    end 
  
-
-     else
-      # @objects = BatchSource.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
-      # @total = BatchSource.active_objects.count
-     end
-     
-     
-     @objects =  query.page(params[:page]).per(params[:limit]).order("id DESC")
-     @total = query.count 
-     
-     
-     
-     
+    @objects =  query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count  
   end
 
 

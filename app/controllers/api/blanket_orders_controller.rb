@@ -18,17 +18,56 @@ class Api::BlanketOrdersController < Api::BaseApiController
         } 
      end
      
+    
+    if params[:is_filter].present? 
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_order_date =  parse_date( params[:start_order_date] )
+      end_order_date =  parse_date( params[:end_order_date] )
+      start_due_date =  parse_date( params[:start_due_date] )
+      end_due_date =  parse_date( params[:end_due_date] )
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
+    
+      if start_order_date.present?
+        query = query.where{ order_date.gte start_order_date}
+      end
+      
+      if end_order_date.present?
+        query = query.where{ delivery_date.lt end_order_date}
+      end
+      
+      if start_due_date.present?
+        query = query.where{ due_date.gte start_due_date}
+      end
+      
+      if end_due_date.present?
+        query = query.where{ due_date.lt end_due_date}
+      end
+      
+      object = Warehouse.find_by_id params[:warehouse_id]
+      if not object.nil? 
+        query = query.where(:warehouse_id => object.id )
+      end
+      
+ 
+    end
+    
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
     @total = query.count   
-    
-    
-    # contact_id_list = BlanketOrder.all.map{|x| x.contact_id } 
-    # warehouse_id_list = BlanketOrder.all.map{|x| x.warehouse_id } 
-    
-    # contact_id_list.uniq!
-    # warehouse_id_list.uniq!
-    
-    
+      
   end
 
   def create

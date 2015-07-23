@@ -2,12 +2,12 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
   
   def index
      
+    query =  BlendingWorkOrder.joins(:warehouse,:blending_recipe)
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
         
-        
-        @objects = BlendingWorkOrder.joins(:warehouse,:blending_recipe).where{
+        query = query.where{
           (
             ( code =~  livesearch )  | 
             ( warehouse.name =~ livesearch ) | 
@@ -16,28 +16,42 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
             ( blending_recipe.target_item.name =~ livesearch ) | 
             ( blending_recipe.target_item.uom.name =~ livesearch ) | 
             ( description =~ livesearch )
-          )
-
-        }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-        @total = BlendingWorkOrder.joins(:warehouse,:blending_recipe).where{
-          (
-            ( code =~  livesearch )  | 
-            ( warehouse.name =~ livesearch ) | 
-            ( blending_recipe.name =~ livesearch ) | 
-            ( blending_recipe.target_item.sku =~ livesearch ) | 
-            ( blending_recipe.target_item.name =~ livesearch ) | 
-            ( blending_recipe.target_item.uom.name =~ livesearch ) | 
-            ( description =~ livesearch )
-          )
-        }.count
-   
-    else
-      puts "In this shite"
-      @objects = BlendingWorkOrder.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = BlendingWorkOrder.count 
+          ) 
+        } 
+    
     end
     
+    if params[:is_filter].present? 
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] )
+      start_delivery_date =  parse_date( params[:start_delivery_date] )
+      end_delivery_date =  parse_date( params[:end_delivery_date] )
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
+    
+ 
+      
+      object = Warehouse.find_by_id params[:warehouse_id]
+      if not object.nil? 
+        query = query.where(:warehouse_id => object.id )
+      end
+ 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
     
     # render :json => { :blending_work_orders => @objects , :total => @total , :success => true }
   end

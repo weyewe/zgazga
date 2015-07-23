@@ -22,10 +22,10 @@ class Closing < ActiveRecord::Base
     begin_date = check_date
     end_date = check_date + 1.days
     return Closing.where{
-      (is_closed.eq true) &&
-      (beginning_period.lte begin_date) &&
+      (is_closed.eq true) &
+      (beginning_period.lte begin_date) &
       (end_date_period.gt end_date)
-    }
+    } 
     
   end
   

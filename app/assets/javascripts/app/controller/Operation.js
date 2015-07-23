@@ -88,6 +88,32 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
+		 
+			{ 
+				text:'Sales Invoice', 
+				viewClass:'AM.view.operation.SalesInvoice', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sales_invoices',
+						action : 'index'
+					}
+				]
+			}, 
+ 
+			 
+		]
+	},
+	
+	
+	virtualSalesFolder : {
+		text 			: "Virtual Sales", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+    	expanded	: true,
+		children 	: [
+         
 			{ 
 				text:'Virtual Order', 
 				viewClass:'AM.view.operation.VirtualOrder', 
@@ -101,7 +127,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Delivery Virtual Order', 
+				text:'Virtual DO', 
 				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -124,18 +150,7 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
-			{ 
-				text:'Sales Invoice', 
-				viewClass:'AM.view.operation.SalesInvoice', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'sales_invoices',
-						action : 'index'
-					}
-				]
-			}, 
+ 
  
 			 
 		]
@@ -304,7 +319,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
  			{ 
-				text:'SalesDownPayment', 
+				text:'Sales DP', 
 				viewClass:'AM.view.operation.SalesDownPayment', 
 				leaf:true, 
 				iconCls:'text',
@@ -316,7 +331,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'SalesDownPaymentAllocatiom', 
+				text:'Sales DP Allocation', 
 				viewClass:'AM.view.operation.SalesDownPaymentAllocation', 
 				leaf:true, 
 				iconCls:'text',
@@ -328,7 +343,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'PurchaseDownPayment', 
+				text:'Purchase DP', 
 				viewClass:'AM.view.operation.PurchaseDownPayment', 
 				leaf:true, 
 				iconCls:'text',
@@ -340,7 +355,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'PurchaseDownPaymentAllocatiom', 
+				text:'Purchase DP Allocation', 
 				viewClass:'AM.view.operation.PurchaseDownPaymentAllocation', 
 				leaf:true, 
 				iconCls:'text',
@@ -690,6 +705,7 @@ Ext.define("AM.controller.Operation", {
  			this.blanketFolder,
  			this.blendingFolder,
 			this.salesFolder,
+			this.virtualSalesFolder, 
 			this.purchaseFolder,
  			this.financeFolder,
  			this.accountingFolder,

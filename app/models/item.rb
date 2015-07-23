@@ -239,7 +239,7 @@ class Item < ActiveRecord::Base
     end
     item_id = self.id
     if WarehouseItem.where{
-      (item_id == item_id) && 
+      (item_id == item_id) &
       (amount.gt 0)
     }.count > 0
       self.errors.add(:generic_errors, "Item diwarehouse harus 0")

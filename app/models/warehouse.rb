@@ -29,7 +29,7 @@ class Warehouse < ActiveRecord::Base
   def delete_object
     warehouse_id = self.id
      if WarehouseItem.where{
-      (warehouse_id == warehouse_id) && 
+      (warehouse_id == warehouse_id) &
       (amount.gt 0)
       }.count > 0
       self.errors.add(:generic_errors, "Item diwarehouse harus 0")

@@ -2,31 +2,50 @@ class Api::BatchInstancesController < Api::BaseApiController
   
   def index
      
+    query =   BatchInstance.active_objects.joins(:item )
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-         
-        @objects = BatchInstance.where{
-          (
-            ( name =~  livesearch )   
-          )
-
-        }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-        @total = BatchInstance.where{
-          (
-            ( name =~  livesearch )   
-          )
-        }.count
-   
-    else
-      puts "In this shite"
-      @objects = BatchInstance.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = BatchInstance.count 
+      query = query.where{
+        (
+          ( name =~ livesearch ) | 
+          ( item.name =~ livesearch ) | 
+          ( item.sku =~ livesearch )
+        )
+        
+      } 
     end
     
+    if params[:is_filter].present?
+ 
+      start_manufactured_at =  parse_date( params[:start_manufactured_at] )
+      end_manufactured_at =  parse_date( params[:end_manufactured_at] )
+      
+       
+      if start_manufactured_at.present?
+        query = query.where{ manufactured_at.gte start_manufactured_at}
+      end
+      
+      if end_manufactured_at.present?
+        query = query.where{ manufactured_at.lt end_manufactured_at}
+      end
+      
+      object = Item.find_by_id params[:item_id]
+      if not object.nil? 
+        query = query.where(:item_id => object.id )
+      end
+      
+      
+      if  params[:min_amount].present? 
+        min_amount = BigDecimal( params[:min_amount] ) 
+        if min_amount > BigDecimal('0')
+          query = query.where{ amount.lte min_amount }
+        end 
+      end
+    end
     
-    # render :json => { :batch_instances => @objects , :total => @total , :success => true }
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count  
   end
 
   def create

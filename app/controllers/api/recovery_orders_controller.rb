@@ -1,36 +1,53 @@
 class Api::RecoveryOrdersController < Api::BaseApiController
   
   def index
+    
+    query =   RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form) 
+    
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
+      query = query.where{
+        (
+          ( code =~ livesearch)  | 
+          ( roller_identification_form.nomor_disasembly =~  livesearch) | 
+          ( warehouse.name =~  livesearch)
+        ) 
+      }  
+    end
+    
+  
+    if params[:is_filter].present? 
+      start_confirmation =  parse_date( params[:start_confirmation] )
+      end_confirmation =  parse_date( params[:end_confirmation] ) 
+      
+      
+      if params[:is_confirmed].present?
+        query = query.where(:is_confirmed => true ) 
+        if start_confirmation.present?
+          query = query.where{ confirmed_at.gte start_confirmation}
+        end
+        
+        if end_confirmation.present?
+          query = query.where{ confirmed_at.lt  end_confirmation }
+        end
+      else
+        query = query.where(:is_confirmed => false )
+      end
      
-     
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{
-         (
-           ( code =~ livesearch)  | 
-           ( roller_identification_form.nomor_disasembly =~  livesearch) | 
-           ( warehouse.name =~  livesearch)
-         )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{
-         (
-           ( code =~ livesearch)  | 
-           ( roller_identification_form.nomor_disasembly =~  livesearch) | 
-           ( warehouse.name =~  livesearch)
-         )
-       }.count
- 
-
-     else
-       @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = RecoveryOrder.active_objects.count
-     end
-     
-     
-     
-     
+      
+      object = RollerIdentificationForm.find_by_id params[:roller_identification_form_id]
+      if not object.nil? 
+        query = query.where(:roller_identification_form_id => object.id )
+      end
+      
+      object = Warehouse.find_by_id params[:warehouse_id]
+      if not object.nil? 
+        query = query.where(:warehouse_id => object.id )
+      end
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count  
   end
 
   def create

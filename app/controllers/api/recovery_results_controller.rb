@@ -3,40 +3,54 @@ class Api::RecoveryResultsController < Api::BaseApiController
   def index
      
      
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).where{
-         (
-           
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = RecoveryOrderDetail.active_objects.joins(:contact,:employee,:exchange).where{
-         (
-            
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-       }.count
- 
-
-     else
-       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = RecoveryOrderDetail.active_objects.count
-     end
+    query = RecoveryOrderDetail.active_objects.joins(:recovery_order, :roller_identification_form_detail,:roller_builder)
      
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
+      
+      query = query.where{
+        ( 
+          ( code =~ livesearch)  | 
+          ( nomor_surat =~ livesearch)  | 
+          ( contact.name =~  livesearch) | 
+          ( employee.name =~  livesearch) | 
+          ( exchange.name =~  livesearch)
+        )      
+      } 
+    end
      
-     
-     
+    if params[:is_filter].present? 
+      start_finished_date =  parse_date( params[:start_finished_date] )
+      end_finished_date =  parse_date( params[:end_finished_date] )
+      
+      start_rejected_date =  parse_date( params[:start_rejected_date] )
+      end_rejected_date =  parse_date( params[:end_rejected_date] )
+      
+      if params[:is_finished].present? 
+        if start_finished_date.present?
+          query = query.where{ finished_date.gte start_finished_date}
+        end
+        
+        if end_finished_date.present?
+          query = query.where{ finished_date.lt end_finished_date}
+        end
+      elsif params[:is_rejected].present?
+        if start_rejected_date.present?
+          query = query.where{ rejected_date.gte start_rejected_date}
+        end
+        
+        if end_rejected_date.present?
+          query = query.where{ rejected_date.lt end_rejected_date}
+        end
+      else
+        query = query.where(:is_rejected => false, :is_finished => false )
+      end
+       
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
+      
   end
  
   

@@ -27,11 +27,9 @@ Ext.define('AM.view.operation.blanketorder.List' ,{
 				flex : 3,
 				tpl : 	'Order No: <br /> <b>{code}</b>'  + '<br />' +  '<br />' +  
 						'Production No: <br /> <b>{production_no}</b>'  + '<br />' +  '<br />' +  	
-						'Warehouse: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+						'Warehouse: <br /> <b>{warehouse_name}</b>'  
 						
-						'Tanggal Order: <br /> <b>{order_date}</b>'  + '<br />' + '<br />' +
-						'Due Date: <br /> <b>{due_date}</b>'  + '<br />' + '<br />' +
-						'Catatan: <br /> <b>{notes}</b>'   
+						
 			},
  
 			
@@ -39,7 +37,10 @@ Ext.define('AM.view.operation.blanketorder.List' ,{
 				xtype : 'templatecolumn',
 				text : "Tujuan",
 				flex : 3,
-				tpl :  'Customer: <br />  <b>{contact_name}</b>'  	
+				tpl :  'Customer: <br />  <b>{contact_name}</b>'  	+ '<br />' + '<br />' +
+						'Tanggal Order: <br /> <b>{order_date}</b>'  + '<br />' + '<br />' +
+								'Due Date: <br /> <b>{due_date}</b>'  + '<br />' + '<br />' +
+								'Catatan: <br /> <b>{notes}</b>'   
 			},
 			
 			// {

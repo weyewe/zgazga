@@ -2,29 +2,43 @@ class Api::BlanketResultsController < Api::BaseApiController
   def index
      
     
+    query = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ blanket_order.is_confirmed.eq true }
+    
     if params[:livesearch].present? 
-      livesearch = "%#{params[:livesearch]}%"
-        
-        query = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ blanket_order.is_confirmed.eq true }
-        
-        query = query.where{
-          (
-            ( blanket.contact.name  =~ livesearch ) | 
-            ( blanket.machine.name =~ livesearch ) | 
-            ( blanket.sku  =~ livesearch  )  | 
-            ( blanket.name  =~ livesearch  )  
-          ) 
-        }
-        @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
-
-        @total = query.count
-   
-    else
-      puts "In this shite"
-      @objects = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = BlanketOrderDetail.joins(:blanket_order).where{blanket_order.is_confirmed.eq true }.count 
+      livesearch = "%#{params[:livesearch]}%" 
+      
+      query = query.where{
+        (
+          ( blanket.contact.name  =~ livesearch ) | 
+          ( blanket.machine.name =~ livesearch ) | 
+          ( blanket.sku  =~ livesearch  )  | 
+          ( blanket.name  =~ livesearch  )  
+        ) 
+      }  
     end
     
+    if params[:is_filter].present?
+     
+      start_finished_at =  parse_date( params[:start_finished_at] )
+      end_finished_at =  parse_date( params[:end_finished_at] )
+      
+      
+      if params[:is_finished].present?
+        query = query.where(:is_finished => true ) 
+        if start_finished_at.present?
+          query = query.where{ finished_at.gte start_finished_at}
+        end
+        
+        if end_finished_at.present?
+          query = query.where{ finished_at.lt  end_finished_at }
+        end
+      else
+        query = query.where(:is_finished => false )
+      end
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count 
     
     # render :json => { :blanket_results => @objects , :total => @total , :success => true }
   end
