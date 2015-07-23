@@ -113,10 +113,92 @@ Ext.define('AM.controller.RecoveryResults', {
 	
 	'recoveryresultform button[action=save]': {
         click: this.updateObject
-	}	
+	},
+	
+	'recoveryresultProcess recoveryresultlist button[action=filterObject]': {
+		click: this.filterObject
+	},
+	'filterrecoveryresultform button[action=save]' : {
+		click : this.executeFilterObject  
+	},
+	
+	'filterrecoveryresultform button[action=reset]' : {
+		click : this.executeResetFilterObject  
+	},
+	
+	
 		
     });
   },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterrecoveryresultform');
+		
+		view.setPreviousValue( me.getRecoveryResultsStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRecoveryResultsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
+		 
+		me.getRecoveryResultsStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRecoveryResultsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
+		 
+		me.getRecoveryResultsStore().load();
+		win.close();
+  },
+  
+  
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

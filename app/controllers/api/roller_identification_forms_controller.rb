@@ -53,13 +53,13 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
       end
       
       if params[:is_in_house].present?
-        query = query.where(:is_in_house => true )
-  
-        object = Contact.find_by_id params[:contact_id]
-        if not object.nil? 
-          query = query.where(:contact_id => object.id )
-        end   
+        query = query.where(:is_in_house => true ) 
       end 
+      
+      object = Contact.find_by_id params[:contact_id]
+      if not object.nil? 
+        query = query.where(:contact_id => object.id )
+      end   
     end 
     
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")

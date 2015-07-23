@@ -75,11 +75,93 @@ Ext.define('AM.controller.RecoveryOrders', {
 			},
 			'recoveryorderform button[action=save]': {
         click: this.updateObject
-      }
+      },
+		      
+			'recoveryorderProcess recoveryorderlist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterrecoveryorderform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterrecoveryorderform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+			
+			
 		
     });
   },
 
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterrecoveryorderform');
+		
+		view.setPreviousValue( me.getRecoveryOrdersStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRecoveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRecoveryOrdersStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getRecoveryOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getRecoveryOrdersStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRecoveryOrdersStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRecoveryOrdersStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getRecoveryOrdersStore().getProxy().extraParams = extraParams;
+		 
+		me.getRecoveryOrdersStore().load();
+		win.close();
+  },
+  
+  
+  
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');
     var form = win.down('form');

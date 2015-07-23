@@ -1,11 +1,11 @@
-	'batchinstanceProcess batchinstancelist button[action=filterObject]': {
+	'recoveryresultProcess recoveryresultlist button[action=filterObject]': {
 		click: this.filterObject
 	},
-	'filterbatchinstanceform button[action=save]' : {
+	'filterrecoveryresultform button[action=save]' : {
 		click : this.executeFilterObject  
 	},
 	
-	'filterbatchinstanceform button[action=reset]' : {
+	'filterrecoveryresultform button[action=reset]' : {
 		click : this.executeResetFilterObject  
 	},
 	
@@ -18,9 +18,9 @@
   filterObject: function() {
   	// console.log("inside the filter object");
   	var me = this; 
-		var view = Ext.widget('filterbatchinstanceform');
+		var view = Ext.widget('filterrecoveryresultform');
 		
-		view.setPreviousValue( me.getBatchInstancesStore().getProxy().extraParams ); 
+		view.setPreviousValue( me.getRecoveryResultsStore().getProxy().extraParams ); 
 		
 	  view.show(); 
   },
@@ -30,14 +30,14 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getBatchInstancesStore().currentPage  = 1; 
+		me.getRecoveryResultsStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"],
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"],
 			is_filter : true 
 		};
 		 
@@ -54,9 +54,9 @@
 		}
 		 
 		 
-		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
 		 
-		me.getBatchInstancesStore().load();
+		me.getRecoveryResultsStore().load();
 		win.close();
   },
   
@@ -65,19 +65,19 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getBatchInstancesStore().currentPage  = 1; 
+		me.getRecoveryResultsStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"]
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"]
 		};
 		  
-		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
 		 
-		me.getBatchInstancesStore().load();
+		me.getRecoveryResultsStore().load();
 		win.close();
   },
   
