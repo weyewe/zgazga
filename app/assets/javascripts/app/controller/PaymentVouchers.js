@@ -266,12 +266,12 @@ Ext.define('AM.controller.PaymentVouchers', {
 	executeConfirm: function(button){
 		var me = this; 
 		var win = button.up('window');
-    var form = win.down('form');
+    	var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getPaymentVouchersStore();
+    	var store = this.getPaymentVouchersStore();
 		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
+    	var values = form.getValues();
  
 		if(record){
 			var rec_id = record.get("id");

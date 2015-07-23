@@ -26,7 +26,8 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
       'paymentvoucherdetaillist': {
         itemdblclick: this.editObject,
         selectionchange: this.selectionChange ,
-				afterrender : this.loadObjectList
+				afterrender : this.loadObjectList,
+				'confirmed' : this.reloadParentRow,
       },
       'paymentvoucherdetailform button[action=save]': {
         click: this.updateObject
@@ -96,7 +97,42 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 	  	field.up('form').getForm().findField('amount').setValue( amount );
   	}  
   },
-   
+  
+  
+	reloadParentRow: function( parentId ){ 
+		var parentList = this.getParentList();
+	 
+		var modifiedId = parentId;
+		var me = this; 
+		 
+		var record = parentList.getSelectionModel().getSelection()[0];
+		var row = parentList.store.indexOf(record);
+ 
+
+		var node = parentList.getView().getNode(row);
+	
+		
+		
+		
+		AM.model.PaymentVoucher.load( modifiedId , {
+		    scope: parentList,
+		    failure: function(record, operation) {
+		        //do something if the load failed
+		    },
+		    success: function(new_record, operation) {
+					
+					
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( parentList );      
+					
+ 
+		    },
+		    callback: function(record, operation) { 
+ 
+		    }
+		});
+		
+	},
    
 
 	loadObjectList : function(me){
@@ -174,7 +210,8 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
   	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
-
+		var list = this.getList(); 
+		
 		var parentRecord = this.getParentList().getSelectedObject();
 	
     var store = this.getPaymentVoucherDetailsStore();
@@ -204,6 +241,8 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 							payment_voucher_id : parentRecord.get('id')
 						}
 					});
+					
+					list.fireEvent('confirmed', record.get("payment_voucher_id"));
 					
 					win.close();
 				},
@@ -251,6 +290,8 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 					// form.fireEvent('item_quantity_changed');
 					form.setLoading(false);
 					win.close();
+					
+					list.fireEvent('confirmed', record.get("payment_voucher_id") );
 				},
 				failure: function( record, op){
 					button.enable();
@@ -286,6 +327,8 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 							payment_voucher_id : parent_id
 						}
 					});
+					
+					list.fireEvent('confirmed', record.get("payment_voucher_id"));
 				},
 				failure : function(record,op ){
 					list.setLoading(false);
