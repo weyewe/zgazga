@@ -58,6 +58,7 @@ class PaymentVoucherDetail < ActiveRecord::Base
     PaymentVoucherDetail.where(:payment_voucher_id =>payment_voucher_id).each do |pvd|
       amount += pvd.amount
       pph_23 += pvd.pph_23
+      pph_21 += pvd.pph_21
     end
     payment_voucher = PaymentVoucher.find_by_id(payment_voucher_id)
     payment_voucher.update_amount(amount)
