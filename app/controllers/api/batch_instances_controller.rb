@@ -35,13 +35,20 @@ class Api::BatchInstancesController < Api::BaseApiController
         query = query.where(:item_id => object.id )
       end
       
-      
-      if  params[:min_amount].present? 
-        min_amount = BigDecimal( params[:min_amount] ) 
-        if min_amount > BigDecimal('0')
-          query = query.where{ amount.lte min_amount }
-        end 
+      if params[:is_min_amount].present?
+        # puts " >>>>>>>>>>>>>>>>>>>>> \n\n"*10
+        # puts "is_min_amount present "
+        if  params[:min_amount].present? 
+          min_amount = BigDecimal( params[:min_amount] ) 
+          
+          # puts "The min_amount: #{min_amount.to_s}"
+          if min_amount > BigDecimal('0')
+            query = query.where{ amount.lte min_amount }
+          end 
+        end
       end
+      
+
     end
     
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")

@@ -75,10 +75,90 @@ Ext.define('AM.controller.StockAdjustments', {
 			},
 			'stockadjustmentform button[action=save]': {
         click: this.updateObject
-      }
+      },
+      
+      	'stockadjustmentProcess stockadjustmentlist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterstockadjustmentform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterstockadjustmentform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+			
 		
     });
   },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterstockadjustmentform');
+		
+		view.setPreviousValue( me.getStockAdjustmentsStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getStockAdjustmentsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getStockAdjustmentsStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getStockAdjustmentsStore().getProxy().extraParams = extraParams;
+		 
+		me.getStockAdjustmentsStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getStockAdjustmentsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getStockAdjustmentsStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getStockAdjustmentsStore().getProxy().extraParams = extraParams;
+		 
+		me.getStockAdjustmentsStore().load();
+		win.close();
+  },
+  
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

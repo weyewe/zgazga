@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.deliveryorder.FilterForm', {
+Ext.define('AM.view.operation.stockadjustment.FilterForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.filterdeliveryorderform',
+  alias : 'widget.filterstockadjustmentform',
 
-  title : 'Filter DeliveryOrder',
+  title : 'Filter StockAdjustment',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -13,8 +13,8 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 	
   initComponent: function() {
 			var me = this; 
-
-	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
+	
+    var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
 		storeId : 'warehouse_search',
 		fields	: [
 		 		{
@@ -44,37 +44,6 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 		},
 		autoLoad : false 
 	});
-	
-	var remoteJsonStoreDeliveryOrder = Ext.create(Ext.data.JsonStore, {
-		storeId : 'sales_order_search',
-		fields	: [
-		 		{
-					name : 'sales_order_code',
-					mapping : "code"
-				} ,
-				{
-					name : 'sales_order_nomor_surat',
-					mapping : "nomor_surat"
-				} ,
-		 
-				{
-					name : 'sales_order_id',
-					mapping : 'id'
-				}  
-		],
-		
-	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_sales_orders',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
 		
     this.items = [{
       xtype: 'form',
@@ -86,7 +55,6 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 					anchor: '100%'
       },
       items: [
-      	
     		    {
     					xtype: 'checkboxfield',
     					name : 'is_confirmed',
@@ -105,22 +73,20 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
     					fieldLabel: 'Akhir Konfirmasi',
     					format: 'Y-m-d',
 				},
- 
- 
-    		    {
+				{
     					xtype: 'datefield',
-    					name : 'start_delivery_date',
-    					fieldLabel: 'Mulai Delivery',
+    					name : 'start_adjustment_date',
+    					fieldLabel: 'Mulai Adjustment Date',
     					format: 'Y-m-d',
-    			},
-    			{
+				},
+				
+                {
     					xtype: 'datefield',
-    					name : 'end_delivery_date',
-    					fieldLabel: 'Akhir Delivery',
+    					name : 'end_adjustment_date',
+    					fieldLabel: 'Akhir Adjustment Date',
     					format: 'Y-m-d',
-    			}, 
-    	 
-    	        
+				},
+				
     		    {
     				fieldLabel: 'Warehouse',
     				xtype: 'combo',
@@ -144,32 +110,9 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
     				name : 'warehouse_id' 
     			},
     			
-    			{
-    				fieldLabel: 'DeliveryOrder',
-    				xtype: 'combo',
-    				queryMode: 'remote',
-    				forceSelection: true, 
-    				displayField : 'sales_order_code',
-    				valueField : 'sales_order_id',
-    				pageSize : 5,
-    				minChars : 1, 
-    				allowBlank : false, 
-    				triggerAction: 'all',
-    				store : remoteJsonStoreDeliveryOrder , 
-    				listConfig : {
-    					getInnerTpl: function(){
-    						return  	'<div data-qtip="{sales_order_code}">' + 
-    												'<div class="combo-name">{sales_order_code}</div>' + 
-    												'<div class="combo-name">NomorSurat: {sales_order_nomor_surat}</div>' + 
-    						 					'</div>';
-    					}
-    				},
-    				name : 'sales_order_id' 
-    			},
-			
+   
 			]
     }];
-    
     
     this.buttons = [{
       text: 'Save',
@@ -255,5 +198,7 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 	}
  
 });
+
+
 
 

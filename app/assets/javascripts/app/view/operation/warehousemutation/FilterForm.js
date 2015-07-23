@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.deliveryorder.FilterForm', {
+Ext.define('AM.view.operation.warehousemutation.FilterForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.filterdeliveryorderform',
+  alias : 'widget.filterwarehousemutationform',
 
-  title : 'Filter DeliveryOrder',
+  title : 'Filter WarehouseMutation',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?
@@ -14,8 +14,8 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
   initComponent: function() {
 			var me = this; 
 
-	var remoteJsonStoreWarehouse = Ext.create(Ext.data.JsonStore, {
-		storeId : 'warehouse_search',
+	var remoteJsonStoreWarehouseTo = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search_to',
 		fields	: [
 		 		{
 					name : 'warehouse_name',
@@ -45,20 +45,20 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStoreDeliveryOrder = Ext.create(Ext.data.JsonStore, {
-		storeId : 'sales_order_search',
+	var remoteJsonStoreWarehouseFrom = Ext.create(Ext.data.JsonStore, {
+		storeId : 'warehouse_search_from',
 		fields	: [
 		 		{
-					name : 'sales_order_code',
-					mapping : "code"
+					name : 'warehouse_name',
+					mapping : "name"
 				} ,
 				{
-					name : 'sales_order_nomor_surat',
-					mapping : "nomor_surat"
+					name : 'warehouse_description',
+					mapping : "description"
 				} ,
 		 
 				{
-					name : 'sales_order_id',
+					name : 'warehouse_id',
 					mapping : 'id'
 				}  
 		],
@@ -66,7 +66,7 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_sales_orders',
+			url : 'api/search_warehouses',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -75,6 +75,7 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
 		},
 		autoLoad : false 
 	});
+	 
 		
     this.items = [{
       xtype: 'form',
@@ -109,20 +110,20 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
  
     		    {
     					xtype: 'datefield',
-    					name : 'start_delivery_date',
-    					fieldLabel: 'Mulai Delivery',
+    					name : 'start_mutation_date',
+    					fieldLabel: 'Mulai Mutasi',
     					format: 'Y-m-d',
     			},
     			{
     					xtype: 'datefield',
-    					name : 'end_delivery_date',
-    					fieldLabel: 'Akhir Delivery',
+    					name : 'end_mutation_date',
+    					fieldLabel: 'Akhir Mutasi',
     					format: 'Y-m-d',
     			}, 
     	 
     	        
     		    {
-    				fieldLabel: 'Warehouse',
+    				fieldLabel: 'Warehouse From',
     				xtype: 'combo',
     				queryMode: 'remote',
     				forceSelection: true, 
@@ -132,7 +133,7 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
     				minChars : 1, 
     				allowBlank : false, 
     				triggerAction: 'all',
-    				store : remoteJsonStoreWarehouse , 
+    				store : remoteJsonStoreWarehouseFrom , 
     				listConfig : {
     					getInnerTpl: function(){
     						return  	'<div data-qtip="{warehouse_name}">' + 
@@ -141,31 +142,32 @@ Ext.define('AM.view.operation.deliveryorder.FilterForm', {
     						 					'</div>';
     					}
     				},
-    				name : 'warehouse_id' 
+    				name : 'warehouse_from_id' 
     			},
     			
     			{
-    				fieldLabel: 'DeliveryOrder',
+    				fieldLabel: 'Warehouse To',
     				xtype: 'combo',
     				queryMode: 'remote',
     				forceSelection: true, 
-    				displayField : 'sales_order_code',
-    				valueField : 'sales_order_id',
+    				displayField : 'warehouse_name',
+    				valueField : 'warehouse_id',
     				pageSize : 5,
     				minChars : 1, 
     				allowBlank : false, 
     				triggerAction: 'all',
-    				store : remoteJsonStoreDeliveryOrder , 
+    				store : remoteJsonStoreWarehouseFrom , 
     				listConfig : {
     					getInnerTpl: function(){
-    						return  	'<div data-qtip="{sales_order_code}">' + 
-    												'<div class="combo-name">{sales_order_code}</div>' + 
-    												'<div class="combo-name">NomorSurat: {sales_order_nomor_surat}</div>' + 
+    						return  	'<div data-qtip="{warehouse_name}">' + 
+    												'<div class="combo-name">{warehouse_name}</div>' + 
+    												'<div class="combo-name">Deskripsi: {warehouse_description}</div>' + 
     						 					'</div>';
     					}
     				},
-    				name : 'sales_order_id' 
+    				name : 'warehouse_to_id' 
     			},
+    
 			
 			]
     }];

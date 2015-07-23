@@ -71,15 +71,19 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 		
 	 
 
-
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
+		});
 
 		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
 		 				'-',
-						this.searchField,
-						'->',
-				 
 						
+						'->',
+						this.filterButton , 
+				 		this.searchField, 
 		];
+		
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,

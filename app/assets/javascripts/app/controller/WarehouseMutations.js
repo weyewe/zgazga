@@ -75,9 +75,88 @@ Ext.define('AM.controller.WarehouseMutations', {
 			},
 			'warehousemutationform button[action=save]': {
         click: this.updateObject
-      }
+      },
+      
+	  	'warehousemutationProcess warehousemutationlist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterwarehousemutationform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterwarehousemutationform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+		
 		
     });
+  },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterwarehousemutationform');
+		
+		view.setPreviousValue( me.getWarehouseMutationsStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getWarehouseMutationsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getWarehouseMutationsStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getWarehouseMutationsStore().getProxy().extraParams = extraParams;
+		 
+		me.getWarehouseMutationsStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getWarehouseMutationsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getWarehouseMutationsStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getWarehouseMutationsStore().getProxy().extraParams = extraParams;
+		 
+		me.getWarehouseMutationsStore().load();
+		win.close();
   },
 
 	onColorPickerSelect: function(colorId, theColorPicker){

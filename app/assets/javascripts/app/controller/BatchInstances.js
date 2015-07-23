@@ -62,9 +62,88 @@ Ext.define('AM.controller.BatchInstances', {
 			'markmemberasrunawayform button[action=confirmRunAway]' : {
 				click : this.executeConfirmRunAway
 			},
+				
+			'batchinstancelist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterbatchinstanceform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterbatchinstanceform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
 		
     });
   },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterbatchinstanceform');
+		
+		view.setPreviousValue( me.getBatchInstancesStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getBatchInstancesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
+		 
+		me.getBatchInstancesStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getBatchInstancesStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
+		 
+		me.getBatchInstancesStore().load();
+		win.close();
+  },
+  
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;

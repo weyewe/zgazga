@@ -1,11 +1,11 @@
-	'purchaseinvoiceProcess purchaseinvoicelist button[action=filterObject]': {
+	'batchinstanceProcess batchinstancelist button[action=filterObject]': {
 		click: this.filterObject
 	},
-	'filterpurchaseinvoiceform button[action=save]' : {
+	'filterbatchinstanceform button[action=save]' : {
 		click : this.executeFilterObject  
 	},
 	
-	'filterpurchaseinvoiceform button[action=reset]' : {
+	'filterbatchinstanceform button[action=reset]' : {
 		click : this.executeResetFilterObject  
 	},
 	
@@ -18,9 +18,9 @@
   filterObject: function() {
   	// console.log("inside the filter object");
   	var me = this; 
-		var view = Ext.widget('filterpurchaseinvoiceform');
+		var view = Ext.widget('filterbatchinstanceform');
 		
-		view.setPreviousValue( me.getPurchaseInvoicesStore().getProxy().extraParams ); 
+		view.setPreviousValue( me.getBatchInstancesStore().getProxy().extraParams ); 
 		
 	  view.show(); 
   },
@@ -30,14 +30,14 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		me.getBatchInstancesStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"],
+			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"],
 			is_filter : true 
 		};
 		 
@@ -54,9 +54,9 @@
 		}
 		 
 		 
-		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
 		 
-		me.getPurchaseInvoicesStore().load();
+		me.getBatchInstancesStore().load();
 		win.close();
   },
   
@@ -65,19 +65,19 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		me.getBatchInstancesStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"]
+			livesearch: me.getBatchInstancesStore().getProxy().extraParams["livesearch"]
 		};
 		  
-		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		me.getBatchInstancesStore().getProxy().extraParams = extraParams;
 		 
-		me.getPurchaseInvoicesStore().load();
+		me.getBatchInstancesStore().load();
 		win.close();
   },
   
