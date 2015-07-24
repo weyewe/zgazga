@@ -1,7 +1,7 @@
-Ext.define('AM.store.Payables', {
+Ext.define('AM.store.ReceivableDetails', {
   	extend: 'Ext.data.Store',
-		require : ['AM.model.Payable'],
-  	model: 'AM.model.Payable',
+		require : ['AM.model.ReceivableDetail'],
+  	model: 'AM.model.ReceivableDetail',
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,

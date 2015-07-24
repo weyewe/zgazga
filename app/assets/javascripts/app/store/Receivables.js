@@ -5,7 +5,7 @@ Ext.define('AM.store.Receivables', {
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,
-	pageSize : 40, 
+	pageSize : 20, 
 	
 	
 		

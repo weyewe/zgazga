@@ -1,29 +1,29 @@
-Ext.define('AM.controller.Payables', {
+Ext.define('AM.controller.WarehouseStocks', {
   extend: 'Ext.app.Controller',
 
-  stores: ['Payables'],
-  models: ['Payable'],
+  stores: ['WarehouseStocks'],
+  models: ['WarehouseStock'],
 
   views: [
-    'operation.payable.List',
-    'operation.payable.Form',
-		'operation.payabledetail.List',
+    'operation.warehousestock.List',
+    'operation.warehousestock.Form',
+		'operation.warehousestockdetail.List',
 		'Viewport'
   ],
 
   	refs: [
 		{
 			ref: 'list',
-			selector: 'payablelist'
+			selector: 'warehousestocklist'
 		},
 		{
-			ref : 'payableDetailList',
-			selector : 'payabledetaillist'
+			ref : 'warehouseStockDetailList',
+			selector : 'warehousestockdetaillist'
 		},
 		
 		{
 			ref : 'form',
-			selector : 'payableform'
+			selector : 'warehousestockform'
 		},
 		{
 			ref: 'viewport',
@@ -33,47 +33,47 @@ Ext.define('AM.controller.Payables', {
 
   init: function() {
     this.control({
-      'payableProcess payablelist': {
-        itemdblclick: this.editObject,
+      'warehousestockProcess warehousestocklist': {
+        // itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'payableProcess payableform button[action=save]': {
+      'warehousestockProcess warehousestockform button[action=save]': {
         click: this.updateObject
       },
-			'payableProcess payableform customcolorpicker' : {
+			'warehousestockProcess warehousestockform customcolorpicker' : {
 				'colorSelected' : this.onColorPickerSelect
 			},
 
-      'payableProcess payablelist button[action=addObject]': {
+      'warehousestockProcess warehousestocklist button[action=addObject]': {
         click: this.addObject
       },
-      'payableProcess payablelist button[action=editObject]': {
+      'warehousestockProcess warehousestocklist button[action=editObject]': {
         click: this.editObject
       },
-      'payableProcess payablelist button[action=deleteObject]': {
+      'warehousestockProcess warehousestocklist button[action=deleteObject]': {
         click: this.deleteObject
 			}	,
 			
-			'payableProcess payablelist button[action=confirmObject]': {
+			'warehousestockProcess warehousestocklist button[action=confirmObject]': {
         click: this.confirmObject
       },
 
-			'payableProcess payablelist button[action=unconfirmObject]': {
+			'warehousestockProcess warehousestocklist button[action=unconfirmObject]': {
         click: this.unconfirmObject
       },
-			'confirmpayableform button[action=confirm]' : {
+			'confirmwarehousestockform button[action=confirm]' : {
 				click : this.executeConfirm
 			},
 			
-			'unconfirmpayableform button[action=confirm]' : {
+			'unconfirmwarehousestockform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
 
-			'payableProcess payablelist textfield[name=searchField]': {
+			'warehousestockProcess warehousestocklist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
-			'payableform button[action=save]': {
+			'warehousestockform button[action=save]': {
         click: this.updateObject
       }
 		
@@ -98,11 +98,11 @@ Ext.define('AM.controller.Payables', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getPayablesStore().getProxy().extraParams = {
+		me.getWarehouseStocksStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getPayablesStore().load();
+		me.getWarehouseStocksStore().load();
 	},
  
 
@@ -112,7 +112,7 @@ Ext.define('AM.controller.Payables', {
 	},
 
   addObject: function() {
-	var view = Ext.widget('payableform');
+	var view = Ext.widget('warehousestockform');
   view.show();
 
 	 
@@ -120,7 +120,7 @@ Ext.define('AM.controller.Payables', {
 
   editObject: function() {
     var record = this.getList().getSelectedObject();
-    var view = Ext.widget('payableform');
+    var view = Ext.widget('warehousestockform');
 
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
@@ -130,7 +130,7 @@ Ext.define('AM.controller.Payables', {
 		// console.log("the startObject callback function");
 		var record = this.getList().getSelectedObject();
 		if(record){
-			var view = Ext.widget('confirmpayableform');
+			var view = Ext.widget('confirmwarehousestockform');
 
 			view.setParentData( record );
 	    view.show();
@@ -147,7 +147,7 @@ Ext.define('AM.controller.Payables', {
     var form = win.down('form');
 		var me = this; 
 
-    var store = this.getPayablesStore();
+    var store = this.getWarehouseStocksStore();
     var record = form.getRecord();
     var values = form.getValues();
  
@@ -182,7 +182,7 @@ Ext.define('AM.controller.Payables', {
 			//  no record at all  => gonna create the new one 
 			console.log("This is the new record")
 			var me  = this; 
-			var newObject = new AM.model.Payable( values ) ; 
+			var newObject = new AM.model.WarehouseStock( values ) ; 
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -216,7 +216,7 @@ Ext.define('AM.controller.Payables', {
 
 	unconfirmObject: function(){
 		// console.log("the startObject callback function");
-		var view = Ext.widget('unconfirmpayableform');
+		var view = Ext.widget('unconfirmwarehousestockform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
     view.show();
@@ -229,7 +229,7 @@ Ext.define('AM.controller.Payables', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getPayablesStore();
+    var store = this.getWarehouseStocksStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -280,7 +280,7 @@ Ext.define('AM.controller.Payables', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getPayablesStore();
+    var store = this.getWarehouseStocksStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -327,7 +327,7 @@ Ext.define('AM.controller.Payables', {
     var record = this.getList().getSelectedObject();
 
     if (record) {
-      var store = this.getPayablesStore();
+      var store = this.getWarehouseStocksStore();
 			store.remove(record);
 			store.sync( );
  
@@ -358,17 +358,17 @@ Ext.define('AM.controller.Payables', {
   },
 
 	updateChildGrid: function(record){
-		var templateDetailGrid = this.getPayableDetailList();
+		var templateDetailGrid = this.getWarehouseStockDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
 		
-		templateDetailGrid.getStore().getProxy().extraParams.payable_id =  record.get('id') ;
+		templateDetailGrid.getStore().getProxy().extraParams.warehouse_stock_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
 			params : {
-				payable_id : record.get('id')
+				warehouse_stock_id : record.get('id')
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
@@ -385,7 +385,7 @@ Ext.define('AM.controller.Payables', {
 		
 		// console.log("modifiedId:  " + modifiedId);
 		 
-		AM.model.Payable.load( modifiedId , {
+		AM.model.WarehouseStock.load( modifiedId , {
 		    scope: list,
 		    failure: function(record, operation) {
 		        //do something if the load failed

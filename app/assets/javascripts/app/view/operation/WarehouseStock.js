@@ -1,6 +1,6 @@
-Ext.define('AM.view.operation.Receivable', {
+Ext.define('AM.view.operation.WarehouseStock', {
     extend: 'AM.view.Worksheet',
-    alias: 'widget.receivableProcess',
+    alias: 'widget.warehousestockProcess',
 	 
 		layout : {
 			type : 'hbox',
@@ -14,12 +14,12 @@ Ext.define('AM.view.operation.Receivable', {
 		
 		items : [
 			{
-				xtype : 'receivablelist' ,
+				xtype : 'warehousestocklist' ,
 				flex : 1 //,
 				// html : 'hahaha'
 			},
 			{
-				xtype :'receivabledetaillist',
+				xtype :'warehousestockdetaillist',
 				// html : "This is gonna be the price_rule",
 				flex : 1
 			} 

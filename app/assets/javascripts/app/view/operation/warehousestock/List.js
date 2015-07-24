@@ -1,34 +1,16 @@
-Ext.define('AM.view.operation.receivable.List' ,{
+Ext.define('AM.view.operation.warehousestock.List' ,{
   	extend: 'Ext.grid.Panel',
-  	alias : 'widget.receivablelist',
+  	alias : 'widget.warehousestocklist',
 
-  	store: 'Receivables',  
+  	store: 'WarehouseStocks',  
  
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
- 
-			{
-				xtype : 'templatecolumn',
-				text : "Transaksi",
-				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
-			},
-			
+			{ header: 'ID', dataIndex: 'id'},
+			{ header: 'Nama',  dataIndex: 'name', flex: 1},
+				{	header: 'Code', dataIndex: 'code', flex: 1 } ,
+			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
 			
 		];
 
@@ -71,9 +53,7 @@ Ext.define('AM.view.operation.receivable.List' ,{
 		});
 		
 		 
-			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
-				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+			this.tbar = [ 
 					'->',
 					this.searchField ];
 	 

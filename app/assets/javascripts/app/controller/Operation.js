@@ -115,7 +115,7 @@ Ext.define("AM.controller.Operation", {
 		children 	: [
          
 			{ 
-				text:'Virtual Order', 
+				text:'Order', 
 				viewClass:'AM.view.operation.VirtualOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -127,7 +127,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Virtual DO', 
+				text:'DO', 
 				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -139,7 +139,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Virtual Order Clearance', 
+				text:'Clearance', 
 				viewClass:'AM.view.operation.VirtualOrderClearance', 
 				leaf:true, 
 				iconCls:'text',
@@ -229,6 +229,18 @@ Ext.define("AM.controller.Operation", {
 				conditions : [
 					{
 						controller : 'warehouse_mutations',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Stock Gudang', 
+				viewClass:'AM.view.operation.WarehouseStock', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'warehouse_stocks',
 						action : 'index'
 					}
 				]

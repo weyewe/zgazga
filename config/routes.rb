@@ -248,6 +248,15 @@ Ticketie::Application.routes.draw do
     
     resources :batch_sources
     resources :batch_source_details
+    
+    resources :payables
+    resources :payable_details
+    
+    resources :receivables
+    resources :receivable_details 
+    
+    resources :warehouse_stocks
+    resources :warehouse_stock_details
   end
   
   

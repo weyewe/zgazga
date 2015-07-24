@@ -1,9 +1,9 @@
 
-Ext.define('AM.view.operation.receivable.Form', {
+Ext.define('AM.view.operation.warehousestock.Form', {
   extend: 'Ext.window.Window',
-  alias : 'widget.receivableform',
+  alias : 'widget.warehousestockform',
 
-  title : 'Add / Edit Receivable',
+  title : 'Add / Edit WarehouseStock',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

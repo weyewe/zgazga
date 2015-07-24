@@ -1,20 +1,25 @@
 Ext.define('AM.model.Payable', {
   	extend: 'Ext.data.Model',
   	fields: [
-    	{ name: 'id', type: 'int' },
-    	{ name: 'source_class', type: 'string' },
-    	{ name: 'source_id', type: 'int' },
-    	{ name: 'source_code', type: 'string' },
-    	{ name: 'amount', type: 'string' },
-    	{ name: 'remaining_amount', type: 'string' },
-    	{ name: 'exchange_id', type: 'int' },
-    	{ name: 'exchange_name', type: 'string' },
-    	{ name: 'contact_id', type: 'int' },
-    	{ name: 'contact_name', type: 'string' },
-    	{ name: 'exchange_rate_amount', type: 'string' },
-    	{ name: 'due_date', type: 'string' },
-    	{ name: 'pending_clearence_amount', type: 'string' },
-    	{ name: 'is_completed', type: 'string' },
+
+    	    { name: 'id', type: 'int' },
+    	    { name: 'sales_date', type: 'string' },
+			{ name: 'nomor_surat', type: 'string' } ,
+			{ name: 'code', type: 'string' } ,
+			
+			{ name: 'contact_id', type: 'int' },
+    	    { name: 'contact_name', type: 'string' },
+    	    
+    	    { name: 'employee_id', type: 'int' },
+    	    { name: 'employee_name', type: 'string' },
+    	    
+    	    { name: 'exchange_id', type: 'int' },
+    	    { name: 'exchange_name', type: 'string' },
+			
+			{ name: 'is_confirmed', type: 'boolean' } , 
+			{ name: 'confirmed_at', type: 'string' }   ,
+			
+			
   	],
 
 	 
