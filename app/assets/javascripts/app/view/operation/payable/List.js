@@ -7,27 +7,27 @@ Ext.define('AM.view.operation.payable.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			
-			{	header: 'CustomerId', dataIndex: 'contact_id', flex: 2 },
-			{	header: 'ExchangeId', dataIndex: 'exchange_id', flex: 2 },
-			{	header: 'Employee_id', dataIndex: 'employee_id', flex: 2 },
-		 
-			
-			
-			
-			
+ 
  
 			{
 				xtype : 'templatecolumn',
-				text : "Transaksi",
+				text : "Sumber Hutang",
 				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
+				tpl : 'Dokumen: <br /><b>{source_class}</b>' + '<br />' + '<br />' +
+							'Kode Dokumen:<br />  <b>{source_code}</b>'   
 			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Jumlah",
+				flex : 3,
+				tpl : 'Total: <br /><b>{amount}</b> {exchange_name}' + '<br />' + '<br />' +
+							'Sisa:  <br /><b>{remaining_amount}</b> {exchange_name}'  + '<br />' + '<br />' +
+							'Oustanding clearance bank: <b>{pending_clearence_amount}</b>' 
+			},
+			
+			
+			{ header: 'Jatuh Tempo',  dataIndex: 'due_date', flex: 2},
 			
 			
 		];
@@ -71,9 +71,7 @@ Ext.define('AM.view.operation.payable.List' ,{
 		});
 		
 		 
-			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
-				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+			this.tbar = [ 
 					'->',
 					this.searchField ];
 	 

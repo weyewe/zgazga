@@ -24,7 +24,7 @@ Ext.define('AM.controller.PayableDetails', {
   init: function() {
     this.control({
       'payabledetaillist': {
-        itemdblclick: this.editObject,
+        // itemdblclick: this.editObject,
         selectionchange: this.selectionChange ,
 				afterrender : this.loadObjectList
       },

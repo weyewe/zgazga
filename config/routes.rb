@@ -148,8 +148,8 @@ Ticketie::Application.routes.draw do
      
     # operation
     
-    resources :payables
-    resources :receivables
+    # resources :payables
+    # resources :receivables
     resources :stock_adjustments
     resources :stock_adjustment_details
     

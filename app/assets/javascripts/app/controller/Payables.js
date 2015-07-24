@@ -34,7 +34,7 @@ Ext.define('AM.controller.Payables', {
   init: function() {
     this.control({
       'payableProcess payablelist': {
-        itemdblclick: this.editObject,
+        // itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },

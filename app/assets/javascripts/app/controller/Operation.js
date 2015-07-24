@@ -294,6 +294,33 @@ Ext.define("AM.controller.Operation", {
 		iconCls		: 'text-folder', 
     	expanded	: true,
 		children 	: [
+			
+			{ 
+				text:'Hutang', 
+				viewClass:'AM.view.operation.Payable', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'payables',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Piutang', 
+				viewClass:'AM.view.operation.Receivable', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'receivables',
+						action : 'index'
+					}
+				]
+			}, 
+			
         	{ 
 				text:'PaymentRequest', 
 				viewClass:'AM.view.operation.PaymentRequest', 
