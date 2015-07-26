@@ -2,190 +2,30 @@ class Api::ReceivablesController < Api::BaseApiController
   
   def index
      
-     
-     if params[:livesearch].present? 
-       livesearch = "%#{params[:livesearch]}%"
-       @objects = Receivable.active_objects.joins(:contact,:employee,:exchange).where{
-         (
-           
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = Receivable.active_objects.joins(:contact,:employee,:exchange).where{
-         (
-            
-           ( code =~ livesearch)  | 
-           ( nomor_surat =~ livesearch)  | 
-           ( contact.name =~  livesearch) | 
-           ( employee.name =~  livesearch) | 
-           ( exchange.name =~  livesearch)
-         )
-       }.count
- 
-
-     else
-       @objects = Receivable.active_objects.joins(:contact,:employee,:exchange).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = Receivable.active_objects.count
-     end
-     
-     
-     
-     
-  end
-
-  def create
+    query = Receivable.active_objects.joins(:exchange,:contact)     
     
-    params[:receivable][:transaction_datetime] =  parse_date( params[:receivable][:transaction_datetime] )
-    
-    
-    @object = Receivable.create_object( params[:receivable])
- 
-    if @object.errors.size == 0 
-      
-      render :json => { :success => true, 
-                        :receivables => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
-                          ] , 
-                        :total => Receivable.active_objects.count }  
-    else
-      puts "It is fucking error!!\n"*10
-      @object.errors.messages.each {|x| puts x }
-      
-      msg = {
-        :success => false, 
-        :message => {
-          :errors => extjs_error_format( @object.errors ) 
-          # :errors => {
-          #   :name => "Nama tidak boleh bombastic"
-          # }
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
+        
+        
+        query = query.where{ 
+          (
+            ( source_class =~  livesearch )  | 
+            ( source_code =~ livesearch ) | 
+            ( contact.name =~ livesearch ) | 
+            ( exchange.name =~ livesearch ) 
+          ) 
         }
-      }
-      
-      render :json => msg                         
-    end
-  end
-  
-  def show
-    @object  = Receivable.find params[:id]
-    render :json => { :success => true,   
-                      :receivables => [
-                          :id => @object.id, 
-                          :code => @object.code ,
-                          :nomor_surat => @object.nomor_surat , 
-                          :sales_date => format_date_friendly(@object.sales_date)  ,
-                          :is_confirmed => @object.is_confirmed,
-                          :confirmed_at => format_date_friendly(@object.confirmed_at),
-                          :contact_id => @object.contact_id,
-                          :exchange_id => @object.exchange_id,
-                          :employee_id => @object.employee_id
-                        
-                        ],
-                      :total => Receivable.active_objects.count  }
-  end
-
-  def update
-    params[:receivable][:transaction_datetime] =  parse_date( params[:receivable][:transaction_datetime] )
-    params[:receivable][:confirmed_at] =  parse_date( params[:receivable][:confirmed_at] )
-    
-    @object = Receivable.find(params[:id])
-    
-    if params[:confirm].present?  
-      if not current_user.has_role?( :receivables, :confirm)
-        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-        return
-      end
-      
-      begin
-        ActiveRecord::Base.transaction do 
-          @object.confirm_object(:confirmed_at => params[:receivable][:confirmed_at] ) 
-        end
-      rescue ActiveRecord::ActiveRecordError  
-      else
-      end
-      
-      
-      
-      
-    elsif params[:unconfirm].present?    
-      
-      if not current_user.has_role?( :receivables, :unconfirm)
-        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
-        return
-      end
-      
-      begin
-        ActiveRecord::Base.transaction do 
-          @object.unconfirm_object
-        end
-      rescue ActiveRecord::ActiveRecordError  
-      else
-      end
-      
-      
-    else
-      @object.update_object(params[:receivable])
-    end
-    
-     
-    
-    
-    
-    
-    if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :receivables => [
-                            :id => @object.id,
-                            :code => @object.code ,
-                            :nomor_surat => @object.nomor_surat , 
-                            :sales_date => format_date_friendly(@object.sales_date),
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at),
-                            :contact_id => @object.contact_id,
-                            :exchange_id => @object.exchange_id,
-                            :employee_id => @object.employee_id
-                          ],
-                        :total => Receivable.active_objects.count  } 
-    else
-      
-      msg = {
-        :success => false, 
-        :message => {
-          :errors => extjs_error_format( @object.errors )  
-        }
-      }
-      
-      render :json => msg
-      return 
-    end
-  end
-  
    
-
-  def destroy
-    @object = Receivable.find(params[:id])
-    @object.delete_object
-
-    if   not @object.persisted? 
-      render :json => { :success => true, :total => Receivable.active_objects.count }  
-    else
-      render :json => { :success => false, :total => Receivable.active_objects.count, 
-        :message => {
-          :errors => extjs_error_format( @object.errors )  
-        } 
-      }  
     end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total  = query.count
+    
+    # render :json => { :receivables => @objects , :total => @total , :success => true }
   end
+ 
+  
   
   def search
     search_params = params[:query]
@@ -197,32 +37,52 @@ class Api::ReceivablesController < Api::BaseApiController
     query = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
-    if  selected_id.nil?  
-      @objects = Receivable.where{  
-        ( 
-           ( code =~ query )  
-         )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+    if  selected_id.nil?
+      query = Receivable.joins(:exchange,:contact).where{ 
+          ( source_class =~  query )  | 
+          ( source_code =~ query ) | 
+          ( contact.name =~ query ) | 
+          ( exchange.name =~ query ) 
+                              }
+                              
+      if params[:contact_id].present?
+        object = Contact.find_by_id params[:contact_id]
+        if not object.nil?  
+          query = query.where(:contact_id => object.id )
+        end
+      end    
+      
+      
+      # @objects = Receivable.joins(:exchange,:contact).where{ 
+      #     ( source_class =~  query )  | 
+      #     ( source_code =~ query ) | 
+      #     ( contact.name =~ query ) | 
+      #     ( exchange.name =~ query ) 
+      #                         }.
+      #                   page(params[:page]).
+      #                   per(params[:limit]).
+      #                   order("id DESC")
                         
-      @total = Receivable.where{  
-        ( 
-           ( code =~ query )  
-         )
-      }.count 
+      # @total = Receivable.joins(:exchange,:contact).where{ 
+      #     ( source_class =~  query )  | 
+      #     ( source_code =~ query ) | 
+      #     ( contact.name =~ query ) | 
+      #     ( exchange.name =~ query ) 
+        
+      #                         }.count
+      @objects = query.page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
+      @total = query.count 
     else
-      @objects = Receivable.where{ 
-          (id.eq selected_id)   
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
-                        
-      @total = Receivable.where{ 
-          (id.eq selected_id)  
-      }.count 
+      @objects = Receivable.joins(:exchange,:contact).where{ (id.eq selected_id)  
+                              }.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
+   
+      @total = Receivable.joins(:exchange,:contact).where{ (id.eq selected_id)   
+                              }.count 
     end
     
     

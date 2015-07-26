@@ -2,7 +2,11 @@ Ext.define('AM.view.operation.OperationProcessList', {
     extend: 'Ext.tree.Panel',
     alias: 'widget.operationProcessList',
 
-    
+    resizable: true, 
+    // closable: true, 
+    collapsible : true, 
+    title: "Navigation",
+    collapseDirection: 'left',
     // title: 'Process List',
     rootVisible: false,
 		cls: 'examples-list',
