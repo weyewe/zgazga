@@ -1,3 +1,4 @@
+puts "begin"
 role = {
   'system' => {
     'administrator' => true
@@ -73,8 +74,12 @@ data_entry = User.create_object(
   
   Account.create_base_objects
   Exchange.create_object_for_base_exchange
-  ItemType.create_base_objects
-  Section.create_base_section_actions
+  ItemType.create_base_objects 
+  
+puts "total user: #{User.count}"
+puts "total account: #{Account.count}"
+puts "total exchange: #{Exchange.count}"
+puts "total item type: #{ItemType.count}"
 
 if Rails.env.development?
 
@@ -93,6 +98,7 @@ if Rails.env.development?
   # creating supplier 
   
   # puts "contact_group_array: #{contact_group_array}"
+  
   
   supplier_array = [] 
   (1.upto 5).each do |x|
@@ -167,6 +173,8 @@ if Rails.env.development?
       )
   end
   
+  
+  puts "total item type: #{ItemType.count}"
   sub_type_array = [] 
   (1.upto 10).each do |x|
     
@@ -185,6 +193,8 @@ if Rails.env.development?
         
       )
   end
+  
+  puts "total uom: #{Uom.count}"
   
   warehouse_array = []
   (1.upto 10).each do |x|
@@ -436,6 +446,8 @@ if Rails.env.development?
       )
   end
   
+  puts "Total core_builder: #{CoreBuilder.count}"
+  
   roller_builder_array = []
   (1.upto 10).each do |x|
     selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]
@@ -469,6 +481,8 @@ if Rails.env.development?
         :tl => 9,
       )
   end
+  
+  puts "Total roller builder: #{RollerBuilder.count}"
   
   blanket_array = []
   (1.upto 10).each do |x|
@@ -535,6 +549,8 @@ if Rails.env.development?
     end
   end
   
+  
+  puts "Total blending recipe: #{BlendingRecipe.count}"
   # Confirmed StockAdjustment
   stock_adjustment_array =[]
   # (1.upto 10).each do |x|
@@ -638,6 +654,8 @@ if Rails.env.development?
     cashbank_adjustment_array << cashbank_adjustment
   end
   
+  
+  puts "Total cashbank adjustment: #{CashBankAdjustment.count}"
   # NotConfirmed CashBankAdjustment
   (1.upto 10).each do |x|
     selected_cashbank = cashbank_array[rand( 0..(cashbank_array.length - 1))]
@@ -888,6 +906,8 @@ if Rails.env.development?
     payable_array << payable 
   end
   
+  puts "Total Payable: #{Payable.count}"
+  
   # NotConfirmed PaymentVoucher
   (1.upto 10).each do |x|
     selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))]
@@ -1023,6 +1043,8 @@ if Rails.env.development?
         )
     end
   end
+  
+  puts "Total sales order: #{SalesOrder.count}"
   
   # Confirmed DeliveryOrder
   delivery_order_array = []
@@ -1181,6 +1203,8 @@ if Rails.env.development?
     end
   end
   
+  puts "Total VirtualOrder: #{VirtualOrder.count}"
+  
   # NotConfirmed VirtualDeliveryOrder
   (1.upto 10).each do |x|
     selected_virtual_order = virtual_order_array[rand(0..(virtual_order_array.length - 1))]
@@ -1328,6 +1352,8 @@ if Rails.env.development?
   Receivable.all.each do |receivable|
     receivable_array << receivable 
   end
+  
+  puts "Total Receivable: #{Receivable.count}"
   
   # NotConfirmed ReceiptVoucher
   (1.upto 10).each do |x|
@@ -1898,5 +1924,19 @@ if Rails.env.development?
       )
   
   
+  Menu.create_object(
+      :name => "Sales Order",
+      :controller_name => "sales_orders"
+    )
+
+  # Menu.create_object(
+  #     :name => "Delivery Order",
+  #     :controller_name => "delivery_orders"
+  #   )
+    
+  # Menu.create_object(
+  #     :name => "Sales Invoice",
+  #     :controller_name => "sales_invoices"
+  #   )
 end
   

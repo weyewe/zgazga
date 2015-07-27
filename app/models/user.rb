@@ -9,8 +9,8 @@ class User < ActiveRecord::Base
    
    before_save :ensure_authentication_token
 
-  has_many :home_assignments
-  has_many :homes, :through => :home_assignments
+  has_many :menu_action_assignments
+  has_many :menu_action, :through => :menu_action_assignments
 
    def ensure_authentication_token
      if authentication_token.blank?
