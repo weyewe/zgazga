@@ -1929,14 +1929,14 @@ if Rails.env.development?
       :controller_name => "sales_orders"
     )
 
-  # Menu.create_object(
-  #     :name => "Delivery Order",
-  #     :controller_name => "delivery_orders"
-  #   )
+  Menu.create_object(
+      :name => "Delivery Order",
+      :controller_name => "delivery_orders"
+    )
     
-  # Menu.create_object(
-  #     :name => "Sales Invoice",
-  #     :controller_name => "sales_invoices"
-  #   )
+  Menu.create_object(
+      :name => "Sales Invoice",
+      :controller_name => "sales_invoices"
+    )
 end
   

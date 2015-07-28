@@ -13,38 +13,38 @@ Ext.define('AM.view.master.menudetail.List' ,{
 			{
 	            xtype: 'checkcolumn',
 	            header: 'View',
-	            dataIndex: 'is_view_allowed',
-	            width: 70
+	            dataIndex: 'index',
+	            width: 55
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Create',
-	            dataIndex: 'is_create_allowed',
-	            width: 70
+	            dataIndex: 'create',
+	            width: 55
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Edit',
-	            dataIndex: 'is_update_allowed',
-	            width: 70
+	            dataIndex: 'update',
+	            width: 55
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Confirm',
-	            dataIndex: 'is_confirm_allowed',
-	            width: 70
+	            dataIndex: 'confirm',
+	            width: 55
 	        },
       		{
 	            xtype: 'checkcolumn',
 	            header: 'Unconfirm',
-	            dataIndex: 'is_unconfirm_allowed',
-	            width: 70
+	            dataIndex: 'unconfirm',
+	            width: 55
 	        },
       		{
 	            xtype: 'checkcolumn',
 	            header: 'Delete',
-	            dataIndex: 'is_delete_allowed',
-	            width: 70
+	            dataIndex: 'destroy',
+	            width: 55
 	        }
 			
 			 
@@ -76,7 +76,7 @@ Ext.define('AM.view.master.menudetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [  ]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -113,6 +113,6 @@ Ext.define('AM.view.master.menudetail.List' ,{
 	},
 	
 	setObjectTitle : function(record){
-		this.setTitle("Menu: " + record.get("code"));
+		this.setTitle("Menu: " + record.get("name"));
 	}
 });

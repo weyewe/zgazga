@@ -49,10 +49,10 @@ Ext.define('AM.controller.MenuDetails', {
         click: this.deleteObject
       },
  
-			// monitor parent(sales_order) update
-			// 'menulist checkcolumn': {
-			// 	'checkchange' : this.updateAuthorization
-			// },
+ 
+			'menudetaillist checkcolumn': {
+				'checkchange' : this.updateAuthorization
+			},
 			
 			'menulist' : {
 				'updated' : this.reloadStore,
@@ -65,7 +65,68 @@ Ext.define('AM.controller.MenuDetails', {
   
  
   updateAuthorization: function(param1, param2   , param3 ){
+  	var me = this; 
+  	var theList  = this.getList(); 
   	console.log("inside update AUth");
+  	console.log( param1  ) ;
+  	console.log("probing param1: ");
+  	console.log( param1["dataIndex"]) ; 
+  	console.log( param2 );
+  	console.log( param3 );
+  	
+  	var dataIndex = param1["dataIndex"]; 
+  	
+  	// get the model
+  	// if param3 == true
+  	// create menu_action_assignment
+  	
+  	var selected_record_node = this.getList().getView().getNode( param2 );
+  	
+  	// console.log("The selected record node:");
+  	// console.log( selected_record_node );
+  	
+  	var selected_record =  this.getList().getView().getRecord( selected_record_node );
+  	
+  	// console.log(" the selected record");
+  	// console.log( selected_record );
+  	
+  	console.log("dataIndex: " + dataIndex + " , value: "  + param3);
+  	
+  	selected_record.set(  dataIndex, param3 );
+  	
+  	
+  	console.log( "The selected record after update");
+  	console.log( selected_record);
+  	
+  	// var me =this ; 
+  	// var list = me.getList();
+  	
+
+		theList.setLoading(true);
+ 		selected_record.save({
+ 			params: {
+ 				targetField: dataIndex 
+ 			},
+ 			
+			success : function(new_record){
+				
+				AM.view.Constants.updateRecord( selected_record, new_record );  
+ 				theList.setLoading(false); 
+			},
+			failure : function(record,op ){ 
+				theList.setLoading(false);
+
+			}
+		}); 
+	
+  	
+  	// if param3 == false 
+  	// delete menu action_assignment 
+  	
+
+				
+			 
+  	
   },
 
 	loadObjectList : function(me){

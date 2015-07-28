@@ -25,7 +25,7 @@ class Menu < ActiveRecord::Base
         
         if new_object.save
             target_result = [
-                ["View", "index"],
+                ["View", "index" ],
                 ["Create", "create"],
                 ["Update", "update"],
                 ["Confirm", "confirm"],

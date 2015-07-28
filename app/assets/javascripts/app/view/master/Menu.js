@@ -21,7 +21,7 @@ Ext.define('AM.view.master.Menu', {
 			{
 				xtype :'menudetaillist',
 				// html : "This is gonna be the price_rule",
-				flex : 1
+				flex : 3
 			} 
 		],
  

@@ -3,15 +3,15 @@ Ext.define('AM.model.MenuDetail', {
   	fields: [
  
     	    { name: 'id', type: 'int' },
-    	    
+    	    { name: 'user_id', type: 'int' } , 
     	    { name: 'name', type: 'string' },
     	    
-    	    { name: 'is_view_allowed', type: 'boolean' }, 
-    	    { name: 'is_create_allowed', type: 'boolean' }, 
-    	    { name: 'is_update_allowed', type: 'boolean' }, 
-    	    { name: 'is_confirm_allowed', type: 'boolean' }, 
-    	    { name: 'is_unconfirm_allowed', type: 'boolean' }, 
-    	    { name: 'is_delete_allowed', type: 'boolean' }, 
+    	    { name: 'view', type: 'boolean' }, 
+    	    { name: 'create', type: 'boolean' }, 
+    	    { name: 'update', type: 'boolean' }, 
+    	    { name: 'confirm', type: 'boolean' }, 
+    	    { name: 'unconfirm', type: 'boolean' }, 
+    	    { name: 'destroy', type: 'boolean' }, 
  
   	],
 
