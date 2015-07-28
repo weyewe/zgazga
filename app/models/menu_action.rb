@@ -14,6 +14,14 @@ class MenuAction < ActiveRecord::Base
         return new_object 
     end
     
+    
+    def is_assigned_to_user?( user_object )
+        MenuActionAssignment.where(
+            :user_id => user_object.id, 
+            :id => self.id 
+            ).count != 0 
+    end
+    
     def delete_object
         self.menu_action_assignments.each do |ae|
             ae.delete_object

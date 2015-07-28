@@ -257,6 +257,9 @@ Ticketie::Application.routes.draw do
     
     resources :warehouse_stocks
     resources :warehouse_stock_details
+    
+    resources :menus # select the user  
+    resources :menu_details  # select the menu action checkbox
   end
   
   

@@ -10,7 +10,7 @@ namespace :master_detail_extjs do
   task :generate_asset_and_controller_files => :environment do
     puts "the first"
  
-    main_view_name = 'AM.view.operation.WarehouseStock'
+    main_view_name = 'AM.view.master.Menu'
  
     tokenized_main_view_name = main_view_name.split('.')
 
