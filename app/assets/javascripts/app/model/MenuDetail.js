@@ -6,7 +6,7 @@ Ext.define('AM.model.MenuDetail', {
     	    { name: 'user_id', type: 'int' } , 
     	    { name: 'name', type: 'string' },
     	    
-    	    { name: 'view', type: 'boolean' }, 
+    	    { name: 'index', type: 'boolean' }, 
     	    { name: 'create', type: 'boolean' }, 
     	    { name: 'update', type: 'boolean' }, 
     	    { name: 'confirm', type: 'boolean' }, 

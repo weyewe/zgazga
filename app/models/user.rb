@@ -65,7 +65,24 @@ class User < ActiveRecord::Base
       self.save 
 
    end
-
+    
+   def is_admin?
+       self.role.name == ROLE_NAME[:admin]
+   end
+   
+   def has_menu_assignment?( controller_name , action_name )
+       return true if self.is_admin? 
+       
+       menu = Menu.find_by_controller_name controller_name 
+       
+       return false if menu.nil? 
+       
+       if menu.menu_actions.where(:action_name => action_name).count != 0 
+           return true 
+       else
+           return false 
+       end
+   end
    
    def User.create_object(params)
      # only used in seeds.rb => we need to assign pre-determined password

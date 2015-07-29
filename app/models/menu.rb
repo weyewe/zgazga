@@ -52,5 +52,14 @@ class Menu < ActiveRecord::Base
         self.destroy 
     end
     
+    def is_action_allowed?( action_name, current_user_id)
+        current_menu_id = self.id 
+        MenuActionAssignment.joins(:menu_action).where{
+            ( menu_action.menu_id.eq current_menu_id ) & 
+            ( menu_action.action_name.eq action_name ) & 
+            ( user_id.eq current_user_id)
+            
+        }.count != 0 
+    end
     
 end

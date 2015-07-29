@@ -14,37 +14,37 @@ Ext.define('AM.view.master.menudetail.List' ,{
 	            xtype: 'checkcolumn',
 	            header: 'View',
 	            dataIndex: 'index',
-	            width: 55
+	            width: 70
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Create',
 	            dataIndex: 'create',
-	            width: 55
+	            width: 70
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Edit',
 	            dataIndex: 'update',
-	            width: 55
+	            width: 70
 	        },
 			{
 	            xtype: 'checkcolumn',
 	            header: 'Confirm',
 	            dataIndex: 'confirm',
-	            width: 55
+	            width: 70
 	        },
       		{
 	            xtype: 'checkcolumn',
 	            header: 'Unconfirm',
 	            dataIndex: 'unconfirm',
-	            width: 55
+	            width: 70
 	        },
       		{
 	            xtype: 'checkcolumn',
 	            header: 'Delete',
 	            dataIndex: 'destroy',
-	            width: 55
+	            width: 70
 	        }
 			
 			 

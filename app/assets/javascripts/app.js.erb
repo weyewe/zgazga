@@ -108,15 +108,19 @@ Ext.define("AM.currentUser",{
 		
 		
 		
-		
-		
+
 		
 	}
 });
 
 
 
+Ext.Loader.setPath('Ext.ux', 'app/ux');
+
  
+Ext.require([
+    'Ext.ux.CheckColumn'
+]);
 
 
 Ext.onReady(function(){

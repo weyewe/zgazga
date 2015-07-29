@@ -5,7 +5,7 @@ Ext.define('AM.store.MenuDetails', {
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,
-	pageSize : 1, 
+	pageSize : 40, 
 	
 	
 		

@@ -1,0 +1,19 @@
+{"success":true,"auth_token":"R8kGxwCQ677yQaq3uawV","email":"admin@gmail.com","role":"{\"system\":{\"administrator\":true}}"}
+
+
+{"success":true,"auth_token":"cvy8EXxp5e6qXeyDSvAw","email":"jojo@gmail.com",
+    "role":
+        "{
+            \"passwords\":{\"update\":true},
+            \"works\":{\"index\":true,\"create\":true,\"update\":true,\"destroy\":true,
+            \"work_reports\":true,\"project_reports\":true,\"category_reports\":true},
+            \"projects\":{\"search\":true},
+            \"categories\":{\"search\":true}
+        }"
+}
+
+{"success":true,"auth_token":"JJszNtCKhyyhSpdkjsZy","email":"admin@gmail.com",
+    "role":
+        "{
+            \"system\":{\"administrator\":true},
+            \"sales_orders\":{\"index\":true}}"}

@@ -301,8 +301,12 @@ class Api::BaseApiController < ApplicationController
     puts "#{params}"
     current_controller_name = params[:controller].gsub("api/", "")
     
-    if not current_user.has_role?(current_controller_name.to_sym, params[:action])
-      render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+    # if not current_user.has_role?(current_controller_name.to_sym, params[:action])
+    
+    return if params[:action] == "search"
+    
+    if not current_user.has_menu_assignment?(current_controller_name , params[:action])
+      render :json => {:success => false, :access_denied => "Tidak punya menu authorisasi"}
       return
     end
   end

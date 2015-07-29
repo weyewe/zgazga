@@ -67,12 +67,12 @@ Ext.define('AM.controller.MenuDetails', {
   updateAuthorization: function(param1, param2   , param3 ){
   	var me = this; 
   	var theList  = this.getList(); 
-  	console.log("inside update AUth");
-  	console.log( param1  ) ;
-  	console.log("probing param1: ");
-  	console.log( param1["dataIndex"]) ; 
-  	console.log( param2 );
-  	console.log( param3 );
+  	// console.log("inside update AUth");
+  	// console.log( param1  ) ;
+  	// console.log("probing param1: ");
+  	// console.log( param1["dataIndex"]) ; 
+  	// console.log( param2 );
+  	// console.log( param3 );
   	
   	var dataIndex = param1["dataIndex"]; 
   	
@@ -90,13 +90,13 @@ Ext.define('AM.controller.MenuDetails', {
   	// console.log(" the selected record");
   	// console.log( selected_record );
   	
-  	console.log("dataIndex: " + dataIndex + " , value: "  + param3);
+  	// console.log("dataIndex: " + dataIndex + " , value: "  + param3);
   	
   	selected_record.set(  dataIndex, param3 );
   	
   	
-  	console.log( "The selected record after update");
-  	console.log( selected_record);
+  	// console.log( "The selected record after update");
+  	// console.log( selected_record);
   	
   	// var me =this ; 
   	// var list = me.getList();
