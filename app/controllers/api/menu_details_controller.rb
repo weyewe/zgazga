@@ -1,5 +1,9 @@
 class Api::MenuDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "menus"
+  end
+  
   def index
     @parent = User.find_by_id params[:menu_id]
     query = Menu.includes(:menu_actions).order("id ASC")

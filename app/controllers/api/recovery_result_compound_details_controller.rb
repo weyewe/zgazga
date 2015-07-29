@@ -1,5 +1,9 @@
 class Api::RecoveryResultCompoundDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "recovery_results"
+  end
+  
   def index
     @parent = RecoveryOrderDetail.find_by_id params[:recovery_result_id]
     @objects = @parent.active_compound_children.joins(:recovery_order_detail ).page(params[:page]).per(params[:limit]).order("id DESC")

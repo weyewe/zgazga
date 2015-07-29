@@ -1,4 +1,8 @@
 class Api::PayableDetailsController < Api::BaseApiController
+ 
+   def parent_controller_name
+      "payables"
+  end
   
   def index
     @parent = Payable.find_by_id params[:payable_id]

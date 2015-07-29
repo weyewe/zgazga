@@ -295,8 +295,15 @@ class Api::BaseApiController < ApplicationController
     return "#{year}-#{month}-#{day}" 
   end
   
+  
+  # def parent_controller_name 
+  # end
   def ensure_authorized
     puts "===========>Inside ensure_authorized\n"
+    # puts self.class.to_s
+    # controller_name = self.class.to_s
+    # controller_name = controller_name.gsub("Api::", "")
+ 
     # puts "The params: "
     # puts "#{params}"
     

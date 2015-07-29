@@ -1,5 +1,10 @@
 class Api::ReceiptVoucherDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "receipt_vouchers"
+  end
+  
+  
   def index
     @parent = ReceiptVoucher.find_by_id params[:receipt_voucher_id]
     @objects = @parent.active_children.joins(:receipt_voucher, :receivable).page(params[:page]).per(params[:limit]).order("id DESC")

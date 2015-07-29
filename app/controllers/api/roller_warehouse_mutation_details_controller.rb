@@ -1,5 +1,10 @@
 class Api::RollerWarehouseMutationDetailsController < Api::BaseApiController
   
+  
+  def parent_controller_name
+      "roller_warehouse_mutations"
+  end
+  
   def index
     @parent = RollerWarehouseMutation.find_by_id params[:roller_warehouse_mutation_id]
     @objects = @parent.active_children.joins(:roller_warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

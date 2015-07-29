@@ -1,5 +1,9 @@
 class Api::TemporaryDeliveryOrderDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "temporary_delivery_orders"
+  end
+  
   def index
     @parent = TemporaryDeliveryOrder.find_by_id params[:temporary_delivery_order_id]
     @objects = @parent.active_children.joins(:temporary_delivery_order, :item , :sales_order_detail).page(params[:page]).per(params[:limit]).order("id DESC")

@@ -1,5 +1,11 @@
 class Api::RecoveryOrderDetailsController < Api::BaseApiController
   
+  
+  def parent_controller_name
+      "recovery_orders"
+  end
+  
+  
   def index
     @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
     @objects = @parent.active_children.joins(:recovery_order, :roller_identification_form_detail,:roller_builder).page(params[:page]).per(params[:limit]).order("id DESC")

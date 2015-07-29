@@ -1,5 +1,10 @@
 class Api::WarehouseStockDetailsController < Api::BaseApiController
   
+  
+  def parent_controller_name
+      "warehouse_stocks"
+  end
+  
   def index
     @parent = Warehouse.find_by_id params[:warehouse_stock_id]
     

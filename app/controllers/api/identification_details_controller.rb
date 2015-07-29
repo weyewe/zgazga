@@ -1,5 +1,9 @@
 class Api::IdentificationDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "identifications"
+  end
+  
   def index
     @parent = Identification.find_by_id params[:identification_id]
     @objects = @parent.active_children.joins(:identification, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

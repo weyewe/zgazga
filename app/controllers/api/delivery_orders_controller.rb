@@ -5,7 +5,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
      
      
      
-    query =   DeliveryOrder.active_objects.joins(:warehouse, :sales_order) 
+    query =   DeliveryOrder.active_objects.joins(:warehouse, :sales_order => [:contact]) 
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"

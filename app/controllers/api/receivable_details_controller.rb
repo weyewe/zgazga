@@ -1,5 +1,9 @@
 class Api::ReceivableDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "receivables"
+  end
+  
   def index
     @parent = Receivable.find_by_id params[:receivable_id]
     @objects = @parent.active_children.joins(:receivable, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

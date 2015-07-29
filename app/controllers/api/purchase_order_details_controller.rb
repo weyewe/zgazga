@@ -1,5 +1,9 @@
 class Api::PurchaseOrderDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "purchase_orders"
+  end
+  
   def index
     @parent = PurchaseOrder.find_by_id params[:purchase_order_id]
     @objects = @parent.active_children.joins(:purchase_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

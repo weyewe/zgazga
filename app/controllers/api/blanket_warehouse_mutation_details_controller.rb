@@ -1,4 +1,8 @@
 class Api::BlanketWarehouseMutationDetailsController < Api::BaseApiController
+
+  def parent_controller_name
+      "blanket_warehouse_mutations"
+  end
   
   def index
     @parent = BlanketWarehouseMutation.find_by_id params[:blanket_warehouse_mutation_id]

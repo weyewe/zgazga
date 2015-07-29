@@ -1,5 +1,11 @@
 class Api::SalesDownPaymentAllocationDetailsController < Api::BaseApiController
   
+  
+  
+  def parent_controller_name
+      "sales_down_payment_allocations"
+  end
+  
   def index
     @parent = SalesDownPaymentAllocation.find_by_id params[:sales_down_payment_allocation_id]
     @objects = @parent.active_children.joins(:sales_down_payment_allocation, :receivable).page(params[:page]).per(params[:limit]).order("id DESC")

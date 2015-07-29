@@ -1,5 +1,10 @@
 class Api::VirtualDeliveryOrderDetailsController < Api::BaseApiController
   
+
+  def parent_controller_name
+      "virtual_delivery_orders"
+  end
+  
   def index
     @parent = VirtualDeliveryOrder.find_by_id params[:virtual_delivery_order_id]
     @objects = @parent.active_children.joins(:virtual_delivery_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

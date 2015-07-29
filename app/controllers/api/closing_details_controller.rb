@@ -1,5 +1,10 @@
 class Api::ClosingDetailsController < Api::BaseApiController
   
+
+  def parent_controller_name
+      "closings"
+  end
+  
   def index
     @parent = Closing.find_by_id params[:closing_id]
     @objects = @parent.active_children.joins(:closing, :exchange).page(params[:page]).per(params[:limit]).order("id DESC")
