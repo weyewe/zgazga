@@ -297,9 +297,27 @@ class Api::BaseApiController < ApplicationController
   
   def ensure_authorized
     puts "===========>Inside ensure_authorized\n"
-    puts "The params: "
-    puts "#{params}"
-    current_controller_name = params[:controller].gsub("api/", "")
+    # puts "The params: "
+    # puts "#{params}"
+    
+    # puts "the parent controller name #{@parent_controller_name}"
+    # puts "the parent controller name 2: #{self.parent_controller_name}"
+    
+    # resource.phone_number if resource.respond_to? :phone_number
+    
+    if self.respond_to? :parent_controller_name
+      current_controller_name   = self.parent_controller_name
+      
+    else
+      current_controller_name = params[:controller].gsub("api/", "")
+    end
+    
+    # if self.parent_controller_name.present? 
+    #   current_controller_name = self.parent_controller_name.present? 
+    # else
+    #   current_controller_name = params[:controller].gsub("api/", "")
+    # end
+    
     
     # if not current_user.has_role?(current_controller_name.to_sym, params[:action])
     

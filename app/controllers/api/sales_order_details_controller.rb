@@ -1,4 +1,8 @@
-class Api::SalesOrderDetailsController < Api::BaseApiController
+class Api::SalesOrderDetailsController < Api::BaseApiController 
+  
+  def parent_controller_name
+      "sales_orders"
+  end
   
   def index
     @parent = SalesOrder.find_by_id params[:sales_order_id]
