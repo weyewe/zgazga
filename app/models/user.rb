@@ -77,11 +77,19 @@ class User < ActiveRecord::Base
        
        return false if menu.nil? 
        
-       if menu.menu_actions.where(:action_name => action_name).count != 0 
-           return true 
+       current_user_id = self.id 
+       menu_action =  menu.menu_actions.where(:action_name => action_name).first 
+       
+       if MenuActionAssignment.where{
+           ( user_id.eq current_user_id ) & 
+           ( menu_action_id.eq menu_action.id )
+           
+       }.count != 0 
+            return true 
        else
-           return false 
+            return false 
        end
+ 
    end
    
    def User.create_object(params)
