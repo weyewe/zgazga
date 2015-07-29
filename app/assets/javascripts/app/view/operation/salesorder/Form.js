@@ -14,6 +14,34 @@ Ext.define('AM.view.operation.salesorder.Form', {
   initComponent: function() {
 			var me = this; 
 	
+		var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
+			storeId : 'exchange_search',
+			fields	: [
+			 		{
+						name : 'exchange_name',
+						mapping : "name"
+					} ,
+ 
+			 
+					{
+						name : 'exchange_id',
+						mapping : 'id'
+					}  
+			],
+			
+		 
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_exchanges',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
+		
 	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
 		storeId : 'contact_search',
 		fields	: [
@@ -76,6 +104,36 @@ Ext.define('AM.view.operation.salesorder.Form', {
 		autoLoad : false 
 	});
 	 
+	var remoteJsonStoreEmployee = Ext.create(Ext.data.JsonStore, {
+		storeId : 'employee_search',
+		fields	: [
+		 		{
+					name : 'employee_name',
+					mapping : "name"
+				} ,
+				{
+					name : 'employee_description',
+					mapping : "description"
+				} ,
+		 
+				{
+					name : 'employee_id',
+					mapping : 'id'
+				}  
+		],
+		
+	 
+		proxy  	: {
+			type : 'ajax',
+			url : 'api/search_employees',
+			reader : {
+				type : 'json',
+				root : 'records', 
+				totalProperty  : 'total'
+			}
+		},
+		autoLoad : false 
+	});
 		
     this.items = [{
       xtype: 'form',
