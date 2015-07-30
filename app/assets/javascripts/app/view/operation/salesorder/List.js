@@ -4,36 +4,46 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 
   	store: 'SalesOrders',  
  
-
+	// forcefit: true, 
+	forceFit: false ,
 	initComponent: function() {
-		this.columns = [
-			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-
-			{
-				xtype : 'templatecolumn',
-				text : "Description",
-				flex : 3,
-				tpl : 	'Sales Date: <br />  <b>{sales_date}</b>'  + '<br />' + '<br />' +
-							'No Surat: <b>{nomor_surat}</b>' 
-			},
+		this.columns = [ 
+			{ header: 'Kode',  dataIndex: 'code' },
+			{ header: 'Sales Date',  dataIndex: 'sales_date' },
+			{ header: 'No Surat',  dataIndex: 'nomor_surat' },
+			{ header: 'Customer',  dataIndex: 'contact_name' },
+			{ header: 'Currency',  dataIndex: 'exchange_name' },
+			{ header: 'Marketing',  dataIndex: 'employee_name' },
+			{ header: 'Status Konfirmasi',  dataIndex: 'is_confirmed' },
+			{ header: 'Tanggal Konfirmasi',  dataIndex: 'confirmed_at' }, 
 			
-			{	header: 'Customer', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
-			{	header: 'Marketing', dataIndex: 'employee_name', flex: 2 },
+			
+			// { header: 'Kode',  dataIndex: 'code', flex: 1},
+
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Description",
+			// 	flex : 3,
+			// 	tpl : 	'Sales Date: <br />  <b>{sales_date}</b>'  + '<br />' + '<br />' +
+			// 				'No Surat: <b>{nomor_surat}</b>' 
+			// },
+			
+			// {	header: 'Customer', dataIndex: 'contact_name', flex: 2 },
+			// {	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
+			// {	header: 'Marketing', dataIndex: 'employee_name', flex: 2 },
 		 
 			
 			
 			
 			
  
-			{
-				xtype : 'templatecolumn',
-				text : "Konfirmasi",
-				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
-			},
+			// {
+			// 	xtype : 'templatecolumn',
+			// 	text : "Konfirmasi",
+			// 	flex : 3,
+			// 	tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+			// 				'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			// },
 			
 			
 		];
