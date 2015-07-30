@@ -2,6 +2,7 @@
 //= require_tree ./app/store
 //= require_tree ./app/view
 //= require_tree ./app/controller
+//= require_tree ./app/ux
 //= require app
  
 

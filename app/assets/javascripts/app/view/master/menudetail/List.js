@@ -1,7 +1,7 @@
 Ext.define('AM.view.master.menudetail.List' ,{
   	extend: 'Ext.grid.Panel',
   	alias : 'widget.menudetaillist',
-	requires: ['Ext.ux.CheckColumn'],
+	// requires: ['AM.ux.CheckColumn'],
   	store: 'MenuDetails', 
  
 
@@ -11,37 +11,37 @@ Ext.define('AM.view.master.menudetail.List' ,{
 			{ header: 'Name', dataIndex: 'name', flex: 1},
 		 
 			{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'View',
 	            dataIndex: 'index',
 	            width: 70
 	        },
 			{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'Create',
 	            dataIndex: 'create',
 	            width: 70
 	        },
 			{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'Edit',
 	            dataIndex: 'update',
 	            width: 70
 	        },
 			{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'Confirm',
 	            dataIndex: 'confirm',
 	            width: 70
 	        },
       		{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'Unconfirm',
 	            dataIndex: 'unconfirm',
 	            width: 70
 	        },
       		{
-	            xtype: 'checkcolumn',
+	            xtype: 'amcheckcolumn',
 	            header: 'Delete',
 	            dataIndex: 'destroy',
 	            width: 70

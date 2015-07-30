@@ -26,9 +26,9 @@ var grid = Ext.create('Ext.grid.Panel', {
  * based on whether or not it is checked to alter the background image used
  * for a column.
  */
-Ext.define('Ext.ux.CheckColumn', {
+Ext.define('AM.ux.CheckColumn', {
     extend: 'Ext.grid.column.Column',
-    alias: 'widget.checkcolumn',
+    alias: 'widget.amcheckcolumn',
     
     constructor: function() {
         this.addEvents(

@@ -50,7 +50,7 @@ Ext.define('AM.controller.MenuDetails', {
       },
  
  
-			'menudetaillist checkcolumn': {
+			'menudetaillist amcheckcolumn': {
 				'checkchange' : this.updateAuthorization
 			},
 			
