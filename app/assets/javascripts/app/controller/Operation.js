@@ -591,6 +591,19 @@ Ext.define("AM.controller.Operation", {
 				]
 			},
 			{ 
+				text:'GL', 
+				viewClass:'AM.view.operation.Ledger', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'ledgers',
+						action : 'index'
+					}
+				]
+			},
+			
+			{ 
 				text:'Closing', 
 				viewClass:'AM.view.operation.Closing', 
 				leaf:true, 

@@ -260,6 +260,8 @@ Ticketie::Application.routes.draw do
     
     resources :menus # select the user  
     resources :menu_details  # select the menu action checkbox
+    
+    resources :ledgers
   end
   
   
