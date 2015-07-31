@@ -57,7 +57,9 @@ class PaymentVoucherDetail < ActiveRecord::Base
     pph_23 = 0
     PaymentVoucherDetail.where(:payment_voucher_id =>payment_voucher_id).each do |pvd|
       amount += pvd.amount
-      pph_23 += pvd.pph_23
+      if pvd.pph_23.present?
+        pph_23 += pvd.pph_23
+      end
     end
     payment_voucher = PaymentVoucher.find_by_id(payment_voucher_id)
     payment_voucher.update_amount(amount)
