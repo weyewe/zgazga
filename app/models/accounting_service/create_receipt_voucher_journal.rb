@@ -151,7 +151,7 @@ module AccountingService
           )   
       end
       
-      if rvd.present? and BigDecimal( rvd.pph_23 )  > BigDecimal("0")
+      if rvd.pph_23.present? and BigDecimal( rvd.pph_23 )  > BigDecimal("0")
         #         Debit Biaya PPh 23
         pph_23 = (receipt_voucher.rate_to_idr * rvd.pph_23).round(2)
         TransactionDataDetail.create_object(
