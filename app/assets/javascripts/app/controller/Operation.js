@@ -590,14 +590,27 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			},
+			// { 
+			// 	text:'GL', 
+			// 	viewClass:'AM.view.operation.Ledger', 
+			// 	leaf:true, 
+			// 	iconCls:'text',
+			// 	conditions : [
+			// 		{
+			// 			controller : 'ledgers',
+			// 			action : 'index'
+			// 		}
+			// 	]
+			// },
+			
 			{ 
-				text:'GL', 
-				viewClass:'AM.view.operation.Ledger', 
+				text:'Transactions', 
+				viewClass:'AM.view.operation.TransactionData', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'ledgers',
+						controller : 'transaction_data',
 						action : 'index'
 					}
 				]

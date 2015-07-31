@@ -132,4 +132,8 @@ class TransactionData < ActiveRecord::Base
     end
     new_object.confirm 
   end
+  
+  def active_children
+    self.transaction_data_details
+  end
 end

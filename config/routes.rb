@@ -262,6 +262,9 @@ Ticketie::Application.routes.draw do
     resources :menu_details  # select the menu action checkbox
     
     resources :ledgers
+    
+    resources :transaction_datas
+    resources :transaction_data_details
   end
   
   
