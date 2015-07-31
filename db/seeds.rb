@@ -895,6 +895,7 @@ if Rails.env.development?
         )
     end
     if purchase_invoice.errors.size == 0 
+      purchase_invoice.reload
       purchase_invoice.confirm_object(:confirmed_at => DateTime.now)
       purchase_invoice_array << purchase_invoice
     end
@@ -964,6 +965,7 @@ if Rails.env.development?
         )
     end
     if payment_voucher.errors.size == 0 
+      payment_voucher.reload
       payment_voucher.confirm_object(:confirmed_at => DateTime.now)
     end
   end

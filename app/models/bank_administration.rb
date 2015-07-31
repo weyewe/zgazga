@@ -84,7 +84,22 @@ class BankAdministration < ActiveRecord::Base
     if params[:confirmed_at].nil?
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
-    end    
+    end   
+    
+    debit = 0
+    credit = 0
+    self.bank_administration_details.each do |badm|
+      if badm.status == NORMAL_BALANCE[:debit]
+        debit += badm.amount
+      else
+        credit += badm.amount
+      end
+    end
+    if (debit != credit) 
+      self.errors.add(:generic_errors, "Jumlah debit dan credit harus sama")
+      return self
+    end
+    
     
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]

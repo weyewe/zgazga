@@ -15,6 +15,13 @@ module AccountingService
 #     Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
 #     Debit GBCH/CashBank, Credit HutangPPh21 Hutang PPh23
 
+    biaya_pembulatan = 0 
+    if payment_voucher.status_pembulatan == NORMAL_BALANCE[:credit]
+      biaya_pembulatan = payment_voucher.pembulatan
+    else
+      biaya_pembulatan = payment_voucher.pembulatan * -1
+    end
+    total = payment_voucher.amount - (payment_voucher.total_pph_21 + payment_voucher.total_pph_23 - payment_voucher.biaya_bank + biaya_pembulatan)
 
     if payment_voucher.is_gbch == true
 #     Credit GBCHPayable
@@ -22,8 +29,8 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
-        :real_amount         => payment_voucher.amount ,
+        :amount              => (total * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
         :description => "Credit GBCHPayable"
         )
@@ -58,15 +65,18 @@ module AccountingService
       end
     else
 #       Credit CashBank
-      TransactionDataDetail.create_object(
+      cd = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => payment_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
-        :real_amount         => payment_voucher.amount ,
+        :amount              => (total * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id,
         :description => "Credit CashBank"
         )
+      puts "#{total}  rate #{payment_voucher.rate_to_idr}"
+      puts cd.inspect
+      puts cd.errors.messages
       if payment_voucher.biaya_bank > 0
 #     Credit CashBank for biaya bank
         TransactionDataDetail.create_object(
@@ -126,26 +136,26 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => pvd.payable.exchange.account_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (pvd.amount * pvd.payable.exchange_rate_amount).round(2),
-        :real_amount         => pvd.amount ,
+        :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
+        :real_amount         => (pvd.amount_paid / pvd.rate) ,
         :exchange_id         => pvd.payable.exchange_id ,
         :description => "Debit AccountPayable"
       )
 #       Credit ExchangeGain or Debit ExchangeLost
-      if pvd.payable.exchange_rate_amount < payment_voucher.rate_to_idr
+      if pvd.payable.exchange_rate_amount < (payment_voucher.rate_to_idr * pvd.rate)
          TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selish_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
-          :amount              => ((payment_voucher.rate_to_idr * pvd.rate * pvd.amount) - (pvd.payable.exchange_rate_amount * pvd.amount)).round(2),
+          :amount              => ((payment_voucher.rate_to_idr * pvd.rate * (pvd.amount_paid / pvd.rate)) - (pvd.payable.exchange_rate_amount * pvd.amount)).round(2),
           :description => "Debit ExchangeLost"
           )   
-      elsif pvd.payable.exchange_rate_amount > payment_voucher.rate_to_idr
+      elsif pvd.payable.exchange_rate_amount > (payment_voucher.rate_to_idr * pvd.rate)
          TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
-          :amount              => ((pvd.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * pvd.amount)).round(2),
+          :amount              => ((pvd.payable.exchange_rate_amount * pvd.amount) - (payment_voucher.rate_to_idr * pvd.rate * (pvd.amount_paid / pvd.rate))).round(2),
           :description => "Credit ExchangeGain"
           )     
       end
@@ -213,7 +223,12 @@ module AccountingService
       end
       
     end    
+    ta.transaction_data_details.each do |x|
+      puts "#{x.amount}  #{x.description}"
+    end
     ta.confirm
+    puts ta.errors.messages
+    puts ta.inspect
   end
     
     def CreatePaymentVoucherJournal.undo_create_confirmation_journal(object)

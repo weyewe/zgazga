@@ -116,7 +116,7 @@ class PurchaseInvoice < ActiveRecord::Base
     if self.save 
        
       self.update_purchase_invoice_confirm
-       self.generate_payable  
+      self.generate_payable  
       AccountingService::CreatePurchaseInvoiceJournal.create_confirmation_journal(self)
     end
     return self 
