@@ -61,7 +61,12 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     pph_23 = 0
     ReceiptVoucherDetail.where(:receipt_voucher_id =>receipt_voucher_id).each do |pvd|
       amount += pvd.amount
-      pph_23 += pvd.pph_23
+      
+      if pvd.pph_23.present?
+        pph_23 += pvd.pph_23
+      end
+      
+      
     end
     receipt_voucher = ReceiptVoucher.find_by_id(receipt_voucher_id)
     receipt_voucher.update_amount(amount)
