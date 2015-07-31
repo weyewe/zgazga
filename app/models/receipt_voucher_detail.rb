@@ -38,17 +38,17 @@ class ReceiptVoucherDetail < ActiveRecord::Base
       :receivable_id => pyb.id
       ).count  
     
-    if self.persisted?
-       if pvcount > 1
-         self.errors.add(:receivable_id, "Receivable sudah terpakai")
-      return self 
-       end
-    else
-       if pvcount > 0
-         self.errors.add(:receivable_id, "Receivable sudah terpakai")
-      return self 
-       end
-    end
+    # if self.persisted?
+    #   if pvcount > 1
+    #     self.errors.add(:receivable_id, "Receivable sudah terpakai")
+    #   return self 
+    #   end
+    # else
+    #   if pvcount > 0
+    #     self.errors.add(:receivable_id, "Receivable sudah terpakai")
+    #   return self 
+    #   end
+    # end
   end 
   
   
