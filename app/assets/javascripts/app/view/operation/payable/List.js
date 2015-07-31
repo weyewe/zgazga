@@ -14,7 +14,8 @@ Ext.define('AM.view.operation.payable.List' ,{
 				text : "Sumber Hutang",
 				flex : 3,
 				tpl : 'Dokumen: <br /><b>{source_class}</b>' + '<br />' + '<br />' +
-							'Kode Dokumen:<br />  <b>{source_code}</b>'   
+							'Kode Dokumen:<br />  <b>{source_code}</b>'  + '<br />' + '<br />' + 
+							'Supplier:<br />  <b>{contact_name}</b>'  
 			},
 			
 			{

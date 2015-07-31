@@ -12,7 +12,8 @@ Ext.define('AM.view.operation.receivable.List' ,{
 				text : "Sumber Piutang",
 				flex : 3,
 				tpl : 'Dokumen: <br /><b>{source_class}</b>' + '<br />' + '<br />' +
-							'Kode Dokumen:<br />  <b>{source_code}</b>'   
+							'Kode Dokumen:<br />  <b>{source_code}</b>'    + '<br />' + '<br />' + 
+							'Customer:<br />  <b>{contact_name}</b>'  
 			},
 			
 			{
