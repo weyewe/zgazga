@@ -15,15 +15,23 @@ module AccountingService
 #   GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
 #   Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
 
-
+    biaya_pembulatan = 0 
+      if receipt_voucher.status_pembulatan == NORMAL_BALANCE[:credit]
+        biaya_pembulatan = receipt_voucher.pembulatan * -1
+      else
+        biaya_pembulatan = receipt_voucher.pembulatan
+      end
+      total = receipt_voucher.amount - (receipt_voucher.total_pph_23 + receipt_voucher.biaya_bank + biaya_pembulatan)
+   
     if receipt_voucher.is_gbch == true
       #     debit GBCHReceivable
+        
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
-        :real_amount         => receipt_voucher.amount ,
+        :amount              => (total * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
         :exchange_id         => receipt_voucher.exchange_id ,
         :description => "Debit GBCHReceivable"
         )
@@ -62,8 +70,8 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => receipt_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
-        :real_amount         => receipt_voucher.amount ,
+        :amount              => (total * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => total ,
         :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => "Debit CashBank"
         )
@@ -127,30 +135,29 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => rvd.receivable.exchange.account_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (rvd.amount * rvd.receivable.exchange_rate_amount).round(2),
-        :real_amount         => rvd.amount ,
+        :amount              => ((rvd.amount_paid / rvd.rate) * rvd.receivable.exchange_rate_amount).round(2),
+        :real_amount         => (rvd.amount_paid / rvd.rate) ,
         :exchange_id         => rvd.receivable.exchange_id ,
         :description => "Credit AccountReceivable"
       )
 #       Credit ExchangeGain or Debit ExchangeLost
-      if rvd.receivable.exchange_rate_amount < receipt_voucher.rate_to_idr
+      if rvd.receivable.exchange_rate_amount < (receipt_voucher.rate_to_idr * rvd.rate)
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
-          :amount              => ((receipt_voucher.rate_to_idr * rvd.rate * rvd.amount) - (rvd.receivable.exchange_rate_amount * rvd.amount)).round(2),
+          :amount              => ((receipt_voucher.rate_to_idr * rvd.rate * (rvd.amount_paid / rvd.rate)).round(2) - (rvd.receivable.exchange_rate_amount * (rvd.amount_paid / rvd.rate)).round(2)),
           :description => "Credit ExchangeGain"
           )        
-      elsif rvd.receivable.exchange_rate_amount > receipt_voucher.rate_to_idr
-        TransactionDataDetail.create_object(
+      elsif rvd.receivable.exchange_rate_amount > (receipt_voucher.rate_to_idr * rvd.rate)
+        cd = TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
-          :amount              => ((rvd.receivable.exchange_rate_amount * rvd.amount) - (receipt_voucher.rate_to_idr * rvd.rate * rvd.amount)).round(2),
+          :amount              => ((rvd.receivable.exchange_rate_amount * (rvd.amount_paid / rvd.rate)).round(2) - (receipt_voucher.rate_to_idr * (rvd.amount_paid / rvd.rate) * rvd.rate).round(2)),
           :description => "Debit ExchangeLost"
-          )   
+          )  
       end
-      
       if rvd.pph_23 > 0
         #         Debit Biaya PPh 23
         pph_23 = (receipt_voucher.rate_to_idr * rvd.pph_23).round(2)
@@ -227,7 +234,7 @@ module AccountingService
         :description => message
         )
 
-  #     Debit GBCH
+  #     Credit GBCH
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id ,

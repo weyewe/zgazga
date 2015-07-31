@@ -29,7 +29,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     end
     
     if pyb.remaining_amount < amount
-      self.errors.add(:receivable_id, "Amount melebih amount receivable")
+      self.errors.add(:receivable_id, "Amount #{amount} melebih amount receivable #{pyb.remaining_amount} ")
       return self 
     end
     
@@ -58,7 +58,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     pph_21 = 0
     pph_23 = 0
     ReceiptVoucherDetail.where(:receipt_voucher_id =>receipt_voucher_id).each do |pvd|
-      amount += pvd.amount
+      amount += pvd.amount_paid
       pph_23 += pvd.pph_23
     end
     receipt_voucher = ReceiptVoucher.find_by_id(receipt_voucher_id)
@@ -81,8 +81,8 @@ class ReceiptVoucherDetail < ActiveRecord::Base
  
     new_object.amount =  (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
  
-    new_object.pph_23 = params[:pph_23]
-    new_object.rate = params[:rate]
+    new_object.pph_23 = BigDecimal( params[:pph_23] || '0')
+    new_object.rate = BigDecimal( params[:rate] || '0')
     if new_object.save
       new_object.calculateTotalAmount
     end
@@ -99,8 +99,8 @@ class ReceiptVoucherDetail < ActiveRecord::Base
  
     self.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
  
-    self.pph_23 = params[:pph_23]
-    self.rate = params[:rate]
+    self.pph_23 = BigDecimal( params[:pph_23] || '0')
+    self.rate = BigDecimal( params[:rate] || '0')
     if self.save
       self.calculateTotalAmount
     end

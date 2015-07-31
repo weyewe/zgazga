@@ -19,7 +19,7 @@ module AccountingService
 #     Debit PPNMASUKAN, Debit ExchangeLoss or Credit ExchangeGain
     
 #     Credit AccountPayable
-    TransactionDataDetail.create_object(
+    cd = TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => purchase_invoice.exchange.account_payable_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
@@ -28,7 +28,9 @@ module AccountingService
       :exchange_id         => purchase_invoice.exchange_id ,
       :description => "Credit Account Payable"
       )
-
+    puts "#{purchase_invoice.amount_payable}  rate #{purchase_invoice.exchange_rate_amount}"
+    puts cd.inspect
+    puts cd.errors.messages
 #     Debit GoodsPendingClearance
     purchase_invoice.purchase_invoice_details.each do |pid|
       detail_discount = pid.price * purchase_invoice.discount / 100
@@ -73,7 +75,12 @@ module AccountingService
 #         :description => message
 #         )
 #     end
+    ta.transaction_data_details.each do |x|
+      puts "#{x.amount}  #{x.description}"
+    end
     ta.confirm
+    puts ta.errors.messages
+    puts ta.inspect
     end
     
     def CreatePurchaseInvoiceJournal.undo_create_confirmation_journal(object)
@@ -84,6 +91,8 @@ module AccountingService
         :is_contra_transaction => false
       ).order("id DESC").first 
       last_transaction_data.create_contra_and_confirm if not last_transaction_data.nil?
+      last_transaction_data.reload
+      puts last_transaction_data.errors.messages
     end
   end
 end
