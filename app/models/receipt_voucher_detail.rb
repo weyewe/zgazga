@@ -5,6 +5,8 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   belongs_to :receivable
   belongs_to :receipt_voucher
   
+  validates_presence_of :pph23
+  
   
   def self.active_objects
     self
