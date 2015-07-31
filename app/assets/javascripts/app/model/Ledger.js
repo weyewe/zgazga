@@ -4,7 +4,7 @@ Ext.define('AM.model.Ledger', {
     	{ name: 'id', type: 'int' },
     	{ name: 'account_name', type: 'string' },
     	{ name: 'entry_case_text', type: 'string' },
-    	{ name: 'real_amount', type: 'string' },
+    	{ name: 'amount', type: 'string' },
 			{ name: 'created_at', type: 'string' } , 
 			{ name: 'description', type: 'string' }     ,
 			

@@ -11,7 +11,7 @@ Ext.define('AM.view.operation.ledger.List' ,{
 			{ header: 'Ledger ID', dataIndex: 'id'},
 			{ header: 'Account',  dataIndex: 'account_name' },
 			{ header: 'Transaction Date',  dataIndex: "created_at" },
-			{ header: 'Amount',  dataIndex: 'real_amount' },
+			{ header: 'Amount',  dataIndex: 'amount' },
 			{ header: 'Status',  dataIndex: 'entry_case_text' } ,
 			{ header: 'Description',  dataIndex: 'description' } ,
 			

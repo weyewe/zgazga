@@ -6,7 +6,7 @@ json.ledgers objects do |object|
 	json.id 				object.id  
 	json.account_name       object.account.name  
 	json.description        object.description 
-	json.real_amount             object.amount
+	json.amount             object.amount
 	
 	if object.entry_case == NORMAL_BALANCE[:debit]
     	json.entry_case_text   "Debit" 
