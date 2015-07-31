@@ -10,6 +10,7 @@ Ext.define('AM.model.Item', {
     	{ name: 'name', type: 'string' },
     	{ name: 'sku', type: 'string' },
     	{ name: 'description', type: 'string' },
+    	{ name: 'amount', type: 'string' },
     	{ name: 'is_tradeable', type: 'boolean' },
     	
     	{ name: 'minimum_amount', type: 'string' },
