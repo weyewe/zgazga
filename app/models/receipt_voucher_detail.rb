@@ -6,6 +6,7 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   belongs_to :receipt_voucher
   
   validates_presence_of :pph_23
+  validates_presence_of :rate
   
   
   def self.active_objects

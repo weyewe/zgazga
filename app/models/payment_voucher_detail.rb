@@ -5,6 +5,10 @@ class PaymentVoucherDetail < ActiveRecord::Base
   belongs_to :payable
   belongs_to :payment_voucher
   
+  validates_presence_of :pph_23
+  validates_presence_of :pph_21
+  validates_presence_of :rate
+  
   
   def self.active_objects
     self
