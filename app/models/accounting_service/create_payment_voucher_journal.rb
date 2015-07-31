@@ -150,7 +150,7 @@ module AccountingService
           )     
       end
       
-      if  pvd.pph_21.present? and BigDecimal( pvd.pph_21 )  > 0
+      if  pvd.pph_21.present? and BigDecimal( pvd.pph_21 )  > BigDecimal("0")
 #         Credit Hutang PPh 21
         pph_21 = (payment_voucher.rate_to_idr * pvd.pph_21).round(2)
         TransactionDataDetail.create_object(
