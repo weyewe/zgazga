@@ -81,6 +81,10 @@ Ext.define('AM.controller.SalesInvoices', {
       'salesinvoiceProcess salesinvoicelist button[action=downloadObject]': {
 			    click: this.downloadObject
 			},
+			
+			'salesinvoiceProcess salesinvoicelist button[action=printCsvObject]': {
+			    click: this.downloadCsv
+			},
 	    'salesinvoiceProcess salesinvoicelist button[action=filterObject]': {
 	        click: this.filterObject
 	    },
@@ -173,6 +177,40 @@ Ext.define('AM.controller.SalesInvoices', {
 			if( record ){
 				window.open( 'sales_invoices/' + id + '.pdf' + "?auth_token=" +auth_token_value);
 			}
+			
+	},
+	
+	
+	downloadCsv: function(){
+  		var me = this; 
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			
+			
+			var extraParams = me.getSalesInvoicesStore().getProxy().extraParams; 
+			
+			
+			var path = "print_csv_sales_invoices.csv?" 
+			path = path + "auth_token=" + auth_token_value; 
+			
+			var appendix = "";
+			for (var k in extraParams) {
+				
+				
+				var value = extraParams[k]
+				
+				if(value == undefined){
+					continue; 
+				}
+				
+				appendix = appendix + "&" + k  + "=" + value;
+		 
+			}
+			
+			path = path + appendix;
+			
+			
+			window.open(  path ); 
 			
 	},
 

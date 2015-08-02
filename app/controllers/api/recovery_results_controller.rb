@@ -27,7 +27,9 @@ class Api::RecoveryResultsController < Api::BaseApiController
       end_rejected_date =  parse_date( params[:end_rejected_date] )
       
       if params[:is_finished].present? 
+        query = query.where(:is_finished => true )
         if start_finished_date.present?
+          
           query = query.where{ finished_date.gte start_finished_date}
         end
         
@@ -35,6 +37,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
           query = query.where{ finished_date.lt end_finished_date}
         end
       elsif params[:is_rejected].present?
+        query = query.where(:is_rejected => true )
         if start_rejected_date.present?
           query = query.where{ rejected_date.gte start_rejected_date}
         end

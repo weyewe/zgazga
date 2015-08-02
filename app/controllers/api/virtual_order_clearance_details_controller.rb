@@ -1,5 +1,9 @@
 class Api::VirtualOrderClearanceDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "virtual_order_clearances"
+  end
+  
   def index
     @parent = VirtualOrderClearance.find_by_id params[:virtual_order_clearance_id]
     @objects = @parent.active_children.joins(:virtual_order_clearance, :virtual_delivery_order_detail).page(params[:page]).per(params[:limit]).order("id DESC")

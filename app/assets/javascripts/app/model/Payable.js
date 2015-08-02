@@ -14,7 +14,7 @@ Ext.define('AM.model.Payable', {
     	{ name: 'exchange_rate_amount', type: 'string' },
     	{ name: 'due_date', type: 'string' },
     	{ name: 'pending_clearence_amount', type: 'string' },
-    	{ name: 'is_completed', type: 'string' },
+    	{ name: 'is_completed', type: 'boolean' },
   	],
 
 	 

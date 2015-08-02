@@ -67,6 +67,18 @@ Ext.define("AM.controller.Master", {
 				]
 			},  
 			{ 
+				text:'Menu', 
+				viewClass:'AM.view.master.Menu', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'menus',
+					action : 'index'
+				}
+				]
+			},  
+			{ 
 				text:'Employee', 
 				viewClass:'AM.view.master.Employee', 
 				leaf:true, 

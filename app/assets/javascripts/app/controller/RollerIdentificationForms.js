@@ -75,10 +75,90 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 			},
 			'rolleridentificationformform button[action=save]': {
         click: this.updateObject
-      }
+      },
+		      
+			'rolleridentificationformProcess rolleridentificationformlist button[action=filterObject]': {
+				click: this.filterObject
+			},
+			'filterrolleridentificationformform button[action=save]' : {
+				click : this.executeFilterObject  
+			},
+			
+			'filterrolleridentificationformform button[action=reset]' : {
+				click : this.executeResetFilterObject  
+			},
+			
 		
     });
   },
+  
+
+  filterObject: function() {
+  	// console.log("inside the filter object");
+  	var me = this; 
+		var view = Ext.widget('filterrolleridentificationformform');
+		
+		view.setPreviousValue( me.getRollerIdentificationFormsStore().getProxy().extraParams ); 
+		
+	  view.show(); 
+  },
+  
+  executeFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRollerIdentificationFormsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRollerIdentificationFormsStore().getProxy().extraParams["livesearch"],
+			is_filter : true 
+		};
+		 
+		for (var k in values) {
+		    if (values.hasOwnProperty(k)) {
+ 
+		    	 
+		    	if(   	values[k] === null  ||  	values[k] == "" 	){
+		    			 continue; 
+		    	 }
+		    	
+		    	extraParams[k] = values[k]; 
+		    }
+		}
+		 
+		 
+		me.getRollerIdentificationFormsStore().getProxy().extraParams = extraParams;
+		 
+		me.getRollerIdentificationFormsStore().load();
+		win.close();
+  },
+  
+  executeResetFilterObject: function(button) {
+  	var win = button.up('window');
+    var form = win.down('form');
+  	var me  = this; 
+		var store = this.getList().getStore();
+		me.getRollerIdentificationFormsStore().currentPage  = 1; 
+		
+		
+    var values = form.getValues(); 
+ 
+		var extraParams = {};
+		extraParams = {
+			livesearch: me.getRollerIdentificationFormsStore().getProxy().extraParams["livesearch"]
+		};
+		  
+		me.getRollerIdentificationFormsStore().getProxy().extraParams = extraParams;
+		 
+		me.getRollerIdentificationFormsStore().load();
+		win.close();
+  },
+  
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

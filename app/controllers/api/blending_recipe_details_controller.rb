@@ -1,5 +1,10 @@
 class Api::BlendingRecipeDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "blending_recipes"
+  end
+  
+  
   def index
     @parent = BlendingRecipe.find_by_id params[:blending_recipe_id]
     @objects = @parent.active_children.joins(:blending_recipe, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

@@ -5,10 +5,10 @@ Ext.define('AM.store.Payables', {
   	// autoLoad: {start: 0, limit: this.pageSize},
 		autoLoad : false, 
   	autoSync: false,
-	pageSize : 40, 
+	pageSize : 20, 
 	
 	
-		 
+		
 		
 	sorters : [
 		{

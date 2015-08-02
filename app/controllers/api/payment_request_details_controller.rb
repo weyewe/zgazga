@@ -1,5 +1,9 @@
 class Api::PaymentRequestDetailsController < Api::BaseApiController
-  
+
+  def parent_controller_name
+      "payment_requests"
+  end
+
   def index
     @parent = PaymentRequest.find_by_id params[:payment_request_id]
     @objects = @parent.active_children.joins(:payment_request, :account).page(params[:page]).per(params[:limit]).order("id DESC")

@@ -5,6 +5,9 @@ class ReceiptVoucherDetail < ActiveRecord::Base
   belongs_to :receivable
   belongs_to :receipt_voucher
   
+  validates_presence_of :pph_23
+  validates_presence_of :rate
+  
   
   def self.active_objects
     self
@@ -38,17 +41,17 @@ class ReceiptVoucherDetail < ActiveRecord::Base
       :receivable_id => pyb.id
       ).count  
     
-    if self.persisted?
-       if pvcount > 1
-         self.errors.add(:receivable_id, "Receivable sudah terpakai")
-      return self 
-       end
-    else
-       if pvcount > 0
-         self.errors.add(:receivable_id, "Receivable sudah terpakai")
-      return self 
-       end
-    end
+    # if self.persisted?
+    #   if pvcount > 1
+    #     self.errors.add(:receivable_id, "Receivable sudah terpakai")
+    #   return self 
+    #   end
+    # else
+    #   if pvcount > 0
+    #     self.errors.add(:receivable_id, "Receivable sudah terpakai")
+    #   return self 
+    #   end
+    # end
   end 
   
   
@@ -58,8 +61,18 @@ class ReceiptVoucherDetail < ActiveRecord::Base
     pph_21 = 0
     pph_23 = 0
     ReceiptVoucherDetail.where(:receipt_voucher_id =>receipt_voucher_id).each do |pvd|
+# <<<<<<< HEAD
+#       amount += pvd.amount
+      
+#       if pvd.pph_23.present?
+#         pph_23 += pvd.pph_23
+#       end
+      
+      
+# =======
       amount += pvd.amount_paid
       pph_23 += pvd.pph_23
+# >>>>>>> master
     end
     receipt_voucher = ReceiptVoucher.find_by_id(receipt_voucher_id)
     receipt_voucher.update_amount(amount)

@@ -10,6 +10,7 @@ Ext.define('AM.view.master.item.List' ,{
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
 			{	header: 'Sku', dataIndex: 'sku', flex: 1 } ,
+			{	header: 'Qty', dataIndex: 'amount', flex: 1 } ,
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
 			{	header: 'Untuk Dijual?', dataIndex: 'is_tradeable', flex: 1 } 
 		];

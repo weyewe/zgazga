@@ -1,5 +1,9 @@
 class Api::BlanketOrderDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "blanket_orders"
+  end
+  
   def index
     @parent = BlanketOrder.find_by_id params[:blanket_order_id]
     @objects = @parent.active_children.joins(:blanket_order, :blanket).page(params[:page]).per(params[:limit]).order("id DESC")

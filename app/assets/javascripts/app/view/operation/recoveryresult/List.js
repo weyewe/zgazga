@@ -13,7 +13,7 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 				xtype : 'templatecolumn',
 				text : "Produksi",
 				flex : 3,
-				tpl : 'RIF ID : <br /><b>{roller_identification_form_detail_id}</b>' + '<br />' + '<br />' +
+				tpl : 'Identification Detail : <br /><b>{roller_identification_form_detail_detail_id}</b>' + '<br />' + '<br />' +
 							'SKU Roller: <br /> <b>{roller_builder_sku}</b>'  + '<br />' + 
 							' Nama: {roller_builder_name}'  + '<br />' + '<br />' +
 							
@@ -120,6 +120,10 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 			hidden : true
 		});
 		
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
+		});
 		 
 			this.tbar = [ this.processObjectButton, 
 				'-',
@@ -128,6 +132,7 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 					this.rejectObjectButton,
 					this.unrejectObjectButton,
 					'->',
+					this.filterButton, 
 					this.searchField ];
 	 
 

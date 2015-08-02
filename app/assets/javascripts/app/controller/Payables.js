@@ -6,7 +6,9 @@ Ext.define('AM.controller.Payables', {
 
   views: [
     'operation.payable.List',
-    'operation.payable.Form' 
+    'operation.payable.Form',
+		'operation.payabledetail.List',
+		'Viewport'
   ],
 
   	refs: [
@@ -15,56 +17,83 @@ Ext.define('AM.controller.Payables', {
 			selector: 'payablelist'
 		},
 		{
-			ref : 'searchField',
-			selector: 'payablelist textfield[name=searchField]'
-		}
+			ref : 'payableDetailList',
+			selector : 'payabledetaillist'
+		},
+		
+		{
+			ref : 'form',
+			selector : 'payableform'
+		},
+		{
+			ref: 'viewport',
+			selector: 'vp'
+		},
 	],
 
   init: function() {
     this.control({
-      'payablelist': {
-        itemdblclick: this.editObject,
+      'payableProcess payablelist': {
+        // itemdblclick: this.editObject,
         selectionchange: this.selectionChange,
 				afterrender : this.loadObjectList,
       },
-      'payableform button[action=save]': {
+      'payableProcess payableform button[action=save]': {
         click: this.updateObject
       },
-      'payablelist button[action=addObject]': {
-        click: this.addObject
-      },
-      'payablelist button[action=editObject]': {
-        click: this.editObject
-      },
-      'payablelist button[action=deleteObject]': {
-        click: this.deleteObject
-      },
-	  	'payablelist textfield[name=searchField]': {
-        change: this.liveSearch
-      },
-			'payablelist button[action=markasdeceasedObject]': {
-        click: this.markAsDeceasedObject
-			}	,
-			'markmemberasdeceasedform button[action=confirmDeceased]' : {
-				click : this.executeConfirmDeceased
+			'payableProcess payableform customcolorpicker' : {
+				'colorSelected' : this.onColorPickerSelect
 			},
 
-			'payablelist button[action=unmarkasdeceasedObject]': {
-        click: this.unmarkAsDeceasedObject
+      'payableProcess payablelist button[action=addObject]': {
+        click: this.addObject
+      },
+      'payableProcess payablelist button[action=editObject]': {
+        click: this.editObject
+      },
+      'payableProcess payablelist button[action=deleteObject]': {
+        click: this.deleteObject
 			}	,
-			'unmarkmemberasdeceasedform button[action=unconfirmDeceased]' : {
-				click : this.executeConfirmUndeceased
+			
+			'payableProcess payablelist button[action=confirmObject]': {
+        click: this.confirmObject
+      },
+
+			'payableProcess payablelist button[action=unconfirmObject]': {
+        click: this.unconfirmObject
+      },
+			'confirmpayableform button[action=confirm]' : {
+				click : this.executeConfirm
 			},
 			
-			'payablelist button[action=markasrunawayObject]': {
-        click: this.markAsRunAwayObject
-			}	,
-			'markmemberasrunawayform button[action=confirmRunAway]' : {
-				click : this.executeConfirmRunAway
+			'unconfirmpayableform button[action=confirm]' : {
+				click : this.executeUnconfirm
 			},
+
+			'payableProcess payablelist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			'payableform button[action=save]': {
+        click: this.updateObject
+      }
 		
     });
   },
+
+	onColorPickerSelect: function(colorId, theColorPicker){
+		var win = theColorPicker.up('window');
+    var form = win.down('form');
+		var colorField = form.getForm().findField('color'); 
+		
+		
+		// console.log("the colorId in onColorPickerSelect:");
+		// console.log( colorId);
+		colorField.setValue( colorId );
+		
+		// console.log("The colorField.getValue()");
+		// console.log( colorField.getValue() );
+	
+	},
 
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
@@ -75,214 +104,57 @@ Ext.define('AM.controller.Payables', {
 	 
 		me.getPayablesStore().load();
 	},
-	
-	markAsDeceasedObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('markmemberasdeceasedform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		view.down('form').getForm().findField('deceased_at').setValue(record.get('deceased_at')); 
-    view.show();
-	},
-	
-	executeConfirmDeceased : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getPayablesStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			record.set( 'deceased_at' , values['deceased_at'] );
-			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			form.setLoading(true);
-			record.save({
-				params : {
-					mark_as_deceased: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
-
-	unmarkAsDeceasedObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('unmarkmemberasdeceasedform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-    view.show();
-	},
-
-	executeConfirmUndeceased : function(button){
-		// console.log("unconfirm deceased");
-
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getPayablesStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			form.setLoading(true);
-			record.save({
-				params : {
-					unmark_as_deceased: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
-	
-	// RUN AWAY
-	
-	markAsRunAwayObject: function(){
-		// console.log("mark as Deceased is clicked");
-		var view = Ext.widget('markmemberasrunawayform');
-		var record = this.getList().getSelectedObject();
-		view.setParentData( record );
-		view.down('form').getForm().findField('run_away_at').setValue(record.get('run_away_at')); 
-    view.show();
-	},
-	
-	executeConfirmRunAway : function(button){
-		var me = this; 
-		var win = button.up('window');
-    var form = win.down('form');
-		var list = this.getList();
-
-    var store = this.getPayablesStore();
-		var record = this.getList().getSelectedObject();
-    var values = form.getValues();
- 
-		if(record){
-			var rec_id = record.get("id");
-			record.set( 'run_away_at' , values['run_away_at'] );
-			 
-			// form.query('checkbox').forEach(function(checkbox){
-			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			// });
-			// 
-			form.setLoading(true);
-			record.save({
-				params : {
-					mark_as_run_away: true 
-				},
-				success : function(record){
-					form.setLoading(false);
-					
-					list.fireEvent('confirmed', record);
-					
-					
-					store.load();
-					win.close();
-					
-				},
-				failure : function(record,op ){
-					// console.log("Fail update");
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					record.reject(); 
-					// this.reject(); 
-				}
-			});
-		}
-	},
  
 
 	loadObjectList : function(me){
-		me.getStore().getProxy().extraParams = {}
+		// console.log( "I am inside the load object list" ); 
 		me.getStore().load();
 	},
 
   addObject: function() {
-    var view = Ext.widget('payableform');
-    view.show();
+	var view = Ext.widget('payableform');
+  view.show();
+
+	 
   },
 
   editObject: function() {
-		var me = this; 
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('payableform');
-
-		
 
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
   },
 
+	confirmObject: function(){
+		// console.log("the startObject callback function");
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('confirmpayableform');
+
+			view.setParentData( record );
+	    view.show();
+		}
+		
+		
+		// this.reloadRecordView( record, view ) ; 
+	},
+
   updateObject: function(button) {
-		var me = this; 
+  	button.disable();
+  	var me  = this; 
     var win = button.up('window');
     var form = win.down('form');
+		var me = this; 
 
     var store = this.getPayablesStore();
     var record = form.getRecord();
     var values = form.getValues();
-
  
-		
 		if( record ){
 			record.set( values );
+			  
 			
-			form.query('checkbox').forEach(function(checkbox){
-				record.set( checkbox['name']  ,checkbox['checked'] ) ;
-			});
-			 
 			form.setLoading(true);
 			record.save({
 				success : function(new_record){
@@ -291,13 +163,9 @@ Ext.define('AM.controller.Payables', {
 					var list = me.getList();
 					AM.view.Constants.updateRecord( record, new_record );  
 					AM.view.Constants.highlightSelectedRow( list );         
-					
-					// store.getProxy().extraParams = {
-					//     livesearch: ''
-					// };
-	 
 					// store.load();
 					win.close();
+					// me.updateChildGrid(record );
 				},
 				failure : function(record,op ){
 					button.enable();
@@ -305,15 +173,16 @@ Ext.define('AM.controller.Payables', {
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
 					form.getForm().markInvalid(errors);
-					this.reject();
+					me.reject();
 				}
 			});
 				
 			 
 		}else{
 			//  no record at all  => gonna create the new one 
+			console.log("This is the new record")
 			var me  = this; 
-			var newObject = new AM.model.Payable( values ) ;
+			var newObject = new AM.model.Payable( values ) ; 
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
@@ -321,10 +190,16 @@ Ext.define('AM.controller.Payables', {
 			form.setLoading(true);
 			newObject.save({
 				success: function(record){
-	
+					//  since the grid is backed by store, if store changes, it will be updated
+					// console.log("create new record");
+					// console.log( record )
+					
 					store.load();
 					form.setLoading(false);
 					win.close();
+					// console.log("The record details");
+					// console.log(record);
+					me.updateChildGrid(record );
 					
 				},
 				failure: function( record, op){
@@ -339,14 +214,123 @@ Ext.define('AM.controller.Payables', {
 		} 
   },
 
+	unconfirmObject: function(){
+		// console.log("the startObject callback function");
+		var view = Ext.widget('unconfirmpayableform');
+		var record = this.getList().getSelectedObject();
+		view.setParentData( record );
+    view.show();
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
+	executeConfirm: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getPayablesStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'confirmed_at' , values['confirmed_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					confirm: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
+					
+					// me.reloadRecord( record ) ; 
+					
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
+					
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+	
+	
+	executeUnconfirm: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getPayablesStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'confirmed_at' , values['confirmed_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					unconfirm: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
+					
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
+					
+					win.close();
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
+	
+
+
   deleteObject: function() {
     var record = this.getList().getSelectedObject();
 
     if (record) {
       var store = this.getPayablesStore();
-      store.remove(record);
-      store.sync();
-// to do refresh programmatically
+			store.remove(record);
+			store.sync( );
+ 
 			this.getList().query('pagingtoolbar')[0].doRefresh();
     }
 
@@ -354,12 +338,73 @@ Ext.define('AM.controller.Payables', {
 
   selectionChange: function(selectionModel, selections) {
     var grid = this.getList();
+		var me= this;
+		var record = this.getList().getSelectedObject();
+		if(!record){
+			return; 
+		}
+		
+		
+		me.updateChildGrid(record );
+		
+		
+		
 
     if (selections.length > 0) {
       grid.enableRecordButtons();
     } else {
       grid.disableRecordButtons();
     }
-  }
+  },
+
+	updateChildGrid: function(record){
+		var templateDetailGrid = this.getPayableDetailList();
+		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
+		templateDetailGrid.setObjectTitle( record ) ;
+		
+		// console.log("record id: " + record.get("id"));
+		
+		templateDetailGrid.getStore().getProxy().extraParams.payable_id =  record.get('id') ;
+		 
+		templateDetailGrid.getStore().load({
+			params : {
+				payable_id : record.get('id')
+			},
+			callback : function(records, options, success){
+				templateDetailGrid.enableAddButton(); 
+			}
+		});
+		
+	},
+	
+	reloadRecord: function(record){
+		
+		var list = this.getList();
+		var store = this.getList().getStore();
+		var modifiedId = record.get('id');
+		
+		// console.log("modifiedId:  " + modifiedId);
+		 
+		AM.model.Payable.load( modifiedId , {
+		    scope: list,
+		    failure: function(record, operation) {
+		        //do something if the load failed
+		    },
+		    success: function(new_record, operation) {
+					// console.log("The new record");
+					// 				console.log( new_record);
+					recToUpdate = store.getById(modifiedId);
+					recToUpdate.set(new_record.getData());
+					recToUpdate.commit();
+					list.getView().refreshNode(store.indexOfId(modifiedId));
+		    },
+		    callback: function(record, operation) {
+		        //do something whether the load succeeded or failed
+		    }
+		});
+	},
+
+	
+
 
 });

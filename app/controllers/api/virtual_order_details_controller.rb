@@ -1,4 +1,7 @@
 class Api::VirtualOrderDetailsController < Api::BaseApiController
+  def parent_controller_name
+      "virtual_orders"
+  end
   
   def index
     @parent = VirtualOrder.find_by_id params[:virtual_order_id]

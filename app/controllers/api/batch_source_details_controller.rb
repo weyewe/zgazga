@@ -1,5 +1,9 @@
 class Api::BatchSourceDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "batch_sources"
+  end
+  
   # batch source allocation 
   def index
     @parent = BatchSource.find_by_id params[:batch_source_id]

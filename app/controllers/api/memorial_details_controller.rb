@@ -1,5 +1,9 @@
 class Api::MemorialDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "memorials"
+  end
+  
   def index
     @parent = Memorial.find_by_id params[:memorial_id]
     @objects = @parent.active_children.joins(:memorial, :account).page(params[:page]).per(params[:limit]).order("id DESC")

@@ -8,6 +8,11 @@ class ReceiptVoucher < ActiveRecord::Base
   has_many :receipt_voucher_details
   
   
+  # self.total_pph_23 + self.biaya_bank + biaya_pembulatan
+  
+  validates_presence_of :biaya_bank, :pembulatan
+  
+  
   def self.active_objects
     self
   end

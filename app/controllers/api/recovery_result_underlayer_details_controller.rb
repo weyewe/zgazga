@@ -1,4 +1,8 @@
 class Api::RecoveryResultUnderlayerDetailsController < Api::BaseApiController
+ 
+  def parent_controller_name
+      "recovery_results"
+  end
   
   def index
     @parent = RecoveryOrderDetail.find_by_id params[:recovery_result_id]

@@ -1,11 +1,11 @@
-	'purchaseinvoiceProcess purchaseinvoicelist button[action=filterObject]': {
+	'recoveryresultProcess recoveryresultlist button[action=filterObject]': {
 		click: this.filterObject
 	},
-	'filterpurchaseinvoiceform button[action=save]' : {
+	'filterrecoveryresultform button[action=save]' : {
 		click : this.executeFilterObject  
 	},
 	
-	'filterpurchaseinvoiceform button[action=reset]' : {
+	'filterrecoveryresultform button[action=reset]' : {
 		click : this.executeResetFilterObject  
 	},
 	
@@ -18,9 +18,9 @@
   filterObject: function() {
   	// console.log("inside the filter object");
   	var me = this; 
-		var view = Ext.widget('filterpurchaseinvoiceform');
+		var view = Ext.widget('filterrecoveryresultform');
 		
-		view.setPreviousValue( me.getPurchaseInvoicesStore().getProxy().extraParams ); 
+		view.setPreviousValue( me.getRecoveryResultsStore().getProxy().extraParams ); 
 		
 	  view.show(); 
   },
@@ -30,14 +30,14 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		me.getRecoveryResultsStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"],
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"],
 			is_filter : true 
 		};
 		 
@@ -54,9 +54,9 @@
 		}
 		 
 		 
-		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
 		 
-		me.getPurchaseInvoicesStore().load();
+		me.getRecoveryResultsStore().load();
 		win.close();
   },
   
@@ -65,19 +65,19 @@
     var form = win.down('form');
   	var me  = this; 
 		var store = this.getList().getStore();
-		me.getPurchaseInvoicesStore().currentPage  = 1; 
+		me.getRecoveryResultsStore().currentPage  = 1; 
 		
 		
     var values = form.getValues(); 
  
 		var extraParams = {};
 		extraParams = {
-			livesearch: me.getPurchaseInvoicesStore().getProxy().extraParams["livesearch"]
+			livesearch: me.getRecoveryResultsStore().getProxy().extraParams["livesearch"]
 		};
 		  
-		me.getPurchaseInvoicesStore().getProxy().extraParams = extraParams;
+		me.getRecoveryResultsStore().getProxy().extraParams = extraParams;
 		 
-		me.getPurchaseInvoicesStore().load();
+		me.getRecoveryResultsStore().load();
 		win.close();
   },
   

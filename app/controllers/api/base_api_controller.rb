@@ -151,29 +151,7 @@ class Api::BaseApiController < ApplicationController
     return datetime.utc
   end
   
-  def parse_date( date_string) 
-    return nil if not date_string.present?
-    # puts "'The date_string: ' :#{date_string}"
-    date_array = date_string.split('-').map{|x| x.to_i}
-     
-     
-    # puts "inside parse date\n"*10
-    # puts "0: #{date_array[0]}"
-    # puts "0: #{date_array[1]}"
-    # puts "0: #{date_array[2]}"
-    # puts "\n\n"
-   
-    datetime = DateTime.new( date_array[0], 
-                              date_array[1], 
-                              date_array[2], 
-                               0, 
-                               0, 
-                               0,
-                  Rational( UTC_OFFSET , 24) )
-                  
-                  
-    return datetime.utc
-  end
+
   
   def extract_date( date ) 
     if date.nil? or date.length == 0 
@@ -317,14 +295,43 @@ class Api::BaseApiController < ApplicationController
     return "#{year}-#{month}-#{day}" 
   end
   
+  
+  # def parent_controller_name 
+  # end
   def ensure_authorized
     puts "===========>Inside ensure_authorized\n"
-    puts "The params: "
-    puts "#{params}"
-    current_controller_name = params[:controller].gsub("api/", "")
+    # puts self.class.to_s
+    # controller_name = self.class.to_s
+    # controller_name = controller_name.gsub("Api::", "")
+ 
+    # puts "The params: "
+    # puts "#{params}"
     
-    if not current_user.has_role?(current_controller_name.to_sym, params[:action])
-      render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+    # puts "the parent controller name #{@parent_controller_name}"
+    # puts "the parent controller name 2: #{self.parent_controller_name}"
+    
+    # resource.phone_number if resource.respond_to? :phone_number
+    
+    if self.respond_to? :parent_controller_name
+      current_controller_name   = self.parent_controller_name
+      
+    else
+      current_controller_name = params[:controller].gsub("api/", "")
+    end
+    
+    # if self.parent_controller_name.present? 
+    #   current_controller_name = self.parent_controller_name.present? 
+    # else
+    #   current_controller_name = params[:controller].gsub("api/", "")
+    # end
+    
+    
+    # if not current_user.has_role?(current_controller_name.to_sym, params[:action])
+    
+    return if params[:action] == "search"
+    
+    if not current_user.has_menu_assignment?(current_controller_name , params[:action])
+      render :json => {:success => false, :access_denied => "Tidak punya menu authorisasi"}
       return
     end
   end

@@ -1,5 +1,10 @@
 class Api::BankAdministrationDetailsController < Api::BaseApiController
   
+  
+  def parent_controller_name
+      "bank_administrations"
+  end
+  
   def index
     @parent = BankAdministration.find_by_id params[:bank_administration_id]
     @objects = @parent.active_children.joins(:bank_administration, :account).page(params[:page]).per(params[:limit]).order("id DESC")

@@ -64,11 +64,17 @@ Ext.define('AM.view.operation.warehousemutation.List' ,{
 			checkChangeBuffer: 300
 		});
 		
+		this.filterButton  = new Ext.Button({
+			text: 'Filter',
+			action: 'filterObject' 
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
 					this.confirmObjectButton, this.unconfirmObjectButton,
 					'->',
+					this.filterButton , 
 					this.searchField ];
 	 
 

@@ -1,5 +1,11 @@
 class Api::RollerIdentificationFormDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "roller_identification_forms"
+  end
+  
+  
+  
   def index
     @parent = RollerIdentificationForm.find_by_id params[:roller_identification_form_id]
     @objects = @parent.active_children.joins(:roller_identification_form, :core_builder,:roller_type,:machine).page(params[:page]).per(params[:limit]).order("id DESC")

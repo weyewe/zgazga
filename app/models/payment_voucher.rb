@@ -7,6 +7,7 @@ class PaymentVoucher < ActiveRecord::Base
   belongs_to :cash_bank
   belongs_to :exchange
   has_many :payment_voucher_details
+  validates_presence_of :biaya_bank, :pembulatan
   
   
   def self.active_objects

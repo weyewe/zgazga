@@ -77,7 +77,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Temporary Delivery Order', 
+				text:'Temporary DO', 
 				viewClass:'AM.view.operation.TemporaryDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -115,7 +115,7 @@ Ext.define("AM.controller.Operation", {
 		children 	: [
          
 			{ 
-				text:'Virtual Order', 
+				text:'Order', 
 				viewClass:'AM.view.operation.VirtualOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -127,7 +127,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Virtual DO', 
+				text:'DO', 
 				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
 				leaf:true, 
 				iconCls:'text',
@@ -139,7 +139,7 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
-				text:'Virtual Order Clearance', 
+				text:'Clearance', 
 				viewClass:'AM.view.operation.VirtualOrderClearance', 
 				leaf:true, 
 				iconCls:'text',
@@ -233,6 +233,18 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
+			{ 
+				text:'Stock Gudang', 
+				viewClass:'AM.view.operation.WarehouseStock', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'warehouse_stocks',
+						action : 'index'
+					}
+				]
+			}, 
  
  
 			 
@@ -282,6 +294,33 @@ Ext.define("AM.controller.Operation", {
 		iconCls		: 'text-folder', 
     	expanded	: true,
 		children 	: [
+			
+			{ 
+				text:'Hutang', 
+				viewClass:'AM.view.operation.Payable', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'payables',
+						action : 'index'
+					}
+				]
+			}, 
+			
+			{ 
+				text:'Piutang', 
+				viewClass:'AM.view.operation.Receivable', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'receivables',
+						action : 'index'
+					}
+				]
+			}, 
+			
         	{ 
 				text:'PaymentRequest', 
 				viewClass:'AM.view.operation.PaymentRequest', 
@@ -551,6 +590,32 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			},
+			// { 
+			// 	text:'GL', 
+			// 	viewClass:'AM.view.operation.Ledger', 
+			// 	leaf:true, 
+			// 	iconCls:'text',
+			// 	conditions : [
+			// 		{
+			// 			controller : 'ledgers',
+			// 			action : 'index'
+			// 		}
+			// 	]
+			// },
+			
+			{ 
+				text:'Transactions', 
+				viewClass:'AM.view.operation.TransactionData', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'transaction_data',
+						action : 'index'
+					}
+				]
+			},
+			
 			{ 
 				text:'Closing', 
 				viewClass:'AM.view.operation.Closing', 

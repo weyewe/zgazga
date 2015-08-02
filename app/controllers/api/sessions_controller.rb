@@ -23,10 +23,25 @@ class Api::SessionsController < Api::BaseApiController
     if resource.valid_password?(params[:user_login][:password])
       sign_in(:user, resource)
       resource.ensure_authentication_token
+      
+      role_object = {}
+      
+      if resource.is_admin?
+        role_object[:system] = {:administrator => true }
+      end
+      
+      MenuActionAssignment.joins(:menu_action => [:menu]).where{
+        ( user_id.eq resource.id )  & 
+        ( menu_action.action_name.eq "index")
+      }.each do |menu_action_assignment| 
+        role_object[menu_action_assignment.menu_action.menu.controller_name.to_sym] = {:index => true }
+      end
+       
       render :json=> {:success=>true, 
                       :auth_token=>resource.authentication_token, 
                       :email=>resource.email,
-                      :role => resource.role.the_role.to_json
+                      # :role => resource.role.the_role.to_json
+                      :role => role_object.to_json
               }
       return
     end

@@ -5,6 +5,10 @@ class PaymentVoucherDetail < ActiveRecord::Base
   belongs_to :payable
   belongs_to :payment_voucher
   
+  validates_presence_of :pph_23
+  validates_presence_of :pph_21
+  validates_presence_of :rate
+  
   
   def self.active_objects
     self
@@ -38,17 +42,17 @@ class PaymentVoucherDetail < ActiveRecord::Base
       :payable_id => pyb.id
       ).count  
     
-    if self.persisted?
-       if pvcount > 1
-         self.errors.add(:payable_id, "Payable sudah terpakai")
-      return self 
-       end
-    else
-       if pvcount > 0
-         self.errors.add(:payable_id, "Payable sudah terpakai")
-      return self 
-       end
-    end
+    # if self.persisted?
+    #   if pvcount > 1
+    #     self.errors.add(:payable_id, "Payable sudah terpakai")
+    #   return self 
+    #   end
+    # else
+    #   if pvcount > 0
+    #     self.errors.add(:payable_id, "Payable sudah terpakai")
+    #   return self 
+    #   end
+    # end
   end 
   
   def calculateTotalAmount
@@ -56,9 +60,16 @@ class PaymentVoucherDetail < ActiveRecord::Base
     pph_21 = 0
     pph_23 = 0
     PaymentVoucherDetail.where(:payment_voucher_id =>payment_voucher_id).each do |pvd|
+# <<<<<<< HEAD
+#       amount += pvd.amount
+#       if pvd.pph_23.present?
+#         pph_23 += pvd.pph_23
+#       end
+# =======
       amount += pvd.amount_paid
       pph_23 += pvd.pph_23
       pph_21 += pvd.pph_21
+# >>>>>>> master
     end
     payment_voucher = PaymentVoucher.find_by_id(payment_voucher_id)
     payment_voucher.update_amount(amount)

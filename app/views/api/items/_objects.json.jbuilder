@@ -9,6 +9,7 @@ json.items objects do |object|
 	json.selling_price object.selling_price
 	
 	json.price_list object.price_list  
+	json.amount object.amount  
     	
     	
 	json.exchange_id object.exchange_id

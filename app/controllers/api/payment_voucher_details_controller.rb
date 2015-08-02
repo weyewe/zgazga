@@ -1,5 +1,9 @@
 class Api::PaymentVoucherDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "payment_vouchers"
+  end
+  
   def index
     @parent = PaymentVoucher.find_by_id params[:payment_voucher_id]
     @objects = @parent.active_children.joins(:payment_voucher, :payable).page(params[:page]).per(params[:limit]).order("id DESC")

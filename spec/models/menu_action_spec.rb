@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe ActionAssignment do
+describe MenuAction do
   pending "add some examples to (or delete) #{__FILE__}"
 end

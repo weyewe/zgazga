@@ -2,62 +2,32 @@ Ext.define('AM.view.operation.receivable.List' ,{
   	extend: 'Ext.grid.Panel',
   	alias : 'widget.receivablelist',
 
-  	store: 'Receivables', 
+  	store: 'Receivables',  
  
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID_NUMBER', dataIndex: 'id_number'},
-			// { header: 'Nama',  dataIndex: 'name', flex: 1},
-			
 			{
 				xtype : 'templatecolumn',
-				text : "Details",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Nama</b>: <br />{name}' + '<br /><br />' + 
-							'<b>KTP</b>: <br />{id_card_number}' + '<br /><br />' + 
-							'<b>Ultah</b>: <br />{birthday_date}'  
-			},
-			
-			
-			{	header: 'Address', dataIndex: 'address', flex: 1 }, 
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Status",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Kabur</b>: <br />{is_run_away}' + '<br /><br />' + 
-							'<b>Meninggal</b>: <br />{is_deceased}' + '<br /><br />' + 
-							'<b>Ultah</b>: <br />{birthday_date}'  
-			},
-			
-			
-			{
-				xtype : 'templatecolumn',
-				text : "Tabungan",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>Latihan</b>: <br />{total_locked_savings_account}' + '<br /><br />' + 
-							'<b>Keanggotaan</b>: <br />{total_membership_savings}' + '<br /><br />' + 
-							'<b>Masa Depan</b>: <br />{total_savings_account}'  
+				text : "Sumber Piutang",
+				flex : 3,
+				tpl : 'Dokumen: <br /><b>{source_class}</b>' + '<br />' + '<br />' +
+							'Kode Dokumen:<br />  <b>{source_code}</b>'    + '<br />' + '<br />' + 
+							'Customer:<br />  <b>{contact_name}</b>'  
 			},
 			
 			{
 				xtype : 'templatecolumn',
-				text : "Address",
-				sortable : false,
-				flex : 1,
-				tpl : '<b>RT</b>: <br />{rt}' + '<br /><br />' + 
-							'<b>RW</b>: <br />{rw}' + '<br /><br />' + 
-							'<b>Kelurahan</b>: <br />{village}'  
+				text : "Jumlah",
+				flex : 3,
+				tpl : 'Total: <br /><b>{amount}</b> {exchange_name}' + '<br />' + '<br />' +
+							'Sisa:  <br /><b>{remaining_amount}</b> {exchange_name}'  + '<br />' + '<br />' +
+							'Oustanding clearance bank: <b>{pending_clearence_amount}</b>' 
 			},
 			
 			
-			{	header: 'Complete?', dataIndex: 'is_data_complete', flex: 1 }  , 
+			{ header: 'Jatuh Tempo',  dataIndex: 'due_date', flex: 2},
 			
-			{	header: 'Active Group Loan', dataIndex: 'active_group_loan_name', flex: 1 }  , 
 			
 			
 		];
@@ -79,6 +49,19 @@ Ext.define('AM.view.operation.receivable.List' ,{
 			disabled: true
 		});
 		
+		this.confirmObjectButton = new Ext.Button({
+			text: 'Confirm',
+			action: 'confirmObject',
+			disabled: true
+		});
+	
+		this.unconfirmObjectButton = new Ext.Button({
+			text: 'Unconfirm',
+			action: 'unconfirmObject',
+			disabled: true,
+			hidden : true
+		});
+		
 		this.searchField = new Ext.form.field.Text({
 			name: 'searchField',
 			hideLabel: true,
@@ -87,36 +70,14 @@ Ext.define('AM.view.operation.receivable.List' ,{
 			checkChangeBuffer: 300
 		});
 		
-		this.markAsDeceasedObjectButton = new Ext.Button({
-			text: 'Deceased',
-			action: 'markasdeceasedObject',
-			disabled: true
-		});
+		 
+			this.tbar = [ 
+					'->',
+					this.searchField ];
+	 
 
-		this.unmarkAsDeceasedObjectButton = new Ext.Button({
-			text: 'Cancel Deceased',
-			action: 'unmarkasdeceasedObject',
-			disabled: true,
-			hidden :true 
-		});
+
 		
-		this.markAsRunAwayObjectButton = new Ext.Button({
-			text: 'Run Away',
-			action: 'markasrunawayObject',
-			disabled: true
-		});
-
-
-
-		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton ,
-		 				'-',
-						this.searchField,
-						'->',
-						this.markAsDeceasedObjectButton,
-						this.unmarkAsDeceasedObjectButton,
-						this.markAsRunAwayObjectButton
-						
-		];
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -125,6 +86,7 @@ Ext.define('AM.view.operation.receivable.List' ,{
 		});
 
 		this.callParent(arguments);
+		
 	},
  
 	loadMask	: true,
@@ -135,44 +97,24 @@ Ext.define('AM.view.operation.receivable.List' ,{
 
 	enableRecordButtons: function() {
 		this.editObjectButton.enable();
-		this.deleteObjectButton.enable();
+		this.deleteObjectButton.enable(); 
 		
-		
-		this.markAsRunAwayObjectButton.enable();
-
-		this.unmarkAsDeceasedObjectButton.enable();
-		this.markAsDeceasedObjectButton.enable();
-
-
-
 		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
+		
+		if( selectedObject && selectedObject.get("is_confirmed") == true ){
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show();
+			this.unconfirmObjectButton.enable();
 		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
+			this.confirmObjectButton.enable();
+			this.confirmObjectButton.show();
+			this.unconfirmObjectButton.hide();
 		}
-
-
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.markAsDeceasedObjectButton.disable();
-		this.unmarkAsDeceasedObjectButton.disable();
-		this.markAsRunAwayObjectButton.disable();
-
-		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
-		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
-		}
+		this.confirmObjectButton.disable(); 
 	}
 });

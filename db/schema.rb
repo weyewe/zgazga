@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713043707) do
+ActiveRecord::Schema.define(version: 20150727033823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,21 +28,6 @@ ActiveRecord::Schema.define(version: 20150713043707) do
     t.integer  "account_case",                               default: 2
     t.boolean  "is_base_account",                            default: false
     t.string   "code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "action_assignments", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "action_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "actions", force: true do |t|
-    t.integer  "section_id"
-    t.string   "name"
-    t.string   "action_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -601,6 +586,28 @@ ActiveRecord::Schema.define(version: 20150713043707) do
     t.string   "description"
     t.boolean  "is_confirmed",                          default: false
     t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "menu_action_assignments", force: true do |t|
+    t.integer  "menu_action_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "menu_actions", force: true do |t|
+    t.integer  "menu_id"
+    t.string   "action_name"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "menus", force: true do |t|
+    t.string   "name"
+    t.string   "controller_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,4 +1,8 @@
 class Api::BlanketResultDetailsController < Api::BaseApiController
+
+  def parent_controller_name
+      "blanket_results"
+  end
   
   def index
     params[:blanket_detail_id] = params[:blanket_result_id]
