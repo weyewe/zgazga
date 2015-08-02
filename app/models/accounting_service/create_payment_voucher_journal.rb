@@ -15,22 +15,14 @@ module AccountingService
 #     Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
 #     Debit GBCH/CashBank, Credit HutangPPh21 Hutang PPh23
 
-    biaya_pembulatan = 0 
-    if payment_voucher.status_pembulatan == NORMAL_BALANCE[:credit]
-      biaya_pembulatan = payment_voucher.pembulatan
-    else
-      biaya_pembulatan = payment_voucher.pembulatan * -1
-    end
-    total = payment_voucher.amount - (payment_voucher.total_pph_21 + payment_voucher.total_pph_23 - payment_voucher.biaya_bank + biaya_pembulatan)
-
     if payment_voucher.is_gbch == true
 #     Credit GBCHPayable
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (total * payment_voucher.rate_to_idr).round(2),
-        :real_amount         => total ,
+        :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => payment_voucher.amount ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
         :description => "Credit GBCHPayable"
         )
@@ -69,14 +61,11 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => payment_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (total * payment_voucher.rate_to_idr).round(2),
-        :real_amount         => total ,
+        :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
+        :real_amount         => payment_voucher.amount ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id,
         :description => "Credit CashBank"
         )
-      puts "#{total}  rate #{payment_voucher.rate_to_idr}"
-      puts cd.inspect
-      puts cd.errors.messages
       if payment_voucher.biaya_bank > 0
 #     Credit CashBank for biaya bank
         TransactionDataDetail.create_object(
@@ -120,7 +109,7 @@ module AccountingService
     end
     
     #     Credit/Debit Pembulatan
-    if payment_voucher.biaya_bank > 0 
+    if payment_voucher.pembulatan > 0 
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_pembulatan][:code]).id   ,
@@ -177,6 +166,8 @@ module AccountingService
             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_21,
+            :real_amount         => pvd.pph_21 ,
+            :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit GBCH for HutangPPh21"
             )  
         else
@@ -186,6 +177,8 @@ module AccountingService
             :account_id          => payment_voucher.cash_bank.account_id,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_21,
+            :real_amount         => pvd.pph_21 ,
+            :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit CashBank for HutangPPh21"
             )  
         end
@@ -208,6 +201,8 @@ module AccountingService
             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_23,
+            :real_amount         => pvd.pph_23 ,
+            :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit GBCH for HutangPPh23"
             )  
         else
@@ -217,18 +212,15 @@ module AccountingService
             :account_id          => payment_voucher.cash_bank.account_id,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => pph_23,
+            :real_amount         => pvd.pph_23 ,
+            :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit CashBank for HutangPPh23"
             )  
         end
       end
       
     end    
-    ta.transaction_data_details.each do |x|
-      puts "#{x.amount}  #{x.description}"
-    end
     ta.confirm
-    puts ta.errors.messages
-    puts ta.inspect
   end
     
     def CreatePaymentVoucherJournal.undo_create_confirmation_journal(object)

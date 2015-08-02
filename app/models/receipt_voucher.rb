@@ -46,8 +46,8 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
-    new_object.pembulatan = params[:pembulatan]
-    new_object.status_pembulatan = params[:status_pembulatan]
+    # new_object.pembulatan = params[:pembulatan]
+    # new_object.status_pembulatan = params[:status_pembulatan]
     new_object.biaya_bank = params[:biaya_bank]
     new_object.rate_to_idr = params[:rate_to_idr]
     new_object.receipt_date = params[:receipt_date]
@@ -76,8 +76,8 @@ class ReceiptVoucher < ActiveRecord::Base
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]
     self.due_date = params[:due_date]
-    self.pembulatan = params[:pembulatan]
-    self.status_pembulatan = params[:status_pembulatan]
+    # self.pembulatan = params[:pembulatan]
+    # self.status_pembulatan = params[:status_pembulatan]
     self.biaya_bank = params[:biaya_bank]
     self.rate_to_idr = params[:rate_to_idr]
     self.receipt_date = params[:receipt_date]
@@ -195,6 +195,8 @@ class ReceiptVoucher < ActiveRecord::Base
    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
+    self.pembulatan = params[:pembulatan]
+    self.status_pembulatan = params[:status_pembulatan]
     if self.save
       self.confirm_detail
       if not self.is_gbch?
@@ -223,7 +225,14 @@ class ReceiptVoucher < ActiveRecord::Base
       return self 
     end
     if not self.is_gbch
-      if self.amount > self.cash_bank.amount 
+      biaya_pembulatan = 0 
+        if self.status_pembulatan == NORMAL_BALANCE[:credit]
+          biaya_pembulatan = self.pembulatan * -1
+        else
+          biaya_pembulatan = self.pembulatan
+        end
+        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+      if total > self.cash_bank.amount 
         self.errors.add(:generic_errors, "Dana tidak mencukupi")
         return self 
       end
@@ -297,7 +306,14 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di reconcile")
       return self 
     end
-    if self.amount > self.cash_bank.amount 
+    biaya_pembulatan = 0 
+    if self.status_pembulatan == NORMAL_BALANCE[:credit]
+      biaya_pembulatan = self.pembulatan * -1
+    else
+      biaya_pembulatan = self.pembulatan
+    end
+    total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+    if total > self.cash_bank.amount 
       self.errors.add(:generic_errors, "Dana tidak mencukupi")
       return self 
     end

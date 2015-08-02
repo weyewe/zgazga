@@ -15,14 +15,6 @@ module AccountingService
 #   GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
 #   Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
 
-    biaya_pembulatan = 0 
-      if receipt_voucher.status_pembulatan == NORMAL_BALANCE[:credit]
-        biaya_pembulatan = receipt_voucher.pembulatan * -1
-      else
-        biaya_pembulatan = receipt_voucher.pembulatan
-      end
-      total = receipt_voucher.amount - (receipt_voucher.total_pph_23 + receipt_voucher.biaya_bank + biaya_pembulatan)
-   
     if receipt_voucher.is_gbch == true
       #     debit GBCHReceivable
         
@@ -30,8 +22,8 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (total * receipt_voucher.rate_to_idr).round(2),
-        :real_amount         => total ,
+        :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => receipt_voucher.amount ,
         :exchange_id         => receipt_voucher.exchange_id ,
         :description => "Debit GBCHReceivable"
         )
@@ -70,8 +62,8 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => receipt_voucher.cash_bank.account_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (total * receipt_voucher.rate_to_idr).round(2),
-        :real_amount         => total ,
+        :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
+        :real_amount         => receipt_voucher.amount ,
         :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => "Debit CashBank"
         )
@@ -118,7 +110,7 @@ module AccountingService
     end
     
     #     Debit/Credit Pembulatan
-    if receipt_voucher.biaya_bank > 0 
+    if receipt_voucher.pembulatan > 0 
       
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
@@ -175,6 +167,8 @@ module AccountingService
             :account_id          => rvd.receivable.exchange.gbch_receivable_id   ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => pph_23,
+            :real_amount         => rvd.pph_23 ,
+            :exchange_id         => rvd.receivable.exchange_id ,
             :description => "Credit GBCH for Biaya PPh 23"
             )  
         else
@@ -184,6 +178,8 @@ module AccountingService
             :account_id          => receipt_voucher.cash_bank.account_id,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => pph_23,
+            :real_amount         => rvd.pph_23 ,
+            :exchange_id         => rvd.receivable.exchange_id ,
             :description => "Credit CashBank for Biaya PPh 23"
             )  
         end

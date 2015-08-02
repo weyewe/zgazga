@@ -86,21 +86,12 @@ class BankAdministration < ActiveRecord::Base
       return self 
     end   
     
-    debit = 0
-    credit = 0
-    self.bank_administration_details.each do |badm|
-      if badm.status == NORMAL_BALANCE[:debit]
-        debit += badm.amount
-      else
-        credit += badm.amount
-      end
-    end
-    if (debit != credit) 
-      self.errors.add(:generic_errors, "Jumlah debit dan credit harus sama")
+    total_amount = self.cash_bank.amount + self.amount
+    if total_amount < 0 
+      self.errors.add(:generic_errors, "Final CashBank Amount tidak boleh kurang dari 0")
       return self
     end
-    
-    
+        
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save

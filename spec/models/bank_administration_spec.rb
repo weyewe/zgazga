@@ -63,7 +63,7 @@ describe BankAdministration do
           :bank_administration_id => @ba.id,
           :account_id => @coa_1.id,
           :description => "description_1",
-          :status => NORMAL_BALANCE[:debet],
+          :status => NORMAL_BALANCE[:debit],
           :amount => BigDecimal("1000")
           )
       end

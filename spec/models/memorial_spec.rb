@@ -42,7 +42,7 @@ describe Memorial do
           :memorial_id => @memo.id,
           :account_id => @coa_1.id,
           :amount => BigDecimal("1000"),
-          :status => NORMAL_BALANCE[:debet]
+          :status => NORMAL_BALANCE[:debit]
           )
         @memod_2 = MemorialDetail.create_object(
           :memorial_id => @memo.id,
@@ -58,11 +58,11 @@ describe Memorial do
       
       context "Confirm Memorial" do
         before(:each) do
+          @memo.reload
           @memo.confirm_object(:confirmed_at => DateTime.now)
         end
         
         it "should confirm Memorial" do
-          puts @memo.errors.messages
           @memo.errors.size.should == 0
           @memo.is_confirmed.should == true
         end

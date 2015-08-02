@@ -218,12 +218,12 @@ describe ReceiptVoucher do
     @gbch_no_2 = "12345"
     @due_date_1 = DateTime.now
     @due_date_2 = DateTime.now + 1.days
-    @pembulatan_1 = BigDecimal("0")
-    @pembulatan_2 = BigDecimal("0")
+    @pembulatan_1 = BigDecimal("1")
+    @pembulatan_2 = BigDecimal("2")
     @status_pembulatan_1 = STATUS_PEMBULATAN[:debet]
     @status_pembulatan_2 = STATUS_PEMBULATAN[:kredit]
-    @biaya_bank_1 = BigDecimal("0")
-    @biaya_bank_2 = BigDecimal("0")
+    @biaya_bank_1 = BigDecimal("1")
+    @biaya_bank_2 = BigDecimal("2")
     @rate_to_idr_1 = BigDecimal("1")
     @rate_to_idr_2 = BigDecimal("1000")
     @receipt_date_1 = DateTime.now
@@ -342,8 +342,6 @@ describe ReceiptVoucher do
       @rv.is_gbch.should == @is_gbch_2
       @rv.gbch_no.should == @gbch_no_2
       @rv.due_date.should == @due_date_2
-      @rv.pembulatan.should == @pembulatan_2
-      @rv.status_pembulatan.should == @status_pembulatan_2
       @rv.biaya_bank.should == @biaya_bank_2
       @rv.rate_to_idr.should == @rate_to_idr_2
       @rv.receipt_date.should == @receipt_date_2
@@ -402,7 +400,11 @@ describe ReceiptVoucher do
       context "confirm receipt_voucher" do
         before(:each) do
           @initial_receivable_amount = @receivable_1.amount
-          @rv.confirm_object(:confirmed_at => DateTime.now)
+          @rv.confirm_object(
+            :confirmed_at => DateTime.now,
+            :pembulatan => @pembulatan_1,
+            :status_pembulatan => @status_pembulatan_1,
+            )
           @cb_1.reload
           @receivable_1.reload
         end
@@ -444,7 +446,7 @@ describe ReceiptVoucher do
           end
           
           it "should update cashbank amount to 100000" do
-            @cb_1.amount.should == BigDecimal("100000")
+            @cb_1.amount.should == BigDecimal("99998")
           end
           
           context "unreconcile receipt_voucher" do
@@ -453,7 +455,7 @@ describe ReceiptVoucher do
               @cb_1.reload
             end
             
-            it "should unreconcile receipt_voucher" do     
+            it "should unreconcile receipt_voucher" do    
               @rv.is_reconciled.should == false
             end
 
@@ -502,13 +504,17 @@ describe ReceiptVoucher do
       context "confirm receipt_voucher" do
         before(:each) do
           @initial_receivable_amount = @receivable_1.amount
-          @rv.confirm_object(:confirmed_at => DateTime.now)
+          @rv.confirm_object(
+            :confirmed_at => DateTime.now,
+            :pembulatan => @pembulatan_1,
+            :status_pembulatan => @status_pembulatan_1,
+            )
           @cb_1.reload
           @receivable_1.reload
         end
         
-        it "should update cashbank amount to 100000" do
-          @cb_1.amount.should == BigDecimal("100000")
+        it "should update cashbank amount to 99998" do
+          @cb_1.amount.should == BigDecimal("99998")
         end
         
         it "should create TransactionData" do

@@ -82,11 +82,20 @@ class PurchaseReceival < ActiveRecord::Base
     if params[:confirmed_at].nil?
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
-    end    
+    end
+    
+    self.purchase_receival_details.each do |prd|
+      if prd.purchase_order_detail.pending_receival_amount < prd.amount 
+        self.errors.add(:generic_errors, "Purchase Receival Amount melebih Jumlah Purchase Order")
+        return self
+      end
+    end
+    
     if Closing.is_date_closed(self.receival_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
+    
     if self.purchase_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.receival_date,
@@ -193,16 +202,14 @@ class PurchaseReceival < ActiveRecord::Base
       prd.cogs = prd.item.avg_price * prd.amount
      
 #       set detail purchase_order,pending_receival_amount
-      prd.purchase_order_detail.pending_receival_amount -= prd.amount    
+      prd.purchase_order_detail.pending_receival_amount -= prd.amount   
       if prd.purchase_order_detail.pending_receival_amount == 0 
         prd.purchase_order_detail.is_all_received == true
       end
       prd.purchase_order_detail.save
       prd.save    
       total_cogs += prd.cogs
-      total_amount += (prd.purchase_order_detail.price * prd.purchase_order_detail.amount)
-      
-        
+      total_amount += (prd.purchase_order_detail.price * prd.amount)
         if prd.item.is_batched?
           BatchSource.create_object( 
             :item_id  => prd.item_id,
@@ -241,6 +248,7 @@ class PurchaseReceival < ActiveRecord::Base
       prd.cogs = 0
 #       set detail purchase_order,pending_receival_amount
       prd.purchase_order_detail.pending_receival_amount += prd.amount
+      
       prd.purchase_order_detail.is_all_received == false
       prd.purchase_order_detail.save
       prd.save

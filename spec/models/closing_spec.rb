@@ -256,8 +256,12 @@ describe Closing do
       :rate => BigDecimal("1")
       )
       
-    @rv_1.reload  
-    @rv_1.confirm_object(:confirmed_at => DateTime.now)
+    @rv_1.reload 
+    @rv_1.confirm_object(
+            :confirmed_at => DateTime.now,
+            :pembulatan => @pembulatan_1,
+            :status_pembulatan => @status_pembulatan_1,
+            )
        
     end
     

@@ -196,12 +196,12 @@ describe PaymentVoucher do
     @gbch_no_2 = "12345"
     @due_date_1 = DateTime.now
     @due_date_2 = DateTime.now + 1.days
-    @pembulatan_1 = BigDecimal("0")
-    @pembulatan_2 = BigDecimal("0")
+    @pembulatan_1 = BigDecimal("1")
+    @pembulatan_2 = BigDecimal("2")
     @status_pembulatan_1 = STATUS_PEMBULATAN[:debet]
     @status_pembulatan_2 = STATUS_PEMBULATAN[:kredit]
-    @biaya_bank_1 = BigDecimal("0")
-    @biaya_bank_2 = BigDecimal("0")
+    @biaya_bank_1 = BigDecimal("1")
+    @biaya_bank_2 = BigDecimal("2")
     @rate_to_idr_1 = BigDecimal("1")
     @rate_to_idr_2 = BigDecimal("1000")
     @payment_date_1 = DateTime.now
@@ -320,8 +320,6 @@ describe PaymentVoucher do
       @pv.is_gbch.should == @is_gbch_2
       @pv.gbch_no.should == @gbch_no_2
       @pv.due_date.should == @due_date_2
-      @pv.pembulatan.should == @pembulatan_2
-      @pv.status_pembulatan.should == @status_pembulatan_2
       @pv.biaya_bank.should == @biaya_bank_2
       @pv.rate_to_idr.should == @rate_to_idr_2
       @pv.payment_date.should == @payment_date_2
@@ -341,8 +339,8 @@ describe PaymentVoucher do
           :payable_id => @payable_1.id,
           :amount => BigDecimal("100000"),
           :amount_paid => BigDecimal("100000"),
-          :pph_21 => BigDecimal("0"),
-          :pph_23 => BigDecimal("0"),
+          :pph_21 => BigDecimal("1"),
+          :pph_23 => BigDecimal("1"),
           :rate => BigDecimal("1")
           )
         @pv.reload
@@ -386,7 +384,11 @@ describe PaymentVoucher do
       context "confirm payment_voucher" do
         before(:each) do
           @initial_payable_amount = @payable_1.amount
-          @pv.confirm_object(:confirmed_at => DateTime.now)
+          @pv.confirm_object(
+            :confirmed_at => DateTime.now,
+            :pembulatan => @pembulatan_1,
+            :status_pembulatan => @status_pembulatan_1,
+            )
           @cb_1.reload
           @payable_1.reload
         end
@@ -413,8 +415,8 @@ describe PaymentVoucher do
             @pv.is_reconciled.should == true
           end
           
-          it "should update cashbank amount to 0" do
-            @cb_1.amount.should == BigDecimal("0")
+          it "should update cashbank amount to 4" do
+            @cb_1.amount.should == BigDecimal("4")
           end
           
            it "should create 2 TransactionData" do
@@ -489,8 +491,8 @@ describe PaymentVoucher do
           :payable_id => @payable_1.id,
           :amount => BigDecimal("100000"),
           :amount_paid => BigDecimal("100000"),
-          :pph_21 => BigDecimal("0"),
-          :pph_23 => BigDecimal("0"),
+          :pph_21 => BigDecimal("1"),
+          :pph_23 => BigDecimal("1"),
           :rate => BigDecimal("1")
           )
         @pv.reload
@@ -499,13 +501,17 @@ describe PaymentVoucher do
       context "confirm payment_voucher" do
         before(:each) do
           @initial_payable_amount = @payable_1.amount
-          @pv.confirm_object(:confirmed_at => DateTime.now)
+          @pv.confirm_object(
+            :confirmed_at => DateTime.now,
+            :pembulatan => @pembulatan_1,
+            :status_pembulatan => @status_pembulatan_1,
+            )
           @cb_1.reload
           @payable_1.reload
         end
         
-        it "should update cashbank amount to 0" do
-          @cb_1.amount.should == BigDecimal("0")
+        it "should update cashbank amount to 4" do
+          @cb_1.amount.should == BigDecimal("4")
         end
         
         it "should create 1 transaction_data" do
