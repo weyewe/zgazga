@@ -206,6 +206,8 @@ class ReceiptVoucher < ActiveRecord::Base
       self.confirm_detail
       if not self.is_gbch?
         biaya_pembulatan = 0 
+        puts "The biaya_pembulatan is nil before depoy" if biaya_pembulatan.nil?
+        
         if self.status_pembulatan == NORMAL_BALANCE[:credit]
           biaya_pembulatan = self.pembulatan * -1
         else
@@ -213,7 +215,7 @@ class ReceiptVoucher < ActiveRecord::Base
         end
         puts "The pph_23 is nil" if self.total_pph_23.nil?
         puts "The biaya_bank is nil " if self.biaya_bank.nil?
-        puts "The pembulatan is nil " if biaya_pembulatan.nil?
+        puts "The biaya_pembulatan is nil after depoy" if biaya_pembulatan.nil?
         
         total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
         self.generate_cash_mutation(total)
