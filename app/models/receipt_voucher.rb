@@ -44,17 +44,17 @@ class ReceiptVoucher < ActiveRecord::Base
       return self 
     end
   end 
-  
+   
   def self.create_object(params)
     new_object = self.new
     new_object.no_bukti = params[:no_bukti]
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
-    new_object.pembulatan = params[:pembulatan]
+    new_object.pembulatan = BigDecimal(params[:pembulatan] || '0') # params[:pembulatan]
     new_object.status_pembulatan = params[:status_pembulatan]
-    new_object.biaya_bank = params[:biaya_bank]
-    new_object.rate_to_idr = params[:rate_to_idr]
+    new_object.biaya_bank = BigDecimal(params[:biaya_bank] || '0')# params[:biaya_bank]
+    new_object.rate_to_idr =BigDecimal(params[:rate_to_idr] || '0') #params[:rate_to_idr]
     new_object.receipt_date = params[:receipt_date]
     new_object.contact_id = params[:contact_id]
     new_object.cash_bank_id = params[:cash_bank_id]
@@ -81,10 +81,10 @@ class ReceiptVoucher < ActiveRecord::Base
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]
     self.due_date = params[:due_date]
-    # self.pembulatan = params[:pembulatan]
-    # self.status_pembulatan = params[:status_pembulatan]
-    self.biaya_bank = params[:biaya_bank]
-    self.rate_to_idr = params[:rate_to_idr]
+    self.pembulatan = BigDecimal(params[:rate_to_idr] || '0')  # params[:pembulatan] 
+    self.status_pembulatan = params[:status_pembulatan]
+    self.biaya_bank = BigDecimal(params[:rate_to_idr] || '0') # params[:biaya_bank]
+    self.rate_to_idr = BigDecimal(params[:rate_to_idr] || '0')  # params[:rate_to_idr]
     self.receipt_date = params[:receipt_date]
     self.contact_id = params[:contact_id]
     self.cash_bank_id = params[:cash_bank_id]
