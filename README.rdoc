@@ -104,5 +104,5 @@ bundle exec rake migrate_zga:confirm_blanket_order
 
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
-WHERE pg_stat_activity.datname = 'database_name'
+WHERE pg_stat_activity.datname = 'zengra_production'
   AND pid <> pg_backend_pid();
