@@ -211,6 +211,10 @@ class ReceiptVoucher < ActiveRecord::Base
         else
           biaya_pembulatan = self.pembulatan
         end
+        puts "The pph_23 is nil" if self.total_pph_23.nil?
+        puts "The biaya_bank is nil " if self.biaya_bank.nil?
+        puts "The pembulatan is nil " if biaya_pembulatan.nil?
+        
         total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total)
