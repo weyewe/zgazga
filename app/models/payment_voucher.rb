@@ -7,7 +7,7 @@ class PaymentVoucher < ActiveRecord::Base
   belongs_to :cash_bank
   belongs_to :exchange
   has_many :payment_voucher_details
-  validates_presence_of :biaya_bank, :pembulatan
+  validates_presence_of :biaya_bank
   
   
   def self.active_objects
@@ -48,8 +48,8 @@ class PaymentVoucher < ActiveRecord::Base
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
-    # new_object.pembulatan = params[:pembulatan]
-    # new_object.status_pembulatan = params[:status_pembulatan]
+    new_object.pembulatan = params[:pembulatan]
+    new_object.status_pembulatan = params[:status_pembulatan]
     new_object.biaya_bank = params[:biaya_bank]
     new_object.rate_to_idr = params[:rate_to_idr]
     new_object.payment_date = params[:payment_date]
@@ -205,8 +205,8 @@ class PaymentVoucher < ActiveRecord::Base
       return self 
     end
     
-    self.pembulatan = params[:pembulatan]
-    self.status_pembulatan = params[:status_pembulatan]
+    # self.pembulatan = params[:pembulatan]
+    # self.status_pembulatan = params[:status_pembulatan]
     biaya_pembulatan = 0 
     if self.status_pembulatan == NORMAL_BALANCE[:credit]
       biaya_pembulatan = self.pembulatan * -1

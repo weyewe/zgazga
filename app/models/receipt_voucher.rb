@@ -10,7 +10,7 @@ class ReceiptVoucher < ActiveRecord::Base
   
   # self.total_pph_23 + self.biaya_bank + biaya_pembulatan
   
-  validates_presence_of :biaya_bank, :pembulatan
+  validates_presence_of :biaya_bank
   
   
   def self.active_objects
@@ -51,8 +51,8 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
-    # new_object.pembulatan = params[:pembulatan]
-    # new_object.status_pembulatan = params[:status_pembulatan]
+    new_object.pembulatan = params[:pembulatan]
+    new_object.status_pembulatan = params[:status_pembulatan]
     new_object.biaya_bank = params[:biaya_bank]
     new_object.rate_to_idr = params[:rate_to_idr]
     new_object.receipt_date = params[:receipt_date]
@@ -200,8 +200,8 @@ class ReceiptVoucher < ActiveRecord::Base
    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
-    self.pembulatan = params[:pembulatan]
-    self.status_pembulatan = params[:status_pembulatan]
+    # self.pembulatan = params[:pembulatan]
+    # self.status_pembulatan = params[:status_pembulatan]
     if self.save
       self.confirm_detail
       if not self.is_gbch?

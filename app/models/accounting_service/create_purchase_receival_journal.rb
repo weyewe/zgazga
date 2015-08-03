@@ -12,15 +12,18 @@ module AccountingService
       }, true )
       
 #     debit raw
+    total_amount = 0 
     purchase_receival.purchase_receival_details.each do |prd|
+      amount = 0
+      amount = (prd.amount * prd.purchase_order_detail.price * purchase_receival.exchange_rate_amount).round(2)
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => prd.item.item_type.account_id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (prd.amount * prd.purchase_order_detail.price * purchase_receival.exchange_rate_amount).round(2),
+        :amount              => amount,
         :description => "Debit Raw"
-        
       )
+      total_amount += amount
     end
     
 #     credit good pending clearance
@@ -28,7 +31,7 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id     ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (purchase_receival.total_amount * purchase_receival.exchange_rate_amount).round(2) ,
+        :amount              => total_amount.round(2) ,
         :description => "Credit GoodsPendingClearance"
       )
      ta.confirm
