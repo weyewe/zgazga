@@ -37,7 +37,7 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 							// 'PPh21: <br /><b>{total_pph_21}</b>' + '<br />' + '<br />' +
 							'PPh23: <br /><b>{total_pph_23}</b>' + '<br />' + '<br />' +
 							'Biaya Bank: <br /><b>{biaya_bank}</b>' + '<br />' + '<br />' + 
-							'Pembulatan: <br /><b>{pembulatan}</b>' 
+							'Pembulatan: <br /><b>{pembulatan} {status_pembulatan_text}</b>' 
 			},
 			
 			

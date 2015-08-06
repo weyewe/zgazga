@@ -229,39 +229,12 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 						anchor : '-10'
 					},
 					items : [ 
-						
-						{
-							xtype: 'numberfield',
-							fieldLabel : 'Pembulatan',
-							name : 'pembulatan'
-						},
-						{
-	    				fieldLabel: 'Status Pembulatan',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'status_pembulatan_text',
-	    				valueField : 'status_pembulatan',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : localJsonStoreStatusPembulatan , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{status_pembulatan_text}">' + 
-	    												'<div class="combo-name">{status_pembulatan_text}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'status_pembulatan' 
-    	    	},
-    	    	{
+				    	{
 							xtype: 'numberfield',
 							fieldLabel : 'Rate To IDR',
 							name : 'rate_to_idr'
 						},
-    	    	{
+				    	{
 							xtype: 'numberfield',
 							fieldLabel : 'Biaya Bank',
 							name : 'biaya_bank'
@@ -393,7 +366,6 @@ Ext.define('AM.view.operation.paymentvoucher.Form', {
 		
 		me.setSelectedCustomer( record.get("contact_id")  ) ;
 		me.setSelectedCashBank( record.get("cash_bank_id")  ) ;
-		me.setSelectedStatusPembulatan( record.get("status_pembulatan")  ) ;
  
 	}
  
