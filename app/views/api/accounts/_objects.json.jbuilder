@@ -1,9 +1,9 @@
 json.accounts objects do |object|
 	json.id 								object.id 
 	
-	if @parent
-		json.parent_id					@parent.id  
-		json.parent_name 				@parent.name 	
+	if parent_id.present?
+		json.parent_id					parent_id  
+		json.parent_name 				parent_name 	
 	else
 		json.parent_id					 ""  
 		json.parent_name 				""

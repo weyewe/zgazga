@@ -190,7 +190,8 @@ Ext.define('AM.controller.Accounts', {
     }
 
   },
-
+  
+  
   selectionChange: function(selectionModel, selections) {
     var grid = this.getList();
 
@@ -207,5 +208,5 @@ Ext.define('AM.controller.Accounts', {
       grid.disableRecordButtons();
     }
   }
-
+ 
 });
