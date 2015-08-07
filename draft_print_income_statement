@@ -1,0 +1,3 @@
+beban_usaha
+
+Account.find_by_code(ACCOUNT_CODE[:beban_usaha][:code])
