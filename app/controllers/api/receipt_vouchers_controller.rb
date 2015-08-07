@@ -110,7 +110,10 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.confirm_object(:confirmed_at => params[:receipt_voucher][:confirmed_at] ) 
+          @object.confirm_object(:confirmed_at => params[:receipt_voucher][:confirmed_at],
+                   :pembulatan =>  params[:receipt_voucher][:pembulatan],
+                   :status_pembulatan =>  params[:receipt_voucher][:status_pembulatan]
+                   )
         end
       rescue ActiveRecord::ActiveRecordError  
       else
@@ -136,7 +139,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       
     elsif params[:reconcile].present?    
       
-      if not current_user.has_role?( :receipt_vouchers, :unconfirm)
+      if not current_user.has_role?( :receipt_vouchers, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

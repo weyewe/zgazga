@@ -51,8 +51,8 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
-    new_object.pembulatan = BigDecimal(params[:pembulatan] || '0') # params[:pembulatan]
-    new_object.status_pembulatan = params[:status_pembulatan]
+    # new_object.pembulatan = BigDecimal(params[:pembulatan] || '0') # params[:pembulatan]
+    # new_object.status_pembulatan = params[:status_pembulatan]
     new_object.biaya_bank = BigDecimal(params[:biaya_bank] || '0')# params[:biaya_bank]
     new_object.rate_to_idr =BigDecimal(params[:rate_to_idr] || '0') #params[:rate_to_idr]
     new_object.receipt_date = params[:receipt_date]
@@ -81,7 +81,7 @@ class ReceiptVoucher < ActiveRecord::Base
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]
     self.due_date = params[:due_date]
-    self.pembulatan = BigDecimal(params[:rate_to_idr] || '0')  # params[:pembulatan] 
+    self.pembulatan = BigDecimal(params[:pembulatan] || '0')  # params[:pembulatan] 
     self.status_pembulatan = params[:status_pembulatan]
     self.biaya_bank = BigDecimal(params[:rate_to_idr] || '0') # params[:biaya_bank]
     self.rate_to_idr = BigDecimal(params[:rate_to_idr] || '0')  # params[:rate_to_idr]
@@ -200,8 +200,8 @@ class ReceiptVoucher < ActiveRecord::Base
    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
-    # self.pembulatan = params[:pembulatan]
-    # self.status_pembulatan = params[:status_pembulatan]
+    self.pembulatan = BigDecimal(params[:pembulatan] || '0')
+    self.status_pembulatan = params[:status_pembulatan]
     if self.save
       self.confirm_detail
       if not self.is_gbch?

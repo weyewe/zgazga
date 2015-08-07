@@ -275,6 +275,8 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		if(record){
 			var rec_id = record.get("id");
 			record.set( 'confirmed_at' , values['confirmed_at'] );
+			record.set( 'pembulatan' , values['pembulatan'] );
+			record.set( 'status_pembulatan' , values['status_pembulatan'] );
 			 
 			// form.query('checkbox').forEach(function(checkbox){
 			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;

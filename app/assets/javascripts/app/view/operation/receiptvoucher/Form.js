@@ -198,18 +198,7 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 		
 		var me = this; 
 		
-		var localJsonStoreStatusPembulatan = Ext.create(Ext.data.Store, {
-			type : 'array',
-			storeId : 'status_pembulatan',
-			fields	: [ 
-				{ name : "status_pembulatan"}, 
-				{ name : "status_pembulatan_text"}  
-			], 
-			data : [
-				{ status_pembulatan : 1, status_pembulatan_text : "Debit"},
-				{ status_pembulatan : 2, status_pembulatan_text : "Credit"},
-			] 
-		});
+	
 		
 		var salesInfo = {
 					xtype : 'fieldset',
@@ -229,32 +218,7 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 							fieldLabel: 'Due Date',
 							format: 'Y-m-d',
 						},
-						{
-							xtype: 'numberfield',
-							fieldLabel : 'Pembulatan',
-							name : 'pembulatan'
-						},
-						{
-	    				fieldLabel: 'Status Pembulatan',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'status_pembulatan_text',
-	    				valueField : 'status_pembulatan',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : localJsonStoreStatusPembulatan , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{status_pembulatan_text}">' + 
-	    												'<div class="combo-name">{status_pembulatan_text}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'status_pembulatan' 
-    	    	},
+						
     	    	{
 							xtype: 'numberfield',
 							fieldLabel : 'Rate To IDR',

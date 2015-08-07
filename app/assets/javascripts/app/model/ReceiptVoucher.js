@@ -10,6 +10,7 @@ Ext.define('AM.model.ReceiptVoucher', {
     	    { name: 'cash_bank_name', type: 'string' },
     	    { name: 'cash_bank_exchange_name', type: 'string' },
     	    { name: 'status_pembulatan', type: 'int' },
+    	    { name: 'status_pembulatan_text', type: 'string' },
     	    { name: 'receipt_date', type: 'string' },
     	    { name: 'amount', type: 'string' },
     	    { name: 'rate_to_idr', type: 'string' },
