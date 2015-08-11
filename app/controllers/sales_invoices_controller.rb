@@ -1,6 +1,22 @@
 class SalesInvoicesController < ApplicationController 
   
  
+  def download_report
+    filename = "result.xlsx"
+    filepath = Rails.root.join('public', 'images', filename )
+    
+    PayableMutation.create_report( filepath ) 
+    
+    file = File.open( filepath , "rb")
+    contents = file.read
+    file.close
+    
+    File.delete(filepath) if File.exist?(filepath)
+    
+    send_data(contents, :filename => filename)
+
+  end
+  
   def show
         
     user = User.find_by_authentication_token params[:auth_token]
@@ -24,6 +40,11 @@ class SalesInvoicesController < ApplicationController
       end
     end
   end
+  
+  
+
+  
+  
   
   def print_csv
         

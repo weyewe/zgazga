@@ -106,3 +106,15 @@ SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'zengra_production'
   AND pid <> pg_backend_pid();
+  
+  
+account_id_list  = []
+Account.all.each {|x| account_id_list << x.id } 
+
+valid_comb_account_id_list = []
+
+ValidComb.all.each {|x| valid_comb_account_id_list << x.account_id } 
+
+diff = account_id_list - valid_comb_account_id_list
+
+result = Account.where( :id => diff ) 

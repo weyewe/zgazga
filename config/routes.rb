@@ -7,6 +7,9 @@ Ticketie::Application.routes.draw do
   resources :sales_invoices
   get 'print_csv_sales_invoices' => 'sales_invoices#print_csv', :as => :print_csv_sales_invoices, :method => :get
   
+  
+  get 'sales_invoices_download_report' => 'sales_invoices#download_report', :as => :sales_invoices_download_report
+   
   resources :purchase_orders
   resources :purchase_receivals
   resources :purchase_invoices
@@ -113,7 +116,8 @@ Ticketie::Application.routes.draw do
  
     
     get 'search_batch_instances' => 'batch_instances#search', :as => :search_batch_instance
-   
+    
+    
  
    
     # master data 

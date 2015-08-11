@@ -11,7 +11,7 @@ gem 'whenever', :require => false
 gem 'mina'
 gem 'mina-unicorn',    :require => false
 gem 'unicorn'
-
+gem 'rubyXL'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 

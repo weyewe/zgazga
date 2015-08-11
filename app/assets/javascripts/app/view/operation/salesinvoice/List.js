@@ -103,6 +103,11 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 			action: 'printCsvObject' 
 		});
 		
+		this.downloadReportButton  = new Ext.Button({
+			text: 'Repor',
+			action: 'downloadReportObject' 
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
@@ -111,6 +116,7 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 					'->',
 					this.printCsvButton, 
 					this.filterButton ,
+						this.downloadReportButton,
 					this.searchField ];
 	 
 

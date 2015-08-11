@@ -82,6 +82,10 @@ Ext.define('AM.controller.SalesInvoices', {
 			    click: this.downloadObject
 			},
 			
+			'salesinvoiceProcess salesinvoicelist button[action=downloadReportObject]': {
+			    click: this.downloadReportObject
+			},
+			
 			'salesinvoiceProcess salesinvoicelist button[action=printCsvObject]': {
 			    click: this.downloadCsv
 			},
@@ -180,6 +184,17 @@ Ext.define('AM.controller.SalesInvoices', {
 			
 	},
 	
+	
+	downloadReportObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			if( record ){
+				window.open( 'sales_invoices_' + 'download_report' + "?auth_token=" +auth_token_value);
+			}
+			
+	},
 	
 	downloadCsv: function(){
   		var me = this; 
