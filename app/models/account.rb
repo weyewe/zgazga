@@ -361,7 +361,7 @@ class Account < ActiveRecord::Base
   
   
   def self.create_object_from_cash_bank(cash_bank)
-    cash_bank_account = Account.find_by_code(ACCOUNT_CODE[:kas_dan_setara_kas][:code])
+    cash_bank_account = Account.find_by_code(ACCOUNT_CODE[:kas_dan_bank][:code])
     new_cash_bank_account = self.new
     new_cash_bank_account.code = cash_bank_account.code + cash_bank.id.to_s
     if cash_bank.is_bank == true

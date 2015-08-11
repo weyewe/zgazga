@@ -101,6 +101,14 @@ class Closing < ActiveRecord::Base
       self.generate_valid_combs
       self.generate_valid_combs_for_non_children
     end
+    # g = []
+    # Account.all.each {|x| g << [x.id,x.name]}
+    
+    # h =[]
+    # ValidComb.all.each {|x| h << [x.account_id]}
+    
+    puts "Account count #{Account.all.count}"
+    puts "ValidComb count #{ValidComb.all.count}"
     return self
   end
   
@@ -168,7 +176,6 @@ class Closing < ActiveRecord::Base
     end_transaction = end_date_period
     leaves_account = Account.all_ledger_accounts
     # leaves_account_id_list = leaves_account.map{|x| x.id }
-    
     leaves_account.each do |leaf_account|
       valid_comb_amount = BigDecimal("0")
       valid_comb_amount_non_idr = BigDecimal("0")
@@ -265,8 +272,9 @@ class Closing < ActiveRecord::Base
         entry_case = NORMAL_BALANCE[:debit] if leaf_account.normal_balance == NORMAL_BALANCE[:credit] 
         entry_case = NORMAL_BALANCE[:credit] if leaf_account.normal_balance == NORMAL_BALANCE[:debit] 
       end
-    
-      # puts " #{leaf_account.name} (#{leaf_account.code}) :: #{valid_comb_amount} "
+      
+      
+      # puts " #{leaf_account.id} #{leaf_account.name} (#{leaf_account.code}) :: #{valid_comb_amount} "
       
       valid_comb = ValidComb.create_object(
         :account_id => leaf_account.id,
@@ -274,7 +282,7 @@ class Closing < ActiveRecord::Base
         :amount => final_valid_comb_amount.abs,
         :entry_case => entry_case
       )
-    
+      
       if cash_bank.count > 0 or account_payable.count > 0 or account_receivable.count > 0 or 
         gbch_payable.count > 0 or gbch_receivable.count > 0
         ValidCombNonBaseExchange.create_object(
@@ -772,19 +780,19 @@ class Closing < ActiveRecord::Base
         generate_exchange_for_cash_bank(transaction_data.id,cash_bank.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end
       
-      if account_payable.count > 0
+      if account_payable.count > 0 && self.is_year_closing == true
         generate_exchange_for_account_payable(transaction_data.id,account_payable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if account_receivable.count > 0
+      if account_receivable.count > 0  && self.is_year_closing == true
         generate_exchange_for_account_receivable(transaction_data.id,account_receivable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if gbch_payable.count > 0
+      if gbch_payable.count > 0  && self.is_year_closing == true
         generate_exchange_for_gbch_payable(transaction_data.id,gbch_payable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if gbch_receivable.count > 0
+      if gbch_receivable.count > 0  && self.is_year_closing == true
         generate_exchange_for_gbch_receivable(transaction_data.id,gbch_receivable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
     end

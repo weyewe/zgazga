@@ -118,7 +118,7 @@ ACCOUNT_CODE = {
     :name => "PERSED. PRINTING CHEMICALS",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :persediaan_printing_blanket  => {
     :code => "11050002",
@@ -132,35 +132,35 @@ ACCOUNT_CODE = {
     :name => "PERSED. PRINTING ROLLERS",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :persediaan_barang_lainnya  => {
     :code => "11050004",
     :name => "PERSED. BARANG LAINNYA",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :bahan_baku_blanket  => {
     :code => "11050102",
     :name => "BAHAN BAKU BLANKET",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :bahan_baku_rollers  => {
     :code => "11050103",
     :name => "BAHAN BAKU ROLLERS",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :bahan_baku_other  => {
     :code => "11050104",
     :name => "BAHAN BAKU OTHER",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },
   :uang_muka_pembelian_level_1  => {
     :code => "1106",
@@ -180,7 +180,7 @@ ACCOUNT_CODE = {
     :code => "11060001",
     :name => "UANG MUKA PEMBELIAN LOKAL",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "110601"
     },
   :uang_muka_pembelian_impor => {
