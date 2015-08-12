@@ -384,6 +384,7 @@ describe PaymentVoucher do
       context "confirm payment_voucher" do
         before(:each) do
           @initial_payable_amount = @payable_1.amount
+          @pv.reload
           @pv.confirm_object(
             :confirmed_at => DateTime.now,
             :pembulatan => @pembulatan_1,

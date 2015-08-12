@@ -4,6 +4,7 @@ class CreateReceivables < ActiveRecord::Migration
       t.string  :source_class
       t.integer :source_id
       t.string  :source_code
+      t.datetime :source_date 
       t.integer :contact_id
       t.decimal :amount , :default        => 0,  :precision => 14, :scale => 2
       t.decimal :remaining_amount , :default        => 0,  :precision => 14, :scale => 2

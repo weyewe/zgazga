@@ -29,6 +29,7 @@ class PurchaseInvoiceMigration < ActiveRecord::Base
     Payable.create_object(
       :source_class => self.class.to_s, 
       :source_id => self.id ,  
+      :source_date => self.invoice_date , 
       :contact_id => self.contact_id,
       :amount => self.amount_payable ,  
       :due_date => self.invoice_date ,  
