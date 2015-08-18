@@ -5,7 +5,9 @@ class SalesInvoicesController < ApplicationController
     filename = "result.xlsx"
     filepath = Rails.root.join('public', 'images', filename )
     
-    PayableMutation.create_report( filepath ) 
+    end_date = DateTime.now
+    start_date = end_date - 1.weeks 
+    PayableMutationReport.create_report( filepath, start_date, end_date ) 
     
     file = File.open( filepath , "rb")
     contents = file.read

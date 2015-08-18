@@ -1,6 +1,10 @@
 class Contact < ActiveRecord::Base
   validates_presence_of :name 
   belongs_to :contact_group
+  
+  has_many :payables
+  has_many :receivables
+  
   validate :contact_type_must_be_valid
 
   def contact_type_must_be_valid

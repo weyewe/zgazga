@@ -2,6 +2,7 @@ class Payable < ActiveRecord::Base
   
   belongs_to :exchange    
   belongs_to :contact
+  has_many :payment_voucher_details 
   
   def self.active_objects
     return self

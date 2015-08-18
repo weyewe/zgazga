@@ -13,8 +13,9 @@ Ext.define('AM.view.Content', {
 		
 		items : [
 			{
-				html : "Personal",
-				xtype : 'container'
+				// html : "Personal",
+				// xtype : 'container'
+				xtype : 'reportProcessPanel'
 			},
 			{
 				// html : "Operation",
