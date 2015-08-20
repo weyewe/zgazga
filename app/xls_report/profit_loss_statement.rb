@@ -7,8 +7,8 @@ class ProfitLossStatement
     
     def self.create_header() 
         @worksheet.add_cell(0,1, "PT ZENTRUM GRAPHICS ASIA")
-        @worksheet.add_cell(1,0, "Laba Rugi Bulan Berjalan")
-        @worksheet.add_cell(1,1, @end_date ) 
+        @worksheet.add_cell(1,1, "Laba Rugi Bulan Berjalan")
+        @worksheet.add_cell(1,2, @end_date ) 
     end
     
     def self.create_table_header
@@ -42,7 +42,7 @@ class ProfitLossStatement
         beban_lainnya = Account.find_by_code( "72" )
         total_beban_lainnya = BigDecimal('0')
         beban_lainnya.children.order("code ASC").each do |pendapatan_element|
-            pendapatan_element.descendants.where(:is_ledger => true ).order("code ASC").each do |leaf_account|
+            pendapatan_element.descendants.order("code ASC").each do |leaf_account|
                 vc = ValidComb.where(:closing_id => @closing.id , :account_id => leaf_account.id ).first
             
                 @worksheet.add_cell(@row, 1, leaf_account.name ) 
@@ -59,7 +59,7 @@ class ProfitLossStatement
         pendapatan_lainnya = Account.find_by_code( "71" )
         total_pendapatan_lainnya = BigDecimal('0')
         pendapatan_lainnya.children.order("code ASC").each do |pendapatan_element|
-            pendapatan_element.descendants.where(:is_ledger => true ).order("code ASC").each do |leaf_account|
+            pendapatan_element.leaves.order("code ASC").each do |leaf_account|
                 vc = ValidComb.where(:closing_id => @closing.id , :account_id => leaf_account.id ).first
             
                 @worksheet.add_cell(@row, 1, leaf_account.name ) 
@@ -85,7 +85,7 @@ class ProfitLossStatement
         
         total_revenue = BigDecimal('0')
         
-        pendapatan_group.children.order("code ASC").each do |pendapatan_element|
+        pendapatan_group.leaves.order("code ASC").each do |pendapatan_element|
             vc = ValidComb.where(:closing_id => @closing.id , :account_id => pendapatan_element.id ).first
             
             @worksheet.add_cell(@row, 1, pendapatan_element.name ) 
@@ -111,7 +111,7 @@ class ProfitLossStatement
         
         total_cogs = BigDecimal('0')
         
-        cogs_group.children.order("code ASC").each do |cogs_element|
+        cogs_group.leaves.order("code ASC").each do |cogs_element|
             vc = ValidComb.where(:closing_id => @closing.id , :account_id => cogs_element.id ).first
             
             @worksheet.add_cell(@row, 1, cogs_element.name ) 
@@ -145,7 +145,7 @@ class ProfitLossStatement
         
         total_beban_penjualan = BigDecimal('0')
         
-        beban_penjualan.children.order("code ASC").each do |pendapatan_element|
+        beban_penjualan.leaves.order("code ASC").each do |pendapatan_element|
             vc = ValidComb.where(:closing_id => @closing.id , :account_id => pendapatan_element.id ).first
             
             @worksheet.add_cell(@row, 1, pendapatan_element.name ) 
@@ -169,7 +169,7 @@ class ProfitLossStatement
         total_beban_umum = BigDecimal('0')
         
         beban_umum_group.children.order("code ASC").each do |pendapatan_element|
-            pendapatan_element.descendants.where(:is_ledger => true ).order("code ASC").each do |leaf_account|
+            pendapatan_element.leaves.order("code ASC").each do |leaf_account|
                 vc = ValidComb.where(:closing_id => @closing.id , :account_id => leaf_account.id ).first
             
                 @worksheet.add_cell(@row, 1, leaf_account.name ) 
