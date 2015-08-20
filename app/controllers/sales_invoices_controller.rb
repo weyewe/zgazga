@@ -7,7 +7,10 @@ class SalesInvoicesController < ApplicationController
     
     end_date = DateTime.now
     start_date = end_date - 1.weeks 
-    PayableMutationReport.create_report( filepath, start_date, end_date ) 
+    
+    ProfitLossStatement.create_report( filepath, start_date, end_date, Closing.first  )
+    
+    # PayableMutationReport.create_report( filepath, start_date, end_date ) 
     
     file = File.open( filepath , "rb")
     contents = file.read

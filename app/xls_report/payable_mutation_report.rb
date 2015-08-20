@@ -35,43 +35,43 @@ class PayableMutationReport
          
         row = 8 
         Contact.where(:contact_type => CONTACT_TYPE[:supplier].to_s).
-                    joins(:payables => [:payment_voucher_details]).find_each do |supplier| 
+                    includes(:payables => [:payment_voucher_details]).find_each do |supplier| 
                         
             
-            zero_value = BigDecimal("0")
-            opening_balance_query =   supplier.payables.where{
-                (received_date.lt start_date) & 
-                ( remaining_amount.not_eq zero_value ) 
-            } 
+            # zero_value = BigDecimal("0")
+            # opening_balance_query =   supplier.payables.where{
+            #     (received_date.lt start_date) & 
+            #     ( remaining_amount.not_eq zero_value ) 
+            # } 
             
-            opening_balance_amount = opening_balance_query.sum("remaining_amount*exchange_rate_amount")
+            # opening_balance_amount = opening_balance_query.sum("remaining_amount*exchange_rate_amount")
             
             
-            additional_credit_query = supplier.payables.where{
-                (received_date.gte start_date) & 
-                (received_date.lt end_date) 
-            }
+            # additional_credit_query = supplier.payables.where{
+            #     (received_date.gte start_date) & 
+            #     (received_date.lt end_date) 
+            # }
             
-            additional_credit =  additional_credit_query.sum("remaining_amount*exchange_rate_amount")
+            # additional_credit =  additional_credit_query.sum("remaining_amount*exchange_rate_amount")
             
-            possible_payables_id_list = supplier.payables.where{
-                (
-                    (received_date.lt start_date) & 
-                    ( remaining_amount.not_eq zero_value ) 
-                ) | 
-                (
-                    (received_date.gte start_date) & 
-                     (received_date.lt end_date) 
-                )
+            # possible_payables_id_list = supplier.payables.where{
+            #     (
+            #         (received_date.lt start_date) & 
+            #         ( remaining_amount.not_eq zero_value ) 
+            #     ) | 
+            #     (
+            #         (received_date.gte start_date) & 
+            #          (received_date.lt end_date) 
+            #     )
                 
-            }.map{|x| x.id } 
+            # }.map{|x| x.id } 
             
-            payment = PaymentVoucherDetail.joins(:payment_voucher).where{
-                ( payment_voucher.is_confirmed.eq true ) & 
-                ( payment_date.gte start_date) & 
-                ( payment_date.lt end_dat)
+            # payment = PaymentVoucherDetail.joins(:payment_voucher).where{
+            #     ( payment_voucher.is_confirmed.eq true ) & 
+            #     ( payment_date.gte start_date) & 
+            #     ( payment_date.lt end_dat)
                 
-            }.sum
+            # }.sum
             
             
              

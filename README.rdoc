@@ -116,5 +116,4 @@ valid_comb_account_id_list = []
 ValidComb.all.each {|x| valid_comb_account_id_list << x.account_id } 
 
 diff = account_id_list - valid_comb_account_id_list
-
-result = Account.where( :id => diff ) 
+ 
