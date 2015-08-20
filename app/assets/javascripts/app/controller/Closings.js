@@ -75,8 +75,13 @@ Ext.define('AM.controller.Closings', {
 			},
 			'closingform button[action=save]': {
         click: this.updateObject
-      }
-		
+      },
+			'closingProcess closinglist button[action=downloadReportObject]': {
+			    click: this.downloadReportObject
+			},
+			'closingProcess closinglist button[action=downloadLabaRugiObject]': {
+			    click: this.downloadLabaRugiObject
+			},
     });
   },
 
@@ -326,8 +331,27 @@ Ext.define('AM.controller.Closings', {
 		}
 	},
 	
-
-
+	downloadReportObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			if( record ){
+				window.open( 'closings_' + 'download_report' + "?auth_token=" +auth_token_value);
+			}
+			
+	},
+	
+	downloadLabaRugiObject: function(){
+			var record = this.getList().getSelectedObject();
+			var id = record.get("id");
+			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+			var auth_token_value = currentUser['auth_token'];
+			if( record ){
+				window.open( 'closings_' + 'download_labarugi' + "?auth_token=" +auth_token_value);
+			}
+			
+	},
   deleteObject: function() {
     var record = this.getList().getSelectedObject();
 

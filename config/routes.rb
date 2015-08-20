@@ -9,7 +9,9 @@ Ticketie::Application.routes.draw do
   
   
   get 'sales_invoices_download_report' => 'sales_invoices#download_report', :as => :sales_invoices_download_report
-   
+  get 'closings_download_report' => 'closings#download_report', :as => :closings_download_report
+  get 'closings_download_labarugi' => 'closings#download_labarugi', :as => :closings_download_labarugi
+    
   resources :purchase_orders
   resources :purchase_receivals
   resources :purchase_invoices

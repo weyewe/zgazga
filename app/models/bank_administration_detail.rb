@@ -95,10 +95,10 @@ class BankAdministrationDetail < ActiveRecord::Base
   def calculateTotalAmount
     amount = 0
     BankAdministrationDetail.where(:bank_administration_id =>bank_administration_id).each do |bad|
-      if bad.status = NORMAL_BALANCE[:credit]
+      if bad.status == NORMAL_BALANCE[:credit]
         amount += bad.amount 
       else
-        amount += bad.amount * -1
+        amount += (bad.amount * -1)
       end
     end
     bank_administration = BankAdministration.find_by_id(bank_administration_id)

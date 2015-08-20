@@ -125,7 +125,7 @@ ACCOUNT_CODE = {
     :name => "PERSED. PRINTING BLANKET",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1105"
+    :parent_code => "110501"
     },  
   :persediaan_printing_rollers  => {
     :code => "11050003",
@@ -350,7 +350,7 @@ ACCOUNT_CODE = {
   :passiva => {
     :code => "3",
     :name => "PASSIVA",
-    :normal_balance => 1,
+    :normal_balance => 2,
     :status => 1,
     :parent_code => nil
     },  

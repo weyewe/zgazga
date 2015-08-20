@@ -104,7 +104,7 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 		});
 		
 		this.downloadReportButton  = new Ext.Button({
-			text: 'Repor',
+			text: 'Report',
 			action: 'downloadReportObject' 
 		});
 		
