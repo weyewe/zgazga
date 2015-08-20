@@ -616,6 +616,7 @@ ActiveRecord::Schema.define(version: 20150727033823) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.datetime "source_date"
     t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0
@@ -875,6 +876,7 @@ ActiveRecord::Schema.define(version: 20150727033823) do
     t.string   "source_class"
     t.integer  "source_id"
     t.string   "source_code"
+    t.datetime "source_date"
     t.integer  "contact_id"
     t.decimal  "amount",                   precision: 14, scale: 2,  default: 0.0
     t.decimal  "remaining_amount",         precision: 14, scale: 2,  default: 0.0

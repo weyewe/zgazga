@@ -141,6 +141,7 @@ class SalesDownPayment < ActiveRecord::Base
     rcb = Receivable.create_object(
       :source_class => self.class.to_s, 
       :source_id => self.id ,  
+      :source_date => self.down_payment_date ,  
       :contact_id => self.contact_id,
       :amount => self.total_amount ,  
       :due_date => self.due_date ,  
@@ -165,6 +166,7 @@ class SalesDownPayment < ActiveRecord::Base
     pyb = Payable.create_object(
       :source_class => self.class.to_s, 
       :source_id => self.id ,  
+      :source_date => self.down_payment_date , 
       :contact_id => self.contact_id,
       :amount => self.total_amount ,  
       :due_date => self.due_date ,  

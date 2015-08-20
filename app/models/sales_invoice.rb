@@ -210,6 +210,7 @@ class SalesInvoice < ActiveRecord::Base
     Receivable.create_object(
       :source_class => self.class.to_s, 
       :source_id => self.id ,  
+      :source_date => self.invoice_date ,  
       :contact_id => self.delivery_order.sales_order.contact_id,
       :amount => self.amount_receivable ,  
       :due_date => self.due_date ,  

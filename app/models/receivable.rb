@@ -13,6 +13,7 @@ class Receivable < ActiveRecord::Base
     new_object.source_id = params[:source_id]
     new_object.contact_id = params[:contact_id]
     new_object.source_code = params[:source_code]
+    new_object.source_date = params[:source_date]
     new_object.amount =  BigDecimal( params[:amount] || '0')
     new_object.remaining_amount = BigDecimal( params[:amount] || '0')
     new_object.exchange_id = params[:exchange_id]
@@ -26,6 +27,7 @@ class Receivable < ActiveRecord::Base
     self.source_class = params[:source_class]
     self.source_id = params[:source_id]
     self.source_code = params[:source_code]
+    self.source_date = params[:source_date]
     self.amount = params[:amount]
     self.remaining_amount = params[:remaining_amount]
     self.save
