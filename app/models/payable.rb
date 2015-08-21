@@ -8,6 +8,22 @@ class Payable < ActiveRecord::Base
     return self
   end
   
+  def source
+    case self.source_class
+    when PaymentRequest.to_s
+      return PaymentRequest.find_by_id(self.source_id)
+    when PurchaseInvoice.to_s
+      return PurchaseInvoice.find_by_id(self.source_id)
+    when PurchaseInvoiceMigration.to_s
+      return PurchaseInvoiceMigration.find_by_id(self.source_id)
+    when PurchaseDownPayment.to_s
+      return PurchaseDownPayment.find_by_id(self.source_id)
+    when SalesDownPayment.to_s
+      return SalesDownPayment.find_by_id(self.source_id)
+    end
+  end
+  
+  
   def self.create_object (params)
     new_object = self.new
     new_object.source_class = params[:source_class]

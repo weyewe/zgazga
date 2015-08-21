@@ -96,7 +96,7 @@ class PaymentRequest < ActiveRecord::Base
       :source_class => self.class.to_s, 
       )
     rvl.each do |x|
-     x.delete_object
+      x.delete_object
     end
   end
 

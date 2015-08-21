@@ -7,6 +7,19 @@ class Receivable < ActiveRecord::Base
     return self
   end
   
+  def source
+    case self.source_class
+    when PurchaseDownPayment.to_s
+      return PurchaseDownPayment.find_by_id(self.source_id)
+    when SalesDownPayment.to_s
+      return SalesDownPayment.find_by_id(self.source_id)
+    when SalesInvoice.to_s
+      return SalesInvoice.find_by_id(self.source_id)
+    when SalesInvoiceMigration.to_s
+      return SalesInvoiceMigration.find_by_id(self.source_id)
+    end
+  end
+  
   def self.create_object (params)
     new_object = self.new
     new_object.source_class = params[:source_class]
