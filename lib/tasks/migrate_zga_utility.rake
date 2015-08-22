@@ -70,7 +70,7 @@ task :flush_lookup_folder  do |t, args|
 end
  
 
-#  rake inspect_csv['ContactGroup.csv']
+#  rake inspect_csv['hutang.csv']
 task :inspect_csv,  :filename do   | t, args| 
     filename = args.filename
     
@@ -112,7 +112,7 @@ task :inspect_csv,  :filename do   | t, args|
 end
 
 
-# rake see_single_column_data['Items.csv',17]   << no spaces allowed
+# rake see_single_column_data['hutang.csv',5]   << no spaces allowed
 task :see_single_column_data , :filename, :column  do | t, args | 
     column = args.column.to_i
     filename = args.filename

@@ -79,6 +79,94 @@ namespace :migrate_zga do
     puts "Done migrating PurchaseInvoiceMigration. Total PurchaseInvoiceMigration: #{PurchaseInvoiceMigration.count}"
   end
   
+  
+
+  task :outstanding_hutang => :environment do
+    
+    
+    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] )  
+    contact_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:contact] ) 
+    
+  
+    
+    migration_filename = MIGRATION_FILENAME[:outstanding_hutang]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+                    
+          invoice_date = row[0]
+          nomor_surat = row[1]
+          contact_id = row[2]
+          contact_name = row[3]
+          amount_payable = row[4]
+          exchange_name = row[5]
+          exchange_rate_amount = row[6]
+          
+#           [[1, "Rupiah"], [2, "USD"], [3, "Euro"], [4, "CHF"], [5, "GBP"], [6, "SGD"]] 
+          
+# USD 
+# EURO 
+# RUPIAH 
+ 
+          msg = "old contact => #{contact_id}, #{contact_name}  | " 
+          
+          if contact_mapping_hash[contact_id].nil?
+            msg << "FARK.. no mapping"
+            
+            puts msg
+          else
+            new_contact = Contact.find_by_id contact_mapping_hash[contact_id]
+            msg << "new_contact_name : #{new_contact.name}"
+          end
+          
+          
+          new_contact_id  = contact_mapping_hash[contact_id]
+            
+          
+          
+          exchange_hash = {}
+          exchange_hash["RUPIAH"] = 1 
+          exchange_hash["USD"] = 2 
+          exchange_hash["EURO"] = 3
+          exchange_hash["CHF"] = 4
+          exchange_hash["GBP"] = 5 
+          exchange_hash["SGD"] = 6 
+          
+          new_exchange_id = exchange_hash[exchange_name.upcase.strip ]
+          parsed_invoice_date = get_parsed_date(invoice_date)
+ 
+          if new_exchange_id.nil?
+            puts exchange_hash
+            puts "nomor surat: #{nomor_surat}, exchange_name: #{exchange_name}"
+            
+          end
+          
+          object = PayableMigration.create_object(
+              :nomor_surat => nomor_surat ,
+              :contact_id => new_contact_id,
+              :exchange_id =>  new_exchange_id,
+              :amount_payable =>  amount_payable,
+              :exchange_rate_amount =>  exchange_rate_amount , 
+              :invoice_date =>  parsed_invoice_date
+              )
+            
+          object.errors.messages.each {|x| puts "Error: #{x}" } 
+    
+        end
+    end
+    
+ 
+    
+    puts "Done migrating Hutang. Total PurchaseInvoiceMigration: #{PayableMigration.count}"
+  end
+  
   task :payable => :environment do
     
     

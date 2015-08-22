@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727033823) do
+ActiveRecord::Schema.define(version: 20150821081125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -612,6 +612,17 @@ ActiveRecord::Schema.define(version: 20150727033823) do
     t.datetime "updated_at"
   end
 
+  create_table "payable_migrations", force: true do |t|
+    t.string   "nomor_surat"
+    t.integer  "contact_id"
+    t.integer  "exchange_id"
+    t.decimal  "exchange_rate_amount", precision: 18, scale: 11, default: 0.0
+    t.decimal  "amount_payable",       precision: 14, scale: 2,  default: 0.0
+    t.datetime "invoice_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "payables", force: true do |t|
     t.string   "source_class"
     t.integer  "source_id"
@@ -868,6 +879,20 @@ ActiveRecord::Schema.define(version: 20150727033823) do
     t.datetime "due_date"
     t.boolean  "is_confirmed",                                  default: false
     t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "receivable_migrations", force: true do |t|
+    t.string   "nomor_surat"
+    t.integer  "contact_id"
+    t.integer  "exchange_id"
+    t.decimal  "amount_base_exchange",    precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_foreign_exchange", precision: 14, scale: 2,  default: 0.0
+    t.decimal  "amount_receivable",       precision: 14, scale: 2,  default: 0.0
+    t.decimal  "exchange_rate_amount",    precision: 18, scale: 11, default: 0.0
+    t.datetime "invoice_date"
+    t.datetime "tukar_faktur_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

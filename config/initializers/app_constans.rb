@@ -334,6 +334,10 @@ MIGRATION_FILENAME = {
   :payment_voucher_confirm => "PaymentVoucherConfirm.csv",
   
   
+  :outstanding_hutang => 'hutang.csv',
+  :outstanding_piutang => 'piutang.csv'
+  
+  
 } 
 
 BASE_ITEM_TYPE = {

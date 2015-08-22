@@ -1,0 +1,20 @@
+
+bundle exec rake db:drop;  bundle exec rake db:create; bundle exec rake db:migrate
+
+bundle exec rake flush_lookup_folder
+bundle exec rake migrate_zga:base_setup
+bundle exec rake migrate_zga:exchange
+bundle exec rake migrate_zga:cash_bank
+bundle exec rake migrate_zga:coa 
+
+bundle exec rake migrate_zga:user 
+bundle exec rake migrate_zga:employee
+
+
+
+bundle exec rake migrate_zga:contact_group
+bundle exec rake migrate_zga:contact
+
+bundle exec rake migrate_zga:outstanding_piutang
+
+bundle exec rake migrate_zga:outstanding_hutang
