@@ -124,16 +124,16 @@ class Closing < ActiveRecord::Base
       ValidComb.where(:closing_id => self.id).each do |valid_comb|
         if not valid_comb.valid_comb_non_base_exchange.nil?
           valid_comb.valid_comb_non_base_exchange.delete_object
-          valid_comb.delete_object
         end
+          valid_comb.delete_object  
       end
     end  
   end
   
   
   def delete_object
-    if self.is_confirmed?
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+    if self.is_closed?
+      self.errors.add(:generic_errors, "Sudah di close")
       return self 
     end
     
@@ -850,7 +850,7 @@ class Closing < ActiveRecord::Base
       
       
       final_valid_comb_amount = valid_comb_amount + ValidComb.previous_closing_valid_comb_amount( previous_closing, node )
-      # puts " #{node.name} (#{node.code}) :: #{final_valid_comb_amount} "
+      puts " #{node.name} (#{node.code}) :: #{final_valid_comb_amount} "
       entry_case = node.normal_balance  
       
       if final_valid_comb_amount < BigDecimal("0")

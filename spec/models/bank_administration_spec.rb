@@ -34,7 +34,24 @@ describe BankAdministration do
       :account_case => ACCOUNT_CASE[:ledger],
       :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
       )
-      
+    @coa_2 = Account.create_object(
+      :code => "1110k3o",
+      :name => "KAS3",
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+      ) 
+    @coa_3 = Account.create_object(
+      :code => "11102324124k3o",
+      :name => "KAS233",
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+      ) 
+    @coa_4 = Account.create_object(
+      :code => "111230k3o",
+      :name => "KA24123S3",
+      :account_case => ACCOUNT_CASE[:ledger],
+      :parent_id => Account.find_by_code(ACCOUNT_CODE[:aktiva][:code]).id
+      ) 
     @administration_date_1 = DateTime.now
     @administration_date_2 = DateTime.now + 1.days
     @description_1 = "description_1"
@@ -64,23 +81,54 @@ describe BankAdministration do
           :account_id => @coa_1.id,
           :description => "description_1",
           :status => NORMAL_BALANCE[:debit],
-          :amount => BigDecimal("1000")
+          :amount => BigDecimal("20000")
           )
+        @bad2 = BankAdministrationDetail.create_object(
+          :bank_administration_id => @ba.id,
+          :account_id => @coa_2.id,
+          :description => "description_1",
+          :status => NORMAL_BALANCE[:credit],
+          :amount => BigDecimal("20000")
+          )
+         @bad3 = BankAdministrationDetail.create_object(
+          :bank_administration_id => @ba.id,
+          :account_id => @coa_3.id,
+          :description => "description_1",
+          :status => NORMAL_BALANCE[:credit],
+          :amount => BigDecimal("20000")
+          )
+         @bad4 = BankAdministrationDetail.create_object(
+          :bank_administration_id => @ba.id,
+          :account_id => @coa_4.id,
+          :description => "description_1",
+          :status => NORMAL_BALANCE[:credit],
+          :amount => BigDecimal("20000")
+          )
+          
       end
       
       it "should create BankAdministrationDetail" do
         @bad.errors.size.should == 0
-        
+        @bad2.errors.size.should == 0
       end
       
       context "Confirm BankAdministration" do
         before(:each) do
+          @ba.reload
           @ba.confirm_object(:confirmed_at => DateTime.now)
         end
         
         it "should confirm BankAdministration" do
           @ba.errors.size.should == 0
           @ba.is_confirmed.should == true
+        end
+        
+        it "should create 1 TransactionalData" do
+         td = TransactionData.where(
+            :transaction_source_type => @ba.class.to_s,
+            :transaction_source_id => @ba.id
+            )
+          td.count.should == 1
         end
         
         context "Unconfirm BankAdministration" do

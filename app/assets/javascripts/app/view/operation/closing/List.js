@@ -61,11 +61,21 @@ Ext.define('AM.view.operation.closing.List' ,{
 			checkChangeBuffer: 300
 		});
 		
+		this.downloadLabaRugiButton  = new Ext.Button({
+			text: 'Laba Rugi Bulan Berjalan',
+			action: 'downloadLabaRugiObject' 
+		});
+		
+		this.downloadReportButton  = new Ext.Button({
+			text: 'Neraca Saldo',
+			action: 'downloadReportObject' 
+		});
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.confirmObjectButton, 	this.downloadLabaRugiButton,this.unconfirmObjectButton,
 					'->',
+					this.downloadReportButton,
 					this.searchField ];
 	 
 

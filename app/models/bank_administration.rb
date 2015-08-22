@@ -87,15 +87,14 @@ class BankAdministration < ActiveRecord::Base
     end   
     
     total_amount = self.cash_bank.amount + self.amount
-    if total_amount < 0 
-      self.errors.add(:generic_errors, "Final CashBank Amount tidak boleh kurang dari 0")
+    if total_amount == 0
+      self.errors.add(:generic_errors, "Final CashBank Amount tidak boleh sama dengan 0")
       return self
     end
         
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
-    if self.save
-      if self.cash_bank.exchange.is_base == false
+    if self.cash_bank.exchange.is_base == false
         latest_exchange_rate = ExchangeRate.get_latest(
           :ex_rate_date => self.administration_date,
           :exchange_id => self.cash_bank.exchange_id
@@ -104,7 +103,8 @@ class BankAdministration < ActiveRecord::Base
         self.exchange_rate_amount = latest_exchange_rate.rate
       else
         self.exchange_rate_amount = 1
-      end
+    end
+    if self.save
       self.generate_cash_mutation
       AccountingService::CreateBankAdministrationJournal.create_confirmation_journal(self)
     end  

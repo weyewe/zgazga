@@ -700,31 +700,31 @@ if Rails.env.development?
   end
   
   # Confirmed PaymentRequest
-  payment_request_array = []
-  (1.upto 10).each do |x|
-    selected_contact = supplier_array[rand( 0..(supplier_array.length - 1))]
-    selected_exchange = exchange_array[rand( 0..(supplier_array.length - 1))]
-    selected_ledger_account = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
-    payment_request = PaymentRequest.create_object(
-      :contact_id => selected_contact.id,
-      :request_date => DateTime.now,
-      :due_date => DateTime.now,
-      :exchange_id => selected_exchange.id,
-      :account_id => selected_ledger_account.id,
-      )
-    (1.upto 5).each do |y|
-    selected_ledger_account_detail = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
-    PaymentRequestDetail.create_object(
-      :payment_request_id => payment_request.id,
-      :account_id => selected_ledger_account_detail.id,
-      :status => NORMAL_BALANCE[:debit],
-      :amount => BigDecimal("1000"),
-      )
-    end
-    payment_request.reload
-    payment_request.confirm_object(payment_request)
-    payment_request_array << payment_request
-  end
+  # payment_request_array = []
+  # (1.upto 10).each do |x|
+  #   selected_contact = supplier_array[rand( 0..(supplier_array.length - 1))]
+  #   selected_exchange = exchange_array[rand( 0..(supplier_array.length - 1))]
+  #   selected_ledger_account = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+  #   payment_request = PaymentRequest.create_object(
+  #     :contact_id => selected_contact.id,
+  #     :request_date => DateTime.now,
+  #     :due_date => DateTime.now,
+  #     :exchange_id => selected_exchange.id,
+  #     :account_id => selected_ledger_account.id,
+  #     )
+  #   (1.upto 5).each do |y|
+  #   selected_ledger_account_detail = ledger_account_array[rand( 0..(ledger_account_array.length - 1))]
+  #   PaymentRequestDetail.create_object(
+  #     :payment_request_id => payment_request.id,
+  #     :account_id => selected_ledger_account_detail.id,
+  #     :status => NORMAL_BALANCE[:debit],
+  #     :amount => BigDecimal("1000"),
+  #     )
+  #   end
+  #   payment_request.reload
+  #   payment_request.confirm_object(payment_request)
+  #   payment_request_array << payment_request
+  # end
   
   # Not Confirmed PaymentRequest
   (1.upto 10).each do |x|
@@ -1668,82 +1668,82 @@ if Rails.env.development?
   end
   
   # Confirmed Memorial
-  memorial_array = []
-  (1.upto 10).each do |x|
-    memorial = Memorial.create_object(
-        :description => "Description #{x}",
-        :no_bukti => "Memo#{x}",
-        :amount => BigDecimal("10000")
-      )
-      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
-      MemorialDetail.create_object(
-          :memorial_id => memorial.id,
-          :account_id => selected_account.id,
-          :amount => BigDecimal("5000"),
-          :status => NORMAL_BALANCE[:debit]
-        )
-      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
-      MemorialDetail.create_object(
-          :memorial_id => memorial.id,
-          :account_id => selected_account.id,
-          :amount => BigDecimal("5000"),
-          :status => NORMAL_BALANCE[:credit]
-        )
-    if memorial.errors.size == 0 
-      memorial.confirm_object(:confirmed_at => DateTime.now)
-      memorial.reload
-      memorial_array << memorial
-    end
-  end
+  # memorial_array = []
+  # (1.upto 10).each do |x|
+  #   memorial = Memorial.create_object(
+  #       :description => "Description #{x}",
+  #       :no_bukti => "Memo#{x}",
+  #       :amount => BigDecimal("10000")
+  #     )
+  #     selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+  #     MemorialDetail.create_object(
+  #         :memorial_id => memorial.id,
+  #         :account_id => selected_account.id,
+  #         :amount => BigDecimal("5000"),
+  #         :status => NORMAL_BALANCE[:debit]
+  #       )
+  #     selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+  #     MemorialDetail.create_object(
+  #         :memorial_id => memorial.id,
+  #         :account_id => selected_account.id,
+  #         :amount => BigDecimal("5000"),
+  #         :status => NORMAL_BALANCE[:credit]
+  #       )
+  #   if memorial.errors.size == 0 
+  #     memorial.confirm_object(:confirmed_at => DateTime.now)
+  #     memorial.reload
+  #     memorial_array << memorial
+  #   end
+  # end
   
-  # NotConfirmed BankAdministration
-  (1.upto 10).each do |x|
-    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
-    bank_administration = BankAdministration.create_object(
-        :cash_bank_id => selected_cashbank.id,
-        :administration_date => DateTime.now,
-        :description => "Description #{x}",
-        :no_bukti => "BA#{x}",
-        :exchange_rate_amount => BigDecimal("1")
-      )
-    (1.upto 4).each do |y|
-      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
-      BankAdministrationDetail.create_object(
-        :bank_administration_id => bank_administration.id,
-        :account_id => selected_account.id,
-        :description => "Description #{y}",
-        :status => rand(1..2),
-        :amount => BigDecimal("10000"),
-        )
-    end
-  end
+  # # NotConfirmed BankAdministration
+  # (1.upto 10).each do |x|
+  #   selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
+  #   bank_administration = BankAdministration.create_object(
+  #       :cash_bank_id => selected_cashbank.id,
+  #       :administration_date => DateTime.now,
+  #       :description => "Description #{x}",
+  #       :no_bukti => "BA#{x}",
+  #       :exchange_rate_amount => BigDecimal("1")
+  #     )
+  #   (1.upto 4).each do |y|
+  #     selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+  #     BankAdministrationDetail.create_object(
+  #       :bank_administration_id => bank_administration.id,
+  #       :account_id => selected_account.id,
+  #       :description => "Description #{y}",
+  #       :status => rand(1..2),
+  #       :amount => BigDecimal("10000"),
+  #       )
+  #   end
+  # end
   
-  # Confirmed BankAdministration
-  bank_administration_array = []
-  (1.upto 10).each do |x|
-    selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
-    bank_administration = BankAdministration.create_object(
-        :cash_bank_id => selected_cashbank.id,
-        :administration_date => DateTime.now,
-        :description => "Description #{x}",
-        :no_bukti => "BA#{x}",
-      )
-    (1.upto 4).each do |y|
-      selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
-      BankAdministrationDetail.create_object(
-        :bank_administration_id => bank_administration.id,
-        :account_id => selected_account.id,
-        :description => "Description #{y}",
-        :status => rand(1..2),
-        :amount => BigDecimal("10000"),
-        )
-    end
-    if bank_administration.errors.size == 0 
-      bank_administration.reload
-      bank_administration.confirm_object(:confirmed_at => DateTime.now)
-      bank_administration_array << bank_administration
-    end
-  end
+  # # Confirmed BankAdministration
+  # bank_administration_array = []
+  # (1.upto 10).each do |x|
+  #   selected_cashbank = cashbank_array[rand(0..(cashbank_array.length - 1))] 
+  #   bank_administration = BankAdministration.create_object(
+  #       :cash_bank_id => selected_cashbank.id,
+  #       :administration_date => DateTime.now,
+  #       :description => "Description #{x}",
+  #       :no_bukti => "BA#{x}",
+  #     )
+  #   (1.upto 4).each do |y|
+  #     selected_account = ledger_account_array[rand(0..(ledger_account_array.length - 1))] 
+  #     BankAdministrationDetail.create_object(
+  #       :bank_administration_id => bank_administration.id,
+  #       :account_id => selected_account.id,
+  #       :description => "Description #{y}",
+  #       :status => rand(1..2),
+  #       :amount => BigDecimal("10000"),
+  #       )
+  #   end
+  #   if bank_administration.errors.size == 0 
+  #     bank_administration.reload
+  #     bank_administration.confirm_object(:confirmed_at => DateTime.now)
+  #     bank_administration_array << bank_administration
+  #   end
+  # end
   
   # NotConfirmed SalesDownPayment
   (1.upto 10).each do |x|
