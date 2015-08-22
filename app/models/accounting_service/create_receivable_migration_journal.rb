@@ -20,7 +20,7 @@ module AccountingService
       real_amount =  receivable_migration.amount_receivable
     end
     
-    puts "The real amount: #{real_amount.to_s}, exchange: #{receivable_migration.exchange.is_base}"
+    # puts "The real amount: #{real_amount.to_s}, exchange: #{receivable_migration.exchange.is_base}"
  
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        

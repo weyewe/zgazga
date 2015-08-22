@@ -694,7 +694,9 @@ ACCOUNT_CODE = {
     :locked_savings_account => 240,
     :memorial_general => 250,
     
-    :payable_migration_journal => 666
+    :payable_migration_journal => 666,
+    :receivable_migration_journal => 667,
+    
   
   
 }
