@@ -80,26 +80,29 @@ class Blanket < ActiveRecord::Base
   end
   
   def valid_adhesive
-    if not adhesive_id == 0  
+    
+    
+    
+    if adhesive_id.present? 
       adhesive = Item.find_by_id(adhesive_id)
       if adhesive.nil?
         self.errors.add(:adhesive_id, "Adhesive tidak valid")
         return self
       else
         if not adhesive.item_type.name == ITEM_TYPE_CASE[:AdhesiveBlanket]
-          self.errors.add(:adhesive_id, "Adhesive tidak valid")
+          self.errors.add(:adhesive_id, "Adhesive1  harus dari tipe adhesive blanket")
           return self
         end
       end
-    end
-    if not adhesive2_id == 0  
+    end                                                                                                                                                                                                                                                                                                             
+    if adhesive2_id.present?
       adhesive2 = Item.find_by_id(adhesive2_id)
       if adhesive2.nil?
-        self.errors.add(:adhesive2_id, "Adhesive tidak valid")
+        self.errors.add(:adhesive2_id, "Adhesive2  tidak valid")
         return self
       else
         if not adhesive2.item_type.name == ITEM_TYPE_CASE[:AdhesiveBlanket]
-          self.errors.add(:adhesive2_id, "Adhesive tidak valid")
+          self.errors.add(:adhesive2_id, "Adhesive2  harus dari tipe adhesive blanket")
           return self
         end
       end

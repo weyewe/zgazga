@@ -335,7 +335,9 @@ MIGRATION_FILENAME = {
   
   
   :outstanding_hutang => 'hutang.csv',
-  :outstanding_piutang => 'piutang.csv'
+  :outstanding_piutang => 'piutang.csv',
+  
+  :warehouse_serpong => "warehouse_serpong.csv"
   
   
 } 

@@ -28,7 +28,7 @@ namespace :migrate_zga do
             is_deleted = false
             is_deleted = true if row[4] == "True"
             
-            next if is_deleted  
+            # next if is_deleted  
             
   
             object = Machine.create_object( 

@@ -209,8 +209,8 @@ namespace :migrate_zga do
           
  
           new_uom_id =  uom_mapping_hash[uom_id] 
-          new_exchange_id =  uom_mapping_hash[exchange_id]
-          new_machine_id =  machine_mapping_hash[exchange_id] 
+          new_exchange_id =  exchange_mapping_hash[exchange_id]
+          new_machine_id =  machine_mapping_hash[machine_id] 
           new_contact_id =  contact_mapping_hash[contact_id] 
           
      
@@ -249,13 +249,13 @@ namespace :migrate_zga do
 
           
           if Machine.find_by_id( new_machine_id.to_i ).nil?
-            puts "fucka.. id #{new_machine_id} has no corresponding new machine_id "
+            puts "fucka.. id #{machine_id} has no corresponding new machine_id "
             error = true 
           end
           
           
           if Exchange.find_by_id( new_exchange_id.to_i ).nil?
-            puts "fucka.. id #{new_exchange_id} has no corresponding new exchange_id "
+            puts "fucka.. id #{exchange_id} has no corresponding new exchange_id "
             error = true 
           end
           
@@ -270,7 +270,7 @@ namespace :migrate_zga do
           end
           
     
-          next if error 
+          # next if error 
           
           
     
@@ -303,12 +303,15 @@ namespace :migrate_zga do
             :exchange_id =>  new_exchange_id,
           )
 
+          if object.errors.size != 0 
             object.errors.messages.each {|x| puts "blanket migration error. old id : #{id}. message: #{x}"}
-          
-           
-
+          else
             result_array << [ id , 
                     object.id   ]
+          end
+           
+
+            
 
         end
         
@@ -351,15 +354,15 @@ namespace :migrate_zga do
         next if is_deleted 
         new_item_type_id =  item_type_mapping_hash[item_type_id] 
         if  new_item_type_id.to_i == blanket_item_type.id
-          puts "Sku: #{sku}"
+          # puts "Sku: #{sku}"
           original_blanket_item_type_hash[sku] = id 
         end 
         
       end
     end
     
-    puts "The content of original_blanket_item_type_hash: "
-    puts original_blanket_item_type_hash
+    # puts "The content of original_blanket_item_type_hash: "
+    # puts original_blanket_item_type_hash
     
     CSV.open(item_lookup_location, 'a') do |csv|
       result_array.each do |el| 
@@ -394,7 +397,10 @@ namespace :migrate_zga do
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     result_array = [] 
-    awesome_row_counter = - 1 
+    awesome_row_counter = -1
+    
+    error_sku_list =  [] 
+    
     
     CSV.open(original_location, 'r') do |csv| 
         csv.each do |row| 
@@ -418,7 +424,7 @@ namespace :migrate_zga do
           is_deleted = false 
           is_deleted  = true if row[13] == "True" 
           
-          next if is_deleted 
+          # next if is_deleted 
           
  
 
@@ -449,7 +455,7 @@ namespace :migrate_zga do
           
           
     
-          
+          # puts "Gonna build core builder, base_sku: #{sku}"
           object = CoreBuilder.create_object(
             :base_sku => sku,
             :name => name,
@@ -461,17 +467,26 @@ namespace :migrate_zga do
             :tl => tl
             )
 
+          if object.errors.size != 0
+            object.errors.messages.each {|msg| puts "rrorr in creating shite SKU: #{sku}. err  msg: #{msg}"} 
+            error_sku_list << sku 
+          else
+            result_array << [ id , 
+                    object.id , 
+                    object.base_sku  ]
+          end
             
           
            
 
-            result_array << [ id , 
-                    object.id , 
-                    object.base_sku  ]
+            
 
         end
         
     end
+    
+    
+    # puts "The error sku_list: error_sku_list"
     
     CSV.open(lookup_location, 'w') do |csv|
       result_array.each do |el| 
@@ -510,7 +525,7 @@ namespace :migrate_zga do
         next if is_deleted 
         new_item_type_id =  item_type_mapping_hash[item_type_id] 
         if  new_item_type_id.to_i == core_item_type.id
-          puts "Sku: #{sku}"
+          # puts "Sku: #{sku}"
           original_core_item_type_hash[sku] = id 
         end 
         
@@ -803,6 +818,38 @@ namespace :migrate_zga do
     end
     
     puts "Done migrating roller builder. Total core builder : #{RollerBuilder.count}"
+  end
+  
+  task :warehouse_serpong  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_serpong]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          end
+        end
+        
+        
+    end
+    
+    puts "erroneous sku: #{non_present_sku_list}"
   end
  
   
