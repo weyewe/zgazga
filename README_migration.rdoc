@@ -21,17 +21,28 @@ bundle exec rake migrate_zga:item_type
 bundle exec rake  migrate_zga:sub_type
 
 
+bundle exec rake migrate_zga:warehouse 
+
 bundle exec rake migrate_zga:independent_item 
 bundle exec rake migrate_zga:blanket 
 bundle exec rake migrate_zga:core_builder
-bundle exec rake migrate_zga:warehouse_serpong
-
 bundle exec rake migrate_zga:roller_type
 bundle exec rake  migrate_zga:roller_builder 
-bundle exec rake migrate_zga:warehouse 
-
-
+bundle exec rake migrate_zga:warehouse_a1
+bundle exec rake migrate_zga:warehouse_e15
+bundle exec rake migrate_zga:warehouse_e16 
+bundle exec rake migrate_zga:warehouse_semarang
+bundle exec rake migrate_zga:warehouse_surabaya
+ 
 
 
 bundle exec rake migrate_zga:outstanding_piutang
 bundle exec rake migrate_zga:outstanding_hutang
+
+
+StockAdjustment.first.unconfirm_object
+StockAdjustmentDetail.all.each {|x| x.delete_object } 
+StockAdjustment.first.delete_object 
+
+
+BatchInstance.all.each {|x| x.delete_object } 

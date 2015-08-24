@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20150821081125) do
     t.string   "name"
     t.text     "description"
     t.datetime "manufactured_at"
+    t.datetime "expiry_date"
     t.decimal  "amount",                 precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
