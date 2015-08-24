@@ -46,3 +46,5 @@ StockAdjustment.first.delete_object
 
 
 BatchInstance.all.each {|x| x.delete_object } 
+
+test hahaha
