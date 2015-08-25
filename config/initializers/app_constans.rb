@@ -341,7 +341,9 @@ MIGRATION_FILENAME = {
   :warehouse_e15 => "warehouse_e15.csv",
   :warehouse_e16 => "warehouse_e16.csv",
   :warehouse_surabaya => 'warehouse_sby.csv',
-  :warehouse_semarang => 'warehouse_semarang.csv'
+  :warehouse_semarang => 'warehouse_semarang.csv',
+  
+  :item_avg_price => 'item_avg_price.csv'
   
   
 } 

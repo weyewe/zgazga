@@ -201,7 +201,12 @@ class Blanket < ActiveRecord::Base
     new_object.minimum_amount = BigDecimal('1')  
     new_object.selling_price = BigDecimal('1')  
     new_object.price_list = BigDecimal('1')  
-    new_object.exchange_id = Exchange.where(:is_base => true).first.id
+    if params[:exchange_id].nil? 
+      new_object.exchange_id = Exchange.where(:is_base => true).first.id 
+    else
+      new_object.exchange_id = params[:exchange_id]
+    end
+    
     if new_object.save
     
     end

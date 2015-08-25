@@ -1550,6 +1550,35 @@ namespace :migrate_zga do
     puts "erroneous sku: #{non_present_sku_list}"
     puts "The duplicate: #{duplicate_batch_instance_name_array}"
   end
+  
+
+  task :collect_item_avg_price  => :environment do
+ 
+    mismatch_sku_list  = [] 
+    
+    item_hash = get_item_avg_price_hash
+    
+    # puts "The item hash: #{item_hash}"
+    
+    item_hash.each do |key, value | 
+      if value[:exchange_id] != value[:listed_exchange_id]
+        # puts "exchange_id #{value[:exchange_id]}, listed_exchange_id: #{value[:listed_exchange_id]}, old_exchange_id: #{value[:old_exchange_id]}"
+        # puts "item with id : #{key} has mismatch exchange_id"
+        mismatch_sku_list << Item.find_by_id( key ).sku 
+      end
+    end
+    
+    # usd = 12158
+    # euro = 15160.27
+    # CHF = 12612.25
+    # USD = 12158
+    # GBP = 19066.87
+    # SGD = 9335.61
+    
+    # [1, 3, 2, 4]   1 == IDR ,  3 == Euro , 4 == CHF, 2 == USD
+    # puts "the mismatch: #{mismatch_sku_list}"
+    # 
+  end
  
   
 end
