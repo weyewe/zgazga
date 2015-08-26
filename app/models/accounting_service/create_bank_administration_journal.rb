@@ -2,7 +2,7 @@ module AccountingService
   class CreateBankAdministrationJournal
   def CreateBankAdministrationJournal.create_confirmation_journal(bank_administration) 
       
-    message = "BankAdministration"
+    message = "BankAdministration #{bank_administration.no_bukti} "
 
       ta = TransactionData.create_object({
         :transaction_datetime => bank_administration.administration_date,

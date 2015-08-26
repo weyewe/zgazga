@@ -56,13 +56,15 @@ class PurchaseOrder < ActiveRecord::Base
   end
   
   def update_object( params ) 
-    if self.is_confirmed? 
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
-      return self
-    end
-    if self.purchase_order_details.count > 0
-      self.errors.add(:generic_errors, "Sudah memiliki detail")
-      return self 
+    if self.allow_edit_detail == false
+      if self.is_confirmed? 
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self
+      end
+      if self.purchase_order_details.count > 0
+        self.errors.add(:generic_errors, "Sudah memiliki detail")
+        return self 
+      end
     end
     self.contact_id = params[:contact_id]
     self.purchase_date = params[:purchase_date]

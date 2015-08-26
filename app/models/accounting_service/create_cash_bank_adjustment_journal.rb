@@ -2,7 +2,7 @@ module AccountingService
   class CreateCashBankAdjustmentJournal
   def CreateCashBankAdjustmentJournal.create_confirmation_journal(cash_bank_adjustment) 
       
-    message = "CashBank Adjustment"
+    message = "CashBank Adjustment #{cash_bank_adjustment.code}"
 
       ta = TransactionData.create_object({
         :transaction_datetime => cash_bank_adjustment.adjustment_date,

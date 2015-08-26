@@ -246,6 +246,7 @@ class Item < ActiveRecord::Base
       return self
     end
     self.destroy
+    return self
   end
   
   

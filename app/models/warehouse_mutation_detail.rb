@@ -71,6 +71,7 @@ class WarehouseMutationDetail < ActiveRecord::Base
     new_object.amount = params[:amount]
     if new_object.save
       new_object.code = "WmD-" + new_object.id.to_s  
+      new_object.save
     end
     return new_object
   end

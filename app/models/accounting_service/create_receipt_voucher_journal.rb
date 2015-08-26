@@ -1,7 +1,7 @@
 module AccountingService
   class CreateReceiptVoucherJournal
   def CreateReceiptVoucherJournal.create_confirmation_journal(receipt_voucher) 
-    message = "Receipt Voucher"
+    message = "Receipt Voucher #{receipt_voucher.no_bukti}"
       ta = TransactionData.create_object({
         :transaction_datetime => receipt_voucher.receipt_date,
         :description =>  message,

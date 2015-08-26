@@ -88,7 +88,11 @@ class Api::ItemsController < Api::BaseApiController
     if not @object.persisted? 
       render :json => { :success => true, :total => Item.active_objects.count }  
     else
-      render :json => { :success => false, :total => Item.active_objects.count }  
+      render :json => { :success => false, :total => Item.active_objects.count ,
+              :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+      }
     end
   end
   
@@ -168,7 +172,7 @@ class Api::ItemsController < Api::BaseApiController
                         order("id DESC")
                         
       @total = Item.compounds.joins(:exchange, :item_type, :uom).where{ 
-               ( sku  =~ query ) | 
+        ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.count

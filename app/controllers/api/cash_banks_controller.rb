@@ -78,16 +78,14 @@ class Api::CashBanksController < Api::BaseApiController
     @object = CashBank.find(params[:id])
     @object.delete_object
 
-   if  @object.persisted?
-      msg = {
-        :success => false, 
-        :message => {
-          :errors => extjs_error_format( @object.errors )  
-        }
-      }      
-      render :json => msg
-    else     
-      render :json => { :success => true, :total => CashBank.active_objects.count }  
+    if not @object.persisted?
+      render :json => { :success => true, :total => Uom.active_objects.count }  
+    else
+      render :json => { :success => false, :total => Uom.active_objects.count,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+        }  
     end
   end
   

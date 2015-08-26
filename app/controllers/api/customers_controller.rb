@@ -98,7 +98,11 @@ class Api::CustomersController < Api::BaseApiController
     if not @object.persisted?
       render :json => { :success => true, :total => Contact.active_objects.customers.count }  
     else
-      render :json => { :success => false, :total => Contact.active_objects.customers.count }  
+      render :json => { :success => false, :total => Contact.active_objects.customers.count ,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+      }  
     end
   end
   

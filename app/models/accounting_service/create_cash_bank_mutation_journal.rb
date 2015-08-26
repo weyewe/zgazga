@@ -1,7 +1,7 @@
 module AccountingService
   class CreateCashBankMutationJournal
   def CreateCashBankMutationJournal.create_confirmation_journal(cash_bank_mutation) 
-    message = "CashBank Mutation"
+    message = "CashBank Mutation #{cash_bank_mutation.no_bukti}"
       ta = TransactionData.create_object({
         :transaction_datetime => cash_bank_mutation.mutation_date,
         :description =>  message,

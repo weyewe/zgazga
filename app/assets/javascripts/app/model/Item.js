@@ -11,7 +11,11 @@ Ext.define('AM.model.Item', {
     	{ name: 'sku', type: 'string' },
     	{ name: 'description', type: 'string' },
     	{ name: 'amount', type: 'string' },
+    	{ name: 'customer_amount', type: 'string' },
+    	{ name: 'pending_delivery', type: 'string' },
+    	{ name: 'pending_receival', type: 'string' },
     	{ name: 'is_tradeable', type: 'boolean' },
+    	{ name: 'virtual', type: 'string' },
     	
     	{ name: 'minimum_amount', type: 'string' },
     	{ name: 'selling_price', type: 'string' },

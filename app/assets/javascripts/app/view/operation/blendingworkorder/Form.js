@@ -104,7 +104,7 @@ Ext.define('AM.view.operation.blendingworkorder.Form', {
 				{
 					xtype: 'textarea',
 					name : 'description',
-					fieldLabel: 'Deskiprsi'
+					fieldLabel: 'Deskripsi'
 				},
 				{
   				fieldLabel: 'Blending Recipe',

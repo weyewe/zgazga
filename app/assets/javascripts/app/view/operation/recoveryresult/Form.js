@@ -130,7 +130,7 @@ Ext.define('AM.view.operation.recoveryresult.Form', {
 					valueField : 'item_compound_id',
 					pageSize : 5,
 					minChars : 1, 
-					allowBlank : false, 
+					allowBlank : true, 
 					triggerAction: 'all',
 					store : remoteJsonStoreItemCompound , 
 					listConfig : {

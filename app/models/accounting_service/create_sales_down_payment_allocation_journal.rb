@@ -1,7 +1,7 @@
 module AccountingService
   class CreateSalesDownPaymentAllocationJournal
   def CreateSalesDownPaymentAllocationJournal.create_confirmation_journal(sales_down_payment_allocation) 
-    message = "SalesDownPaymentAllocation"
+    message = "SalesDownPaymentAllocation #{sales_down_payment_allocation.code}"
       ta = TransactionData.create_object({
         :transaction_datetime => sales_down_payment_allocation.allocation_date,
         :description =>  message,
