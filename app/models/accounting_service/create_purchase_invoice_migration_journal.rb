@@ -1,7 +1,7 @@
 module AccountingService
   class CreatePurchaseInvoiceMigrationJournal
   def CreatePurchaseInvoiceMigrationJournal.create_confirmation_journal(purchase_invoice_migration) 
-    message = "Purchase Invoice Migration"
+    message = "Purchase Invoice Migration #{purchase_invoice_migration.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => purchase_invoice_migration.invoice_date,
         :description =>  message,

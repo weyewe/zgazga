@@ -93,7 +93,11 @@ class Api::WarehousesController < Api::BaseApiController
     if not @object.persisted? 
       render :json => { :success => true, :total => Warehouse.active_objects.count }  
     else
-      render :json => { :success => false, :total => Warehouse.active_objects.count }  
+      render :json => { :success => false, :total => Warehouse.active_objects.count ,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+      }  
     end
   end
   

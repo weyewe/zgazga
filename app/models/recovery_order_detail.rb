@@ -113,9 +113,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
-    if params[:compound_under_layer_usage] <= BigDecimal("0")
-      self.errors.add(:compound_under_layer_usage, "Harus lebih dari 0")
-      return self 
+    if params[:compound_under_layer_id] != 0
+      if BigDecimal(params[:compound_under_layer_usage]) <= BigDecimal("0")
+        self.errors.add(:compound_under_layer_usage, "Harus lebih dari 0")
+        return self 
+      end
     end
     # self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
     return self if self.errors.size != 0 

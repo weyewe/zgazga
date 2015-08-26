@@ -1,7 +1,7 @@
 module AccountingService
   class CreateVirtualOrderClearanceJournal
   def CreateVirtualOrderClearanceJournal.create_confirmation_journal(virtual_order_clearance) 
-    message = "VirtualOrderClearance"
+    message = "VirtualOrderClearance #{virtual_order_clearance.code}"
       ta = TransactionData.create_object({
         :transaction_datetime => virtual_order_clearance.clearance_date,
         :description =>  message,

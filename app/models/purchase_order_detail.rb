@@ -58,9 +58,11 @@ class PurchaseOrderDetail < ActiveRecord::Base
     new_object = self.new
     purchase_order = PurchaseOrder.find_by_id(params[:purchase_order_id])
     if not purchase_order.nil?
-      if purchase_order.is_confirmed?
-        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
-        return new_object 
+      if purchase_order.allow_edit_detail == false
+        if purchase_order.is_confirmed?
+          new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+          return new_object 
+        end
       end
     end
     new_object.purchase_order_id = params[:purchase_order_id]
@@ -75,9 +77,11 @@ class PurchaseOrderDetail < ActiveRecord::Base
   end
   
   def update_object(params)
-    if self.purchase_order.is_confirmed?
-      self.errors.add(:generic_errors, "Sudah di konfirmasi")
-      return self 
+    if purchase_order.allow_edit_detail == false
+      if self.purchase_order.is_confirmed?
+        self.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return self 
+      end
     end
     self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')

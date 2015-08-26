@@ -42,17 +42,17 @@ class PaymentVoucherDetail < ActiveRecord::Base
       :payable_id => pyb.id
       ).count  
     
-    # if self.persisted?
-    #   if pvcount > 1
-    #     self.errors.add(:payable_id, "Payable sudah terpakai")
-    #   return self 
-    #   end
-    # else
-    #   if pvcount > 0
-    #     self.errors.add(:payable_id, "Payable sudah terpakai")
-    #   return self 
-    #   end
-    # end
+    if self.persisted?
+      if pvcount > 1
+        self.errors.add(:payable_id, "Payable sudah terpakai")
+      return self 
+      end
+    else
+      if pvcount > 0
+        self.errors.add(:payable_id, "Payable sudah terpakai")
+      return self 
+      end
+    end
   end 
   
   def calculateTotalAmount

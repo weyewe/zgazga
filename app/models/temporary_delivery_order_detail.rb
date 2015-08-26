@@ -13,7 +13,7 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
     return if  sales_order_detail_id.nil?
     pod = SalesOrderDetail.find_by_id sales_order_detail_id
     if pod.nil? 
-      self.errors.add(:item_id, "Harus ada sales_order_detail_id")
+      self.errors.add(:sales_order_detail_id, "Harus ada sales_order_detail_id")
       return self 
     end
     
@@ -24,12 +24,12 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
     
     if self.persisted?
        if itemcount > 1
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:sales_order_detail_id, "Item sudah terpakai")
       return self 
        end
     else
        if itemcount > 0
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:sales_order_detail_id, "Item sudah terpakai")
       return self 
        end
     end

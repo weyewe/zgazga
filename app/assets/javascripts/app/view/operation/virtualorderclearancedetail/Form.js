@@ -22,11 +22,11 @@ Ext.define('AM.view.operation.virtualorderclearancedetail.Form', {
 					mapping : "code"
 				}, 
 				{
-					name : 'virtual_delivery_order_detail_item_sku',
+					name : 'virtual_order_detail_item_sku',
 					mapping : 'virtual_order_detail_item_sku'
 				},
 				{
-					name : 'virtual_delivery_order_detail_item_name',
+					name : 'virtual_order_detail_item_name',
 					mapping : 'virtual_order_detail_item_name'
 				},
 				{

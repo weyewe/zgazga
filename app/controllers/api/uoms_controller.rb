@@ -87,7 +87,11 @@ class Api::UomsController < Api::BaseApiController
     if not @object.persisted?
       render :json => { :success => true, :total => Uom.active_objects.count }  
     else
-      render :json => { :success => false, :total => Uom.active_objects.count }  
+      render :json => { :success => false, :total => Uom.active_objects.count,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+        }  
     end
   end
   

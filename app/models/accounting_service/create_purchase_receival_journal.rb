@@ -1,7 +1,7 @@
 module AccountingService
   class CreatePurchaseReceivalJournal
   def CreatePurchaseReceivalJournal.create_confirmation_journal(purchase_receival) 
-    message = "Purchase Receival"
+    message = "Purchase Receival #{purchase_receival.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => purchase_receival.receival_date,
         :description =>  message,

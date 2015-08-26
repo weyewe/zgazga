@@ -47,12 +47,12 @@ class SalesInvoiceDetail < ActiveRecord::Base
     
     if self.persisted?
        if itemcount > 1
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:delivery_order_detail_id, "Item sudah terpakai")
       return self 
        end
     else
        if itemcount > 0
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:delivery_order_detail_id, "Item sudah terpakai")
       return self 
        end
     end

@@ -1,7 +1,7 @@
 module AccountingService
   class CreateSalesInvoiceJournal
   def CreateSalesInvoiceJournal.create_confirmation_journal(sales_invoice) 
-    message = "Sales Invoice"
+    message = "Sales Invoice #{sales_invoice.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => sales_invoice.invoice_date,
         :description =>  message,

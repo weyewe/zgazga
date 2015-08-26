@@ -4,7 +4,7 @@ json.warehouse_stock_details objects do |object|
 	json.item_name			object.item.name 
 	
 	json.amount   object.amount
-	 
+	json.customer_amount object.customer_amount
 	
 	json.item_uom_id object.item.uom.id
 	json.item_uom_name object.item.uom.name 

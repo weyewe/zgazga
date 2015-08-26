@@ -88,7 +88,11 @@ class Api::ItemTypesController < Api::BaseApiController
     if not @object.persisted?
       render :json => { :success => true, :total => ItemType.active_objects.count }  
     else
-      render :json => { :success => false, :total => ItemType.active_objects.count }  
+      render :json => { :success => false, :total => ItemType.active_objects.count,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+        }  
     end
   end
   

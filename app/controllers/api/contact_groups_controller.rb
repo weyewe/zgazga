@@ -80,7 +80,11 @@ class Api::ContactGroupsController < Api::BaseApiController
     if @object.is_deleted
       render :json => { :success => true, :total => ContactGroup.active_objects.count }  
     else
-      render :json => { :success => false, :total => ContactGroup.active_objects.count }  
+      render :json => { :success => false, :total => ContactGroup.active_objects.count ,
+            :message => {
+              :errors => extjs_error_format( @object.errors )  
+            }
+      }  
     end
   end
   

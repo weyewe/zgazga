@@ -22,7 +22,8 @@ Ext.define('AM.view.operation.warehousestockdetail.List' ,{
 				xtype : 'templatecolumn',
 				text : "Quantity",
 				flex : 3,
-				tpl : 	' <b>{amount}</b> {item_uom_name}'  
+				tpl : 	' <b>{amount}</b> {item_uom_name}' +  '<br />' + '<br />' +
+						'Customer Amount : {customer_amount}'
 			},
 			
 			

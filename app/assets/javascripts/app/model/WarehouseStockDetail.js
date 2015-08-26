@@ -11,6 +11,7 @@ Ext.define('AM.model.WarehouseStockDetail', {
     	    { name: 'item_sku', type: 'string' },
     	    { name: 'item_uom_name', type: 'string' },
 			{ name: 'amount', type: 'string' } ,
+			{ name: 'customer_amount', type: 'string' } ,
  
 			
   	],

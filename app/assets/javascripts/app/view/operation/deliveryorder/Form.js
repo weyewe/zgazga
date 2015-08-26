@@ -96,11 +96,6 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
 			        name : 'roller_identification_form_id',
 			        fieldLabel: 'roller_identification_form_id'
 			      },
-			      {
-		            xtype: 'displayfield',
-		            name : 'roller_identification_form_code',
-		            fieldLabel: 'Kode RIF'
-		        },
     	      {
     		        xtype: 'displayfield',
     		        name : 'code',

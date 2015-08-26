@@ -2,7 +2,7 @@ module AccountingService
   class CreateMemorialJournal
   def CreateMemorialJournal.create_confirmation_journal(memorial) 
       
-    message = "Memorial"
+    message = "Memorial #{memorial.no_bukti}"
 
       ta = TransactionData.create_object({
         :transaction_datetime => memorial.confirmed_at,

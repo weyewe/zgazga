@@ -8,9 +8,17 @@ Ext.define('AM.view.master.item.List' ,{
 	initComponent: function() {
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
-			{ header: 'Nama',  dataIndex: 'name', flex: 1},
 			{	header: 'Sku', dataIndex: 'sku', flex: 1 } ,
-			{	header: 'Qty', dataIndex: 'amount', flex: 1 } ,
+			{ header: 'Nama',  dataIndex: 'name', flex: 1},
+			{ header: 'Ready',  dataIndex: 'amount', flex: 1},
+			{ header: 'Pending Receival',  dataIndex: 'pending_receival', flex: 1},
+			{ header: 'Pending Delivery',  dataIndex: 'pending_delivery', flex: 1},
+			{ header: 'Minimum',  dataIndex: 'minimum_amount', flex: 1},
+			{ header: 'Virtual',  dataIndex: 'virtual', flex: 1},
+			{ header: 'Cust QTY',  dataIndex: 'customer_amount', flex: 1},
+			{ header: 'UoM',  dataIndex: 'uom_name', flex: 1},
+			{ header: 'Selling Price',  dataIndex: 'selling_price', flex: 1},
+			{ header: 'Currency',  dataIndex: 'exchange_name', flex: 1},
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
 			{	header: 'Untuk Dijual?', dataIndex: 'is_tradeable', flex: 1 } 
 		];

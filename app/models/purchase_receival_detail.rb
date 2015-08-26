@@ -32,7 +32,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
     return if  purchase_order_detail_id.nil?
     pod = PurchaseOrderDetail.find_by_id purchase_order_detail_id
     if pod.nil? 
-      self.errors.add(:item_id, "Harus ada purchase_order_detail_id")
+      self.errors.add(:purchase_order_detail_id, "Harus ada purchase_order_detail_id")
       return self 
     end
     
@@ -43,12 +43,12 @@ class PurchaseReceivalDetail < ActiveRecord::Base
     
     if self.persisted?
        if itemcount > 1
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:purchase_order_detail_id, "Item sudah terpakai")
       return self 
        end
     else
        if itemcount > 0
-         self.errors.add(:item_id, "Item sudah terpakai")
+         self.errors.add(:purchase_order_detail_id, "Item sudah terpakai")
       return self 
        end
     end

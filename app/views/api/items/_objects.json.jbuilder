@@ -6,10 +6,14 @@ json.items objects do |object|
 	json.description object.description 
 	json.is_tradeable object.is_tradeable
 	json.minimum_amount object.minimum_amount
+	json.pending_delivery object.pending_delivery
+	json.pending_receival object.pending_receival
 	json.selling_price object.selling_price
 	
 	json.price_list object.price_list  
 	json.amount object.amount  
+	json.virtual object.virtual
+	json.customer_amount object.customer_amount
     	
     	
 	json.exchange_id object.exchange_id

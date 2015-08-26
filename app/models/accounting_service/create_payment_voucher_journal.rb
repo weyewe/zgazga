@@ -1,7 +1,7 @@
 module AccountingService
   class CreatePaymentVoucherJournal
   def CreatePaymentVoucherJournal.create_confirmation_journal(payment_voucher) 
-    message = "Payment Voucher"
+    message = "Payment Voucher #{payment_voucher.no_bukti}"
       ta = TransactionData.create_object({
         :transaction_datetime => payment_voucher.payment_date,
         :description =>  message,

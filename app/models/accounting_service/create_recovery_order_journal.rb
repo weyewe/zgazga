@@ -1,7 +1,7 @@
 module AccountingService
   class CreateRecoveryOrderJournal
     def CreateRecoveryOrderJournal.create_confirmation_journal(recovery_order_detail) 
-      message = "RecoveryOrder"
+      message = "RecoveryOrder #{recovery_order_detail.recovery_order.code}"
         ta = TransactionData.create_object({
           :transaction_datetime => recovery_order_detail.finished_date,
           :description =>  message,

@@ -1,7 +1,7 @@
 module AccountingService
   class CreateDeliveryOrderJournal
   def CreateDeliveryOrderJournal.create_confirmation_journal(delivery_order) 
-    message = "DeliveryOrder"
+    message = "DeliveryOrder #{delivery_order.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => delivery_order.delivery_date,
         :description =>  message,
