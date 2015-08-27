@@ -262,16 +262,18 @@ Ext.define('AM.controller.SalesInvoices', {
 
   addObject: function() {
 	var view = Ext.widget('salesinvoiceform');
-  view.show();
-
-	 
+	var me = this;
+	view.setComboBoxExtraParams() ;
+  	view.show();
+  	
   },
 
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('salesinvoiceform');
-
+	var me = this;
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 

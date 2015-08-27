@@ -214,6 +214,7 @@ Ext.define('AM.controller.DeliveryOrders', {
 
   addObject: function() {
 	var view = Ext.widget('deliveryorderform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -222,7 +223,7 @@ Ext.define('AM.controller.DeliveryOrders', {
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('deliveryorderform');
-
+		view.setComboBoxExtraParams() ;
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
   },

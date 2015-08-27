@@ -113,6 +113,7 @@ Ext.define('AM.controller.VirtualDeliveryOrders', {
 
   addObject: function() {
 	var view = Ext.widget('virtualdeliveryorderform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -121,7 +122,7 @@ Ext.define('AM.controller.VirtualDeliveryOrders', {
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('virtualdeliveryorderform');
-
+		view.setComboBoxExtraParams() ;
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
   },

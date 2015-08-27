@@ -174,6 +174,18 @@ Ext.define('AM.view.operation.deliveryorder.Form', {
     this.callParent(arguments);
   },
   
+  setExtraParamInSalesOrderIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('sales_order_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.delivery_order =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInSalesOrderIdComboBox( ); 
+	},
+  
   setSelectedWarehouse: function( warehouse_id ){
 		var comboBox = this.down('form').getForm().findField('warehouse_id'); 
 		var me = this; 

@@ -74,7 +74,7 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 
@@ -85,22 +85,27 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = VirtualOrderDetail.joins(:virtual_order, :item => [:uom]).where{ 
+      query_code = VirtualOrderDetail.joins(:virtual_order, :item => [:uom]).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:virtual_order_id].present?
+        object = VirtualOrder.find_by_id params[:virtual_order_id]
+        if not object.nil?  
+          query = query.where(:virtual_order_id => object.id )
+        end
+      end    
+      
+      @objects = query_code.
+                  page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
                         
-      @total = VirtualOrderDetail.joins(:virtual_order, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
-      }.count
+      @total = query_code.count
+      
     else
       @objects = VirtualOrderDetail.where{ 
               (id.eq selected_id)  

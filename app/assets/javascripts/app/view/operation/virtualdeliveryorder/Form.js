@@ -201,6 +201,18 @@ Ext.define('AM.view.operation.virtualdeliveryorder.Form', {
 		});
 	},
 	
+	setExtraParamInVirtualOrderIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('virtual_order_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.virtual_delivery_order =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInVirtualOrderIdComboBox( ); 
+	},
+	
 	setComboBoxData : function( record){ 
 
 		var me = this; 

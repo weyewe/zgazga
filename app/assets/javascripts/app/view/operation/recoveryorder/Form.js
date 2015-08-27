@@ -210,6 +210,19 @@ Ext.define('AM.view.operation.recoveryorder.Form', {
 		});
 	},
 	
+	setExtraParamInRollerIdentificationFormIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('roller_identification_form_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.recovery_order =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInRollerIdentificationFormIdComboBox( ); 
+	},
+	
+	
 	setSelectedWarehouse: function( warehouse_id ){
 		var comboBox = this.down('form').getForm().findField('warehouse_id'); 
 		var me = this; 

@@ -113,6 +113,7 @@ Ext.define('AM.controller.VirtualOrderClearances', {
 
   addObject: function() {
 	var view = Ext.widget('virtualorderclearanceform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -123,6 +124,7 @@ Ext.define('AM.controller.VirtualOrderClearances', {
     var view = Ext.widget('virtualorderclearanceform');
 
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 

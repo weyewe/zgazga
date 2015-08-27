@@ -209,16 +209,15 @@ Ext.define('AM.controller.PurchaseReceivals', {
 
   addObject: function() {
 	var view = Ext.widget('purchasereceivalform');
+	view.setComboBoxExtraParams() ;
   view.show();
-
-	 
   },
 
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('purchasereceivalform');
-
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 

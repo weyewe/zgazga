@@ -192,24 +192,28 @@ class Api::RecoveryOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{  
+      query_code = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{  
         ( 
            ( code =~ query)  | 
            ( roller_identification_form.nomor_disasembly =~  query) | 
            ( warehouse.name =~  query) 
          )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:roller_warehouse_mutation].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_completed.eq true) 
+        }
+      end
+      
+      @objects = query_code.
+                      page(params[:page]).
+                      per(params[:limit]).
+                      order("id DESC")
                         
-      @total = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{  
-        ( 
-           ( code =~ query)  | 
-           ( roller_identification_form.nomor_disasembly =~  query) | 
-           ( warehouse.name =~  query) 
-         )
-      }.count 
+      @total = query_code.count 
+      
     else
       @objects = RecoveryOrder.active_objects.joins(:warehouse,:roller_identification_form).where{ 
           (id.eq selected_id)   

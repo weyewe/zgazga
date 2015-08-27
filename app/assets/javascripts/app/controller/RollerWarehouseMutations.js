@@ -113,6 +113,7 @@ Ext.define('AM.controller.RollerWarehouseMutations', {
 
   addObject: function() {
 	var view = Ext.widget('rollerwarehousemutationform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -121,7 +122,7 @@ Ext.define('AM.controller.RollerWarehouseMutations', {
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('rollerwarehousemutationform');
-
+	  view.setComboBoxExtraParams() ;
     view.down('form').loadRecord(record);
     view.setComboBoxData( record ) ;
   },

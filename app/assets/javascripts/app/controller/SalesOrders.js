@@ -195,6 +195,7 @@ Ext.define('AM.controller.SalesOrders', {
 
   addObject: function() {
 	var view = Ext.widget('salesorderform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -205,6 +206,7 @@ Ext.define('AM.controller.SalesOrders', {
     var view = Ext.widget('salesorderform');
 
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 
