@@ -100,6 +100,7 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
           query = query.where(:sales_order_id => object.id )
         end
       end    
+        
       # @objects = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
       #   ( item.sku  =~ query ) | 
       #   ( item.name =~ query ) | 

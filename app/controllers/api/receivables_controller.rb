@@ -46,42 +46,28 @@ class Api::ReceivablesController < Api::BaseApiController
                               }
                               
       if params[:contact_id].present?
-        object = Contact.find_by_id params[:contact_id]
+        object = Contact.find_by_id params[:contact_id] 
         if not object.nil?  
-          query = query.where(:contact_id => object.id )
+          query = query.where(:contact_id => object.id ) 
         end
       end    
       
-      
-      # @objects = Receivable.joins(:exchange,:contact).where{ 
-      #     ( source_class =~  query )  | 
-      #     ( source_code =~ query ) | 
-      #     ( contact.name =~ query ) | 
-      #     ( exchange.name =~ query ) 
-      #                         }.
-      #                   page(params[:page]).
-      #                   per(params[:limit]).
-      #                   order("id DESC")
-                        
-      # @total = Receivable.joins(:exchange,:contact).where{ 
-      #     ( source_class =~  query )  | 
-      #     ( source_code =~ query ) | 
-      #     ( contact.name =~ query ) | 
-      #     ( exchange.name =~ query ) 
-        
-      #                         }.count
       @objects = query.page(params[:page]).
                   per(params[:limit]).
                   order("id DESC")
       @total = query.count 
     else
-      @objects = Receivable.joins(:exchange,:contact).where{ (id.eq selected_id)  
+      @objects = Receivable.joins(:exchange,:contact).where{ 
+          (id.eq selected_id) &&  
+          (is_completed.eq false)   
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Receivable.joins(:exchange,:contact).where{ (id.eq selected_id)   
+      @total = Receivable.joins(:exchange,:contact).where{ 
+        (id.eq selected_id)   &&  
+        (is_completed.eq false)  
                               }.count 
     end
     

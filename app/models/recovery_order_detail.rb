@@ -190,7 +190,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
         :amount => self.compound_usage,
         )  
       # deduce compound_under_layer_usage
-      if not self.compound_under_layer_id.nil?
+      if not (self.compound_under_layer_id.nil? or self.compound_under_layer_id == 0)
       update_warehouse_item_amount(
         :item_id => self.compound_under_layer_id,
         :mutation_date => self.finished_date,
@@ -390,7 +390,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
         :amount => self.compound_usage,
         )  
       # deduce compound_under_layer_usage
-      if not self.compound_under_layer_id.nil?
+      if not (self.compound_under_layer_id.nil? or self.compound_under_layer_id == 0)
       update_warehouse_item_amount(
         :item_id => self.compound_under_layer_id,
         :mutation_date => self.rejected_date,
@@ -467,7 +467,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
     self.accessories_cost = accessories_cost
     self.compound_cost = (self.roller_builder.compound.avg_price * self.compound_usage).round(2)
     
-    if not self.compound_under_layer_id.nil?
+    if not self.compound_under_layer_id == 0
       self.compound_cost += (self.compound_under_layer.avg_price * self.compound_under_layer_usage).round(2)
     end
     
