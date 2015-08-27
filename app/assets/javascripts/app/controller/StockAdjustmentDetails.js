@@ -48,6 +48,10 @@ Ext.define('AM.controller.StockAdjustmentDetails', {
       'stockadjustmentdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
+      
+      'stockadjustmentdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
  
 			// monitor parent(sales_order) update
 			'stockadjustmentlist' : {
@@ -58,6 +62,22 @@ Ext.define('AM.controller.StockAdjustmentDetails', {
 		
     });
   },
+  
+  
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		// console.log("This is fucking awsome: " + newValue);
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getStockAdjustmentDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getStockAdjustmentDetailsStore().load();
+	},
 
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);

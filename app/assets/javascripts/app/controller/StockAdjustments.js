@@ -429,6 +429,8 @@ Ext.define('AM.controller.StockAdjustments', {
 		
 		
 		
+		
+		
 
     if (selections.length > 0) {
       grid.enableRecordButtons();
@@ -444,6 +446,8 @@ Ext.define('AM.controller.StockAdjustments', {
 		
 		// console.log("record id: " + record.get("id"));
 		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
+		
 		templateDetailGrid.getStore().getProxy().extraParams.stock_adjustment_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -452,6 +456,7 @@ Ext.define('AM.controller.StockAdjustments', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		
