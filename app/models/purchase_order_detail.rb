@@ -72,6 +72,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
     new_object.price = BigDecimal( params[:price] || '0')
     if new_object.save
       new_object.code = "POD-" + new_object.id.to_s  
+      new_object.save
     end
     return new_object
   end
@@ -85,7 +86,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
     end
     self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0')
-    self.pending_receival_quantity = BigDecimal( params[:amount] || '0')
+    self.pending_receival_amount = BigDecimal( params[:amount] || '0')
     self.price = BigDecimal( params[:price] || '0')
     self.save
     return self

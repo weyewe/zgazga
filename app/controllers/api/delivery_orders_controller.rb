@@ -231,7 +231,8 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       }.count 
     else
       @objects = DeliveryOrder.where{ 
-          (id.eq selected_id)   
+          (id.eq selected_id)  &&
+          (is_invoice_completed.eq false)
       }.
       page(params[:page]).
       per(params[:limit]).

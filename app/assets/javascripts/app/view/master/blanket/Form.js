@@ -453,7 +453,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					valueField : 'item_bar_id',
 					pageSize : 5,
 					minChars : 1, 
-					allowBlank : false, 
+					allowBlank : true, 
 					triggerAction: 'all',
 					store : remoteJsonStoreBar , 
 					listConfig : {
@@ -474,7 +474,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					valueField : 'item_bar_id',
 					pageSize : 5,
 					minChars : 1, 
-					allowBlank : false, 
+					allowBlank : true, 
 					triggerAction: 'all',
 					store : remoteJsonStoreBar , 
 					listConfig : {
