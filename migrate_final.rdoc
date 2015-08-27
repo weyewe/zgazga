@@ -1,0 +1,36 @@
+
+bundle exec rake db:drop;  bundle exec rake db:create; bundle exec rake db:migrate
+
+bundle exec rake flush_lookup_folder
+bundle exec rake migrate_zga:base_setup
+bundle exec rake migrate_zga:exchange
+bundle exec rake migrate_zga:cash_bank
+bundle exec rake migrate_zga:coa 
+
+
+
+bundle exec rake migrate_zga:contact_group
+bundle exec rake migrate_zga:contact
+
+bundle exec rake migrate_zga:user 
+bundle exec rake migrate_zga:employee
+
+
+bundle exec rake migrate_zga:machine 
+bundle exec rake migrate_zga:uom
+bundle exec rake migrate_zga:item_type
+bundle exec rake  migrate_zga:sub_type
+
+
+bundle exec rake migrate_zga:independent_item 
+bundle exec rake migrate_zga:blanket 
+bundle exec rake migrate_zga:core_builder
+bundle exec rake migrate_zga:roller_type
+bundle exec rake  migrate_zga:roller_builder 
+bundle exec rake migrate_zga:warehouse 
+
+
+bundle exec rake migrate_zga:exchange_rate
+ 
+ 
+// migrate the warehouse => check if item exists, if it doesn't, report to US

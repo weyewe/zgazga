@@ -83,7 +83,7 @@ namespace :migrate_zga do
           is_deleted = false 
           is_deleted  = true if row[21] == "True" 
           
-          next if is_deleted 
+          # next if is_deleted 
           
           is_tradeable = false 
           is_tradeable  = true if row[6] == "True" 
@@ -104,7 +104,8 @@ namespace :migrate_zga do
             )
           
           object.errors.messages.each do |x|
-            puts "error: #{x}. Old id: #{id}. #{row[21]}" 
+            
+            puts "error: #{x}.SKU: #{sku}  Old id: #{id}. #{row[21]}" 
             puts "item_type_id : #{item_type_id}"
             puts "new_item_type_id : #{new_item_type_id}"
           end
@@ -209,8 +210,8 @@ namespace :migrate_zga do
           
  
           new_uom_id =  uom_mapping_hash[uom_id] 
-          new_exchange_id =  uom_mapping_hash[exchange_id]
-          new_machine_id =  machine_mapping_hash[exchange_id] 
+          new_exchange_id =  exchange_mapping_hash[exchange_id]
+          new_machine_id =  machine_mapping_hash[machine_id] 
           new_contact_id =  contact_mapping_hash[contact_id] 
           
      
@@ -249,13 +250,13 @@ namespace :migrate_zga do
 
           
           if Machine.find_by_id( new_machine_id.to_i ).nil?
-            puts "fucka.. id #{new_machine_id} has no corresponding new machine_id "
+            puts "fucka.. id #{machine_id} has no corresponding new machine_id "
             error = true 
           end
           
           
           if Exchange.find_by_id( new_exchange_id.to_i ).nil?
-            puts "fucka.. id #{new_exchange_id} has no corresponding new exchange_id "
+            puts "fucka.. id #{exchange_id} has no corresponding new exchange_id "
             error = true 
           end
           
@@ -270,7 +271,7 @@ namespace :migrate_zga do
           end
           
     
-          next if error 
+          # next if error 
           
           
     
@@ -303,12 +304,15 @@ namespace :migrate_zga do
             :exchange_id =>  new_exchange_id,
           )
 
+          if object.errors.size != 0 
             object.errors.messages.each {|x| puts "blanket migration error. old id : #{id}. message: #{x}"}
-          
-           
-
+          else
             result_array << [ id , 
                     object.id   ]
+          end
+           
+
+            
 
         end
         
@@ -351,15 +355,15 @@ namespace :migrate_zga do
         next if is_deleted 
         new_item_type_id =  item_type_mapping_hash[item_type_id] 
         if  new_item_type_id.to_i == blanket_item_type.id
-          puts "Sku: #{sku}"
+          # puts "Sku: #{sku}"
           original_blanket_item_type_hash[sku] = id 
         end 
         
       end
     end
     
-    puts "The content of original_blanket_item_type_hash: "
-    puts original_blanket_item_type_hash
+    # puts "The content of original_blanket_item_type_hash: "
+    # puts original_blanket_item_type_hash
     
     CSV.open(item_lookup_location, 'a') do |csv|
       result_array.each do |el| 
@@ -394,7 +398,10 @@ namespace :migrate_zga do
     original_location =   original_file_location( migration_filename )
     lookup_location =  lookup_file_location(  migration_filename ) 
     result_array = [] 
-    awesome_row_counter = - 1 
+    awesome_row_counter = -1
+    
+    error_sku_list =  [] 
+    
     
     CSV.open(original_location, 'r') do |csv| 
         csv.each do |row| 
@@ -418,7 +425,7 @@ namespace :migrate_zga do
           is_deleted = false 
           is_deleted  = true if row[13] == "True" 
           
-          next if is_deleted 
+          # next if is_deleted 
           
  
 
@@ -449,7 +456,7 @@ namespace :migrate_zga do
           
           
     
-          
+          # puts "Gonna build core builder, base_sku: #{sku}"
           object = CoreBuilder.create_object(
             :base_sku => sku,
             :name => name,
@@ -461,17 +468,26 @@ namespace :migrate_zga do
             :tl => tl
             )
 
+          if object.errors.size != 0
+            object.errors.messages.each {|msg| puts "rrorr in creating shite SKU: #{sku}. err  msg: #{msg}"} 
+            error_sku_list << sku 
+          else
+            result_array << [ id , 
+                    object.id , 
+                    object.base_sku  ]
+          end
             
           
            
 
-            result_array << [ id , 
-                    object.id , 
-                    object.base_sku  ]
+            
 
         end
         
     end
+    
+    
+    # puts "The error sku_list: error_sku_list"
     
     CSV.open(lookup_location, 'w') do |csv|
       result_array.each do |el| 
@@ -510,15 +526,15 @@ namespace :migrate_zga do
         next if is_deleted 
         new_item_type_id =  item_type_mapping_hash[item_type_id] 
         if  new_item_type_id.to_i == core_item_type.id
-          puts "Sku: #{sku}"
+          # puts "Sku: #{sku}"
           original_core_item_type_hash[sku] = id 
         end 
         
       end
     end
     
-    puts "The content of original_core_item_type_hash: "
-    puts original_core_item_type_hash
+    # puts "The content of original_core_item_type_hash: "
+    # puts original_core_item_type_hash
     
     CSV.open(item_lookup_location, 'a') do |csv|
       result_array.each do |el| 
@@ -530,7 +546,7 @@ namespace :migrate_zga do
         used_core_old_id = original_core_item_type_hash[new_core_item.sku]
         
         if new_core_old_id.nil? or used_core_old_id.nil?
-          puts "there is no mapping for base_sku : #{core_builder.base_sku}"
+          # puts "there is no mapping for base_sku : #{core_builder.base_sku}"
         end
         
         csv << [ new_core_old_id, new_core_item.id, new_core_item.sku ] 
@@ -574,6 +590,9 @@ namespace :migrate_zga do
             :description => description
             )
           
+          if object.errors.size != 0
+            object.errors.messages.each {|x| puts "error: #{x}" }
+          end
  
            
 
@@ -645,7 +664,7 @@ namespace :migrate_zga do
           is_deleted = false 
           is_deleted  = true if row[26] == "True" 
           
-          next if is_deleted 
+          # next if is_deleted 
           
           is_chamfer = false 
           is_chamfer  = true if row[25] == "True" 
@@ -720,7 +739,7 @@ namespace :migrate_zga do
 
             
           
-          object.errors.messages.each {|x| puts "err id #{id}: #{x}" }
+          object.errors.messages.each {|x| puts "base_sku: #{base_sku}. err id #{id}: #{x}" }
 
             result_array << [ id , 
                     object.id , 
@@ -767,15 +786,15 @@ namespace :migrate_zga do
         # next if is_deleted 
         new_item_type_id =  item_type_mapping_hash[item_type_id] 
         if  new_item_type_id.to_i == roller_item_type.id
-          puts "Sku: #{sku}"
+          # puts "Sku: #{sku}"
           original_roller_item_type_hash[sku] = id 
         end 
         
       end
     end
     
-    puts "The content of original_roller_item_type_hash: "
-    puts original_roller_item_type_hash
+    # puts "The content of original_roller_item_type_hash: "
+    # puts original_roller_item_type_hash
     
     CSV.open(item_lookup_location, 'a') do |csv|
       result_array.each do |el| 
@@ -802,7 +821,763 @@ namespace :migrate_zga do
       end
     end
     
-    puts "Done migrating roller builder. Total core builder : #{RollerBuilder.count}"
+    puts "Done migrating roller builder. Total roller builder : #{RollerBuilder.count}"
+  end
+  
+
+  task :warehouse_a1  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_a1]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {} 
+    batch_item_array = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          quantity = row[1]
+          batch_name = row[3]
+          manufactured_date = row[4]
+          expiry_date = row[5]
+           
+          
+ 
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else
+            
+            if batch_name.present?
+              manufactured_date = get_parsed_date( manufactured_date )
+              expiry_date = get_parsed_date( expiry_date )
+              batch_item_array << [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+            end
+            
+            
+            init_quantity  = item_quantity_hash[ item.sku ]
+            init_quantity = BigDecimal("0") if not  init_quantity.present? 
+            additional_quantity = BigDecimal( quantity )
+            
+            final_quantity  = init_quantity + additional_quantity
+            
+            item_quantity_hash[ item.sku ] = final_quantity
+          end
+        end
+        
+        
+    end
+    
+    # puts item_quantity_hash
+    
+    # ["A1", "E15", "E16", "Sby", "Smg", "GA"] 
+    
+    
+    warehouse = Warehouse.find_by_code "A1"
+    adjustment_date = DateTime.new(2015,7,29,0,0,0)
+    
+    sa = StockAdjustment.create_object(
+              :warehouse_id => warehouse.id,
+              :adjustment_date => adjustment_date,
+              :description => "migrasi awal di sistem, gudang A1" 
+              )
+    
+    item_quantity_hash.each do |key, value |
+      item = Item.find_by_sku key 
+      
+      next if value <= BigDecimal("0")
+      
+      StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => sa.id ,
+              :item_id =>  item.id ,
+              :price => BigDecimal("1") ,
+              :amount => value ,
+              :status => ADJUSTMENT_STATUS[:addition]
+              )
+      
+      
+    end
+    
+    confirmation_date = DateTime.new(2015,7,30,0,0,0)
+    
+    sa.confirm_object( :confirmed_at => confirmation_date  ) 
+    
+    new_array = [] 
+    duplicate_batch_instance_name_array = [] 
+    batch_item_array.each do |element|
+      # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+      batch = BatchInstance.create_object(
+          :item_id => element[0],
+          :name =>  element[1],
+          :description => "",
+          :manufactured_at => element[3],
+          :expiry_date => element[4]
+        )
+        
+      if batch.errors.size != 0 
+        batch.errors.messages.each {|x| puts "error in the batch instance, #{x}. name : #{element[1]}" } 
+        duplicate_batch_instance_name_array << element[1]
+      else
+        new_array << [batch , element[2]]
+      end
+      
+      
+      
+    end
+    
+    # puts "The new array #{new_array}"
+    
+    new_array.each do |batch_element|
+      
+      
+      batch = batch_element[0]
+      
+      # puts "Batch item_id: #{batch.item_id}"
+      
+      stock_adjustment_detail = sa.stock_adjustment_details.where(:item_id => batch.item_id).first
+      
+      batch_source = BatchSource.where(
+          :source_class =>stock_adjustment_detail.class.to_s , 
+          :source_id => stock_adjustment_detail.id, 
+          :item_id => stock_adjustment_detail.item_id 
+        ).first 
+      
+      object = BatchSourceAllocation.create_object(
+          :batch_source_id => batch_source.id ,
+          :batch_instance_id => batch_element[0].id ,
+          :amount => batch_element[1]
+        )
+        
+      object.errors.messages.each {|x| puts "The error message: #{x}" } 
+ 
+    end
+    
+    
+    
+    # need to build the shite
+    
+    puts "erroneous sku: #{non_present_sku_list}"
+    
+    
+    puts "The duplicate: #{duplicate_batch_instance_name_array}"
+  end
+  
+  task :warehouse_e15  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_e15]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {}
+    batch_item_array = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          quantity = row[1]
+          batch_name = row[3]
+          manufactured_date = row[4]
+          expiry_date = row[5]
+           
+          
+ 
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else
+            
+            if batch_name.present?
+              manufactured_date = get_parsed_date( manufactured_date )
+              expiry_date = get_parsed_date( expiry_date )
+              batch_item_array << [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+            end
+            
+            
+            init_quantity  = item_quantity_hash[ item.sku ]
+            init_quantity = BigDecimal("0") if not  init_quantity.present? 
+            
+            if quantity.present?
+              additional_quantity = BigDecimal( quantity )
+            else
+              additional_quantity = BigDecimal( '0' )
+            end
+            
+            
+            final_quantity  = init_quantity + additional_quantity
+            
+            item_quantity_hash[ item.sku ] = final_quantity
+          end
+        end
+        
+        
+    end
+    
+    # ["A1", "E15", "E16", "Sby", "Smg", "GA"] 
+    
+    
+    warehouse = Warehouse.find_by_code "E15"
+    adjustment_date = DateTime.new(2015,7,29,0,0,0)
+    
+    sa = StockAdjustment.create_object(
+              :warehouse_id => warehouse.id,
+              :adjustment_date => adjustment_date,
+              :description => "migrasi awal di sistem, gudang A1" 
+              )
+    
+    item_quantity_hash.each do |key, value |
+      item = Item.find_by_sku key 
+      
+      next if value <= BigDecimal("0")
+      
+      StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => sa.id ,
+              :item_id =>  item.id ,
+              :price => BigDecimal("1") ,
+              :amount => value ,
+              :status => ADJUSTMENT_STATUS[:addition]
+              )
+      
+      
+    end
+    
+    confirmation_date = DateTime.new(2015,7,30,0,0,0)
+    
+    sa.confirm_object( :confirmed_at => confirmation_date  ) 
+
+    new_array = [] 
+    duplicate_batch_instance_name_array = [] 
+    batch_item_array.each do |element|
+      # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+      batch = BatchInstance.create_object(
+          :item_id => element[0],
+          :name =>  element[1],
+          :description => "",
+          :manufactured_at => element[3],
+          :expiry_date => element[4]
+        )
+        
+      if batch.errors.size != 0 
+        batch.errors.messages.each {|x| puts "error in the batch instance, #{x}. name : #{element[1]}" } 
+        duplicate_batch_instance_name_array << element[1]
+      else
+        new_array << [batch , element[2]]
+      end
+      
+      
+      
+    end
+    
+    # puts "The new array #{new_array}"
+    
+    new_array.each do |batch_element|
+      
+      
+      batch = batch_element[0]
+      
+      # puts "Batch item_id: #{batch.item_id}"
+      
+      stock_adjustment_detail = sa.stock_adjustment_details.where(:item_id => batch.item_id).first
+      
+      batch_source = BatchSource.where(
+          :source_class =>stock_adjustment_detail.class.to_s , 
+          :source_id => stock_adjustment_detail.id, 
+          :item_id => stock_adjustment_detail.item_id 
+        ).first 
+      
+      object = BatchSourceAllocation.create_object(
+          :batch_source_id => batch_source.id ,
+          :batch_instance_id => batch_element[0].id ,
+          :amount => batch_element[1]
+        )
+        
+      object.errors.messages.each {|x| puts "The error message: #{x}" } 
+ 
+    end
+    
+    
+    puts "erroneous sku: #{non_present_sku_list}"
+    puts "The duplicate: #{duplicate_batch_instance_name_array}"
+  end
+  
+  task :warehouse_e16  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_e16]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {}
+    batch_item_array = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          quantity = row[1]
+          batch_name = row[3]
+          manufactured_date = row[4]
+          expiry_date = row[5]
+           
+          
+ 
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else
+            
+            if batch_name.present?
+              manufactured_date = get_parsed_date( manufactured_date )
+              expiry_date = get_parsed_date( expiry_date )
+              batch_item_array << [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+            end
+            
+            
+            init_quantity  = item_quantity_hash[ item.sku ]
+            init_quantity = BigDecimal("0") if not  init_quantity.present? 
+            if quantity.present?
+              additional_quantity = BigDecimal( quantity )
+            else
+              additional_quantity = BigDecimal( '0' )
+            end
+            
+            final_quantity  = init_quantity + additional_quantity
+            
+            item_quantity_hash[ item.sku ] = final_quantity
+          end
+        end
+        
+        
+    end
+    
+    # ["A1", "E15", "E16", "Sby", "Smg", "GA"] 
+    
+    
+    warehouse = Warehouse.find_by_code "E16"
+    adjustment_date = DateTime.new(2015,7,29,0,0,0)
+    
+    sa = StockAdjustment.create_object(
+              :warehouse_id => warehouse.id,
+              :adjustment_date => adjustment_date,
+              :description => "migrasi awal di sistem, gudang E16" 
+              )
+    
+    item_quantity_hash.each do |key, value |
+      item = Item.find_by_sku key 
+      
+      next if value <= BigDecimal("0")
+      
+      StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => sa.id ,
+              :item_id =>  item.id ,
+              :price => BigDecimal("1") ,
+              :amount => value ,
+              :status => ADJUSTMENT_STATUS[:addition]
+              )
+      
+      
+    end
+    
+    confirmation_date = DateTime.new(2015,7,30,0,0,0)
+    
+    sa.confirm_object( :confirmed_at => confirmation_date  )
+
+
+    new_array = [] 
+    duplicate_batch_instance_name_array = [] 
+    batch_item_array.each do |element|
+      # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+      batch = BatchInstance.create_object(
+          :item_id => element[0],
+          :name =>  element[1],
+          :description => "",
+          :manufactured_at => element[3],
+          :expiry_date => element[4]
+        )
+        
+      if batch.errors.size != 0 
+        batch.errors.messages.each {|x| puts "error in the batch instance, #{x}. name : #{element[1]}" } 
+        duplicate_batch_instance_name_array << element[1]
+      else
+        new_array << [batch , element[2]]
+      end
+      
+      
+      
+    end
+    
+    # puts "The new array #{new_array}"
+    
+    new_array.each do |batch_element|
+      
+      
+      batch = batch_element[0]
+      
+      # puts "Batch item_id: #{batch.item_id}"
+      
+      stock_adjustment_detail = sa.stock_adjustment_details.where(:item_id => batch.item_id).first
+      
+      batch_source = BatchSource.where(
+          :source_class =>stock_adjustment_detail.class.to_s , 
+          :source_id => stock_adjustment_detail.id, 
+          :item_id => stock_adjustment_detail.item_id 
+        ).first 
+      
+      object = BatchSourceAllocation.create_object(
+          :batch_source_id => batch_source.id ,
+          :batch_instance_id => batch_element[0].id ,
+          :amount => batch_element[1]
+        )
+        
+      object.errors.messages.each {|x| puts "The error message: #{x}" } 
+ 
+    end
+    
+    
+    puts "erroneous sku: #{non_present_sku_list}"
+    puts "The duplicate: #{duplicate_batch_instance_name_array}"
+  end
+  
+  task :warehouse_semarang  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_semarang]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {}
+    batch_item_array = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          quantity = row[1]
+          batch_name = row[3]
+          manufactured_date = row[4]
+          expiry_date = row[5]
+           
+          
+ 
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else
+            
+            if batch_name.present?
+              manufactured_date = get_parsed_date( manufactured_date )
+              expiry_date = get_parsed_date( expiry_date )
+              batch_item_array << [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+            end
+            
+            
+            init_quantity  = item_quantity_hash[ item.sku ]
+            init_quantity = BigDecimal("0") if not  init_quantity.present? 
+            if quantity.present?
+              additional_quantity = BigDecimal( quantity )
+            else
+              additional_quantity = BigDecimal( '0' )
+            end
+            
+            final_quantity  = init_quantity + additional_quantity
+            
+            item_quantity_hash[ item.sku ] = final_quantity
+          end
+        end
+        
+        
+    end
+    
+    # ["A1", "E15", "E16", "Sby", "Smg", "GA"] 
+    
+    
+    warehouse = Warehouse.find_by_code "Smg"
+    adjustment_date = DateTime.new(2015,7,29,0,0,0)
+    
+    sa = StockAdjustment.create_object(
+              :warehouse_id => warehouse.id,
+              :adjustment_date => adjustment_date,
+              :description => "migrasi awal di sistem, gudang Smg" 
+              )
+    
+    item_quantity_hash.each do |key, value |
+      item = Item.find_by_sku key 
+      
+      next if value <= BigDecimal("0")
+      
+      StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => sa.id ,
+              :item_id =>  item.id ,
+              :price => BigDecimal("1") ,
+              :amount => value ,
+              :status => ADJUSTMENT_STATUS[:addition]
+              )
+      
+      
+    end
+    
+    confirmation_date = DateTime.new(2015,7,30,0,0,0)
+    
+    sa.confirm_object( :confirmed_at => confirmation_date  )
+    
+
+    new_array = [] 
+    duplicate_batch_instance_name_array = [] 
+    batch_item_array.each do |element|
+      # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+      batch = BatchInstance.create_object(
+          :item_id => element[0],
+          :name =>  element[1],
+          :description => "",
+          :manufactured_at => element[3],
+          :expiry_date => element[4]
+        )
+        
+      if batch.errors.size != 0 
+        batch.errors.messages.each {|x| puts "error in the batch instance, #{x}. name : #{element[1]}" } 
+        duplicate_batch_instance_name_array << element[1]
+      else
+        new_array << [batch , element[2]]
+      end
+      
+      
+      
+    end
+    
+    # puts "The new array #{new_array}"
+    
+    new_array.each do |batch_element|
+      
+      
+      batch = batch_element[0]
+      
+      # puts "Batch item_id: #{batch.item_id}"
+      
+      stock_adjustment_detail = sa.stock_adjustment_details.where(:item_id => batch.item_id).first
+      
+      batch_source = BatchSource.where(
+          :source_class =>stock_adjustment_detail.class.to_s , 
+          :source_id => stock_adjustment_detail.id, 
+          :item_id => stock_adjustment_detail.item_id 
+        ).first 
+      
+      object = BatchSourceAllocation.create_object(
+          :batch_source_id => batch_source.id ,
+          :batch_instance_id => batch_element[0].id ,
+          :amount => batch_element[1]
+        )
+        
+      object.errors.messages.each {|x| puts "The error message: #{x}" } 
+ 
+    end
+    
+    puts "erroneous sku: #{non_present_sku_list}"
+    puts "The duplicate: #{duplicate_batch_instance_name_array}"
+  end
+  
+  task :warehouse_surabaya  => :environment do
+ 
+    
+    migration_filename = MIGRATION_FILENAME[:warehouse_surabaya]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {}
+    batch_item_array = [] 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+          sku = row[0]
+          quantity = row[1]
+          batch_name = row[3]
+          manufactured_date = row[4]
+          expiry_date = row[5]
+           
+          
+ 
+          item = Item.find_by_sku sku.strip.upcase
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else
+            
+            if batch_name.present?
+              manufactured_date = get_parsed_date( manufactured_date )
+              expiry_date = get_parsed_date( expiry_date )
+              batch_item_array << [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+            end
+            
+            
+            init_quantity  = item_quantity_hash[ item.sku ]
+            init_quantity = BigDecimal("0") if not  init_quantity.present? 
+            if quantity.present?
+              additional_quantity = BigDecimal( quantity )
+            else
+              additional_quantity = BigDecimal( '0' )
+            end
+            
+            final_quantity  = init_quantity + additional_quantity
+            
+            item_quantity_hash[ item.sku ] = final_quantity
+          end
+        end
+        
+        
+    end
+    
+    # ["A1", "E15", "E16", "Sby", "Smg", "GA"] 
+    
+    
+    warehouse = Warehouse.find_by_code "Sby"
+    adjustment_date = DateTime.new(2015,7,29,0,0,0)
+    
+    sa = StockAdjustment.create_object(
+              :warehouse_id => warehouse.id,
+              :adjustment_date => adjustment_date,
+              :description => "migrasi awal di sistem, gudang Sby" 
+              )
+    
+    item_quantity_hash.each do |key, value |
+      item = Item.find_by_sku key 
+      
+      next if value <= BigDecimal("0")
+      
+      StockAdjustmentDetail.create_object(
+              :stock_adjustment_id => sa.id ,
+              :item_id =>  item.id ,
+              :price => BigDecimal("1") ,
+              :amount => value ,
+              :status => ADJUSTMENT_STATUS[:addition]
+              )
+      
+      
+    end
+    
+    confirmation_date = DateTime.new(2015,7,30,0,0,0)
+    
+    sa.confirm_object( :confirmed_at => confirmation_date  )
+
+    new_array = [] 
+    duplicate_batch_instance_name_array = [] 
+    batch_item_array.each do |element|
+      # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
+      batch = BatchInstance.create_object(
+          :item_id => element[0],
+          :name =>  element[1],
+          :description => "",
+          :manufactured_at => element[3],
+          :expiry_date => element[4]
+        )
+        
+      if batch.errors.size != 0 
+        batch.errors.messages.each {|x| puts "error in the batch instance, #{x}. name : #{element[1]}" } 
+        duplicate_batch_instance_name_array << element[1]
+      else
+        new_array << [batch , element[2]]
+      end
+      
+      
+      
+    end
+    
+    # puts "The new array #{new_array}"
+    
+    new_array.each do |batch_element|
+      
+      
+      batch = batch_element[0]
+      
+      # puts "Batch item_id: #{batch.item_id}"
+      
+      stock_adjustment_detail = sa.stock_adjustment_details.where(:item_id => batch.item_id).first
+      
+      batch_source = BatchSource.where(
+          :source_class =>stock_adjustment_detail.class.to_s , 
+          :source_id => stock_adjustment_detail.id, 
+          :item_id => stock_adjustment_detail.item_id 
+        ).first 
+      
+      object = BatchSourceAllocation.create_object(
+          :batch_source_id => batch_source.id ,
+          :batch_instance_id => batch_element[0].id ,
+          :amount => batch_element[1]
+        )
+        
+      object.errors.messages.each {|x| puts "The error message: #{x}" } 
+ 
+    end
+    
+    
+    puts "erroneous sku: #{non_present_sku_list}"
+    puts "The duplicate: #{duplicate_batch_instance_name_array}"
+  end
+  
+
+  task :collect_item_avg_price  => :environment do
+ 
+    mismatch_sku_list  = [] 
+    
+    item_hash = get_item_avg_price_hash
+    
+    # puts "The item hash: #{item_hash}"
+    
+    item_hash.each do |key, value | 
+      if value[:exchange_id] != value[:listed_exchange_id]
+        # puts "exchange_id #{value[:exchange_id]}, listed_exchange_id: #{value[:listed_exchange_id]}, old_exchange_id: #{value[:old_exchange_id]}"
+        # puts "item with id : #{key} has mismatch exchange_id"
+        mismatch_sku_list << Item.find_by_id( key ).sku 
+      end
+    end
+    
+    # usd = 12158
+    # euro = 15160.27
+    # CHF = 12612.25
+    # USD = 12158
+    # GBP = 19066.87
+    # SGD = 9335.61
+    
+    # [1, 3, 2, 4]   1 == IDR ,  3 == Euro , 4 == CHF, 2 == USD
+    # puts "the mismatch: #{mismatch_sku_list}"
+    # 
   end
  
   

@@ -334,6 +334,18 @@ MIGRATION_FILENAME = {
   :payment_voucher_confirm => "PaymentVoucherConfirm.csv",
   
   
+  :outstanding_hutang => 'hutang.csv',
+  :outstanding_piutang => 'piutang.csv',
+  
+  :warehouse_a1 => "warehouse_a1.csv",
+  :warehouse_e15 => "warehouse_e15.csv",
+  :warehouse_e16 => "warehouse_e16.csv",
+  :warehouse_surabaya => 'warehouse_sby.csv',
+  :warehouse_semarang => 'warehouse_semarang.csv',
+  
+  :item_avg_price => 'item_avg_price.csv'
+  
+  
 } 
 
 BASE_ITEM_TYPE = {

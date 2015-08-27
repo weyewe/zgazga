@@ -692,7 +692,11 @@ ACCOUNT_CODE = {
     :savings_account => 220,
     :membership_savings_account => 230,
     :locked_savings_account => 240,
-    :memorial_general => 250
+    :memorial_general => 250,
+    
+    :payable_migration_journal => 666,
+    :receivable_migration_journal => 667,
+    
   
   
 }

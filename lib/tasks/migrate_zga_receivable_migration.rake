@@ -192,4 +192,156 @@ namespace :migrate_zga do
     
     puts "Done migrating Receivable. Total Receivable: #{ lookup_counter}"
   end
+  
+  
+
+  task :outstanding_piutang => :environment do
+    
+    
+    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] )  
+    contact_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:contact] ) 
+    
+  
+    
+    migration_filename = MIGRATION_FILENAME[:outstanding_piutang]
+    original_location =   original_file_location( migration_filename )
+    lookup_location =  lookup_file_location(  migration_filename ) 
+    
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    CSV.open(original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+                    
+          contact_id = row[0]
+          contact_name = row[1]
+          invoice_date = row[2]
+          tukar_faktur_date = row[3]
+          no_faktur = row[4]
+          usd_amount = row[5]
+          euro_amount = row[6]
+          idr_amount = row[7]
+          
+          
+          
+          # not present if "" or '-' or nothing
+          
+          if tukar_faktur_date.present?
+            tukar_faktur_date = tukar_faktur_date.strip  
+          end
+          
+          if usd_amount.present?
+            usd_amount = usd_amount.strip 
+          end
+          
+          if euro_amount.present?
+            euro_amount = euro_amount.strip  
+          end
+          
+          if idr_amount.present?
+            idr_amount = idr_amount.strip 
+          end
+          
+          
+          msg = "#{awesome_row_counter} : tukar_faktur_date #{tukar_faktur_date}  | "
+          msg << "usd_amount #{usd_amount}  | "
+          msg << "euro_amount #{euro_amount} | "
+          msg << "idr_amount #{idr_amount}"
+          
+          # puts msg 
+           
+          
+          tukar_faktur_date = nil if tukar_faktur_date == '-' or  not tukar_faktur_date.present? 
+          usd_amount = usd_amount.gsub('-', '') if not usd_amount.nil?
+          euro_amount = euro_amount.gsub('-', '') if not euro_amount.nil?
+          idr_amount = idr_amount.gsub('-', '')   if not idr_amount.nil?
+          
+
+          
+# USD 
+# EURO 
+# RUPIAH 
+ 
+          # msg = "old contact => #{contact_id}, #{contact_name}  | " 
+          
+          if contact_mapping_hash[contact_id].nil?
+            msg << "FARK.. no mapping"
+            
+            puts msg
+          else
+            new_contact = Contact.find_by_id contact_mapping_hash[contact_id]
+            msg << "new_contact_name : #{new_contact.name}"
+          end
+          
+          
+          new_contact_id  = contact_mapping_hash[contact_id]
+          
+                      
+                      
+                      
+#           [[1, "Rupiah"], [2, "USD"], [3, "Euro"], [4, "CHF"], [5, "GBP"], [6, "SGD"]] 
+ 
+          
+          new_exchange_id = 2 if not usd_amount.present? 
+          new_exchange_id = 3 if not euro_amount.present? 
+          new_exchange_id = 1 if not usd_amount.present? and not euro_amount.present? 
+          
+          # puts ">>> the currency inspect"
+          
+          invoice_date = Date.parse( invoice_date )
+          parsed_invoice_date = get_parsed_date(invoice_date.to_s )
+          
+          if  tukar_faktur_date.present? 
+    
+            tukar_faktur_date = Date.parse( tukar_faktur_date ) 
+            
+          end
+ 
+          # if new_exchange_id.nil?
+          #   puts exchange_hash
+          #   puts "nomor surat: #{nomor_surat}, exchange_name: #{exchange_name}"
+            
+          # end
+          
+          amount_foreign_exchange  = BigDecimal("0") if not usd_amount.present? and not euro_amount.present?
+          amount_foreign_exchange = usd_amount if usd_amount.present?
+          amount_foreign_exchange = euro_amount if euro_amount.present? 
+          
+          
+          if not idr_amount.present? 
+            amount_base_exchange = BigDecimal("0") 
+          else
+            amount_base_exchange = BigDecimal( idr_amount )
+          end
+          
+          
+          if amount_base_exchange == BigDecimal("0") 
+            puts "This shite with no surat: #{no_faktur} is dangerous"
+            next
+          end
+          
+          # puts "The exchange_id: #{new_exchange_id}"
+          
+          object = ReceivableMigration.create_object(
+                    :nomor_surat => no_faktur, 
+                    :contact_id  => new_contact_id,
+                    :exchange_id => new_exchange_id,
+                    :amount_base_exchange => amount_base_exchange ,
+                    :amount_foreign_exchange => amount_foreign_exchange,
+                    :invoice_date => invoice_date , 
+                    :tukar_faktur_date  => tukar_faktur_date
+              )
+            
+          object.errors.messages.each {|x| puts "Error: #{x}" } 
+    
+        end
+    end
+    
+ 
+    
+    puts "Done migrating Piutang. Total ReceivableMigration: #{ReceivableMigration.count}"
+  end
+  
 end

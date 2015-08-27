@@ -55,6 +55,80 @@ def get_truth_value(truth_string )
         
 end
 
+def get_item_avg_price_hash
+    migration_filename = MIGRATION_FILENAME[:item] 
+    item_original_location  = original_file_location( migration_filename )
+    item_lookup_location =  lookup_file_location(  migration_filename ) 
+     
+    result_array = [] 
+    awesome_row_counter = - 1 
+    
+    non_present_sku_list = [] 
+    item_quantity_hash = {}
+    item_hash = {} 
+    
+    non_exchange_sku_array = []
+    
+    exchange_mapping_hash = get_mapping_hash(  MIGRATION_FILENAME[:exchange] )  
+    
+    CSV.open(item_original_location, 'r') do |csv| 
+        csv.each do |row| 
+          awesome_row_counter = awesome_row_counter + 1  
+          next if awesome_row_counter == 0 
+          
+   
+
+          id = row[0]
+          item_type_id = row[1]
+          sub_type_id = row[2]
+          sku = row[3]
+          name = row[4]
+          description = row[5]
+          is_tradeable = row[6]
+          uom_id = row[7]
+          minimum_quantity = row[12]
+          selling_price = row[15]
+          price_list = row[16]
+          exchange_id = row[17]
+          is_deleted = row[21] 
+          avg_price = row[19]
+          
+          if not exchange_id.present?
+              non_exchange_sku_array << sku 
+          end
+ 
+  
+          item = Item.find_by_sku sku.strip.upcase
+          
+        #   puts "The exchange_id: #{exchange_id}, sku: #{sku}"
+          new_exchange_id =  exchange_mapping_hash[exchange_id]
+          
+          
+          if item.nil?
+            non_present_sku_list << sku
+          else 
+            item_hash[ item.id ] = {
+                :exchange_id => item.exchange_id.to_i,
+                :listed_exchange_id => new_exchange_id.to_i, 
+                :old_exchange_id => exchange_id, 
+                :avg_price => BigDecimal(avg_price)
+            }
+            
+            # puts "exchange_id #{exchange_id}, new_exchange_id #{new_exchange_id} "
+          end
+        end
+        
+        
+    end
+     
+    
+    
+    # puts "erroneous sku: #{non_present_sku_list}" 
+    # puts "item_hash : #{item_hash}"
+    puts "sku with no currency: #{non_exchange_sku_array}"
+    return item_hash 
+end
+
 
 # call this using 
 # rake task_name['yhooooo',4]   => no spaces allowed in the argument 
@@ -70,7 +144,7 @@ task :flush_lookup_folder  do |t, args|
 end
  
 
-#  rake inspect_csv['ContactGroup.csv']
+#  rake inspect_csv['Items.csv']
 task :inspect_csv,  :filename do   | t, args| 
     filename = args.filename
     
@@ -112,7 +186,7 @@ task :inspect_csv,  :filename do   | t, args|
 end
 
 
-# rake see_single_column_data['Items.csv',17]   << no spaces allowed
+# rake see_single_column_data['hutang.csv',5]   << no spaces allowed
 task :see_single_column_data , :filename, :column  do | t, args | 
     column = args.column.to_i
     filename = args.filename
