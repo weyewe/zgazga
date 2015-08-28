@@ -327,6 +327,7 @@ class Api::BaseApiController < ApplicationController
     
     
     # if not current_user.has_role?(current_controller_name.to_sym, params[:action])
+    puts "It is all alright"
     
     return if params[:action] == "search"
     
@@ -334,6 +335,8 @@ class Api::BaseApiController < ApplicationController
       render :json => {:success => false, :access_denied => "Tidak punya menu authorisasi"}
       return
     end
+    
+    puts "fine!!"
   end
  
 end
