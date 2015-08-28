@@ -22,6 +22,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'simple_form'
 
 
+
 # gem 'wicked_pdf'
 gem 'wicked_pdf'
 gem 'dropbox-sdk'
