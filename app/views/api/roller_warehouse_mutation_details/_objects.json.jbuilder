@@ -6,7 +6,6 @@ json.roller_warehouse_mutation_details objects do |object|
 	json.code	object.code  
 	json.item_id	object.item_id  
 	json.item_sku	object.item.sku  
-	json.item_name	object.item.name  
-	json.quantity	object.quantity  
+	json.item_name	object.item.name   
 	
 end
