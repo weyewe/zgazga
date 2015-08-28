@@ -34,6 +34,8 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
 
   def create
     
+    puts "Banzia we are in the recovery work_procses"
+    puts "#{params}"
     params[:recovery_work_process][:transaction_datetime] =  parse_date( params[:recovery_work_process][:transaction_datetime] )
     
     
