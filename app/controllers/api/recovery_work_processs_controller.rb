@@ -223,8 +223,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     if  selected_id.nil?  
       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{  
         ( 
-           ( roller_builder.base_sku  =~ query ) | 
-            ( roller_builder.code  =~ query ) 
+           ( roller_builder.base_sku  =~ query ) 
          )
       }.
       page(params[:page]).
