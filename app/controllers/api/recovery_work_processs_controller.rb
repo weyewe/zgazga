@@ -233,8 +233,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
                         
       @total = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{  
         ( 
-           ( roller_builder.base_sku  =~ query ) | 
-            ( roller_builder.code  =~ query ) 
+           ( roller_builder.base_sku  =~ query )  
          )
       }.count 
     else
