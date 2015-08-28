@@ -216,7 +216,7 @@ class Api::BlanketOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = BlanketOrder.active_objects.joins(:contact,:warehouse).where{  
+      query_code = BlanketOrder.active_objects.joins(:contact,:warehouse).where{  
         ( 
             ( code =~ query)  | 
             ( production_no =~ query)  | 
@@ -224,20 +224,21 @@ class Api::BlanketOrdersController < Api::BaseApiController
             ( warehouse.name =~  query) | 
             ( notes =~  query)
          )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:blanket_warehouse_mutation].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_completed.eq true) 
+        }
+      end
+      
+      @objects = query_code.
+                  page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
                         
-      @total = BlanketOrder.active_objects.joins(:contact,:warehouse).where{  
-        ( 
-           ( code =~ query)  | 
-           ( production_no =~ query)  | 
-           ( contact.name =~  query) | 
-           ( warehouse.name =~  query) | 
-           ( notes =~  query)
-         )
-      }.count 
+      @total = query_code.count 
     else
       @objects = BlanketOrder.where{ 
           (id.eq selected_id)   

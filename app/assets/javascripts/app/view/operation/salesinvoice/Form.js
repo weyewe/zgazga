@@ -159,6 +159,17 @@ Ext.define('AM.view.operation.salesinvoice.Form', {
 		});
 	},
 	
+	setExtraParamInDeliveryOrderDetailIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('delivery_order_id'); 
+		var store = comboBox.store;
+		store.getProxy().extraParams.sales_invoices =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInDeliveryOrderDetailIdComboBox( ); 
+	},
+	
 	setComboBoxData : function( record){ 
 
 		

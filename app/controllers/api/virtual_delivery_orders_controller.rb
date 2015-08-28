@@ -178,7 +178,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{  
+      query_code =  VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{  
         ( 
            ( nomor_surat =~  query ) | 
            ( code =~ query)  | 
@@ -187,21 +187,23 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
           # ( virtual_order.contact.name =~  query) |
            ( virtual_order.nomor_surat =~  query)
          )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:virtual_order_clearance].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_reconciled.eq false) 
+        }
+      end
+      
+      
+      @objects = query_code.
+                  page(params[:page]).
+                  per(params[:limit]).
+                  order("id DESC")
                         
-      @total = VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{  
-        ( 
-           ( nomor_surat =~  query ) | 
-           ( code =~ query)  | 
-           ( warehouse.name =~  query) |
-           ( virtual_order.code =~  query) |
-          # ( virtual_order.contact.name =~  query) |
-           ( virtual_order.nomor_surat =~  query)
-         )
-      }.count 
+      @total = query_code.count 
+      
     else
       @objects = VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{ 
           (id.eq selected_id)   

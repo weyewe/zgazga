@@ -272,6 +272,18 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 		});
 	},
 	
+	setExtraParamInRecoveryOrderIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('recovery_order_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.roller_warehouse_mutation =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInRecoveryOrderIdComboBox( ); 
+	},
+	
 	setComboBoxData : function( record){ 
 
 		var me = this; 

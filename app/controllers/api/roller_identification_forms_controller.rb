@@ -208,26 +208,29 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{  
+      query_code = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{  
         ( 
           ( code =~ query)  | 
           ( nomor_disasembly =~ query)  | 
           ( contact.name =~  query) | 
           ( warehouse.name =~  query) 
          )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:recovery_order].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_completed.eq false) 
+        }
+      end
+      
+      @objects = query_code.
+                    page(params[:page]).
+                    per(params[:limit]).
+                    order("id DESC")
                         
-      @total = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{  
-        ( 
-          ( code =~ query)  | 
-          ( nomor_disasembly =~ query)  | 
-          ( contact.name =~  query) | 
-          ( warehouse.name =~  query) 
-         )
-      }.count 
+      @total = query_code.count 
+      
     else
       @objects = RollerIdentificationForm.active_objects.joins(:contact,:warehouse).where{ 
           (id.eq selected_id)   
@@ -242,6 +245,6 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

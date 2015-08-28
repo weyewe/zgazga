@@ -131,7 +131,23 @@ Ext.define('AM.view.operation.virtualdeliveryorderdetail.Form', {
 
     this.callParent(arguments);
   },
-
+	
+	setExtraParamInVirtualOrderDetailComboBox: function(virtual_order_id){
+		var comboBox = this.down('form').getForm().findField('virtual_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.virtual_order_id =  virtual_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) { 
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInVirtualOrderDetailComboBox( record.get("virtual_order_id") ); 
+	},
+	
+	
 	setSelectedItem: function( virtual_order_detail_id ){
 		var comboBox = this.down('form').getForm().findField('virtual_order_detail_id'); 
 		var me = this; 

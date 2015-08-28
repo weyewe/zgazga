@@ -195,6 +195,7 @@ Ext.define('AM.controller.RecoveryOrders', {
 
   addObject: function() {
 	var view = Ext.widget('recoveryorderform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -203,8 +204,8 @@ Ext.define('AM.controller.RecoveryOrders', {
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('recoveryorderform');
-
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 

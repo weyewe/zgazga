@@ -123,6 +123,22 @@ Ext.define('AM.view.operation.virtualorderclearancedetail.Form', {
     this.callParent(arguments);
   },
 
+
+	setExtraParamInVirtualDeliveryOrderDetailComboBox: function(virtual_delivery_order_id){
+		var comboBox = this.down('form').getForm().findField('virtual_delivery_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.virtual_delivery_order_id =  virtual_delivery_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) { 
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInVirtualDeliveryOrderDetailComboBox( record.get("virtual_delivery_order_id") ); 
+	},
+	
 	setSelectedVirtualDeliveryOrderDetail: function( virtual_delivery_order_detail_id ){
 		// console.log("inside set selected original account id ");
 		var comboBox = this.down('form').getForm().findField('virtual_delivery_order_detail_id'); 

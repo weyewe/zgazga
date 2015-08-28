@@ -263,20 +263,26 @@ class Api::SalesOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = SalesOrder.where{  
-        ( 
-           ( code =~ query )  
-         )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      query_code = SalesOrder.where{  
+          ( 
+             ( code =~ query )
+           )
+          
+      }
+      
+      if params[:delivery_order].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_delivery_completed.eq false) 
+        }
+      end
+      
+      @objects = query_code.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")  
                         
-      @total = SalesOrder.where{  
-        ( 
-           ( code =~ query )  
-         )
-      }.count 
+      @total = query_code.count 
     else
       @objects = SalesOrder.where{ 
           (id.eq selected_id)   

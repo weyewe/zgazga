@@ -191,12 +191,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
         )  
       # deduce compound_under_layer_usage
       if not (self.compound_under_layer_id.nil? or self.compound_under_layer_id == 0)
-      update_warehouse_item_amount(
-        :item_id => self.compound_under_layer_id,
-        :mutation_date => self.finished_date,
-        :case_addition =>ADJUSTMENT_STATUS[:deduction],
-        :amount => self.compound_under_layer_usage,
-        ) 
+        update_warehouse_item_amount(
+          :item_id => self.compound_under_layer_id,
+          :mutation_date => self.finished_date,
+          :case_addition =>ADJUSTMENT_STATUS[:deduction],
+          :amount => self.compound_under_layer_usage,
+          ) 
       end
       # deduce core
       core_id = 0

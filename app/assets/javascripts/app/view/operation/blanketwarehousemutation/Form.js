@@ -262,6 +262,18 @@ Ext.define('AM.view.operation.blanketwarehousemutation.Form', {
 		});
 	},
 	
+	setExtraParamInBlanketOrderIdComboBox: function(){  
+		var comboBox = this.down('form').getForm().findField('blanket_order_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.blanket_warehouse_mutation =  true;
+	},
+	
+	setComboBoxExtraParams: function( ) {  
+		var me = this;
+		me.setExtraParamInBlanketOrderIdComboBox( ); 
+	},
+	
 	setComboBoxData : function( record){ 
 
 		var me = this; 

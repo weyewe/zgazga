@@ -87,22 +87,27 @@ class Api::VirtualDeliveryOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = VirtualDeliveryOrderDetail.joins(:virtual_delivery_order, :item,:virtual_order_detail).where{ 
+      query_code = VirtualDeliveryOrderDetail.joins(:virtual_delivery_order, :item,:virtual_order_detail).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
         ( code  =~ query  )  
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:virtual_delivery_order_id].present?
+        object = VirtualDeliveryOrder.find_by_id params[:virtual_delivery_order_id]
+        if not object.nil?  
+          query = query.where(:virtual_delivery_order_id => object.id )
+        end
+      end    
+      
+      @objects = query_code.
+                        page(params[:page]).
+                        per(params[:limit]).
+                        order("id DESC")
                         
-      @total = VirtualDeliveryOrderDetail.joins(:virtual_delivery_order, :item, :virtual_order_detail).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  |
-        ( code  =~ query  )  
-      }.count
+      @total = query_code.count
+      
     else
       @objects = VirtualDeliveryOrderDetail.where{ 
               (id.eq selected_id)  
