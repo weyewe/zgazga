@@ -337,6 +337,7 @@ class Api::BaseApiController < ApplicationController
     end
     
     puts "fine!!"
+    puts "#{params}"
   end
  
 end
