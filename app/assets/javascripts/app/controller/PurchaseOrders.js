@@ -278,8 +278,14 @@ Ext.define('AM.controller.PurchaseOrders', {
 		}else{
 			//  no record at all  => gonna create the new one 
 			console.log("This is the new record")
-			var me  = this; 
+			var me  = this;  
+			
+
 			var newObject = new AM.model.PurchaseOrder( values ) ; 
+			
+			form.query('checkbox').forEach(function(checkbox){
+				newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
 			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing

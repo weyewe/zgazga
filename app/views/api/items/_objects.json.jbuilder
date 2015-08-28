@@ -24,7 +24,7 @@ json.items objects do |object|
 	json.item_type_name object.item_type.name 	
 	
 	json.sub_type_id object.sub_type_id
-	if object.sub_type_id.nil?
+	if object.sub_type.nil?
 		json.sub_type_name  ''
 	else
 		json.sub_type_name object.sub_type.name 

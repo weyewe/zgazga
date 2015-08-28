@@ -237,9 +237,9 @@ class Item < ActiveRecord::Base
       self.errors.add(:generic_errors, "Item sudah terpakai")
       return self
     end
-    item_id = self.id
+    selected_item_id = self.id
     if WarehouseItem.where{
-      (item_id == item_id) &
+      (item_id.eq  selected_item_id) &
       (amount.gt 0)
     }.count > 0
       self.errors.add(:generic_errors, "Item diwarehouse harus 0")

@@ -14,6 +14,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
 
   def create
    
+   puts "in the recovery order dtails\n"*100
     @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
     
   
