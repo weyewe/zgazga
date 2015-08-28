@@ -6,6 +6,8 @@ Ext.define('AM.model.BlanketResult', {
 	        { name: 'blanket_id', type: 'int' }, 
 	        { name: 'blanket_sku', type: 'string' }, 
 	        { name: 'blanket_name', type: 'string' }, 
+	        { name: 'blanket_order_production_no', type: 'string' }, 
+	        { name: 'blanket_order_code', type: 'string' }, 
 	        { name: 'blanket_roll_blanket_item_id', type: 'int' }     ,
 			{ name: 'blanket_roll_blanket_item_name', type: 'string' }     ,
 			{ name: 'blanket_roll_blanket_item_sku', type: 'string' }     ,
@@ -37,6 +39,9 @@ Ext.define('AM.model.BlanketResult', {
     	    { name: 'roll_blanket_usage', type: 'string' },
     	    { name: 'roll_blanket_defect', type: 'string' },		
     	    { name: 'quantity', type: 'int' },	
+    	    { name: 'rejected_quantity', type: 'int' },	
+    	    { name: 'finished_quantity', type: 'int' },	
+    	    
 			
 			
   	],

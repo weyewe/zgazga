@@ -19,7 +19,7 @@ Ext.define('AM.view.operation.blanketwarehousemutationdetail.Form', {
 		fields	: [
 		 		{
 					name : 'blanket_order_detail_blanket_sku',
-					mapping : "blanket_id"
+					mapping : "blanket_sku"
 				}, 
 				{
 					name : 'blanket_order_detail_blanket_name',
@@ -131,13 +131,28 @@ Ext.define('AM.view.operation.blanketwarehousemutationdetail.Form', {
 	},
 	
 	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
 		
 		
 		me.setSelectedBlanketOrderDetail( record.get("blanket_order_detail_id")  ) ; 
+	},
+	
+	setExtraParamInBlanketOrderDetailComboBox: function(blanket_order_id){
+		var comboBox = this.down('form').getForm().findField('blanket_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.blanket_order_id =  blanket_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {
+		console.log("inside setComboBoxExtraParams");
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInBlanketOrderDetailComboBox( record.get("blanket_order_id") ); 
 	},
 	
 	

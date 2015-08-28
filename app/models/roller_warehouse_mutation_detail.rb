@@ -32,6 +32,25 @@ class RollerWarehouseMutationDetail < ActiveRecord::Base
       self.errors.add(:recovery_order_detail_id, "RecoveryOrderDetail belum finish")
       return self 
     end
+    
+    pvcount = RollerWarehouseMutationDetail.where(
+      :roller_warehouse_mutation_id => roller_warehouse_mutation_id,
+      :recovery_order_detail_id => rod.id
+      ).count  
+    
+    if self.persisted?
+      if pvcount > 1
+        self.errors.add(:recovery_order_detail_id, "Item sudah terpakai")
+      return self 
+      end
+    else
+      if pvcount > 0
+        self.errors.add(:recovery_order_detail_id, "Item sudah terpakai")
+      return self 
+      end
+    end
+    
+    
   end
   
   def self.create_object(params)
@@ -54,7 +73,7 @@ class RollerWarehouseMutationDetail < ActiveRecord::Base
         item_id = new_object.recovery_order_detail.roller_builder.roller_used_core_item.id
       end
       new_object.item_id = item_id
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "RWMD-" + new_object.id.to_s  
       new_object.save
     end
     return new_object
@@ -74,11 +93,16 @@ class RollerWarehouseMutationDetail < ActiveRecord::Base
         item_id = self.recovery_order_detail.roller_builder.roller_used_core_item.id
       end
       self.item_id = item_id
+      self.save
     end
     return self
   end
   
   def delete_object
+    if self.roller_warehouse_mutation.is_confirmed == true
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
     return self
   end   

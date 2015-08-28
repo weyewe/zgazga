@@ -8,8 +8,20 @@ class Api::WarehouseMutationDetailsController < Api::BaseApiController
   
   def index
     @parent = WarehouseMutation.find_by_id params[:warehouse_mutation_id]
-    @objects = @parent.active_children.joins(:warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( item.name =~  livesearch ) | 
+           ( item.sku =~ livesearch)   
+         )         
+       } 
+     end
+    
+    @objects = query.page(params[:page]).per(params[:limit])
+    @total = query.count 
   end
 
   def create

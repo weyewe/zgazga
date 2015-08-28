@@ -89,6 +89,7 @@ class DeliveryOrderDetail < ActiveRecord::Base
     self.pending_invoiced_amount = BigDecimal( params[:amount] || '0')
     if self.save
        self.item_id = self.sales_order_detail.item_id
+       self.save
     end
     return self
   end

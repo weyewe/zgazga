@@ -88,22 +88,26 @@ class Api::RollerIdentificationFormDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = RollerIdentificationFormDetail.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{ 
+      query_code = RollerIdentificationFormDetail.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{ 
         ( core_builder.base_sku  =~ query ) | 
         ( core_builder.name  =~ query ) | 
         ( roller_type.name =~ query ) | 
         ( machine.name  =~ query  ) 
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      
+      if params[:roller_identification_form_id].present?
+        object = RollerIdentificationForm.find_by_id params[:roller_identification_form_id]
+        if not object.nil?  
+          query_code = query_code.where(:roller_identification_form_id => object.id )
+        end
+      end    
+      
+      @objects = query_code.
+                page(params[:page]).
+                per(params[:limit]).
+                order("id DESC")
                         
-      @total = RollerIdentificationFormDetail.joins(:roller_identification_form, :core_builder,:roller_type,:machine).where{ 
-        ( core_builder.base_sku  =~ query ) | 
-        ( core_builder.name  =~ query ) | 
-        ( roller_type.name =~ query ) | 
-        ( machine.name  =~ query  ) 
-      }.count
+      @total = query_code.count
     else
       @objects = RollerIdentificationFormDetail.where{ 
               (id.eq selected_id)  

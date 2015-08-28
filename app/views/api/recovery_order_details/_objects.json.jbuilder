@@ -6,6 +6,11 @@ json.recovery_order_details objects do |object|
     json.roller_identification_form_detail_detail_id 	object.roller_identification_form_detail.detail_id 
     json.roller_identification_form_detail_core_sku 	object.roller_identification_form_detail.core_builder.base_sku  
     json.roller_identification_form_detail_core_name 	object.roller_identification_form_detail.core_builder.name
+    if object.roller_identification_form_detail.material_case == 1
+     json.roller_identification_form_detail_material_case 	"New" 
+    elsif object.roller_identification_form_detail.material_case == 2
+     json.roller_identification_form_detail_material_case 	"Used" 
+    end
     json.roller_builder_id 	object.roller_builder_id
     json.roller_builder_sku 	object.roller_builder.base_sku
     json.roller_builder_name 	object.roller_builder.name

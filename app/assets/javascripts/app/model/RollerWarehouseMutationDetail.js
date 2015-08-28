@@ -6,6 +6,7 @@ Ext.define('AM.model.RollerWarehouseMutationDetail', {
 	        { name: 'id', type: 'int' },
     	    { name: 'roller_warehouse_mutation_id', type: 'int' },
    	    	{ name: 'recovery_order_detail_id', type: 'int' },
+   	    	{ name: 'roller_identification_form_detail_id', type: 'int' },
     	    { name: 'code', type: 'string' },
     	    { name: 'item_id', type: 'int' },
     	    { name: 'item_sku', type: 'string' },

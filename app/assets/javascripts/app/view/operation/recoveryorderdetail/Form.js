@@ -335,6 +335,20 @@ Ext.define('AM.view.operation.recoveryorderdetail.Form', {
 		});
 	},
 	
+	setExtraParamInRollerIdentificationFormDetailComboBox: function(roller_identification_form_id){  
+		var comboBox = this.down('form').getForm().findField('roller_identification_form_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.roller_identification_form_id =  roller_identification_form_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInRollerIdentificationFormDetailComboBox( record.get("roller_identification_form_id") ); 
+	},
+	
+	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);

@@ -4,7 +4,8 @@ json.recovery_results  objects do |object|
     json.id 	object.id  
     json.recovery_order_id 	object.recovery_order_id  
     json.roller_identification_form_detail_id 	object.roller_identification_form_detail_id  
-    
+    json.recovery_order_roller_identification_form_nomor_disasembly 	object.recovery_order.roller_identification_form.nomor_disasembly  
+    json.recovery_order_code 	object.recovery_order.code  
     json.roller_identification_form_detail_detail_id 	object.roller_identification_form_detail.detail_id  
     json.roller_identification_form_detail_core_sku 	object.roller_identification_form_detail.core_builder.base_sku  
     json.roller_identification_form_detail_core_name 	object.roller_identification_form_detail.core_builder.name

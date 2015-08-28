@@ -8,9 +8,15 @@ json.records @objects do |object|
     
   json.id 	object.id  
     json.recovery_order_id 	object.recovery_order_id  
-    json.roller_identification_form_detail_id 	object.roller_identification_form_detail_id  
+    json.roller_identification_form_detail_id 	object.roller_identification_form_detail.id  
+    json.roller_identification_form_detail_detail_id 	object.roller_identification_form_detail.detail_id 
     json.roller_identification_form_detail_core_sku 	object.roller_identification_form_detail.core_builder.base_sku  
     json.roller_identification_form_detail_core_name 	object.roller_identification_form_detail.core_builder.name
+    if object.roller_identification_form_detail.material_case == 1
+     json.roller_identification_form_detail_material_case 	"New" 
+    elsif object.roller_identification_form_detail.material_case == 2
+     json.roller_identification_form_detail_material_case 	"Used" 
+    end
     json.roller_builder_id 	object.roller_builder_id
     json.roller_builder_sku 	object.roller_builder.base_sku
     json.roller_builder_name 	object.roller_builder.name
@@ -41,7 +47,6 @@ json.records @objects do |object|
       json.compound_under_layer_name 	object.compound_under_layer.name
     end
     json.compound_under_layer_usage 	object.compound_under_layer_usage
- 
     
 	
 end

@@ -4,6 +4,8 @@ json.blanket_results objects do |object|
     
 	json.id 								object.id  
 	json.blanket_order_id 			 object.blanket_order_id
+	json.blanket_order_production_no		object.blanket_order.production_no 
+	json.blanket_order_code		object.blanket_order.code 
 	json.blanket_id 			 object.blanket_id
 	json.blanket_sku 			 object.blanket.sku
 	json.blanket_name 			 object.blanket.name
@@ -49,4 +51,6 @@ json.blanket_results objects do |object|
 	json.roll_blanket_usage		 object.roll_blanket_usage
 	json.roll_blanket_defect		 object.roll_blanket_defect
 	json.quantity object.quantity 
+	json.finished_quantity object.finished_quantity
+	json.rejected_quantity object.rejected_quantity
 end

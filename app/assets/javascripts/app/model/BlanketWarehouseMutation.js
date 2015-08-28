@@ -5,6 +5,7 @@ Ext.define('AM.model.BlanketWarehouseMutation', {
     	    { name: 'id', type: 'int' },
     	    { name: 'blanket_order_id', type: 'int' },
     	    { name: 'blanket_order_production_no', type: 'string' },
+    	    { name: 'blanket_order_code', type: 'string' },
     	    { name: 'code', type: 'string' },
     	    { name: 'warehouse_from_id', type: 'int' },
     	    { name: 'warehouse_from_name', type: 'string' },

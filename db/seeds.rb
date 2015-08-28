@@ -1482,7 +1482,8 @@ if Rails.env.development?
         :is_in_house => true,
         :amount => 4,
         :identified_date => DateTime.now,
-        :nomor_disasembly => "no diss #{x}"
+        :nomor_disasembly => "no diss #{x}",
+        :code => "code RID = #{x}"
       )
     (1.upto 4).each do |y|
       selected_core_builder = core_builder_array[rand(0..(core_builder_array.length - 1))]

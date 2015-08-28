@@ -13,7 +13,9 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 				xtype : 'templatecolumn',
 				text : "Produksi",
 				flex : 3,
-				tpl : 'Identification Detail : <br /><b>{roller_identification_form_detail_detail_id}</b>' + '<br />' + '<br />' +
+				tpl : 'Kode WorkOrder : <br /><b>{recovery_order_code}</b>' + '<br />' + '<br />' +
+					  'RIF  : <br /><b>{recovery_order_roller_identification_form_nomor_disasembly}</b>' + '<br />' + '<br />' +
+					  'Identification Detail : <br /><b>{roller_identification_form_detail_detail_id}</b>' + '<br />' + '<br />' +
 							'SKU Roller: <br /> <b>{roller_builder_sku}</b>'  + '<br />' + 
 							' Nama: {roller_builder_name}'  + '<br />' + '<br />' +
 							

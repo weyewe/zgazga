@@ -4,6 +4,11 @@ json.roller_identification_form_details objects do |object|
     json.roller_identification_form_id 	object.roller_identification_form_id  
     json.detail_id 	object.detail_id  
     json.material_case 	object.material_case  
+    if object.material_case == 1
+        json.material_case_text "New"
+    elsif object.material_case == 2
+        json.material_case_text "Used"
+    end
     json.core_builder_id 	object.core_builder_id
     json.core_builder_sku 	object.core_builder.base_sku  
     json.core_builder_name 	object.core_builder.name  

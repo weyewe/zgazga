@@ -91,6 +91,7 @@ class SalesInvoiceDetail < ActiveRecord::Base
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
       self.price = (new_object.delivery_order_detail.purchase_order_detail.price * self.amount).round(2)
+      self.save
       self.calculateTotalAmount
     end
     return self

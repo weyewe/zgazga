@@ -25,6 +25,15 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 					name : 'recovery_order_detail_recovery_name',
 					mapping : 'roller_builder_name'
 				},
+				
+				{
+					name : 'roller_identification_form_detail_material_case',
+					mapping : 'roller_identification_form_detail_material_case'
+				},
+				{
+					name : 'roller_identification_form_detail_detail_id',
+					mapping : 'roller_identification_form_detail_detail_id'
+				},
 				{
 					name : 'recovery_order_detail_id',
 					mapping : "id"
@@ -87,7 +96,9 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{recovery_order_detail_recovery_name}">' + 
 	    												'<div class="combo-name">{recovery_order_detail_recovery_sku}</div>' + 
+	    												'<div class="combo-name">RIF ID :{roller_identification_form_detail_detail_id}</div>' + 
 	    												'<div class="combo-name">Name: {recovery_order_detail_recovery_name}</div>' + 
+	    												'<div class="combo-name">Material : {roller_identification_form_detail_material_case}</div>' + 
 	    						 					'</div>';
 	    					}
 	    				},
@@ -128,8 +139,6 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 		});
 	},
 	
-	
-	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
@@ -138,6 +147,19 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.Form', {
 		me.setSelectedRecoveryOrderDetail( record.get("recovery_order_detail_id")  ) ; 
 	},
 	
+	setExtraParamInRecoveryOrderDetailIdComboBox: function(recovery_order_id){  
+		var comboBox = this.down('form').getForm().findField('recovery_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.recovery_order_id =  recovery_order_id;
+		store.getProxy().extraParams.roller_warehouse_mutation_detail =  true;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInRecoveryOrderDetailIdComboBox( record.get("recovery_order_id") ); 
+	},
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('roller_warehouse_mutation_code').setValue(record.get('code')); 

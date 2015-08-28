@@ -65,6 +65,7 @@ class TemporaryDeliveryOrderDetail < ActiveRecord::Base
     self.amount = params[:amount]
     if self.save
       self.item_id = self.sales_order_detail.item_id
+      self.save
     end
     return self
   end

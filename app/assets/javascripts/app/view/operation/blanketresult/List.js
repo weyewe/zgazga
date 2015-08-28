@@ -12,7 +12,10 @@ Ext.define('AM.view.operation.blanketresult.List' ,{
 					xtype : 'templatecolumn',
 					text : "Blanket Info",
 					flex : 3,
-					tpl : 	'Blanket SKU:  <br /><b>{blanket_sku}</b>'    + '<br />' +
+					tpl : 	'Order No:  <br /><b>{blanket_order_code}</b>'    + '<br />' +
+							'Production No: <br /><b>{blanket_order_production_no}</b>'  + '<br />' + '<br />' +
+							
+						 	'Blanket SKU:  <br /><b>{blanket_sku}</b>'    + '<br />' +
 								'Nama: <br /><b>{blanket_name}</b>'  + '<br />' + '<br />' +
 								
 							'Roll Blanket SKU:  <br /><b>{blanket_roll_blanket_item_sku}</b>'    + '<br />' +

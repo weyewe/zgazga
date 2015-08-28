@@ -4,6 +4,9 @@ Ext.define('AM.model.RecoveryResult', {
 
 			{ name: 'id', type: 'int' },
 	         { name: 'recovery_order_id', type: 'int' },
+	         { name: 'recovery_order_code', type: 'string' },
+	         { name: 'recovery_order_roller_identification_form_nomor_disasembly', type: 'string' },
+	         
 	         { name: 'roller_identification_form_detail_detail_id', type: 'int' },	
 	         
 	         { name: 'roller_identification_form_detail_id', type: 'int' },	

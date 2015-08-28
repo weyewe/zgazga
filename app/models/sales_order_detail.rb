@@ -85,7 +85,10 @@ class SalesOrderDetail < ActiveRecord::Base
     self.item_id = params[:item_id]
     self.amount = BigDecimal( params[:amount] || '0') 
     self.price = BigDecimal( params[:price] || '0')
-    self.save
+    if self.save
+      self.pending_delivery_amount = BigDecimal( params[:amount] || '0') 
+      self.save
+    end
     return self
   end
   

@@ -5,6 +5,7 @@ Ext.define('AM.model.RollerIdentificationFormDetail', {
     	    { name: 'roller_identification_form_id', type: 'int' },
     	    { name: 'detail_id', type: 'int' },
     	    { name: 'material_case', type: 'int' },
+    	    { name: 'material_case_text', type: 'string' },
     	    { name: 'core_builder_id', type: 'int' },
     	    { name: 'core_builder_sku', type: 'string' },
     	    { name: 'core_builder_name', type: 'string' },

@@ -48,7 +48,11 @@ Ext.define('AM.controller.WarehouseMutationDetails', {
       'warehousemutationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'warehousemutationdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'warehousemutationlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +62,22 @@ Ext.define('AM.controller.WarehouseMutationDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		// console.log("This is fucking awsome: " + newValue);
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getWarehouseMutationDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getWarehouseMutationDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

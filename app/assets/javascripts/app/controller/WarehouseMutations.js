@@ -443,6 +443,8 @@ Ext.define('AM.controller.WarehouseMutations', {
 		
 		// console.log("record id: " + record.get("id"));
 		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
+		
 		templateDetailGrid.getStore().getProxy().extraParams.warehouse_mutation_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -451,6 +453,7 @@ Ext.define('AM.controller.WarehouseMutations', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

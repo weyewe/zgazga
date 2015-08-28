@@ -5,26 +5,25 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{
+       query_code = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{
          (
            
-           ( roller_builder.base_sku  =~ livesearch ) | 
-          ( roller_builder.code  =~ livesearch )  
-         )
+          ( 
+            ( roller_builder.base_sku  =~ livesearch ) 
+          )  &
+          ( recovery_order.is_confirmed.eq  true ) 
 
-       }.page(params[:page]).per(params[:limit]).order("id DESC")
-
-       @total = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{
-         (
-           ( roller_builder.base_sku  =~ livesearch ) | 
-            ( roller_builder.code  =~ livesearch ) 
          )
-       }.count
- 
+       }
+       @objects = query_code.page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = query_code.count
 
      else
-       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).page(params[:page]).per(params[:limit]).order("id DESC")
-       @total = RecoveryOrderDetail.active_objects.count
+       query_code = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{
+          ( recovery_order.is_confirmed.eq  true ) 
+       }
+       @objects = query_code.page(params[:page]).per(params[:limit]).order("id DESC")
+       @total = query_code.count
      end
      
      
@@ -220,21 +219,18 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     query = "%#{search_params}%"
     # on PostGre SQL, it is ignoring lower case or upper case 
     
-    if  selected_id.nil?  
-      @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{  
+    if  selected_id.nil? 
+      query_code = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{  
         ( 
            ( roller_builder.base_sku  =~ query ) 
          )
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+      }
+      @objects = query_code.
+                    page(params[:page]).
+                    per(params[:limit]).
+                    order("id DESC")
                         
-      @total = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{  
-        ( 
-           ( roller_builder.base_sku  =~ query )  
-         )
-      }.count 
+      @total = query_code.count 
     else
       @objects = RecoveryOrderDetail.active_objects.joins(:recovery_order,:roller_builder,:roller_identification_form_detail).where{ 
           (id.eq selected_id)   

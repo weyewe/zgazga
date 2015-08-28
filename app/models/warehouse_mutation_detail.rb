@@ -83,6 +83,8 @@ class WarehouseMutationDetail < ActiveRecord::Base
     end
     self.item_id = params[:item_id]
     self.amount = params[:amount]
+    if self.save
+    end
     return self
   end
   

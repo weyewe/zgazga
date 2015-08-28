@@ -74,8 +74,9 @@ class BlanketWarehouseMutationDetail < ActiveRecord::Base
     end
     self.blanket_order_detail_id = params[:blanket_order_detail_id]
     self.quantity  = params[:quantity]
-    if new_object.save
+    if self.save
       self.item_id = self.blanket_order_detail.blanket.item.id
+      self.save
     end
     return self
   end

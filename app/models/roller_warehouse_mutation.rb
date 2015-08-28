@@ -60,7 +60,7 @@ class RollerWarehouseMutation < ActiveRecord::Base
     new_object.mutation_date = params[:mutation_date]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save
-      new_object.code = "Cadj-" + new_object.id.to_s  
+      new_object.code = "RWM-" + new_object.id.to_s  
       new_object.save
     end
     return new_object
@@ -83,6 +83,8 @@ class RollerWarehouseMutation < ActiveRecord::Base
     self.warehouse_to_id = params[:warehouse_to_id]
     self.mutation_date = params[:mutation_date]
     self.amount = BigDecimal( params[:amount] || '0')
+    if self.save
+    end
     return self
   end
   
@@ -169,7 +171,7 @@ class RollerWarehouseMutation < ActiveRecord::Base
           :source_class => self.class.to_s, 
           :source_id => self.id ,  
           :amount => self.amount,  
-          :status => ADJUSTMENT_STATUS[:deduction],  
+          :status => ADJUSTMENT_STATUS[:addition],  
           :mutation_date => self.mutation_date ,  
           :warehouse_id => self.warehouse_to_id ,
           :warehouse_item_id => item_in_warehouse_to.id,

@@ -68,7 +68,6 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
     new_object.roller_no = params[:roller_no]
     new_object.repair_request_case = params[:repair_request_case]
     new_object.is_job_scheduled = params[:is_job_scheduled]
-    new_object.is_delivered = params[:is_delivered]
     new_object.is_roller_built = params[:is_roller_built]
     new_object.roller_no = params[:roller_no]
     new_object.rd = BigDecimal( params[:rd] || '0')    
@@ -94,7 +93,6 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
     self.roller_no = params[:roller_no]
     self.repair_request_case = params[:repair_request_case]
     self.is_job_scheduled = params[:is_job_scheduled]
-    self.is_delivered = params[:is_delivered]
     self.is_roller_built = params[:is_roller_built]
     self.roller_no = params[:roller_no]
     self.rd = BigDecimal( params[:rd] || '0')    

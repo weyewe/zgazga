@@ -4,7 +4,10 @@ class Api::RecoveryResultsController < Api::BaseApiController
      
      
     query = RecoveryOrderDetail.active_objects.joins(:recovery_order, :roller_identification_form_detail,:roller_builder)
-     
+    
+    query = query.where{
+      (recovery_order.is_confirmed.eq true)
+    }
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
       
