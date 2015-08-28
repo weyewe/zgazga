@@ -202,8 +202,8 @@ class Api::RecoveryOrdersController < Api::BaseApiController
       
       if params[:roller_warehouse_mutation].present?
         query_code = query_code.where{
-          (is_confirmed.eq true) &
-          (is_completed.eq true) 
+          (is_confirmed.eq true) 
+          # (is_completed.eq true) 
         }
       end
       

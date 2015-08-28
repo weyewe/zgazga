@@ -75,7 +75,7 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 

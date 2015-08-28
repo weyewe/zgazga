@@ -122,6 +122,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
     # self.ensure_compound_batch_and_amount_is_valid_for_finish_or_reject
     return self if self.errors.size != 0 
      
+    if (params[:is_conventional_grinded] == true) & (params[:is_cnc_grinded] == true)
+      self.errors.add(:generic_errors, "Grinding antara CNC dan Conventional saja pilih salah satu")
+      return self 
+    end
+     
     self.compound_usage = BigDecimal( params[:compound_usage] || '0')
     self.compound_under_layer_usage = BigDecimal( params[:compound_under_layer_usage] || '0')
     self.is_disassembled = params[:is_disassembled]
@@ -467,7 +472,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
     self.accessories_cost = accessories_cost
     self.compound_cost = (self.roller_builder.compound.avg_price * self.compound_usage).round(2)
     
-    if not self.compound_under_layer_id == 0
+    if not (self.compound_under_layer_id == 0 or self.compound_under_layer_id.nil?)
       self.compound_cost += (self.compound_under_layer.avg_price * self.compound_under_layer_usage).round(2)
     end
     

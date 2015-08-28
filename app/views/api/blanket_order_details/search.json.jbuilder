@@ -33,6 +33,9 @@ json.records @objects do |object|
 		json.blanket_right_bar_item_sku		 object.blanket.right_bar_item.sku
 	end
 	json.total_cost		 object.total_cost
+	json.quantity object.quantity
+	json.finished_quantity object.finished_quantity
+	json.rejected_quantity object.rejected_quantity
 	json.is_cut		 object.is_cut
 	json.is_side_sealed		 object.is_side_sealed
 	json.is_bar_prepared		 object.is_bar_prepared
@@ -52,6 +55,4 @@ json.records @objects do |object|
 	json.roll_blanket_cost		 object.roll_blanket_cost
 	json.roll_blanket_usage		 object.roll_blanket_usage
 	json.roll_blanket_defect		 object.roll_blanket_defect
-	
-	
 end

@@ -91,13 +91,13 @@ class BlanketOrderDetail < ActiveRecord::Base
    
   def update_object(params)
     if self.blanket_order.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
      
     
     self.blanket_id = params[:blanket_id]
-    self.quantity = params[:quantity ]
+    self.quantity = params[:quantity]
     if self.save
     end
     return self
@@ -105,7 +105,7 @@ class BlanketOrderDetail < ActiveRecord::Base
   
   def delete_object
     if self.blanket_order.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     # reduce blanket_order.amount_received
@@ -133,11 +133,11 @@ class BlanketOrderDetail < ActiveRecord::Base
       return self
     end
     if self.blanket_order.is_confirmed == false
-      self.errors.add(:generic,"Belum di confirm")
+      self.errors.add(:generic_errors,"Belum di confirm")
       return self
     end
     if self.is_finished == true
-      self.errors.add(:generic,"Sudah di finish")
+      self.errors.add(:generic_errors,"Sudah di finish")
       return self
     end 
     
@@ -249,11 +249,11 @@ class BlanketOrderDetail < ActiveRecord::Base
   def unfinish_object
     
     if self.blanket_order.is_confirmed == false
-      self.errors.add(:generic,"Belum di confirm")
+      self.errors.add(:generic_errors,"Belum di confirm")
       return self
     end
     if self.is_finished == false
-      self.errors.add(:generic,"Belum di finish")
+      self.errors.add(:generic_errors,"Belum di finish")
       return self
     end
     

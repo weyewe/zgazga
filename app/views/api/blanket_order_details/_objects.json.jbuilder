@@ -27,6 +27,9 @@ json.blanket_order_details objects do |object|
 		json.blanket_right_bar_item_name		 object.blanket.right_bar_item.name
 		json.blanket_right_bar_item_sku		 object.blanket.right_bar_item.sku
 	end
+	json.quantity object.quantity
+	json.finished_quantity object.finished_quantity
+	json.rejected_quantity object.rejected_quantity
 	json.total_cost		 object.total_cost
 	json.is_cut		 object.is_cut
 	json.is_side_sealed		 object.is_side_sealed
