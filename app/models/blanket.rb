@@ -259,7 +259,7 @@ class Blanket < ActiveRecord::Base
   def delete_object
     # check if used on blanket order
     if BlanketOrderDetail.where(:blanket_id => self.id).count > 0
-      self.errors.add(:generic,"Sudah di gunakan di BlanketOrder")
+      self.errors.add(:generic_errors,"Sudah di gunakan di BlanketOrder")
       return self
     end
     self.destroy

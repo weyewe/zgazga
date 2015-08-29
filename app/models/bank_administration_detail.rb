@@ -48,7 +48,7 @@ class BankAdministrationDetail < ActiveRecord::Base
     bank_administration = BankAdministration.find_by_id(params[:bank_administration_id])
     if not bank_administration.nil?
       if bank_administration.is_confirmed == true
-        new_object.errors.add(:generic,"Sudah di confirm")
+        new_object.errors.add(:generic_errors,"Sudah di confirm")
         return new_object
       end
     end
@@ -68,7 +68,7 @@ class BankAdministrationDetail < ActiveRecord::Base
   
   def update_object(params)
     if self.bank_administration.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     self.bank_administration_id = params[:bank_administration_id]
@@ -84,7 +84,7 @@ class BankAdministrationDetail < ActiveRecord::Base
   
   def delete_object
     if self.bank_administration.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     self.destroy
