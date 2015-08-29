@@ -84,10 +84,13 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 					mapping : "code"
 				} ,
 				{
-					name : 'recovery_order_production_no',
-					mapping : "production_no"
+					name : 'roller_identification_form_nomor_disasembly',
+					mapping : "roller_identification_form_nomor_disasembly"
 				} ,
-		 
+		 		{
+					name : 'roller_identification_form_code',
+					mapping : "roller_identification_form_code"
+				} ,
 				{
 					name : 'recovery_order_id',
 					mapping : 'id'
@@ -150,7 +153,8 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{recovery_order_code}">' + 
 	    												'<div class="combo-name">{recovery_order_code}</div>' + 
-	    												'<div class="combo-name">Production No : {recovery_order_production_no}</div>' + 
+	    												'<div class="combo-name">Code RIF : {roller_identification_form_code}</div>' + 
+	    												'<div class="combo-name">No Diss : {roller_identification_form_nomor_disasembly}</div>' + 
 	    						 					'</div>';
 	    					}
 	    				},

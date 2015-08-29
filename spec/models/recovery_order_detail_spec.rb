@@ -307,6 +307,11 @@ describe RecoveryOrderDetail do
           @rod.is_finished.should == true
         end
         
+        it "should complete RecoveryOrder" do
+          @ro.reload
+          @ro.is_completed.should == true
+        end
+        
         context "Unfinish RecoveryOrderDetail" do
           before(:each) do
             @rod.unfinish_object()

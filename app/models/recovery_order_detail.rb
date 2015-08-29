@@ -510,15 +510,18 @@ class RecoveryOrderDetail < ActiveRecord::Base
   end
   
   def complete_recovery_order
+    rec_id = self.recovery_order_id
     if RecoveryOrderDetail.where{
-      (recovery_order_id.eq self.recovery_order_id) &
+      (recovery_order_id.eq rec_id) &
       ((is_finished.eq false) & (is_rejected.eq false)) 
       }.count == 0
-      self.recovery_order.is_completed = true
+      recovery_order = RecoveryOrder.find_by_id(self.recovery_order_id)
+      recovery_order.is_completed = true
+      recovery_order.save
     else
-      self.recovery_order.is_completed = false
+      recovery_order = RecoveryOrder.find_by_id(self.recovery_order_id)
+      recovery_order.save
     end
-    self.recovery_order.save
   end
   
   def update_warehouse_item_amount(params)
