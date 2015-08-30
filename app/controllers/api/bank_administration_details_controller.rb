@@ -7,8 +7,20 @@ class Api::BankAdministrationDetailsController < Api::BaseApiController
   
   def index
     @parent = BankAdministration.find_by_id params[:bank_administration_id]
-    @objects = @parent.active_children.joins(:bank_administration, :account).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:bank_administration, :account)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( account.name  =~ livesearch ) | 
+           ( description  =~ livesearch ) | 
+           ( code  =~ livesearch  )   
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

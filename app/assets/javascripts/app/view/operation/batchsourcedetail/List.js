@@ -43,9 +43,18 @@ Ext.define('AM.view.operation.batchsourcedetail.List' ,{
 			action: 'deleteObject',
 			disabled: true
 		});
+		
+		this.searchField = new Ext.form.field.Text({
+			name: 'searchField',
+			hideLabel: true,
+			width: 200,
+			emptyText : "Search",
+			checkChangeBuffer: 300
+		});
+		
 
-
-		this.tbar = [this.addObjectButton,   this.deleteObjectButton ]; 
+		this.tbar = [this.addObjectButton,   this.deleteObjectButton , '->', 
+					this.searchField]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -83,5 +92,9 @@ Ext.define('AM.view.operation.batchsourcedetail.List' ,{
 	
 	setObjectTitle : function(record){
 		this.setTitle("BatchSource: " + record.get("code"));
-	}
+	},
+	
+	refreshSearchField : function(){
+		this.searchField.setValue("");
+	}	
 });

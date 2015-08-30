@@ -48,7 +48,9 @@ Ext.define('AM.controller.RecoveryWorkProcessDetails', {
       'recoveryworkprocessdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'recoveryworkprocessdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'recoveryworkprocesslist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,21 @@ Ext.define('AM.controller.RecoveryWorkProcessDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRecoveryWorkProcessDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRecoveryWorkProcessDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

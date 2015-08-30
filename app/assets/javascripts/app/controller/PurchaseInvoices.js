@@ -457,7 +457,7 @@ downloadObject: function(){
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.purchase_invoice_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -466,6 +466,7 @@ downloadObject: function(){
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

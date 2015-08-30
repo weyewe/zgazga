@@ -8,8 +8,23 @@ class Api::RollerIdentificationFormDetailsController < Api::BaseApiController
   
   def index
     @parent = RollerIdentificationForm.find_by_id params[:roller_identification_form_id]
-    @objects = @parent.active_children.joins(:roller_identification_form, :core_builder,:roller_type,:machine).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:roller_identification_form, :core_builder,:roller_type,:machine)
+    
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
+       
+      query  = query.where{
+        (
+          ( core_builder.base_sku  =~ livesearch ) | 
+          ( core_builder.name  =~ livesearch ) | 
+          ( roller_type.name =~ livesearch ) | 
+          ( machine.name  =~ livesearch  ) 
+        )         
+      } 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

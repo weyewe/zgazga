@@ -6,8 +6,18 @@ class Api::RecoveryResultCompoundDetailsController < Api::BaseApiController
   
   def index
     @parent = RecoveryOrderDetail.find_by_id params[:recovery_result_id]
-    @objects = @parent.active_compound_children.joins(:recovery_order_detail ).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_compound_children.count
+    query = @parent.active_compound_children.joins(:recovery_order_detail ,:batch_instance)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( batch_instance)
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

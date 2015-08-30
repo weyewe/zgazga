@@ -7,7 +7,7 @@ class Api::StockAdjustmentDetailsController < Api::BaseApiController
   
   def index
     @parent = StockAdjustment.find_by_id params[:stock_adjustment_id]
-    query = @parent.active_children.joins(:stock_adjustment, :item => [:uom]).order("id DESC")
+    query = @parent.active_children.joins(:stock_adjustment, :item => [:uom])
     # @objects = .page(params[:page]).per(params[:limit])
     
     if params[:livesearch].present? 
@@ -21,7 +21,7 @@ class Api::StockAdjustmentDetailsController < Api::BaseApiController
        } 
      end
     
-    @objects = query.page(params[:page]).per(params[:limit])
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
     @total = query.count 
   end
 

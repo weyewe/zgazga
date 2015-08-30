@@ -66,7 +66,6 @@ Ext.define('AM.controller.WarehouseMutationDetails', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 		
-		// console.log("This is fucking awsome: " + newValue);
 		
 		if( newValue.length ==0 ){
 			return; 

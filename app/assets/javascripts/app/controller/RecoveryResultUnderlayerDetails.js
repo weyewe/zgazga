@@ -48,7 +48,10 @@ Ext.define('AM.controller.RecoveryResultUnderlayerDetails', {
       'recoveryresultunderlayerdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'recoveryresultunderlayerdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'recoveryresultlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +61,21 @@ Ext.define('AM.controller.RecoveryResultUnderlayerDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRecoveryResultUnderlayerDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRecoveryResultUnderlayerDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

@@ -57,7 +57,11 @@ Ext.define('AM.controller.ReceiptVoucherDetails', {
       'receiptvoucherdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'receiptvoucherdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'receiptvoucherlist' : {
 				'updated' : this.reloadStore,
@@ -97,7 +101,21 @@ Ext.define('AM.controller.ReceiptVoucherDetails', {
 	  	field.up('form').getForm().findField('amount').setValue( amount );
   	}  
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getReceiptVoucherDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getReceiptVoucherDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

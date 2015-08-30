@@ -443,7 +443,7 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.roller_identification_form_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -452,6 +452,7 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

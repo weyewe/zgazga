@@ -378,7 +378,7 @@ Ext.define('AM.controller.PaymentRequests', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.payment_request_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -387,6 +387,7 @@ Ext.define('AM.controller.PaymentRequests', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

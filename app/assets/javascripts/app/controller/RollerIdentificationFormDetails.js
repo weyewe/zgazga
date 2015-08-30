@@ -48,7 +48,9 @@ Ext.define('AM.controller.RollerIdentificationFormDetails', {
       'rolleridentificationformdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+		 	'rolleridentificationformdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'rolleridentificationformlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,21 @@ Ext.define('AM.controller.RollerIdentificationFormDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRollerIdentificationFormDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRollerIdentificationFormDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

@@ -48,7 +48,11 @@ Ext.define('AM.controller.PurchaseReceivalDetails', {
       'purchasereceivaldetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'purchasereceivaldetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'purchasereceivallist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +62,22 @@ Ext.define('AM.controller.PurchaseReceivalDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getPurchaseReceivalDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getPurchaseReceivalDetailsStore().load();
+	},
+	
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

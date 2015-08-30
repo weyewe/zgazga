@@ -48,7 +48,12 @@ Ext.define('AM.controller.BatchSourceDetails', {
       'batchsourcedetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'batchsourcedetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
+			
 			// monitor parent(sales_order) update
 			'batchsourcelist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +63,21 @@ Ext.define('AM.controller.BatchSourceDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getBatchSourceDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getBatchSourceDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

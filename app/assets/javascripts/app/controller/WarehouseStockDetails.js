@@ -48,7 +48,11 @@ Ext.define('AM.controller.WarehouseStockDetails', {
       'warehousestockdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'warehousestockdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'warehousestocklist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +62,21 @@ Ext.define('AM.controller.WarehouseStockDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getWarehouseStockDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getWarehouseStockDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

@@ -48,7 +48,9 @@ Ext.define('AM.controller.TransactionDataDetails', {
       'transactiondatadetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'transactiondatadetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},	
 			// monitor parent(sales_order) update
 			'transactiondatalist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,19 @@ Ext.define('AM.controller.TransactionDataDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getTransactionDataDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getTransactionDataDetailsStore().load();
+	},
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

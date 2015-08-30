@@ -11,7 +11,15 @@ class Api::BlanketResultDetailsController < Api::BaseApiController
    
     
     query = @parent.roll_blanket_usages.joins(:batch_instance)
-    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+          ( batch_instance.name  =~ livesearch  )     
+         )         
+       } 
+    end
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
     @total = query.count
     

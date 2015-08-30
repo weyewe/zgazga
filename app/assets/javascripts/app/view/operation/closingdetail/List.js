@@ -35,8 +35,16 @@ Ext.define('AM.view.operation.closingdetail.List' ,{
 			disabled: true
 		});
 
-
-		this.tbar = [this.editObjectButton]; 
+		this.searchField = new Ext.form.field.Text({
+			name: 'searchField',
+			hideLabel: true,
+			width: 200,
+			emptyText : "Search",
+			checkChangeBuffer: 300
+		});
+		
+		this.tbar = [this.editObjectButton, '->', 
+					this.searchField]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -74,5 +82,9 @@ Ext.define('AM.view.operation.closingdetail.List' ,{
 	
 	setObjectTitle : function(record){
 		this.setTitle("Closing: " + record.get("id"));
-	}
+	},	
+	
+	refreshSearchField : function(){
+		this.searchField.setValue("");
+	}	
 });

@@ -48,7 +48,11 @@ Ext.define('AM.controller.BankAdministrationDetails', {
       'bankadministrationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'bankadministrationdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'bankadministrationlist' : {
 				'updated' : this.reloadStore,
@@ -59,6 +63,20 @@ Ext.define('AM.controller.BankAdministrationDetails', {
     });
   },
 
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getBankAdministrationDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getBankAdministrationDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

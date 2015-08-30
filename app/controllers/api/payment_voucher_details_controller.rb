@@ -6,8 +6,18 @@ class Api::PaymentVoucherDetailsController < Api::BaseApiController
   
   def index
     @parent = PaymentVoucher.find_by_id params[:payment_voucher_id]
-    @objects = @parent.active_children.joins(:payment_voucher, :payable).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:payment_voucher, :payable)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( payable.source_code  =~ livesearch  )   
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create
@@ -87,14 +97,14 @@ class Api::PaymentVoucherDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = PaymentVoucherDetail.joins(:payment_voucher, :payable).where{ 
-        ( payable.payable_source_code  =~ query  )   
+        ( payable.source_code  =~ query  )   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
       @total = PaymentVoucherDetail.joins(:payment_voucher, :payable).where{ 
-       ( payable.payable_source_code  =~ query  )  
+       ( payable.source_code  =~ query  )  
       }.count
     else
       @objects = PaymentVoucherDetail.where{ 

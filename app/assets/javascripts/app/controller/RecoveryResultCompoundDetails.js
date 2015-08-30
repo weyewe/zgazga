@@ -48,7 +48,10 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
       'recoveryresultcompounddetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'recoveryresultcompounddetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'recoveryresultlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +61,20 @@ Ext.define('AM.controller.RecoveryResultCompoundDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRecoveryResultCompoundDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRecoveryResultCompoundDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

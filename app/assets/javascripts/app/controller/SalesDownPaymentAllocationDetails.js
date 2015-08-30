@@ -48,7 +48,10 @@ Ext.define('AM.controller.SalesDownPaymentAllocationDetails', {
       'salesdownpaymentallocationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'salesdownpaymentallocationdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'salesdownpaymentallocationlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +61,20 @@ Ext.define('AM.controller.SalesDownPaymentAllocationDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getSalesDownPaymentAllocationDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getSalesDownPaymentAllocationDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

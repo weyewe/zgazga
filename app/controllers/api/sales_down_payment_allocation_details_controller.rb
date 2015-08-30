@@ -8,8 +8,19 @@ class Api::SalesDownPaymentAllocationDetailsController < Api::BaseApiController
   
   def index
     @parent = SalesDownPaymentAllocation.find_by_id params[:sales_down_payment_allocation_id]
-    @objects = @parent.active_children.joins(:sales_down_payment_allocation, :receivable).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:sales_down_payment_allocation, :receivable)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( receivable.source_code  =~ livesearch  )  | 
+            ( code  =~ livesearch  ) 
+         )
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

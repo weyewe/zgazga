@@ -48,7 +48,9 @@ Ext.define('AM.controller.TemporaryDeliveryOrderDetails', {
       'temporarydeliveryorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'temporarydeliveryorderdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'temporarydeliveryorderlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,20 @@ Ext.define('AM.controller.TemporaryDeliveryOrderDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getTemporaryDeliveryOrderDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getTemporaryDeliveryOrderDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

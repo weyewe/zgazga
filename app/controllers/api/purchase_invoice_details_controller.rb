@@ -6,8 +6,20 @@ class Api::PurchaseInvoiceDetailsController < Api::BaseApiController
   
   def index
     @parent = PurchaseInvoice.find_by_id params[:purchase_invoice_id]
-    @objects = @parent.active_children.joins(:purchase_invoice,  :purchase_receival_detail => [:item => [:uom]]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:purchase_invoice,  :purchase_receival_detail => [:item => [:uom]])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( purchase_receival_detail.item.sku  =~ livesearch ) | 
+            ( purchase_receival_detail.item.name =~ livesearch ) | 
+            ( code  =~ livesearch  )
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create
@@ -87,9 +99,8 @@ class Api::PurchaseInvoiceDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = PurchaseInvoiceDetail.joins(:purchase_invoice, :item => [:uom]).where{ 
-        ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
+        ( purchase_receival_detail.item.sku  =~ query ) | 
+        ( purchase_receival_detail.item.name =~ query ) | 
         ( code  =~ query  )  
       }.
       page(params[:page]).

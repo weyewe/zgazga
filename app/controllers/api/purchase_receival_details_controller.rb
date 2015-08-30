@@ -6,8 +6,21 @@ class Api::PurchaseReceivalDetailsController < Api::BaseApiController
   
   def index
     @parent = PurchaseReceival.find_by_id params[:purchase_receival_id]
-    @objects = @parent.active_children.joins(:purchase_receival, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:purchase_receival, :item => [:uom])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.description  =~ livesearch  )  | 
+            ( code  =~ livesearch  )  
+          )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

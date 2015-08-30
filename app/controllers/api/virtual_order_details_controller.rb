@@ -5,8 +5,20 @@ class Api::VirtualOrderDetailsController < Api::BaseApiController
   
   def index
     @parent = VirtualOrder.find_by_id params[:virtual_order_id]
-    @objects = @parent.active_children.joins(:virtual_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:virtual_order, :item => [:uom])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( item.name =~  livesearch ) | 
+           ( code =~  livesearch ) | 
+           ( item.sku =~ livesearch)   
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

@@ -48,7 +48,11 @@ Ext.define('AM.controller.PurchaseInvoiceDetails', {
       'purchaseinvoicedetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'purchaseinvoicedetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'purchaseinvoicelist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +62,21 @@ Ext.define('AM.controller.PurchaseInvoiceDetails', {
 		
     });
   },
-
+  
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getPurchaseInvoiceDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getPurchaseInvoiceDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

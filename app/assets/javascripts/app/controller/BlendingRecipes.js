@@ -226,7 +226,7 @@ Ext.define('AM.controller.BlendingRecipes', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.blending_recipe_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -235,6 +235,7 @@ Ext.define('AM.controller.BlendingRecipes', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

@@ -48,7 +48,10 @@ Ext.define('AM.controller.MemorialDetails', {
       'memorialdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+      
+ 			'memorialdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'memoriallist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +61,21 @@ Ext.define('AM.controller.MemorialDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getMemorialDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getMemorialDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

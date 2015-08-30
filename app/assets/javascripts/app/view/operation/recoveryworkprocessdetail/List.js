@@ -36,9 +36,18 @@ Ext.define('AM.view.operation.recoveryworkprocessdetail.List' ,{
 			action: 'deleteObject',
 			disabled: true
 		});
+		
+		this.searchField = new Ext.form.field.Text({
+			name: 'searchField',
+			hideLabel: true,
+			width: 200,
+			emptyText : "Search",
+			checkChangeBuffer: 300
+		});
+		
 
-
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton , '->', 
+					this.searchField]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -76,5 +85,9 @@ Ext.define('AM.view.operation.recoveryworkprocessdetail.List' ,{
 	
 	setObjectTitle : function(record){
 		this.setTitle("RecoveryOrderDetail: " + record.get("id"));
-	}
+	},
+	
+	refreshSearchField : function(){
+		this.searchField.setValue("");
+	}	
 });

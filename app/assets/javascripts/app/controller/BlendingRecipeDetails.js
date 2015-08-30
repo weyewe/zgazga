@@ -48,7 +48,11 @@ Ext.define('AM.controller.BlendingRecipeDetails', {
       'blendingrecipedetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'blendingrecipedetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'blendingrecipelist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +62,21 @@ Ext.define('AM.controller.BlendingRecipeDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getBlendingRecipeDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getBlendingRecipeDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

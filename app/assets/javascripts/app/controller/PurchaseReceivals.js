@@ -458,7 +458,7 @@ Ext.define('AM.controller.PurchaseReceivals', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.purchase_receival_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -467,6 +467,7 @@ Ext.define('AM.controller.PurchaseReceivals', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

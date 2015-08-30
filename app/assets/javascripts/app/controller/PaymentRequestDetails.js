@@ -48,7 +48,9 @@ Ext.define('AM.controller.PaymentRequestDetails', {
       'paymentrequestdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'paymentrequestdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'paymentrequestlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,19 @@ Ext.define('AM.controller.PaymentRequestDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getPaymentRequestDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getPaymentRequestDetailsStore().load();
+	},
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

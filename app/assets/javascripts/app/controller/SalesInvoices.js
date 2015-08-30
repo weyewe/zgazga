@@ -514,7 +514,7 @@ Ext.define('AM.controller.SalesInvoices', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.sales_invoice_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -523,6 +523,7 @@ Ext.define('AM.controller.SalesInvoices', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

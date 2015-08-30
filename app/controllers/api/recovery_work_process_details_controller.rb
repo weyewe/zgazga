@@ -3,8 +3,22 @@ class Api::RecoveryAccessoryDetailsController < Api::BaseApiController
   
   def index
     @parent = RecoveryOrderDetail.find_by_id params[:recovery_order_detail_id]
-    @objects = @parent.active_children.joins(:recovery_order_detail, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:recovery_order_detail, :item => [:uom])
+    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.description  =~ livesearch  )   
+         )         
+       } 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

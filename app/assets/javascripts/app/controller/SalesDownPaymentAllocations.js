@@ -350,7 +350,7 @@ Ext.define('AM.controller.SalesDownPaymentAllocations', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.sales_down_payment_allocation_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -359,6 +359,7 @@ Ext.define('AM.controller.SalesDownPaymentAllocations', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

@@ -7,8 +7,20 @@ class Api::SalesInvoiceDetailsController < Api::BaseApiController
   
   def index
     @parent = SalesInvoice.find_by_id params[:sales_invoice_id]
-    @objects = @parent.active_children.joins(:sales_invoice, :delivery_order_detail => [:item => [:uom]] ).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:sales_invoice, :delivery_order_detail => [:item => [:uom]] )
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( delivery_order_detail.item.name =~  livesearch ) | 
+           ( code =~  livesearch ) | 
+           ( delivery_order_detail.item.sku =~ livesearch)   
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

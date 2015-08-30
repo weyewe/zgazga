@@ -48,7 +48,12 @@ Ext.define('AM.controller.BlanketWarehouseMutationDetails', {
       'blanketwarehousemutationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'blanketwarehousemutationdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
+			
 			// monitor parent(sales_order) update
 			'blanketwarehousemutationlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +63,21 @@ Ext.define('AM.controller.BlanketWarehouseMutationDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getBlanketWarehouseMutationDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getBlanketWarehouseMutationDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

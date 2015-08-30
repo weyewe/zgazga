@@ -48,7 +48,9 @@ Ext.define('AM.controller.VirtualOrderClearanceDetails', {
       'virtualorderclearancedetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'virtualorderclearancedetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'virtualorderclearancelist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,22 @@ Ext.define('AM.controller.VirtualOrderClearanceDetails', {
 		
     });
   },
-
+  
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getVirtualOrderClearanceDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getVirtualOrderClearanceDetailsStore().load();
+	},
+	
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

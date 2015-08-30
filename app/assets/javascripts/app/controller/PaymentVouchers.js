@@ -502,7 +502,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.payment_voucher_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -511,6 +511,7 @@ Ext.define('AM.controller.PaymentVouchers', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

@@ -365,7 +365,7 @@ Ext.define('AM.controller.VirtualOrderClearances', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.virtual_order_clearance_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -374,6 +374,7 @@ Ext.define('AM.controller.VirtualOrderClearances', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

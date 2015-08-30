@@ -447,7 +447,7 @@ Ext.define('AM.controller.SalesOrders', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.sales_order_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -456,6 +456,7 @@ Ext.define('AM.controller.SalesOrders', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

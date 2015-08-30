@@ -6,8 +6,19 @@ class Api::PurchaseDownPaymentAllocationDetailsController < Api::BaseApiControll
   
   def index
     @parent = PurchaseDownPaymentAllocation.find_by_id params[:purchase_down_payment_allocation_id]
-    @objects = @parent.active_children.joins(:purchase_down_payment_allocation, :payable).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:purchase_down_payment_allocation, :payable)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( payable.source_code  =~ livesearch  )  | 
+            ( code  =~ livesearch  )     
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

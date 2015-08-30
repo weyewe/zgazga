@@ -7,8 +7,18 @@ class Api::ReceiptVoucherDetailsController < Api::BaseApiController
   
   def index
     @parent = ReceiptVoucher.find_by_id params[:receipt_voucher_id]
-    @objects = @parent.active_children.joins(:receipt_voucher, :receivable).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:receipt_voucher, :receivable)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           (receivable.source_code  =~ livesearch  )    
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create
@@ -88,14 +98,14 @@ class Api::ReceiptVoucherDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       @objects = ReceiptVoucherDetail.joins(:receipt_voucher, :receivable).where{ 
-        (receivable.receivable_source_code  =~ query  )   
+        (receivable.source_code  =~ query  )   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
       @total = ReceiptVoucherDetail.joins(:receipt_voucher, :receivable).where{ 
-        (receivable.receivable_source_code  =~ query  ) 
+        (receivable.source_code  =~ query  ) 
       }.count
     else
       @objects = ReceiptVoucherDetail.where{ 

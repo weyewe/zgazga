@@ -6,8 +6,20 @@ class Api::PaymentRequestDetailsController < Api::BaseApiController
 
   def index
     @parent = PaymentRequest.find_by_id params[:payment_request_id]
-    @objects = @parent.active_children.joins(:payment_request, :account).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:payment_request, :account)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( account.name  =~ livesearch ) | 
+            ( account.code =~ livesearch ) | 
+            ( code  =~ livesearch  )  
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

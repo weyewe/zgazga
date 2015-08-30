@@ -363,7 +363,7 @@ Ext.define('AM.controller.Memorials', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.memorial_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -372,6 +372,7 @@ Ext.define('AM.controller.Memorials', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

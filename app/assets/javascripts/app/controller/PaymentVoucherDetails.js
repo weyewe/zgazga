@@ -57,7 +57,9 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
       'paymentvoucherdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'paymentvoucherdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'paymentvoucherlist' : {
 				'updated' : this.reloadStore,
@@ -67,7 +69,19 @@ Ext.define('AM.controller.PaymentVoucherDetails', {
 		
     });
   },
-  
+  liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getPaymentVoucherDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getPaymentVoucherDetailsStore().load();
+	},
   changeAmountPaid: function( field, newValue, oldValue, eOpts ){
  
   	var amount_paid = parseFloat(newValue); 

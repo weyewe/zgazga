@@ -370,7 +370,7 @@ Ext.define('AM.controller.BlanketResults', {
 		var templateDetailGrid = this.getBlanketResultDetailList();
 		// templateDetailGrid.setTitle("Purchase Order: " + record.get('code'));
 		templateDetailGrid.setObjectTitle( record ) ;
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		// console.log("record id: " + record.get("id"));
 		
 		templateDetailGrid.getStore().getProxy().extraParams.blanket_result_id =  record.get('id') ;
@@ -381,6 +381,7 @@ Ext.define('AM.controller.BlanketResults', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

@@ -6,8 +6,21 @@ class Api::VirtualOrderClearanceDetailsController < Api::BaseApiController
   
   def index
     @parent = VirtualOrderClearance.find_by_id params[:virtual_order_clearance_id]
-    @objects = @parent.active_children.joins(:virtual_order_clearance, :virtual_delivery_order_detail).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:virtual_order_clearance, :virtual_delivery_order_detail => [:item])
+    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( code =~  livesearch ) |
+           ( virtual_delivery_order_detail.item.sku =~  livesearch ) |
+           ( virtual_delivery_order_detail.item.name =~  livesearch ) 
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

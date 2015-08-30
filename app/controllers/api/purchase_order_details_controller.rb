@@ -6,8 +6,22 @@ class Api::PurchaseOrderDetailsController < Api::BaseApiController
   
   def index
     @parent = PurchaseOrder.find_by_id params[:purchase_order_id]
-    @objects = @parent.active_children.joins(:purchase_order, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:purchase_order, :item => [:uom]).page(params[:page])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.description  =~ livesearch  )  | 
+            ( code  =~ livesearch  )   
+         )         
+       } 
+    end
+    
+    @objects = query.per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

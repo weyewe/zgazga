@@ -439,7 +439,7 @@ Ext.define('AM.controller.RecoveryResults', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.recovery_result_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -448,6 +448,7 @@ Ext.define('AM.controller.RecoveryResults', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		
@@ -459,7 +460,7 @@ Ext.define('AM.controller.RecoveryResults', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.recovery_result_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -468,6 +469,7 @@ Ext.define('AM.controller.RecoveryResults', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		
@@ -478,7 +480,7 @@ Ext.define('AM.controller.RecoveryResults', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.recovery_result_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -487,6 +489,7 @@ Ext.define('AM.controller.RecoveryResults', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

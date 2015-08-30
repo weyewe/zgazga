@@ -496,7 +496,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
 		templateDetailGrid.setObjectTitle( record ) ;
 		
 		// console.log("record id: " + record.get("id"));
-		
+		templateDetailGrid.getStore().getProxy().extraParams = {} ; 
 		templateDetailGrid.getStore().getProxy().extraParams.recovery_work_process_id =  record.get('id') ;
 		 
 		templateDetailGrid.getStore().load({
@@ -505,6 +505,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
 			},
 			callback : function(records, options, success){
 				templateDetailGrid.enableAddButton(); 
+				templateDetailGrid.refreshSearchField(); 
 			}
 		});
 		

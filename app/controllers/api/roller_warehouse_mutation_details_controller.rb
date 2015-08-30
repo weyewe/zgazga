@@ -7,8 +7,21 @@ class Api::RollerWarehouseMutationDetailsController < Api::BaseApiController
   
   def index
     @parent = RollerWarehouseMutation.find_by_id params[:roller_warehouse_mutation_id]
-    @objects = @parent.active_children.joins(:roller_warehouse_mutation, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:roller_warehouse_mutation, :item => [:uom])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.description  =~ livesearch  )  | 
+            ( code  =~ livesearch  )  
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

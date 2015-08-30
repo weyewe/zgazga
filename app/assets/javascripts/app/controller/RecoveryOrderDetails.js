@@ -48,7 +48,12 @@ Ext.define('AM.controller.RecoveryOrderDetails', {
       'recoveryorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'recoveryorderdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
+			
 			// monitor parent(sales_order) update
 			'recoveryorderlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +63,20 @@ Ext.define('AM.controller.RecoveryOrderDetails', {
 		
     });
   },
-
+  
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRecoveryOrderDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRecoveryOrderDetailsStore().load();
+	},
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

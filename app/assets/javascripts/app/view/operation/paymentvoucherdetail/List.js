@@ -39,8 +39,16 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 			disabled: true
 		});
 
-
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.searchField = new Ext.form.field.Text({
+			name: 'searchField',
+			hideLabel: true,
+			width: 200,
+			emptyText : "Search",
+			checkChangeBuffer: 300
+		});
+		
+		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton , '->', 
+					this.searchField]; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,
@@ -78,5 +86,9 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 	
 	setObjectTitle : function(record){
 		this.setTitle("PaymentVoucher: " + record.get("code"));
-	}
+	},
+	
+	refreshSearchField : function(){
+		this.searchField.setValue("");
+	}	
 });

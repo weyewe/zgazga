@@ -7,8 +7,18 @@ class Api::ClosingDetailsController < Api::BaseApiController
   
   def index
     @parent = Closing.find_by_id params[:closing_id]
-    @objects = @parent.active_children.joins(:closing, :exchange).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:closing, :exchange)
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( exchange.name  =~ livesearch )    
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

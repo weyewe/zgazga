@@ -48,7 +48,10 @@ Ext.define('AM.controller.RollerWarehouseMutationDetails', {
       'rollerwarehousemutationdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'rollerwarehousemutationdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
 			// monitor parent(sales_order) update
 			'rollerwarehousemutationlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +61,21 @@ Ext.define('AM.controller.RollerWarehouseMutationDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getRollerWarehouseMutationDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getRollerWarehouseMutationDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

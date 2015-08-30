@@ -7,8 +7,20 @@ class Api::BlendingRecipeDetailsController < Api::BaseApiController
   
   def index
     @parent = BlendingRecipe.find_by_id params[:blending_recipe_id]
-    @objects = @parent.active_children.joins(:blending_recipe, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:blending_recipe, :item => [:uom])
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.uom.name  =~ livesearch  ) 
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

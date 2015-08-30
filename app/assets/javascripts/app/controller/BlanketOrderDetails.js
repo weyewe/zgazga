@@ -48,7 +48,12 @@ Ext.define('AM.controller.BlanketOrderDetails', {
       'blanketorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			
+ 			'blanketorderdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
+			
+ 			
 			// monitor parent(sales_order) update
 			'blanketorderlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +63,21 @@ Ext.define('AM.controller.BlanketOrderDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getBlanketOrderDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getBlanketOrderDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

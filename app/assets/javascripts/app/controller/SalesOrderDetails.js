@@ -48,7 +48,9 @@ Ext.define('AM.controller.SalesOrderDetails', {
       'salesorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'salesorderdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'salesorderlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,20 @@ Ext.define('AM.controller.SalesOrderDetails', {
 		
     });
   },
-
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getSalesOrderDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getSalesOrderDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

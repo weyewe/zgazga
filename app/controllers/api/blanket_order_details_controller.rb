@@ -6,8 +6,20 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
   
   def index
     @parent = BlanketOrder.find_by_id params[:blanket_order_id]
-    @objects = @parent.active_children.joins(:blanket_order, :blanket).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:blanket_order, :blanket)
+    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( blanket.roll_no  =~ livesearch  )  
+         )         
+       } 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create

@@ -48,7 +48,9 @@ Ext.define('AM.controller.VirtualOrderDetails', {
       'virtualorderdetaillist button[action=deleteObject]': {
         click: this.deleteObject
       },
- 
+ 			'virtualorderdetaillist textfield[name=searchField]': {
+				change: this.liveSearch
+			},
 			// monitor parent(sales_order) update
 			'virtualorderlist' : {
 				'updated' : this.reloadStore,
@@ -58,7 +60,21 @@ Ext.define('AM.controller.VirtualOrderDetails', {
 		
     });
   },
-
+	
+	liveSearch : function(grid, newValue, oldValue, options){
+		var me = this;
+		
+		
+		if( newValue.length ==0 ){
+			return; 
+		}
+ 
+		
+		me.getVirtualOrderDetailsStore().getProxy().extraParams.livesearch = newValue; 
+	  
+		me.getVirtualOrderDetailsStore().load();
+	},
+	
 	loadObjectList : function(me){
 		me.getStore().loadData([],false);
 	},

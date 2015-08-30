@@ -7,8 +7,21 @@ class Api::BatchSourceDetailsController < Api::BaseApiController
   # batch source allocation 
   def index
     @parent = BatchSource.find_by_id params[:batch_source_id]
-    @objects = @parent.active_children.joins(:batch_source,:batch_instance).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:batch_source,:batch_instance).order("id DESC")
+    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+           ( batch_instance.name =~  livesearch ) 
+         )         
+       } 
+    end
+    
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    
+    @total = query.count
   end
 
   def create
@@ -53,7 +66,7 @@ class Api::BatchSourceDetailsController < Api::BaseApiController
     end
   end
   
-    def search
+  def search
     search_params = params[:query]
     selected_id = params[:selected_id]
     if params[:selected_id].nil?  or params[:selected_id].length == 0 

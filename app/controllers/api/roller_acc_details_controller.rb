@@ -2,8 +2,21 @@ class Api::RollerAccDetailsController < Api::BaseApiController
   
   def index
     @parent = RollerIdentificationFormDetail.find_by_id params[:roller_identification_form_detail_id]
-    @objects = @parent.active_children.joins(:roller_identification_form_detail, :item).page(params[:page]).per(params[:limit]).order("id DESC")
-    @total = @parent.active_children.count
+    query = @parent.active_children.joins(:roller_identification_form_detail, :item)
+    
+    if params[:livesearch].present? 
+       livesearch = "%#{params[:livesearch]}%"
+       
+       query  = query.where{
+         (
+            ( item.sku  =~ livesearch ) | 
+            ( item.name =~ livesearch ) | 
+            ( item.description  =~ livesearch  )  
+         )         
+       } 
+    end
+    @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    @total = query.count
   end
 
   def create
