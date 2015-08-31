@@ -262,6 +262,7 @@ class Blanket < ActiveRecord::Base
       self.errors.add(:generic_errors,"Sudah di gunakan di BlanketOrder")
       return self
     end
+    
     self.destroy
     return self
   end

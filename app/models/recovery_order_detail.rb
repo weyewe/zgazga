@@ -42,12 +42,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
     if self.persisted?
        if itemcount > 1
          self.errors.add(:roller_identification_form_detail_id, "Item sudah terpakai")
-      return self 
+         return self 
        end
     else
        if itemcount > 0
          self.errors.add(:roller_identification_form_detail_id, "Item sudah terpakai")
-      return self 
+         return self 
        end
     end
   end  
