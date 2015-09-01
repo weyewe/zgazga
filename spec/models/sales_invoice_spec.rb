@@ -343,6 +343,10 @@ it "should not create SalesInvoice if invoice_date is not valid" do
             :transaction_source_id => @si.id
             )
           td.count.should == 1
+          TransactionDataDetail.where(:transaction_data_id => td.first.id).each do |x|
+            puts x.inspect
+          end
+          td.first.is_confirmed.should == true
         end
         
         it "should create 1 receivable" do

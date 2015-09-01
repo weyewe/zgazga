@@ -33,6 +33,10 @@ Ext.define('AM.view.operation.virtualorderclearance.Form', {
 					mapping : "order_type"
 				} ,
 				{
+					name : 'virtual_delivery_order_virtual_order_contact_name',
+					mapping : "virtual_order_contact_name"
+				} ,
+				{
 					name : 'virtual_delivery_order_delivery_date',
 					mapping : "delivery_date"
 				} ,
@@ -93,7 +97,7 @@ Ext.define('AM.view.operation.virtualorderclearance.Form', {
 		    						return  	'<div data-qtip="{virtual_delivery_order_nomor_surat}">' + 
 		    												'<div class="combo-name">Code : {virtual_delivery_order_code}</div>' + 
 		    												'<div class="combo-name">Nomor Surat : {virtual_delivery_order_nomor_surat}</div>' + 
-		    												'<div class="combo-name">Contact : {virtual_delivery_order_contact_name}</div>' + 
+		    												'<div class="combo-name">Contact : {virtual_delivery_order_virtual_order_contact_name}</div>' + 
 		    						 					'</div>';
 		    					}
 		  					},

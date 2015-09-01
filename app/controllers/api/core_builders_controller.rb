@@ -3,39 +3,38 @@ class Api::CoreBuildersController < Api::BaseApiController
   def index
      
     
-    if params[:query].present? 
-      query = "%#{params[:query]}%"
+    if params[:livesearch].present? 
+      livesearch = "%#{params[:livesearch]}%"
         
         
         @objects = CoreBuilder.joins(:machine,:uom).where{
           (
-            ( name =~  query )  | 
-            ( base_sku =~ query ) | 
-            ( description =~ query ) | 
-            ( machine.name=~ query ) | 
-            ( core_builder_type_case =~ query ) | 
-            ( sku_used_core =~ query ) | 
-            ( sku_new_core =~ query ) | 
-            ( uom.name =~ query )
+            ( name =~  livesearch )  | 
+            ( base_sku =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( machine.name=~ livesearch ) | 
+            ( core_builder_type_case =~ livesearch ) | 
+            ( sku_used_core =~ livesearch ) | 
+            ( sku_new_core =~ livesearch ) | 
+            ( uom.name =~ livesearch )
           )
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
         @total = CoreBuilder.joins(:machine,:uom).where{
           (
-            ( name =~  query )  | 
-            ( base_sku =~ query ) | 
-            ( description =~ query ) | 
-            ( machine.name =~ query ) | 
-            ( core_builder_type_case =~ query ) | 
-            ( sku_used_core =~ query ) | 
-            ( sku_new_core =~ query ) | 
-            ( uom.name =~ query )
+            ( name =~  livesearch )  | 
+            ( base_sku =~ livesearch ) | 
+            ( description =~ livesearch ) | 
+            ( machine.name =~ livesearch ) | 
+            ( core_builder_type_case =~ livesearch ) | 
+            ( sku_used_core =~ livesearch ) | 
+            ( sku_new_core =~ livesearch ) | 
+            ( uom.name =~ livesearch )
           )
         }.count
    
     else
-      puts "In this shite"
       @objects = CoreBuilder.page(params[:page]).per(params[:limit]).order("id DESC")
       @total = CoreBuilder.count 
     end

@@ -365,9 +365,11 @@ class Account < ActiveRecord::Base
     new_cash_bank_account = self.new
     new_cash_bank_account.code = cash_bank_account.code + cash_bank.id.to_s
     if cash_bank.is_bank == true
-      new_cash_bank_account.name = "Bank " + cash_bank.name.to_s
+      new_cash_bank_account.name = "Bank " + cash_bank.name.to_s 
+      # + " " + cash_bank.exchange.name.to_s
     else
-      new_cash_bank_account.name = "Kas " + cash_bank.name.to_s
+      new_cash_bank_account.name = "Kas " + cash_bank.name.to_s 
+      # + " " + cash_bank.exchange.name.to_s
     end
     new_cash_bank_account.account_case = ACCOUNT_CASE[:ledger]
     new_cash_bank_account.parent_id = cash_bank_account.id

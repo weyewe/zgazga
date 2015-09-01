@@ -192,12 +192,18 @@ class Api::BlanketOrdersController < Api::BaseApiController
 
   def destroy
     @object = BlanketOrder.find(params[:id])
-    @object.delete_object
+    begin
+      ActiveRecord::Base.transaction do 
+        @object.delete_object 
+      end
+    rescue ActiveRecord::ActiveRecordError  
+    else
+    end
 
-    if   not @object.persisted? 
+    if not @object.persisted? 
       render :json => { :success => true, :total => BlanketOrder.active_objects.count }  
     else
-      render :json => { :success => false, :total => BlanketOrder.active_objects.count, 
+     render :json => { :success => false, :total => BlanketOrder.active_objects.count, 
         :message => {
           :errors => extjs_error_format( @object.errors )  
         } 
@@ -228,8 +234,8 @@ class Api::BlanketOrdersController < Api::BaseApiController
       
       if params[:blanket_warehouse_mutation].present?
         query_code = query_code.where{
-          (is_confirmed.eq true) &
-          (is_completed.eq false) 
+          (is_confirmed.eq true) 
+          # (is_completed.eq false) 
         }
       end
       

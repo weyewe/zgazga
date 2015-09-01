@@ -113,7 +113,7 @@ class VirtualOrderClearance < ActiveRecord::Base
       new_stock_mutation = StockMutation.create_object(
         :source_class => self.class.to_s, 
         :source_id => self.id ,  
-        :amount => vdod.amount ,  
+        :amount => vdod.virtual_delivery_order_detail.amount ,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.clearance_date ,  
         :item_id => vdod.virtual_delivery_order_detail.item_id,

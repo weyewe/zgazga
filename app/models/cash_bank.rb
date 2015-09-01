@@ -85,9 +85,10 @@ class CashBank < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah terpakai di CashBankAdjustment")
       return self
     end
+    cash_bank_id = self.id
     if CashBankMutation.where{
-      ((source_cash_bank_id.eq self.id))|
-      ((target_cash_bank_id.eq self.id))
+      ((source_cash_bank_id.eq cash_bank_id))|
+      ((target_cash_bank_id.eq cash_bank_id))
       }.count > 0
       self.errors.add(:generic_errors, "Sudah terpakai di CashBankMutation")
       return self

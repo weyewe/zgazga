@@ -88,10 +88,10 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.purchase_receival_detail_id = params[:item_id]
+    self.purchase_receival_detail_id = params[:purchase_receival_detail_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
-      self.price = new_object.purchase_receival_detail.purchase_order_detail.price
+      self.price = new_object.purchase_receival_detail.purchase_order_detail.price * new_object.amount
       self.save
       self.calculateTotalAmount
     end

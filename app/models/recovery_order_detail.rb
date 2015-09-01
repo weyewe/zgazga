@@ -162,7 +162,55 @@ class RecoveryOrderDetail < ActiveRecord::Base
 
     return self if self.errors.size != 0 
     
+    # check amount compound
+    compound_in_warehouse = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.recovery_order.warehouse_id,
+        :item_id => self.roller_builder.compound_id) 
+    if (compound_in_warehouse.amount.to_i - self.compound_usage) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Compound #{self.roller_builder.compound.name} kurang dari #{self.compound_usage}")
+        return self 
+    end 
     
+    # check amount compound_under_layer 
+    if not (self.compound_under_layer_id.nil? or self.compound_under_layer_id == 0)
+      compound_under_layer_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => self.compound_under_layer_id) 
+      if (compound_under_layer_in_warehouse.amount.to_i - self.compound_under_layer_usage) < 0 
+          self.errors.add(:generic_errors, 
+          "Stock quantity Compound #{self.compound_under_layer.name} kurang dari #{self.compound_under_layer_usage}")
+          return self 
+      end 
+    end
+    
+    # check core amount
+    core_id = 0
+    if self.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+      core_id = self.roller_identification_form_detail.core_builder.new_core_item.item.id
+    elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+      core_id = self.roller_identification_form_detail.core_builder.used_core_item.item.id
+    end
+    core_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => core_id) 
+    if (core_in_warehouse.amount.to_i - self.compound_usage) < 0 
+      self.errors.add(:generic_errors, 
+      "Stock quantity Compound #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
+      return self 
+    end       
+    
+    # check accessories amount
+    self.recovery_accessory_details.each do |rad|
+      accessories_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => rad.item_id) 
+      if (accessories_in_warehouse.amount.to_i - rad.amount) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Accessories #{accessories_in_warehouse.item.name} kurang dari #{rad.amount}")
+        return self 
+      end  
+    end
     
     self.is_finished = true 
     self.finished_date = params[:finished_date]
@@ -299,6 +347,36 @@ class RecoveryOrderDetail < ActiveRecord::Base
       return self 
     end
     
+    # check roller amount 
+    roller_id = 0
+    if self.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+      roller_id = self.roller_builder.roller_new_core_item.item.id
+    elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+      roller_id = self.roller_builder.roller_used_core_item.item.id
+    end
+    if self.recovery_order.roller_identification_form.is_in_house == true
+      roller_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => roller_id) 
+      if (roller_in_warehouse.amount.to_i - 1) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Roller #{roller_in_warehouse.item.name} kurang dari 1")
+        return self 
+      end  
+    else
+      roller_in_warehouse = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.recovery_order.warehouse_id,
+        :item_id => roller_id)
+      customer_item = CustomerItem.find_or_create_object(
+        :contact_id => self.recovery_order.roller_identification_form.contact_id,
+        :warehouse_item_id => roller_in_warehouse.id
+        )
+      if (customer_item.amount.to_i - 1) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Roller #{roller_in_warehouse.item.name} kurang dari 1")
+        return self 
+      end    
+    end
     
     self.is_finished = false
     self.finished_date = nil
@@ -376,6 +454,56 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
+    
+    # check amount compound
+    compound_in_warehouse = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.recovery_order.warehouse_id,
+        :item_id => self.roller_builder.compound_id) 
+    if (compound_in_warehouse.amount.to_i - self.compound_usage) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Compound #{self.roller_builder.compound.name} kurang dari #{self.compound_usage}")
+        return self 
+    end 
+    
+    # check amount compound_under_layer 
+    if not (self.compound_under_layer_id.nil? or self.compound_under_layer_id == 0)
+      compound_under_layer_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => self.compound_under_layer_id) 
+      if (compound_under_layer_in_warehouse.amount.to_i - self.compound_under_layer_usage) < 0 
+          self.errors.add(:generic_errors, 
+          "Stock quantity Compound #{self.compound_under_layer.name} kurang dari #{self.compound_under_layer_usage}")
+          return self 
+      end 
+    end
+    
+    # check core amount
+    core_id = 0
+    if self.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+      core_id = self.roller_identification_form_detail.core_builder.new_core_item.item.id
+    elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+      core_id = self.roller_identification_form_detail.core_builder.used_core_item.item.id
+    end
+    core_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => core_id) 
+    if (core_in_warehouse.amount.to_i - self.compound_usage) < 0 
+      self.errors.add(:generic_errors, 
+      "Stock quantity Compound #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
+      return self 
+    end       
+    
+    # check accessories amount
+    self.recovery_accessory_details.each do |rad|
+      accessories_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => rad.item_id) 
+      if (accessories_in_warehouse.amount.to_i - rad.amount) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Accessories #{accessories_in_warehouse.item.name} kurang dari #{rad.amount}")
+        return self 
+      end  
+    end
     
     self.is_rejected = true
     self.rejected_date = params[:rejected_date]

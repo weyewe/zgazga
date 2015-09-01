@@ -12,9 +12,9 @@ json.customers objects do |object|
 	
 	
 	json.npwp	object.default_payment_term
-	json.is_taxable	object.default_payment_term
-	json.tax_code	object.default_payment_term
-	json.nama_faktur_pajak	object.default_payment_term
+	json.is_taxable	object.is_taxable
+	json.tax_code	object.tax_code
+	json.nama_faktur_pajak	object.nama_faktur_pajak
 	
 	json.pic object.pic
 	json.pic_contact_no object.pic_contact_no

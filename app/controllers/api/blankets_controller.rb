@@ -3,7 +3,7 @@ class Api::BlanketsController < Api::BaseApiController
   def index
      
     
-    query_code = Blanket.joins(:machine,:contact)
+    query_code = Blanket.joins(:machine,:contact, :item)
     
     
     if params[:livesearch].present?  
@@ -14,15 +14,15 @@ class Api::BlanketsController < Api::BaseApiController
           (
             ( contact.name =~ livesearch ) |
             ( machine.name =~ livesearch ) | 
-            ( name =~ livesearch ) | 
-            ( sku =~ livesearch )
+            ( item.name =~ livesearch ) | 
+            ( item.sku =~ livesearch )
           )
 
-        }  .page(params[:page]).per(params[:limit])
+        }
  
     end
     
-    @objects =  query_code.page(params[:page]).per(params[:limit])
+    @objects =  query_code.page(params[:page]).per(params[:limit]).order("blankets.id DESC")
     @total = query_code.count 
     
     # render :json => { :blankets => @objects , :total => @total , :success => true }
@@ -116,17 +116,21 @@ class Api::BlanketsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Blanket.joins(:machine,:contact).where{ 
+      @objects = Blanket.joins(:machine,:contact,:item).where{ 
             ( contact.name =~ query ) |
-            ( machine.name =~ query ) 
+            ( machine.name =~ query ) |
+            ( item.name =~ query ) | 
+            ( item.sku =~ query )
                               }.
                         page(params[:page]).
                         per(params[:limit])
                         # order("id DESC")
                         
-      @total = Blanket.joins(:machine,:contact).where{ 
+      @total = Blanket.joins(:machine,:contact,:item).where{ 
             ( contact.name =~ query ) |
-            ( machine.name =~ query ) 
+            ( machine.name =~ query ) |
+            ( item.name =~ query ) | 
+            ( item.sku =~ query )
         
                               }.count
     else

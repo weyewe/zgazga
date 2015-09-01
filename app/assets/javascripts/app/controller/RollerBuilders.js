@@ -93,6 +93,10 @@ Ext.define('AM.controller.RollerBuilders', {
 		
 		if( record ){
 			record.set( values );
+			record.set( 'is_chamfer' , values['is_chamfer'] );
+			record.set( 'is_grooving' , values['is_grooving'] );
+			record.set( 'is_crowning' , values['is_crowning'] );
+			
 			
 			form.query('checkbox').forEach(function(checkbox){
 				record.set( checkbox['name']  ,checkbox['checked'] ) ;
@@ -134,6 +138,10 @@ Ext.define('AM.controller.RollerBuilders', {
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 
+			form.query('checkbox').forEach(function(checkbox){
+				newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
 			form.setLoading(true);
 			newObject.save({
 				success: function(record){

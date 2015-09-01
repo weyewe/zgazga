@@ -86,7 +86,11 @@ class DeliveryOrder < ActiveRecord::Base
 #     validate warehouse_item_amount
     self.delivery_order_details.each do |dod|
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
-      if item_in_warehouse.amount < dod.amount
+      amount_delivery = 0 
+      DeliveryOrderDetail.where(:item_id => dod.item_id).each do |doda|
+        amount_delivery = amount_delivery + doda.amount
+      end
+      if item_in_warehouse.amount < amount_delivery
         self.errors.add(:generic_errors, "Amount item #{item_in_warehouse.item.sku}  di warehouse #{item_in_warehouse.warehouse.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
         return self 
       end
@@ -150,7 +154,7 @@ class DeliveryOrder < ActiveRecord::Base
     self.temporary_delivery_orders.each do |tdo|
       tdo.temporary_delivery_order_details.each do |tdod|
         delivery_order_detail = self.delivery_order_details.where(:item_id => tdod.item_id)
-        if delivery_order_detail.count == 0 
+        # if delivery_order_detail.count == 0 
           # create new detail
           DeliveryOrderDetail.create_object(
           :delivery_order_id =>  self.id,
@@ -159,15 +163,15 @@ class DeliveryOrder < ActiveRecord::Base
           :order_code => tdod.code,
           :amount => tdod.amount
           )
-        else
-          # update detail
-          delivery_order_detail.first.update_object(
-            :delivery_order_id =>  self.id,
-            :sales_order_detail_id => tdod.sales_order_detail_id,
-            :order_type => ORDER_TYPE_CASE[:part_delivery_order],
-            :amount => delivery_order_detail.first.amount + tdod.amount
-            )
-        end
+        # else
+        #   # update detail
+        #   delivery_order_detail.first.update_object(
+        #     :delivery_order_id =>  self.id,
+        #     :sales_order_detail_id => tdod.sales_order_detail_id,
+        #     :order_type => ORDER_TYPE_CASE[:part_delivery_order],
+        #     :amount => delivery_order_detail.first.amount + tdod.amount
+        #     )
+        # end
       end
     end
    return self.confirm_object(:confirmed_at => params[:confirmed_at])
@@ -207,7 +211,18 @@ class DeliveryOrder < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
-                 
+      if dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
+        new_stock_mutation = StockMutation.create_object(
+        :source_class => self.class.to_s, 
+        :source_id => self.id ,  
+        :amount => dod.amount ,  
+        :status => ADJUSTMENT_STATUS[:addition],  
+        :mutation_date => self.delivery_date ,  
+        :item_id => dod.item_id,
+        :item_case => ITEM_CASE[:virtual],
+        :source_code => self.code
+        ) 
+      end
 #       Update WarehouseItem Amount
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)      
       new_stock_mutation = StockMutation.create_object(
@@ -230,12 +245,12 @@ class DeliveryOrder < ActiveRecord::Base
      
 #       set detail sales_order,pending_delivery_amount
       
-      if not dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
-        dod.sales_order_detail.pending_delivery_amount -= dod.amount    
-        if dod.sales_order_detail.pending_delivery_amount == 0 
-          dod.sales_order_detail.is_all_delivered == true
-        end
+      # if not dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
+      dod.sales_order_detail.pending_delivery_amount -= dod.amount    
+      if dod.sales_order_detail.pending_delivery_amount == 0 
+        dod.sales_order_detail.is_all_delivered == true
       end
+      # end
       dod.sales_order_detail.save
       dod.save    
       total_cogs += dod.cogs
@@ -267,10 +282,17 @@ class DeliveryOrder < ActiveRecord::Base
       
 #       amount = dod.amount * -1
 #       dod.item.calculate_avg_price(:added_amount => (amount),:added_avg_price => dod.item.avg_price)
+    # item_case_text = 0
+    # if dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
+    #   item_case_text = ITEM_CASE[:virtual]
+    # else
+    #   item_case_text = ITEM_CASE[:ready]
+    # end
       stock_mutation = StockMutation.where(
         :source_class => self.class.to_s, 
         :source_id => self.id,
         :item_id => dod.item_id
+        # :item_case => item_case_text
         )
       stock_mutation.each do |sm|
         sm.reverse_stock_mutate_object  

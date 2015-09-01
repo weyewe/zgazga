@@ -114,6 +114,39 @@ class RollerWarehouseMutation < ActiveRecord::Base
       return self 
     end
     
+    # check roller amount
+    self.roller_warehouse_mutation_details.each do |rwmd|
+      roller_id = 0
+      if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+      elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+      end
+      item = item_find_by_id(roller_id)
+      item_in_warehouse_from = WarehouseItem.where(
+        :warehouse_id => self.warehouse_from_id,
+        :item_id => roller_id)
+      if item_in_warehouse_from.count == 0 
+        self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller ")
+      else
+        if self.recovery_order.roller_identification_form.is_in_house == true
+          if rwmd.amount > item_in_warehouse_from.amount
+            self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
+            return self 
+          end
+        else
+          if rwmd.amount > item_in_warehouse_from.customer_amount
+            self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
+            return self 
+          end
+        end
+      end
+      
+      
+      
+     
+    end
+    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save

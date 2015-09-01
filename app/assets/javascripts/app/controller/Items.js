@@ -84,6 +84,7 @@ Ext.define('AM.controller.Items', {
 		
 		if( record ){
 			record.set( values );
+			record.set( 'is_tradeable' , values['is_tradeable'] );
 			form.query('checkbox').forEach(function(checkbox){
 				record.set( checkbox['name']  ,checkbox['checked'] ) ;
 			});
@@ -115,7 +116,7 @@ Ext.define('AM.controller.Items', {
 			//  no record at all  => gonna create the new one 
 			var me  = this; 
 			var newObject = new AM.model.Item( values ) ;
-			
+			newObject.set( 'is_tradeable' , values['is_tradeable'] );
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 

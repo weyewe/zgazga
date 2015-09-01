@@ -66,42 +66,10 @@ Ext.define('AM.view.master.rollertype.List' ,{
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
 		
-		
-		this.markAsRunAwayObjectButton.enable();
-
-		this.unmarkAsDeceasedObjectButton.enable();
-		this.markAsDeceasedObjectButton.enable();
-
-
-
-		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
-		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
-		}
-
-
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
 		this.deleteObjectButton.disable();
-		this.markAsDeceasedObjectButton.disable();
-		this.unmarkAsDeceasedObjectButton.disable();
-		this.markAsRunAwayObjectButton.disable();
-
-		selectedObject = this.getSelectedObject();
-
-		if( selectedObject && selectedObject.get("is_deceased") == true ){
-			this.unmarkAsDeceasedObjectButton.show();
-			this.markAsDeceasedObjectButton.hide();
-		}else{
-			this.unmarkAsDeceasedObjectButton.hide();
-			this.markAsDeceasedObjectButton.show();
-		}
 	}
 });

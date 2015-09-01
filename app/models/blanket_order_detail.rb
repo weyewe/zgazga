@@ -168,8 +168,31 @@ class BlanketOrderDetail < ActiveRecord::Base
       :item_id => self.blanket.roll_blanket_item_id
       )
     if item.amount < BigDecimal( params[:roll_blanket_usage] ) 
-      self.errors.add(:roll_blanket_defect,"Stock quantity Roll Blanket kurang dari #{params[:roll_blanket_usage]}")
+      self.errors.add(:roll_blanket_usage,"Stock quantity Roll Blanket #{self.blanket.roll_blanket_item.name} kurang dari #{params[:roll_blanket_usage]}")
       return self
+    end
+    
+    bar_usage = params[:finished_quantity] + params[:rejected_quantity] 
+    if self.blanket.has_right_bar == true
+      left_bar_item = WarehouseItem.find_or_create_object(
+      :warehouse_id => self.blanket_order.warehouse_id,
+      :item_id => self.blanket.left_bar_item_id
+      )
+      if left_bar_item.amount < bar_usage
+        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.left_bar_item.name} kurang dari #{bar_usage}")
+        return self
+      end
+    end
+    
+    if self.blanket.has_right_bar == true
+      right_bar_item = WarehouseItem.find_or_create_object(
+      :warehouse_id => self.blanket_order.warehouse_id,
+      :item_id => self.blanket.right_bar_item_id
+      )
+      if right_bar_item.amount < bar_usage
+        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.right_bar_item.name} kurang dari #{bar_usage}")
+        return self
+      end
     end
     
     if BigDecimal( params[:roll_blanket_usage])  < BigDecimal( params[:roll_blanket_defect] )
@@ -177,17 +200,14 @@ class BlanketOrderDetail < ActiveRecord::Base
       return self 
     end
     
-  
-    
-    self.roll_blanket_usage = params[:roll_blanket_usage]
-    self.roll_blanket_defect = params[:roll_blanket_defect]
-    self.finished_quantity = params[:finished_quantity]
-    self.rejected_quantity = params[:rejected_quantity]
+    self.roll_blanket_usage =  BigDecimal( params[:roll_blanket_usage] || '0')
+    self.roll_blanket_defect =  BigDecimal( params[:roll_blanket_defect] || '0')
+    self.finished_quantity = params[:finished_quantity] 
+    self.rejected_quantity = params[:rejected_quantity] 
     self.is_finished = true
     self.finished_at = params[:finished_at]
  
     if self.save
-      
       BatchSource.create_object( 
           :item_id  => self.blanket.item.id,
           :status   =>  ADJUSTMENT_STATUS[:deduction], 
@@ -196,8 +216,6 @@ class BlanketOrderDetail < ActiveRecord::Base
           :generated_date => self.finished_at , 
           :amount => self.roll_blanket_usage
         )
-        
-        
       self.undelivered_quantity = self.finished_quantity
       self.save 
       

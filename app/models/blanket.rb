@@ -81,9 +81,7 @@ class Blanket < ActiveRecord::Base
   
   def valid_adhesive
     
-    
-    
-    if adhesive_id.present? 
+    if not (adhesive_id == 0 || adhesive_id.nil?)
       adhesive = Item.find_by_id(adhesive_id)
       if adhesive.nil?
         self.errors.add(:adhesive_id, "Adhesive tidak valid")
@@ -95,7 +93,7 @@ class Blanket < ActiveRecord::Base
         end
       end
     end                                                                                                                                                                                                                                                                                                             
-    if adhesive2_id.present?
+    if not (adhesive2_id == 0 || adhesive2_id.nil?)
       adhesive2 = Item.find_by_id(adhesive2_id)
       if adhesive2.nil?
         self.errors.add(:adhesive2_id, "Adhesive2  tidak valid")
@@ -170,11 +168,27 @@ class Blanket < ActiveRecord::Base
     new_object.roll_no = params[:roll_no]
     new_object.contact_id = params[:contact_id]
     new_object.machine_id = params[:machine_id]
-    new_object.adhesive_id = params[:adhesive_id]
-    new_object.adhesive2_id = params[:adhesive2_id]
-    new_object.roll_blanket_item_id = params[:roll_blanket_item_id]
-    new_object.left_bar_item_id = params[:left_bar_item_id]
-    new_object.right_bar_item_id = params[:right_bar_item_id]
+    if not (params[:adhesive_id] == 0 || params[:adhesive_id].nil?)
+      new_object.adhesive_id = params[:adhesive_id]
+    else
+      new_object.adhesive_id = nil
+    end
+    if not (params[:adhesive2_id] == 0 || params[:adhesive2_id].nil?)
+      new_object.adhesive2_id = params[:adhesive2_id]
+    else
+      new_object.adhesive2_id = nil
+    end
+      new_object.roll_blanket_item_id = params[:roll_blanket_item_id]
+    if not (params[:left_bar_item_id] == 0 || params[:left_bar_item_id].nil?)
+      new_object.left_bar_item_id = params[:left_bar_item_id]
+    else
+      new_object.left_bar_item_id = nil
+    end
+    if not (params[:right_bar_item_id] == 0 || params[:right_bar_item_id].nil?)
+      new_object.right_bar_item_id = params[:right_bar_item_id]
+    else
+      new_object.right_bar_item_id = nil
+    end
     new_object.ac = BigDecimal(params[:ac] || '0')
     new_object.ar = BigDecimal(params[:ar] || '0')
     new_object.thickness = BigDecimal(params[:thickness] || '0')
@@ -225,11 +239,19 @@ class Blanket < ActiveRecord::Base
     self.roll_no = params[:roll_no]
     self.contact_id = params[:contact_id]
     self.machine_id = params[:machine_id]
-    self.adhesive_id = params[:adhesive_id]
-    self.adhesive2_id = params[:adhesive2_id]
+    if not params[:adhesive_id] == 0
+      self.adhesive_id = params[:adhesive_id]
+    end
+    if not params[:adhesive2_id] == 0
+      self.adhesive2_id = params[:adhesive2_id]
+    end
     self.roll_blanket_item_id = params[:roll_blanket_item_id]
-    self.left_bar_item_id = params[:left_bar_item_id]
-    self.right_bar_item_id = params[:right_bar_item_id]
+    if not params[:left_bar_item_id] == 0
+      self.left_bar_item_id = params[:left_bar_item_id]
+    end
+    if not params[:right_bar_item_id] == 0
+      self.right_bar_item_id = params[:right_bar_item_id]
+    end
     self.ac = BigDecimal(params[:ac] || '0')
     self.ar = BigDecimal(params[:ar] || '0')
     self.thickness = BigDecimal(params[:thickness] || '0')

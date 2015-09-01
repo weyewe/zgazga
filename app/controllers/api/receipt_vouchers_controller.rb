@@ -5,7 +5,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = ReceiptVoucher.active_objects.joins(:contact,:cash_bank).where{
+       @objects = ReceiptVoucher.active_objects.joins(:contact,:cash_bank => [:exchange]).where{
          (
            ( code =~ livesearch)  | 
            ( no_bukti =~ livesearch)  | 
@@ -17,7 +17,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
 
        }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-       @total = ReceiptVoucher.active_objects.joins(:contact,:cash_bank).where{
+       @total = ReceiptVoucher.active_objects.joins(:contact,:cash_bank => [:exchange]).where{
          (
            ( code =~ livesearch)  | 
            ( no_bukti =~ livesearch)  | 
@@ -220,7 +220,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      @objects = ReceiptVoucher.joins(:contact,:cash_bank).where{  
+      @objects = ReceiptVoucher.joins(:contact,:cash_bank => [:exchange]).where{  
         ( 
            ( code =~ query)  | 
            ( no_bukti =~ query)  | 
@@ -234,7 +234,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       per(params[:limit]).
       order("id DESC")
                         
-      @total = ReceiptVoucher.joins(:contact,:cash_bank).where{  
+      @total = ReceiptVoucher.joins(:contact,:cash_bank => [:exchange]).where{  
         ( 
            ( code =~ query)  | 
            ( no_bukti =~ query)  | 
@@ -245,14 +245,14 @@ class Api::ReceiptVouchersController < Api::BaseApiController
          )
       }.count 
     else
-      @objects = ReceiptVoucher.joins(:contact,:cash_bank).where{ 
+      @objects = ReceiptVoucher.joins(:contact,:cash_bank => [:exchange]).where{ 
           (id.eq selected_id)   
       }.
       page(params[:page]).
       per(params[:limit]).
       order("id DESC")
                         
-      @total = ReceiptVoucher.joins(:contact,:cash_bank).where{ 
+      @total = ReceiptVoucher.joins(:contact,:cash_bank => [:exchange]).where{ 
           (id.eq selected_id)  
       }.count 
     end

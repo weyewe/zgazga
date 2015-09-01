@@ -23,6 +23,7 @@ class RollerType < ActiveRecord::Base
   
   def delete_object
     self.destroy
+    return self
   end
     
 end

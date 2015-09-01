@@ -87,10 +87,10 @@ class SalesInvoiceDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.delivery_order_detail_id = params[:item_id]
+    self.delivery_order_detail_id = params[:delivery_order_detail_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
-      self.price = (new_object.delivery_order_detail.purchase_order_detail.price * self.amount).round(2)
+      self.price = (self.delivery_order_detail.sales_order_detail.price * self.amount).round(2)
       self.save
       self.calculateTotalAmount
     end

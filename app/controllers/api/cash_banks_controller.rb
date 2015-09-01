@@ -100,7 +100,7 @@ class Api::CashBanksController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = CashBank.active_objects.where{
+      @objects = CashBank.active_objects.joins(:exchange).where{
                                 (
                                   (name =~  query ) | 
                                   (description =~  query ) 
@@ -117,13 +117,13 @@ class Api::CashBanksController < Api::BaseApiController
                                 )
                               }.count
     else
-      @objects = CashBank.where{ (id.eq selected_id)  
+      @objects = CashBank.active_objects.joins(:exchange).where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = CashBank.where{ (id.eq selected_id)   
+      @total = CashBank.active_objects.joins(:exchange).where{ (id.eq selected_id)   
                               }.count 
     end
     

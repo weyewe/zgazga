@@ -28,18 +28,28 @@ module AccountingService
       :exchange_id         => purchase_invoice.exchange_id ,
       :description => "Credit Account Payable"
       )
+      
+   TransactionDataDetail.create_object(
+      :transaction_data_id => ta.id,        
+      :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id   ,
+      :entry_case          => NORMAL_BALANCE[:debit]     ,
+      :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
+      :real_amount         => purchase_invoice.amount_payable ,
+      :exchange_id         => purchase_invoice.exchange_id ,
+      :description => "Debit GoodsPendingClearance"
+      )  
 #     Debit GoodsPendingClearance
-    purchase_invoice.purchase_invoice_details.each do |pid|
-      detail_discount = pid.price * purchase_invoice.discount / 100
-      detail_amount = pid.price - detail_discount
-      TransactionDataDetail.create_object(
-        :transaction_data_id => ta.id,        
-        :account_id          => pid.purchase_receival_detail.item.item_type.account_id  ,
-        :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (detail_amount * purchase_invoice.exchange_rate_amount).round(2),
-        :description => "Debit GoodsPendingClearance"
-      )
-    end
+    # purchase_invoice.purchase_invoice_details.each do |pid|
+    #   detail_discount = pid.price * purchase_invoice.discount / 100
+    #   detail_amount = pid.price - detail_discount
+    #   TransactionDataDetail.create_object(
+    #     :transaction_data_id => ta.id,        
+    #     :account_id          => pid.purchase_receival_detail.item.item_type.account_id  ,
+    #     :entry_case          => NORMAL_BALANCE[:debit]     ,
+    #     :amount              => (detail_amount * purchase_invoice.exchange_rate_amount).round(2),
+    #     :description => "Debit GoodsPendingClearance"
+    #   )
+    # end
     
 #     Debit PPN masukan    
     if tax  > 0 

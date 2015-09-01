@@ -51,7 +51,8 @@ class Api::SalesInvoicesController < Api::BaseApiController
            ( code =~ livesearch)  | 
            ( nomor_surat =~ livesearch)  | 
            ( delivery_order.code =~  livesearch) |
-           ( delivery_order.nomor_surat =~  livesearch)
+           ( delivery_order.nomor_surat =~  livesearch) |
+           ( delivery_order.sales_order.contact.name =~  livesearch)
          )
 
        }

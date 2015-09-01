@@ -158,7 +158,6 @@ Ext.define('AM.controller.Blankets', {
       var store = this.getBlanketsStore();
       store.remove(record);
       store.sync();
-// to do refresh programmatically
 			this.getList().query('pagingtoolbar')[0].doRefresh();
     }
 

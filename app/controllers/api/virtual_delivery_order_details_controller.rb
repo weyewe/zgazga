@@ -109,7 +109,7 @@ class Api::VirtualDeliveryOrderDetailsController < Api::BaseApiController
       if params[:virtual_delivery_order_id].present?
         object = VirtualDeliveryOrder.find_by_id params[:virtual_delivery_order_id]
         if not object.nil?  
-          query = query.where(:virtual_delivery_order_id => object.id )
+          query_code = query_code.where(:virtual_delivery_order_id => object.id )
         end
       end    
       

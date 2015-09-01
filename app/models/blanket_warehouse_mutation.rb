@@ -115,6 +115,13 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk blanket #{bwmd.blanket_order_detail.blanket.name}")
         return self 
       end
+      item_in_warehouse_from = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.warehouse_from_id,
+        :item_id => bwmd.item_id)
+      if (item_in_warehouse_from.amount.to_i - bwmd.quantity) < 0 
+        self.errors.add(:generic_errors, "Tidak cukup item dari warehouse sumber ke warehouse tujuan")
+        return self 
+      end 
     end
     
     self.is_confirmed = true
@@ -137,7 +144,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         :item_id => bwmd.item_id)
       
       puts "item in warehouse_to : #{item_in_warehouse_to.amount.to_i }, while quantity returned: #{bwmd.quantity}"
-      if item_in_warehouse_to.amount.to_i - bwmd.quantity < 0 
+      if (item_in_warehouse_to.amount.to_i - bwmd.quantity) < 0 
         self.errors.add(:generic_errors, "Tidak cukup item dari warehouse tujuan ke warehouse sumber")
         return self 
       end

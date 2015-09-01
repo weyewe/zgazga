@@ -8,9 +8,10 @@ class Api::RollerBuildersController < Api::BaseApiController
         
         
         @objects = RollerBuilder.joins(:roller_type,:machine,
-        :uom,:core_builder).where{
+        :uom,:core_builder,:item).where{
           (
             ( name =~  livesearch )  | 
+            ( base_sku =~  livesearch )  | 
             ( roller_type.name =~ livesearch ) | 
             ( sku_roller_new_core =~ livesearch ) | 
             ( sku_roller_used_core =~ livesearch ) | 
@@ -22,8 +23,8 @@ class Api::RollerBuildersController < Api::BaseApiController
 
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
-        @total = RollerBuilder.joins(:roller_type,:machine,:compound,:adhesive,
-        :uom,:core_builder).where{
+        @total = RollerBuilder.joins(:roller_type,:machine,
+        :uom,:core_builder,:item).where{
           (
             ( name =~  livesearch )  | 
             ( roller_type.name =~ livesearch ) | 

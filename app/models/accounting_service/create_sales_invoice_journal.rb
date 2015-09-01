@@ -12,12 +12,17 @@ module AccountingService
       }, true )
     
     #      Debit AccountReceivable, Debit Discount, Credit PPNKELUARAN, Credit Revenue
-    pre_tax = sales_invoice.amount_receivable * 100 / (100 + sales_invoice.tax);
-    tax = sales_invoice.amount_receivable - pre_tax;
-    discount = pre_tax * sales_invoice.discount / 100;
+    amount = 0
+    SalesInvoiceDetail.where(:sales_invoice_id => sales_invoice.id).each do |sid|
+      amount += sid.price
+    end
+    discount = sales_invoice.discount / 100 * amount
+    taxable_amount = amount - discount
+    tax = sales_invoice.tax / 100 * taxable_amount
+  
     
 #     Debit AccountReceivable
-    TransactionDataDetail.create_object(
+   TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => sales_invoice.exchange.account_receivable_id  ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
@@ -32,34 +37,25 @@ module AccountingService
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:discount][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => (sales_invoice.discount   * sales_invoice.exchange_rate_amount).round(2),
+        :amount              => (discount   * sales_invoice.exchange_rate_amount).round(2),
         :description => "Debit Discount"
         )
     end
     
     if tax > 0
 #       Credit PPNkeluaran
-      tax_amount = 0 
-      if sales_invoice.delivery_order.sales_order.contact.is_taxable
-        tax_amount = (tax * sales_invoice.exchange_rate_amount).round(2)
-      else
-        tax_amount =  ((sales_invoice.amount_receivable * sales_invoice.exchange_rate_amount) /11).round(2)
-      end
-     TransactionDataDetail.create_object(
+     td = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:ppn_keluaran][:code]).id  ,
-       :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => tax_amount,
+        :entry_case          => NORMAL_BALANCE[:credit]     ,
+        :amount              => (tax   * sales_invoice.exchange_rate_amount).round(2),
         :description => "Credit PPnkeluaran"
         )
+      puts td.errors.messages
     end
 #     Credit Revenue
     amount_revenue = 0 
-    if sales_invoice.delivery_order.sales_order.contact.is_taxable
-      amount_revenue = (pre_tax * sales_invoice.exchange_rate_amount).round(2)
-    else
-      amount_revenue = (sales_invoice.dpp * sales_invoice.exchange_rate_amount * 10 /  11).round(2)
-    end
+    amount_revenue = (sales_invoice.amount_receivable * sales_invoice.exchange_rate_amount).round(2)
     
     TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        

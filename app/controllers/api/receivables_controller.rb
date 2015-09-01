@@ -63,20 +63,20 @@ class Api::ReceivablesController < Api::BaseApiController
       @total = query.count 
     else
       @objects = Receivable.joins(:exchange,:contact).where{ 
-          (id.eq selected_id) &&  
-          (is_completed.eq false)   
+          (id.eq selected_id) 
+          # (is_completed.eq false)   
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
       @total = Receivable.joins(:exchange,:contact).where{ 
-        (id.eq selected_id)   &&  
-        (is_completed.eq false)  
+        (id.eq selected_id) 
+        # (is_completed.eq false)  
                               }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

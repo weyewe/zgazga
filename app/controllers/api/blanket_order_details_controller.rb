@@ -99,15 +99,16 @@ class Api::BlanketOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       query_code = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ 
-        ( blanket.roll_no  =~ query  )   
+        # ( blanket.roll_no  =~ query  )   
       }
       
       if params[:blanket_order_id].present?
         object = BlanketOrder.find_by_id params[:blanket_order_id]
+        object_id = object.id
         if not object.nil?  
           query_code = query_code.where{
-            (blanket_order_id.eq  object.id ) &
-            (is_finished.eq  true )
+            (blanket_order_id.eq object_id )
+            # (is_finished.eq  true )
           }
         end
       end    

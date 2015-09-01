@@ -10,13 +10,13 @@ json.blankets objects do |object|
 	json.machine_id   object.machine_id  
 	json.machine_name     object.machine.name  
 	json.adhesive_id    object.adhesive_id  
-	if  object.adhesive_id.present?
+	if not (object.adhesive_id.nil? ||  object.adhesive_id == 0)
 		json.adhesive_name object.adhesive.name 
 	else 
 		json.adhesive_name ""
 	end
 	json.adhesive2_id     object.adhesive2_id  
-	if  object.adhesive2_id.present? 
+	if not (object.adhesive2_id.nil? ||  object.adhesive_id == 0)
 		json.adhesive2_name object.adhesive2.name 
 	else 
 		json.adhesive2_name ""
@@ -24,12 +24,13 @@ json.blankets objects do |object|
 	json.roll_blanket_item_id     object.roll_blanket_item_id  
 	json.roll_blanket_item_name     object.roll_blanket_item.name
 	json.left_bar_item_id     object.left_bar_item_id  
-	if  object.left_bar_item_id.present?
+	json.right_bar_item_id     object.right_bar_item_id 
+	if not (object.left_bar_item_id.nil? ||  object.left_bar_item_id == 0)
 		json.left_bar_item_name object.left_bar_item.name 
 	else 
 		json.left_bar_item_name ""
 	end
-	if  object.right_bar_item_id.present?
+	if not (object.right_bar_item_id.nil? ||  object.right_bar_item_id == 0)
 		json.right_bar_item_name object.right_bar_item.name 
 	else 
 		json.right_bar_item_name ""

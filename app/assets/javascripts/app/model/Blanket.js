@@ -5,6 +5,7 @@ Ext.define('AM.model.Blanket', {
     	{ name: 'sku', type: 'string' },
     	{ name: 'name', type: 'string' },
     	{ name: 'description', type: 'string' },
+    	{ name: 'uom_id', type: 'int' },
     	{ name: 'amount', type: 'string' },
     	{ name: 'contact_id', type: 'int' },
     	{ name: 'contact_name', type: 'string' },

@@ -5,13 +5,13 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
-       @objects = VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{
+       @objects = VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order => [:contact]).where{
          (
            ( nomor_surat =~  livesearch ) | 
            ( code =~ livesearch)  | 
            ( warehouse.name =~  livesearch) |
            ( virtual_order.code =~  livesearch) |
-          # ( virtual_order.contact.name =~  livesearch) |
+           ( virtual_order.contact.name =~  livesearch) |
            ( virtual_order.nomor_surat =~  livesearch)
          )
 
@@ -178,13 +178,13 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      query_code =  VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order).where{  
+      query_code =  VirtualDeliveryOrder.active_objects.joins(:warehouse,:virtual_order => [:contact]).where{  
         ( 
            ( nomor_surat =~  query ) | 
            ( code =~ query)  | 
            ( warehouse.name =~  query) |
            ( virtual_order.code =~  query) |
-          # ( virtual_order.contact.name =~  query) |
+           ( virtual_order.contact.name =~  query) |
            ( virtual_order.nomor_surat =~  query)
          )
       }
@@ -218,6 +218,6 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end
