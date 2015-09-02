@@ -30,10 +30,6 @@ Ext.define('AM.view.operation.temporarydeliveryorder.List' ,{
 							'Tanggal Delivery: <br /><b>{delivery_date}</b>'
 			},
 			
-		
-			
-			
- 
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
@@ -59,18 +55,7 @@ Ext.define('AM.view.operation.temporarydeliveryorder.List' ,{
 			// },
 			
 			
-			
-			
  
-			{
-				xtype : 'templatecolumn',
-				text : "Transaksi",
-				flex : 3,
-				tpl : 'Tanggal Transaksi: <b>{transaction_datetime}</b>' + '<br />' + '<br />' +
-							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{confirmed_at}</b>' 
-			},
-			
 			
 		];
 

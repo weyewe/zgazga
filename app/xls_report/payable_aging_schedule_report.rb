@@ -18,7 +18,7 @@ class PayableAgingScheduleReport
       @worksheet.merge_cells(3, 0, 3, 12) 
       @worksheet.add_cell(3,0, "PT ZENTRUM GRAPHICS ASIA")
       @worksheet.merge_cells(4, 0, 4, 12) 
-      @worksheet.add_cell(4,0, "Account Payable Aging Schedule")
+      @worksheet.add_cell(4,0, "Account Receivable Aging Schedule")
       @worksheet.merge_cells(6, 0, 6, 12) 
       duration_string = "#{@end_date.day}-#{@end_date.month}-#{@end_date.year}"
       @worksheet.add_cell(6,0, "As Of : #{duration_string}")

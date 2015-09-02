@@ -1,6 +1,7 @@
 class PaymentVoucher < ActiveRecord::Base
   validates_presence_of :payment_date
   validates_presence_of :due_date
+  validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
   validate :valid_contact
@@ -265,12 +266,14 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    if Closing.is_date_closed(self.payment_date).count > 0 
+     if Closing.is_date_closed(self.payment_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
-    
-    
+     if (self.is_gbch == true) & (self.is_reconciled == true)
+      self.errors.add(:generic_errors, "belum di unreconcile")
+      return self 
+    end
     self.is_confirmed = false
     self.confirmed_at = nil
      if self.save

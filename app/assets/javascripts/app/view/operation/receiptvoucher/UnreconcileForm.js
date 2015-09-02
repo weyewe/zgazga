@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.receiptvoucher.UnconfirmForm', {
+Ext.define('AM.view.operation.receiptvoucher.UnreconcileForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmreceiptvoucherform',
+  alias : 'widget.unreconcilereceiptvoucherform',
 
-  title : 'Unconfirm',
+  title : 'Unreconcile',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -32,7 +32,7 @@ Ext.define('AM.view.operation.receiptvoucher.UnconfirmForm', {
     }];
 
     this.buttons = [{
-      text: 'Unconfirm',
+      text: 'Unreconcile',
       action: 'confirm'
     }, {
       text: 'Cancel',

@@ -111,6 +111,7 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 													'<div class="combo-name">Contact : {receivable_contact_name}</div>' +   
 													'<div class="combo-name">Amount : {receivable_amount}</div>' +   
 													'<div class="combo-name">Remaining Amount : {receivable_remaining_amount}</div>' +   
+													'<div class="combo-name">Currency : {receivable_exchange_name}</div>' +   
 							 					'</div>';
 						}
 					},

@@ -135,7 +135,6 @@ Ext.define('AM.view.operation.paymentvoucher.List' ,{
 	 
 		this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 			'-', 
-				this.confirmObjectButton, this.unconfirmObjectButton,
 
 				this.confirmObjectButton, this.unconfirmObjectButton,this.reconcileObjectButton, 
 				this.unreconcileObjectButton,
@@ -173,21 +172,44 @@ Ext.define('AM.view.operation.paymentvoucher.List' ,{
 			this.confirmObjectButton.hide();
 			this.unconfirmObjectButton.show();
 			this.unconfirmObjectButton.enable();
+			this.unreconcileObjectButton.hide();
+			this.reconcileObjectButton.hide();
 		}else{
-			this.confirmObjectButton.enable();
 			this.confirmObjectButton.show();
+			this.confirmObjectButton.enable();
 			this.unconfirmObjectButton.hide();
+			this.unreconcileObjectButton.hide();
+			this.reconcileObjectButton.hide();
 		}
 		if( selectedObject && selectedObject.get("is_confirmed") == true &&
 		    selectedObject.get("is_gbch") == true && selectedObject.get("is_reconciled") == false)  
 		{
 			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show();
+			this.unconfirmObjectButton.enable();
+			this.reconcileObjectButton.show();
+			this.reconcileObjectButton.enable();
+			this.unreconcileObjectButton.hide();
+		
+		}
+		if ( selectedObject && selectedObject.get("is_confirmed") == true &&
+		    selectedObject.get("is_gbch") == true && selectedObject.get("is_reconciled") == true) 
+		{
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show();
+			this.unconfirmObjectButton.enable();
 			this.unreconcileObjectButton.show();
 			this.unreconcileObjectButton.enable();
-		}else{
-			this.confirmObjectButton.enable();
-			this.reconcileObjectButton.show();
+			this.reconcileObjectButton.hide();
+		}
+		if ( selectedObject && selectedObject.get("is_confirmed") == true &&
+		    selectedObject.get("is_gbch") == false) 
+		{
+			this.confirmObjectButton.hide();
+			this.unconfirmObjectButton.show();
+			this.unconfirmObjectButton.enable();
 			this.unreconcileObjectButton.hide();
+			this.reconcileObjectButton.hide();
 		}
 	},
 

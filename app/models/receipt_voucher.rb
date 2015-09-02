@@ -1,6 +1,7 @@
 class ReceiptVoucher < ActiveRecord::Base
   validates_presence_of :receipt_date
   validates_presence_of :due_date
+  validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
   validate :valid_contact
@@ -135,6 +136,7 @@ class ReceiptVoucher < ActiveRecord::Base
   def update_receivable_remaining_amount(receivable_id,amount)
     rv = Receivable.find_by_id(receivable_id)
     rv.update_remaining_amount(amount)
+    rv.set_completed_receivable
   end
   
   def generate_cash_mutation(total)
@@ -253,6 +255,10 @@ class ReceiptVoucher < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    if (self.is_gbch == true) & (self.is_reconciled == true)
+      self.errors.add(:generic_errors, "belum di unreconcile")
       return self 
     end
     if Closing.is_date_closed(self.receipt_date).count > 0 

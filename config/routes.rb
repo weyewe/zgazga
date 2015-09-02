@@ -55,6 +55,7 @@ Ticketie::Application.routes.draw do
     get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
+    get 'search_warehouse_stock_details' => 'warehouse_stock_details#search', :as => :search_warehouse_stock_detail 
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder

@@ -13,6 +13,7 @@ json.temporary_delivery_orders objects do |object|
 	json.total_waste_cogs 			 object.total_waste_cogs
 	json.is_delivery_completed 			 object.is_delivery_completed
 	json.is_reconciled 			 object.is_reconciled
+	json.is_confirmed 			 object.is_confirmed
 	json.is_pushed 			 object.is_pushed
 	json.push_date 			 format_date_friendly( object.push_date )   
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 

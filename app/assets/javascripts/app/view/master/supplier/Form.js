@@ -161,7 +161,7 @@ Ext.define('AM.view.master.supplier.Form', {
 							name : 'is_taxable' 
 						}, 
 						{
-							fieldLabel: 'Type',
+							fieldLabel: 'Tax Code',
 							xtype: 'combo',
 							queryMode: 'remote',
 							forceSelection: true, 

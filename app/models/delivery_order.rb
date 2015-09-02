@@ -83,12 +83,17 @@ class DeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-#     validate warehouse_item_amount
+    
+#     validate warehouse_item_amount and pending_delivery_amount
     self.delivery_order_details.each do |dod|
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
       amount_delivery = 0 
-      DeliveryOrderDetail.where(:item_id => dod.item_id).each do |doda|
+      DeliveryOrderDetail.where(:item_id => dod.item_id,:delivery_order_id =>self.id).each do |doda|
         amount_delivery = amount_delivery + doda.amount
+      end
+      if dod.sales_order_detail.pending_delivery_amount < amount_delivery 
+        self.errors.add(:generic_errors, "Pending delivery amount  #{dod.item.name} lebih kecil amount delivery ")
+        return self 
       end
       if item_in_warehouse.amount < amount_delivery
         self.errors.add(:generic_errors, "Amount item #{item_in_warehouse.item.sku}  di warehouse #{item_in_warehouse.warehouse.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
@@ -101,6 +106,10 @@ class DeliveryOrder < ActiveRecord::Base
         :ex_rate_date => self.delivery_date,
         :exchange_id => self.sales_order.exchange_id
         )
+      if latest_exchange_rate.nil?
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.sales_order.exchange.name} belum di input")
+        return self 
+      end
       self.exchange_rate_amount = latest_exchange_rate.rate
       self.exchange_rate_id =   latest_exchange_rate.id   
     else

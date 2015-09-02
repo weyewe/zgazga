@@ -7,8 +7,7 @@ class Api::TransactionDatasController < Api::BaseApiController
        livesearch = "%#{params[:livesearch]}%"
        query = query.where{
          ( transaction_source_type =~ livesearch ) | 
-         ( description =~ livesearch ) |  
-         ( code =~ livesearch ) 
+         ( description =~ livesearch )  
          
        }
         

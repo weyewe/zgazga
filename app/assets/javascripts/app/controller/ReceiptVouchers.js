@@ -263,7 +263,7 @@ Ext.define('AM.controller.ReceiptVouchers', {
 		var view = Ext.widget('unreconcilereceiptvoucherform');
 		var record = this.getList().getSelectedObject();
 		view.setParentData( record );
-    view.show();
+		 view.show();
 		// this.reloadRecordView( record, view ) ; 
 	},
 	

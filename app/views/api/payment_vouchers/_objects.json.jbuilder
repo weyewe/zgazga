@@ -9,12 +9,13 @@ json.payment_vouchers objects do |object|
   json.cash_bank_name 			 object.cash_bank.name
   json.cash_bank_exchange_name 			 object.cash_bank.exchange.name
 	json.is_confirmed 			 object.is_confirmed
+	json.is_reconciled 			 object.is_reconciled
 	json.gbch_no 			 object.gbch_no
 	json.is_gbch 			 object.is_gbch
 	json.due_date 			 format_date_friendly(  object.due_date ) 
 	
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 
-	
+	json.reconciliation_date 						format_date_friendly( 	object.reconciliation_date ) 
 	json.code 					 object.code
 	json.amount 					 object.amount
 	json.rate_to_idr 					 object.rate_to_idr

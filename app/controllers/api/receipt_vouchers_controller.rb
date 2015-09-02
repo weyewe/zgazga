@@ -161,7 +161,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       
       begin
         ActiveRecord::Base.transaction do 
-          @object.unreconcileObject
+          @object.unreconcile_object
         end
       rescue ActiveRecord::ActiveRecordError  
       else

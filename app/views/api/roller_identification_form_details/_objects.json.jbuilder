@@ -25,13 +25,13 @@ json.roller_identification_form_details objects do |object|
   		json.repair_request_case_text  "None"
   	elsif object.repair_request_case == 4
 	  	json.repair_request_case_text  "Bearing Set and Centre Drill"
-	  elsif object.repair_request_case == 5
+	elsif object.repair_request_case == 5
 	  	json.repair_request_case_text  "Repair Corosive"
-	  elsif object.repair_request_case == 6
+	elsif object.repair_request_case == 6
 	  	json.repair_request_case_text  "Bearing Set and Repair Corosive"
-	  elsif object.repair_request_case == 7
+	elsif object.repair_request_case == 7
 	  	json.repair_request_case_text  "Centre Drill and Repair Corosive"
-	  else 
+	else 
 	  	json.repair_request_case_text  "All"	
   	end
   	json.rd 	object.rd

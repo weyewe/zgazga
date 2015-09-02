@@ -15,25 +15,29 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 	
 
 	var remoteJsonStoreItem = Ext.create(Ext.data.JsonStore, {
-		storeId : 'item_search',
+		storeId : 'warehouse_item_search',
 		fields	: [
 		 		{
 					name : 'item_sku',
-					mapping : "sku"
+					mapping : "item_sku"
 				}, 
 				{
 					name : 'item_name',
-					mapping : 'name'
+					mapping : 'item_name'
+				},
+				{
+					name : 'amount',
+					mapping : 'amount'
 				},
 				{
 					name : 'item_id',
-					mapping : "id"
+					mapping : "item_id"
 				}, 
 	 
 		],
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_items',
+			url : 'api/search_warehouse_stock_details',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -85,7 +89,8 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 						return  	'<div data-qtip="{item_name}">' +  
 												'<div class="combo-name">'  + 
 															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
+															'{item_sku}' 				+ "<br />" 	 + 
+															'QTY warehouse from : {amount}' 				+
 												 "</div>" +  
 						 					'</div>';
 					}
@@ -132,6 +137,21 @@ Ext.define('AM.view.operation.warehousemutationdetail.Form', {
 				comboBox.setValue( item_id );
 			}
 		});
+	},
+	
+	setExtraParamInItemComboBox: function(id){
+		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.warehouse_id =  id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) { 
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInItemComboBox( record.get("id") ); 
 	},
 	
 	

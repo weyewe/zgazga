@@ -100,10 +100,10 @@ Ext.define('AM.view.operation.deliveryorderdetail.Form', {
 					getInnerTpl: function(){
 						return  	'<div data-qtip="{sales_order_detail_item_name}">' +  
 												'<div class="combo-name">'  +
-															" {sales_order_detail_code} " 		+ "<br />" 	 + 
-															" ({sales_order_detail_item_name}) " 		+ "<br />" 	 + 
-															'{sales_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{sales_order_detail_pending_delivery_amount}' 	+
+															"Code : {sales_order_detail_code} " 		+ "<br />" 	 + 
+															"Name : ({sales_order_detail_item_name}) " 		+ "<br />" 	 + 
+															'SKU : {sales_order_detail_item_sku}' 			+ "<br />" 	 +
+															'Pending Delivery Amount : {sales_order_detail_pending_delivery_amount}' 	+
 												 "</div>" +  
 						 					'</div>';
 					}

@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
+Ext.define('AM.view.operation.receiptvoucher.ReconcileForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.confirmreceiptvoucherform',
+  alias : 'widget.reconcilereceiptvoucherform',
 
-  title : 'Confirm',
+  title : 'Reconcile',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -50,41 +50,15 @@ Ext.define('AM.view.operation.receiptvoucher.ConfirmForm', {
 				},
 				{
 					xtype: 'datefield',
-					fieldLabel: 'Tanggal Konfirmasi',
-					name: 'confirmed_at' ,
+					fieldLabel: 'Tanggal Reconcile',
+					name: 'reconciliation_date' ,
 					format: 'Y-m-d',
 				},  
-		 		{
-							xtype: 'numberfield',
-							fieldLabel : 'Pembulatan',
-							name : 'pembulatan'
-						},
-						{
-	    				fieldLabel: 'Status Pembulatan',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'status_pembulatan_text',
-	    				valueField : 'status_pembulatan',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : localJsonStoreStatusPembulatan , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{status_pembulatan_text}">' + 
-	    												'<div class="combo-name">{status_pembulatan_text}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'status_pembulatan' 
-    	    	},
-  	    		{				
-							xtype: 'displayfield',
-							fieldLabel : 'Total Amount',
-							name : 'amount'
-						},
+    		{				
+					xtype: 'displayfield',
+					fieldLabel : 'Total Amount',
+					name : 'amount'
+				},
 		 
 			]
     }];

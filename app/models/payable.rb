@@ -70,6 +70,7 @@ class Payable < ActiveRecord::Base
     if not self.pending_clearence_amount == 0 or not self.remaining_amount == 0 
       self.is_completed = false
     end
+    self.save
     return self
   end
   
