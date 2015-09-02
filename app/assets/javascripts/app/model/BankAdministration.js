@@ -11,7 +11,7 @@ Ext.define('AM.model.BankAdministration', {
     	    { name: 'exchange_rate_amount', type: 'string' },
     	    { name: 'exchange_rate_id', type: 'string' },
     	    { name: 'description', type: 'string' },
-    	    { name: 'is_confirmed', type: 'string' },
+    	    { name: 'is_confirmed', type: 'boolean' },
     	    { name: 'confirmed_at', type: 'string' },
   	],
   	idProperty: 'id' ,

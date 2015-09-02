@@ -68,7 +68,7 @@ Ext.define('AM.view.master.user.Form', {
 	      },{
 	        xtype: 'textfield',
 	        name : 'name',
-	        fieldLabel: ' Name anda'
+	        fieldLabel: ' Name'
 	      },{
 					xtype: 'textfield',
 					name : 'email',

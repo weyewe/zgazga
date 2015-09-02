@@ -14,6 +14,7 @@ Ext.define('AM.model.SalesInvoice', {
 			{ name: 'amount_receivable', type: 'string' } ,
 			{ name: 'total_cos', type: 'string' } ,
 			{ name: 'tax_value', type: 'string' } ,
+			{ name: 'dpp', type: 'string' } ,
 			{ name: 'exchange_rate_amount', type: 'string' } ,
 			
 			{ name: 'delivery_order_id', type: 'int' },

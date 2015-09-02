@@ -2,6 +2,7 @@ class ReceiptVoucher < ActiveRecord::Base
   validates_presence_of :receipt_date
   validates_presence_of :due_date
   validate :valid_cash_bank
+  validate :valid_rate_to_idr
   validate :valid_contact
   belongs_to :contact
   belongs_to :cash_bank
@@ -44,9 +45,24 @@ class ReceiptVoucher < ActiveRecord::Base
       return self 
     end
   end 
-   
+  
+  def valid_rate_to_idr
+    if rate_to_idr <= BigDecimal("0")
+      self.errors.add(:rate_to_idr, "Harus lebih besar dari 0")
+      return self
+    end
+  end
+  
+  
   def self.create_object(params)
     new_object = self.new
+    if (params[:is_gbch] == false) & (params[:gbch_no].present?)
+      new_object.errors.add(:gbch_no, "GBCH no tidak perlu di isi apabila bukan GBCH")
+      return new_object
+    elsif (params[:is_gbch] == true) & (not params[:gbch_no].present?)
+      new_object.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
+      return new_object
+    end
     new_object.no_bukti = params[:no_bukti]
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
@@ -76,7 +92,13 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah memiliki detail")
       return self 
     end 
-    
+     if (params[:is_gbch] == false) & (params[:gbch_no].present?)
+      self.errors.add(:gbch_no, "GBCH no tidak perlu di isi apabila bukan GBCH")
+      return self
+    elsif (params[:is_gbch] == true) & (not params[:gbch_no].present?)
+      self.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
+      return self
+    end
     self.no_bukti = params[:no_bukti]
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]

@@ -38,13 +38,13 @@ class CustomerStockMutation < ActiveRecord::Base
        
     if self.item_case == ITEM_CASE[:ready] 
       # update item customer_amount
-     self.item.update_customer_amount(amount)
+      self.item.update_customer_amount(amount)
       # update warehouse_item customer_amount
-     if not self.warehouse_item.nil?
-      self.warehouse_item.update_customer_amount(amount)
-     end
+      if not self.warehouse_item.nil?
+        self.warehouse_item.update_customer_amount(amount)
+      end
     # update customer_item amount
-     self.customer_item.update_amount(amount)
+      self.customer_item.update_amount(amount)
     elsif self.item_case == ITEM_CASE[:pending_receival]
       self.item.update_pending_receival(amount)
     elsif self.item_case == ITEM_CASE[:pending_delivery]

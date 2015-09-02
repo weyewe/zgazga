@@ -33,8 +33,8 @@ module AccountingService
       :transaction_data_id => ta.id,        
       :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id   ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
-      :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
-      :real_amount         => purchase_invoice.amount_payable ,
+      :amount              => (pre_tax * purchase_invoice.exchange_rate_amount).round(2),
+      :real_amount         => pre_tax ,
       :exchange_id         => purchase_invoice.exchange_id ,
       :description => "Debit GoodsPendingClearance"
       )  

@@ -64,6 +64,13 @@ class DeliveryOrderDetail < ActiveRecord::Base
         return new_object 
       end
     end
+    sales_order_detail = SalesOrderDetail.find_by_id(params[:sales_order_detail_id])
+    if not sales_order_detail.nil?
+      if sales_order_detail.pending_delivery_amount < BigDecimal(params[:amount]) 
+         new_object.errors.add(:generic_errors, "Amount pending delivery tidak boleh lebih kecil dr amount")
+         return new_object 
+      end
+    end
     new_object.delivery_order_id = params[:delivery_order_id]
     new_object.sales_order_detail_id = params[:sales_order_detail_id]
     new_object.order_type = params[:order_type]
@@ -82,6 +89,13 @@ class DeliveryOrderDetail < ActiveRecord::Base
     if self.delivery_order.is_confirmed?
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
+    end
+    sales_order_detail = SalesOrderDetail.find_by_id(params[:sales_order_detail_id])
+    if not sales_order_detail.nil?
+      if sales_order_detail.pending_delivery_amount < BigDecimal(params[:amount]) 
+         self.errors.add(:generic_errors, "Pending Delivery QTY tidak boleh lebih kecil dari Delivery Order QTY ")
+         return self 
+      end
     end
     self.delivery_order_id = params[:delivery_order_id]
     self.sales_order_detail_id = params[:sales_order_detail_id]

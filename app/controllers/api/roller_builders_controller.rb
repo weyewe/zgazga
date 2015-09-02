@@ -5,10 +5,8 @@ class Api::RollerBuildersController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-        
-        
         @objects = RollerBuilder.joins(:roller_type,:machine,
-        :uom,:core_builder,:item).where{
+        :uom,:core_builder).where{
           (
             ( name =~  livesearch )  | 
             ( base_sku =~  livesearch )  | 
@@ -24,7 +22,7 @@ class Api::RollerBuildersController < Api::BaseApiController
         }.page(params[:page]).per(params[:limit]).order("id DESC")
 
         @total = RollerBuilder.joins(:roller_type,:machine,
-        :uom,:core_builder,:item).where{
+        :uom,:core_builder).where{
           (
             ( name =~  livesearch )  | 
             ( roller_type.name =~ livesearch ) | 
@@ -38,9 +36,8 @@ class Api::RollerBuildersController < Api::BaseApiController
         }.count
    
     else
-      puts "In this shite"
-      @objects = RollerBuilder.page(params[:page]).per(params[:limit]).order("id DESC")
-      @total = RollerBuilder.count 
+      @objects = RollerBuilder.active_objects.joins(:roller_type,:machine,:uom,:core_builder).page(params[:page]).per(params[:limit]).order("id DESC")
+      @total = RollerBuilder.active_objects.joins(:roller_type,:machine,:uom,:core_builder).count 
     end
     
     

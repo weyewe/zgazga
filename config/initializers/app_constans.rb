@@ -343,7 +343,8 @@ MIGRATION_FILENAME = {
   :warehouse_surabaya => 'warehouse_sby.csv',
   :warehouse_semarang => 'warehouse_semarang.csv',
   
-  :item_avg_price => 'item_avg_price.csv'
+  :item_avg_price => 'item_avg_price.csv',
+  :filter_warehouse_a1 => "filter_warehouse_a1.csv"
   
   
 } 

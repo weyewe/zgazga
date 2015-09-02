@@ -233,7 +233,9 @@ Ext.define('AM.controller.RollerIdentificationForms', {
  
 		if( record ){
 			record.set( values );
-			  
+			form.query('checkbox').forEach(function(checkbox){
+        record.set( checkbox['name']  ,checkbox['checked'] ) ;
+      });
 			
 			form.setLoading(true);
 			record.save({
@@ -268,6 +270,9 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 
 			form.setLoading(true);
+			form.query('checkbox').forEach(function(checkbox){
+        newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+      });
 			newObject.save({
 				success: function(record){
 					//  since the grid is backed by store, if store changes, it will be updated

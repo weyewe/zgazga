@@ -144,13 +144,37 @@ Ext.define('AM.controller.ContactGroups', {
 
   deleteObject: function() {
     var record = this.getList().getSelectedObject();
-
+		if(!record){return;} 
+		var list  = this.getList();
+		list.setLoading(true); 
+		
     if (record) {
-      var store = this.getContactGroupsStore();
-      store.remove(record);
-      store.sync();
-// to do refresh programmatically
-		this.getList().query('pagingtoolbar')[0].doRefresh();
+			record.destroy({
+				success : function(record){
+					list.setLoading(false);
+					// list.fireEvent('deleted');	
+					// this.getList().query('pagingtoolbar')[0].doRefresh();
+					// console.log("Gonna reload the shite");
+					// this.getPurchaseOrdersStore.load();
+					list.getStore().load();
+				},
+				failure : function(record,op ){
+					list.setLoading(false);
+					
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					
+					if( errors["generic_errors"] ){
+						Ext.MessageBox.show({
+						           title: 'DELETE FAIL',
+						           msg: errors["generic_errors"],
+						           buttons: Ext.MessageBox.OK, 
+						           icon: Ext.MessageBox.ERROR
+						       });
+					}
+					
+				}
+			});
     }
 
   },

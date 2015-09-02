@@ -59,6 +59,7 @@ class Api::VirtualOrdersController < Api::BaseApiController
                           :employee_id => @object.employee_id ,
                           :employee_name => @object.employee.name ,
                           :nomor_surat => @object.nomor_surat , 
+                          :description => @object.description , 
                           :order_date => format_date_friendly(@object.order_date)  ,
                           :is_confirmed => @object.is_confirmed,
                           :confirmed_at => format_date_friendly(@object.confirmed_at) 

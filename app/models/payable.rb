@@ -1,5 +1,5 @@
 class Payable < ActiveRecord::Base
-  
+  belongs_to :payment_voucher
   belongs_to :exchange    
   belongs_to :contact
   has_many :payment_voucher_details 

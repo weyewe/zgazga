@@ -8,7 +8,7 @@ Ext.define('AM.model.MemorialDetail', {
 			{ name: 'account_id', type: 'int' } ,
 			{ name: 'account_code', type: 'string' } ,
 			{ name: 'account_name', type: 'string' } ,
-			{ name: 'status', type: 'string' } ,
+			{ name: 'status', type: 'int' } ,
 			{ name: 'status_text', type: 'string' } ,
 			{ name: 'amount', type: 'string' } ,
   	],

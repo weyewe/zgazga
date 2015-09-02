@@ -207,7 +207,7 @@ describe RollerWarehouseMutation do
     @rif = RollerIdentificationForm.create_object(
       :warehouse_id => @wrh_1.id,
       :contact_id => @ct_1.id,
-      :is_in_house => true,
+      :is_in_house => false,
       :amount => 1,
       :identified_date => DateTime.now,
       :nomor_disasembly => "nomor_disasembly_1"
@@ -234,7 +234,7 @@ describe RollerWarehouseMutation do
     @rif.confirm_object(:confirmed_at => DateTime.now)
     
     @rb = RollerBuilder.create_object(
-        :base_sku => "base123",
+        :base_sku => "RB123",
         :name => "name Or",
         :description => "123123",
         :uom_id => @uom_1.id,
@@ -288,6 +288,7 @@ describe RollerWarehouseMutation do
       it "should create RollerWarehouseMutation" do
         @rwm.errors.size.should == 0
         @rwm.should be_valid
+        
       end
       
       context "create RollerWarehouseMutationDetail" do
@@ -306,6 +307,21 @@ describe RollerWarehouseMutation do
         context "confirm RollerWarehouseMutation" do
           before(:each) do
             @rwm.confirm_object(:confirmed_at => DateTime.now)
+          end
+          
+          it "customer item amount at warehouse from should == 1" do
+            item_in_warehouse = WarehouseItem.joins(:item).where(
+              :warehouse_id => @rwm.warehouse_from_id,
+              :item_id => @rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id).first
+            item_in_warehouse.customer_amount.should == 0
+          end
+          
+          
+          it "customer item amount at warehouse to should == 1" do
+            item_in_warehouse = WarehouseItem.joins(:item).where(
+              :warehouse_id => @rwm.warehouse_to_id,
+              :item_id => @rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id).first
+            item_in_warehouse.customer_amount.should == 1
           end
           
           it "should confirm RollerWarehouseMutation" do

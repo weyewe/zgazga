@@ -61,7 +61,7 @@ class SalesInvoice < ActiveRecord::Base
     if new_object.save  
       new_object.exchange_id = new_object.delivery_order.sales_order.exchange_id
       new_object.code = "SI-" + new_object.id.to_s  
-      select_tax 
+      new_object.select_tax 
       new_object.save
     end
     return new_object
@@ -83,7 +83,7 @@ class SalesInvoice < ActiveRecord::Base
     self.due_date = params[:due_date]
     if self.save 
     self.exchange_id = self.delivery_order.sales_order.exchange_id
-    select_tax
+    self.select_tax
     self.save
     end
     return self
@@ -181,25 +181,27 @@ class SalesInvoice < ActiveRecord::Base
   
   def select_tax()
     tax_value = 0
-    case self.delivery_order.sales_order.contact.tax_code
-    when TAX_CODE[:code_01]  
-      tax_value = TAX_VALUE[:code_01]
-    when TAX_CODE[:code_02] 
-      tax_value = TAX_VALUE[:code_02]
-    when TAX_CODE[:code_03] 
-      tax_value = TAX_VALUE[:code_03]
-    when TAX_CODE[:code_04] 
-      tax_value = TAX_VALUE[:code_04]
-    when TAX_CODE[:code_05] 
-      tax_value = TAX_VALUE[:code_05]
-    when TAX_CODE[:code_06] 
-      tax_value = TAX_VALUE[:code_06]
-    when TAX_CODE[:code_07] 
-      tax_value = TAX_VALUE[:code_07]
-    when TAX_CODE[:code_08] 
-      tax_value = TAX_VALUE[:code_08]
-    when TAX_CODE[:code_09] 
-      tax_value = TAX_VALUE[:code_09]
+    if self.delivery_order.sales_order.contact.is_taxable == true
+      case self.delivery_order.sales_order.contact.tax_code
+      when TAX_CODE[:code_01]  
+        tax_value = TAX_VALUE[:code_01]
+      when TAX_CODE[:code_02] 
+        tax_value = TAX_VALUE[:code_02]
+      when TAX_CODE[:code_03] 
+        tax_value = TAX_VALUE[:code_03]
+      when TAX_CODE[:code_04] 
+        tax_value = TAX_VALUE[:code_04]
+      when TAX_CODE[:code_05] 
+        tax_value = TAX_VALUE[:code_05]
+      when TAX_CODE[:code_06] 
+        tax_value = TAX_VALUE[:code_06]
+      when TAX_CODE[:code_07] 
+        tax_value = TAX_VALUE[:code_07]
+      when TAX_CODE[:code_08] 
+        tax_value = TAX_VALUE[:code_08]
+      when TAX_CODE[:code_09] 
+        tax_value = TAX_VALUE[:code_09]
+      end
     end
     self.tax = tax_value 
     self.save

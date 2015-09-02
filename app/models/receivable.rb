@@ -2,9 +2,13 @@ class Receivable < ActiveRecord::Base
   belongs_to :receipt_voucher
   belongs_to :exchange
   belongs_to :contact
-  
+  has_many :receipt_voucher_details 
   def self.active_objects
     return self
+  end
+  
+  def self.active_children
+    return self.receipt_voucher_details
   end
   
   def source

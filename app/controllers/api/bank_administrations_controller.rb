@@ -50,6 +50,7 @@ class Api::BankAdministrationsController < Api::BaseApiController
                           :cash_bank_id => @object.cash_bank_id , 
                           :cash_bank_name => @object.cash_bank.name ,  
                           :exchange_rate_amount => @object.exchange_rate_amount , 
+                          :description => @object.description,
                           :amount => @object.amount , 
                           :administration_date => format_date_friendly(@object.administration_date)  ,
                           :is_confirmed => @object.is_confirmed,
@@ -84,6 +85,7 @@ class Api::BankAdministrationsController < Api::BaseApiController
                           :cash_bank_id => @object.cash_bank_id , 
                           :cash_bank_name => @object.cash_bank.name , 
                           :exchange_rate_amount => @object.exchange_rate_amount , 
+                          :description => @object.description,
                           :amount => @object.amount , 
                           :administration_date => format_date_friendly(@object.administration_date)  ,
                           :is_confirmed => @object.is_confirmed,
@@ -144,16 +146,17 @@ class Api::BankAdministrationsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :bank_administrations => [
-                            :id => @object.id, 
-                            :code => @object.code ,
-                            :no_bukti => @object.no_bukti , 
-                            :cash_bank_id => @object.cash_bank_id , 
-                            :cash_bank_name => @object.cash_bank.name , 
-                            :exchange_rate_amount => @object.exchange_rate_amount , 
-                            :amount => @object.amount , 
-                            :administration_date => format_date_friendly(@object.administration_date)  ,
-                            :is_confirmed => @object.is_confirmed,
-                            :confirmed_at => format_date_friendly(@object.confirmed_at) 
+                          :id => @object.id, 
+                          :code => @object.code ,
+                          :no_bukti => @object.no_bukti , 
+                          :cash_bank_id => @object.cash_bank_id , 
+                          :cash_bank_name => @object.cash_bank.name ,  
+                          :exchange_rate_amount => @object.exchange_rate_amount , 
+                          :amount => @object.amount , 
+                          :administration_date => format_date_friendly(@object.administration_date)  ,
+                          :is_confirmed => @object.is_confirmed,
+                          :description => @object.description,
+                          :confirmed_at => format_date_friendly(@object.confirmed_at) 
                           ],
                         :total => BankAdministration.active_objects.count  } 
     else

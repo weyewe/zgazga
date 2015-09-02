@@ -48,7 +48,7 @@ module AccountingService
       TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
-          :entry_case          => NORMAL_BALANCE[:credit]     ,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => (recovery_order_detail.total_cost).round(2),
           :description => "Debit FinishedGoods"
         )

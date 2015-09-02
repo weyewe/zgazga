@@ -162,21 +162,6 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 		});
 	},
 	
-	setSelectedStatus: function( status ){
-		// console.log("inside set selected original account id ");
-		var comboBox = this.down('form').getForm().findField('status'); 
-		var me = this; 
-		var store = comboBox.store;  
-		store.load({
-			params: {
-				selected_id : status 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( status );
-			}
-		});
-	},
 	
 	
 	setComboBoxData : function( record){
@@ -185,7 +170,6 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 		
 		
 		me.setSelectedAccount( record.get("account_id")  ) ; 
-		me.setSelectedStatus( record.get("status")  ) ; 
 	},
 	
 	

@@ -27,6 +27,7 @@ Ext.define('AM.view.operation.salesinvoice.List' ,{
 				text : "Receivable",
 				flex : 3,
 				tpl : 	'Total:  <br /> <b>{amount_receivable} {delivery_order_sales_order_exchange_name}</b>'  + '<br />' + '<br />' +
+						'DPP :  <b>{dpp}</b>'  + '<br />' + '<br />' +
 						'Exchange Rate:  <b>{exchange_rate_amount}</b>'  + '<br />' + '<br />' +
 						'Tax (%):  <b>{tax_value}</b>'  
 			},

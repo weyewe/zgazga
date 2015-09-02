@@ -100,17 +100,17 @@ Ext.define('AM.view.operation.recoveryresultcompounddetail.Form', {
 			{
     	        xtype: 'textfield',
     	        name : 'finish_amount',
-    	        fieldLabel: 'Jumlah Finish (m)'
+    	        fieldLabel: 'Jumlah Finish (kg)'
     	     },
     	     {
     	        xtype: 'textfield',
     	        name : 'reject_amount',
-    	        fieldLabel: 'Jumlah Reject (m)'
+    	        fieldLabel: 'Jumlah Reject (kg)'
     	     },
     	     {
     	        xtype: 'textfield',
     	        name : 'defect_amount',
-    	        fieldLabel: 'Jumlah Defect (m)'
+    	        fieldLabel: 'Jumlah Defect (kg)'
     	     },
      
 			

@@ -824,8 +824,13 @@ namespace :migrate_zga do
     puts "Done migrating roller builder. Total roller builder : #{RollerBuilder.count}"
   end
   
+ 
+   
 
   task :warehouse_a1  => :environment do
+    
+    # how can we handle duplicates?
+    # 1. create the non duplicate version of csv in the memory 
  
     
     migration_filename = MIGRATION_FILENAME[:warehouse_a1]
@@ -912,9 +917,64 @@ namespace :migrate_zga do
     
     sa.confirm_object( :confirmed_at => confirmation_date  ) 
     
+    
+    # in the batch_item_array, there are duplicates.. fix those duplicates into 1
+    
     new_array = [] 
     duplicate_batch_instance_name_array = [] 
-    batch_item_array.each do |element|
+    
+    unique_batch_hash = {}
+    
+    unique_batch_info_hash = {} 
+     
+    
+    
+    batch_item_array.each do |element| 
+      
+      
+      if unique_batch_hash[element[0]].nil? 
+        unique_batch_hash[element[0]] = {}
+        unique_batch_hash[element[0]][element[1]]  = element[2]
+        
+        unique_batch_info_hash[element[0]] = {}
+        unique_batch_info_hash[element[0]][element[1]]  = [element[3], element[4]] 
+      else
+        if unique_batch_hash[element[0]][element[1]].nil?
+          unique_batch_hash[element[0]][element[1]]  = element[2]
+          
+          unique_batch_info_hash[element[0]][element[1]]  = [element[3], element[4]] 
+          
+        else
+          
+          unique_batch_hash[element[0]][element[1]]  = unique_batch_hash[element[0]][element[1]]  +  element[2]
+          
+        end
+        
+      end
+    end
+    
+    filtered_batch_item_array = []
+    unique_batch_hash.each do |item_id , batch_name_quantity_hash|
+      
+      batch_name_quantity_hash.each do |name, quantity|
+        filtered_batch_item_array << [
+            item_id,
+            name, 
+            quantity, 
+            unique_batch_info_hash[item_id][name].first,
+            unique_batch_info_hash[item_id][name].last,
+            
+            # manufactured_date
+            # expiry_date
+          ]
+      end
+      
+      
+    end
+    
+    
+    
+    filtered_batch_item_array.each do |element|
       # [ item.id, batch_name, BigDecimal( quantity ) ,  manufactured_date, expiry_date ]
       batch = BatchInstance.create_object(
           :item_id => element[0],

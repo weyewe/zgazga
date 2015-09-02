@@ -53,7 +53,9 @@ class MemorialDetail < ActiveRecord::Base
     new_object.account_id = params[:account_id]
     new_object.status = params[:status]
     new_object.amount = BigDecimal( params[:amount] || '0')
-    if new_object.save
+     if new_object.save  
+      new_object.code = "MEMD-" + new_object.id.to_s  
+      new_object.save
     end
     return new_object
   end

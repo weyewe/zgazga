@@ -43,6 +43,10 @@ class BlanketOrder < ActiveRecord::Base
         
   def self.create_object(params)
     new_object = self.new
+    if (params[:has_due_date] == true) & (not params[:due_date].present?)
+      new_object.errors.add(:due_date,"Tidak boleh kosong")
+      return new_object
+    end
     new_object.contact_id = params[:contact_id]
     new_object.order_date = params[:order_date]
     new_object.production_no = params[:production_no]
@@ -72,6 +76,10 @@ class BlanketOrder < ActiveRecord::Base
     end
     if self.blanket_order_details.count > 0 
       self.errors.add(:generic,"Sudah memiliki detail")
+      return self
+    end
+    if (params[:has_due_date] == true) & (not params[:due_date].present?)
+      self.errors.add(:due_date,"Tidak boleh kosong")
       return self
     end
     self.contact_id = params[:contact_id]

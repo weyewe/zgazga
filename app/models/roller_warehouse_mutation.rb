@@ -2,7 +2,7 @@ class RollerWarehouseMutation < ActiveRecord::Base
   belongs_to :recovery_order
   has_many :roller_warehouse_mutation_details
   validates_presence_of :recovery_order_id
-  validates_presence_of :warehouse_from_id
+  # validates_presence_of :warehouse_from_id
   validates_presence_of :warehouse_to_id
   validates_presence_of :mutation_date
   validate :valid_warehouse_from_id_and_warehouse_to_id
@@ -55,11 +55,12 @@ class RollerWarehouseMutation < ActiveRecord::Base
   def self.create_object(params)
     new_object = self.new
     new_object.recovery_order_id = params[:recovery_order_id]
-    new_object.warehouse_from_id = params[:warehouse_from_id]
+    # new_object.warehouse_from_id = params[:warehouse_from_id]
     new_object.warehouse_to_id = params[:warehouse_to_id]
     new_object.mutation_date = params[:mutation_date]
     new_object.amount = BigDecimal( params[:amount] || '0')
     if new_object.save
+      new_object.warehouse_from_id = new_object.recovery_order.warehouse_id
       new_object.code = "RWM-" + new_object.id.to_s  
       new_object.save
     end
@@ -79,11 +80,13 @@ class RollerWarehouseMutation < ActiveRecord::Base
     end
     
     self.recovery_order_id = params[:recovery_order_id]
-    self.warehouse_from_id = params[:warehouse_from_id]
+    # self.warehouse_from_id = params[:warehouse_from_id]
     self.warehouse_to_id = params[:warehouse_to_id]
     self.mutation_date = params[:mutation_date]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
+      self.warehouse_from_id = self.recovery_order.warehouse_id
+      self.save
     end
     return self
   end
@@ -115,37 +118,31 @@ class RollerWarehouseMutation < ActiveRecord::Base
     end
     
     # check roller amount
-    self.roller_warehouse_mutation_details.each do |rwmd|
-      roller_id = 0
-      if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
-        roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
-      elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
-        roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
-      end
-      item = item_find_by_id(roller_id)
-      item_in_warehouse_from = WarehouseItem.where(
-        :warehouse_id => self.warehouse_from_id,
-        :item_id => roller_id)
-      if item_in_warehouse_from.count == 0 
-        self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller ")
-      else
-        if self.recovery_order.roller_identification_form.is_in_house == true
-          if rwmd.amount > item_in_warehouse_from.amount
-            self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
-            return self 
-          end
-        else
-          if rwmd.amount > item_in_warehouse_from.customer_amount
-            self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
-            return self 
-          end
-        end
-      end
-      
-      
-      
-     
-    end
+    
+    # self.roller_warehouse_mutation_details.each do |rwmd|
+    #   roller_id = 0
+    #   if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+    #     roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+    #   elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+    #     roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+    #   end
+    #   item = item_find_by_id(roller_id)
+    #   item_in_warehouse_from = WarehouseItem.find_or_create_object(
+    #     :warehouse_id => self.warehouse_from_id,
+    #     :item_id => roller_id)
+    #   if self.recovery_order.roller_identification_form.is_in_house == true
+    #       if rwmd.amount > item_in_warehouse_from.amount
+    #         self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
+    #         return self 
+    #       end
+    #     else
+    #       if rwmd.amount > item_in_warehouse_from.customer_amount
+    #         self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
+    #         return self 
+    #       end
+    #     end
+    #   end
+    # end
     
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
@@ -186,7 +183,7 @@ class RollerWarehouseMutation < ActiveRecord::Base
         new_stock_mutation_from = StockMutation.create_object(
           :source_class => self.class.to_s, 
           :source_id => self.id ,  
-          :amount => self.amount,  
+          :amount => 1,  
           :status => ADJUSTMENT_STATUS[:deduction],  
           :mutation_date => self.mutation_date ,  
           :warehouse_id => self.warehouse_from_id ,
@@ -203,7 +200,7 @@ class RollerWarehouseMutation < ActiveRecord::Base
         new_stock_mutation_to = StockMutation.create_object(
           :source_class => self.class.to_s, 
           :source_id => self.id ,  
-          :amount => self.amount,  
+          :amount => 1,  
           :status => ADJUSTMENT_STATUS[:addition],  
           :mutation_date => self.mutation_date ,  
           :warehouse_id => self.warehouse_to_id ,
@@ -215,7 +212,30 @@ class RollerWarehouseMutation < ActiveRecord::Base
         new_stock_mutation_to.stock_mutate_object
       else
         item_in_warehouse = WarehouseItem.find_or_create_object(
-          :warehouse_id => self.recovery_order.warehouse_id,
+          :warehouse_id => self.warehouse_from_id,
+          :item_id => roller_id)
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => item_in_warehouse.id
+          )
+        new_stock_mutation = CustomerStockMutation.create_object(
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :customer_item_id => customer_item.id,
+          :amount => 1,  
+          :status => ADJUSTMENT_STATUS[:deduction],  
+          :mutation_date => self.mutation_date ,  
+          :warehouse_id => self.warehouse_to_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => roller_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.code
+          ) 
+        new_stock_mutation.stock_mutate_object
+        
+        item_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.warehouse_to_id,
           :item_id => roller_id)
         customer_item = CustomerItem.find_or_create_object(
           :contact_id => self.recovery_order.roller_identification_form.contact_id,

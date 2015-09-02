@@ -315,7 +315,7 @@ Ext.define('AM.view.operation.salesorder.Form', {
 	
 	setComboBoxExtraParams: function( ) {  
 		var me = this;
-		me.setExtraParamInDeliveryOrderDetailIdComboBox( ); 
+		// me.setExtraParamInDeliveryOrderDetailIdComboBox( ); 
 	},
 	
 	setComboBoxData : function( record){ 

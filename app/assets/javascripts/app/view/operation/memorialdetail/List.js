@@ -11,7 +11,7 @@ Ext.define('AM.view.operation.memorialdetail.List' ,{
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Account Code',  dataIndex: 'account_code', flex: 1},
     		{ header: 'Account',  dataIndex: 'account_name', flex: 1},
-    		{ header: 'Status',  dataIndex: 'status', flex: 1},
+    		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{ header: 'Amount', dataIndex: 'amount', flex: 1 } ,
 			
 			 

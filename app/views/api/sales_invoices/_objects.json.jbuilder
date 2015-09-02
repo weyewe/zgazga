@@ -11,6 +11,7 @@ json.sales_invoices objects do |object|
 	
 	json.delivery_order_sales_order_contact_name	object.delivery_order.sales_order.contact.name
 	json.delivery_order_sales_order_exchange_name	object.delivery_order.sales_order.exchange.name
+	json.delivery_order_sales_order_contact_tax_code	object.delivery_order.sales_order.contact.tax_code
 	json.exchange_rate_amount	object.exchange_rate_amount
 	json.amount_receivable	object.amount_receivable
 	json.total_cos	object.total_cos
@@ -19,8 +20,8 @@ json.sales_invoices objects do |object|
 	
 	json.code 					 object.code
 	json.nomor_surat 					 object.nomor_surat
- 	
- 	json.tax_value		object.delivery_order.sales_order.contact.is_taxable ? TAX_VALUE[ "code_#{object.delivery_order.sales_order.contact.tax_code}".to_sym ] : ""
+ 	json.dpp 			object.dpp
+ 	json.tax_value		object.tax
  	
 	
 	

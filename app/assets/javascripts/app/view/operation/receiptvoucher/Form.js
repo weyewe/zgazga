@@ -174,6 +174,12 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 							fieldLabel : 'GBCH no',
 							name : 'gbch_no'
 						}, 
+						{
+							xtype: 'datefield',
+							name : 'due_date',
+							fieldLabel: 'Due Date',
+							format: 'Y-m-d',
+						},
 				]
 			};
 		
@@ -212,12 +218,7 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 						anchor : '-10'
 					},
 					items : [ 
-						{
-							xtype: 'datefield',
-							name : 'due_date',
-							fieldLabel: 'Due Date',
-							format: 'Y-m-d',
-						},
+					
 						
     	    	{
 							xtype: 'numberfield',
@@ -351,7 +352,7 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 		
 		me.setSelectedCustomer( record.get("contact_id")  ) ;
 		me.setSelectedCashBank( record.get("cash_bank_id")  ) ;
-		me.setSelectedStatusPembulatan( record.get("status_pembulatan")  ) ;
+		// me.setSelectedStatusPembulatan( record.get("status_pembulatan")  ) ;
  
 	}
  

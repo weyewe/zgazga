@@ -54,6 +54,11 @@ class RollerIdentificationForm < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.is_confirmed? 
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self
+    end
+    
     self.warehouse_id = params[:warehouse_id]
     self.code = params[:code]
     self.contact_id = params[:contact_id]
@@ -137,6 +142,13 @@ class RollerIdentificationForm < ActiveRecord::Base
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
+    end
+    
+    recovery_count = RecoveryOrder.where(:roller_identification_form_id => self.id).count
+    
+    if recovery_count > 0 
+      self.errors.add(:generic_errors, "Sudah di buat RecoveryOrder")
+      return self
     end
     
     self.confirmed_at = nil

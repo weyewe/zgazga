@@ -6,6 +6,7 @@ Ext.define('AM.model.Blanket', {
     	{ name: 'name', type: 'string' },
     	{ name: 'description', type: 'string' },
     	{ name: 'uom_id', type: 'int' },
+    	{ name: 'uom_name', type: 'string' },
     	{ name: 'amount', type: 'string' },
     	{ name: 'contact_id', type: 'int' },
     	{ name: 'contact_name', type: 'string' },
@@ -30,9 +31,11 @@ Ext.define('AM.model.Blanket', {
 		{ name: 'has_left_bar', type: 'boolean' }     ,
 		{ name: 'has_right_bar', type: 'boolean' }     ,
 		{ name: 'cropping_type', type: 'int' }     ,
+		{ name: 'cropping_type_text', type: 'string' }     ,
 		{ name: 'left_over_ac', type: 'string' }     ,
 		{ name: 'special', type: 'string' }     ,
 		{ name: 'application_case', type: 'int' }     ,
+		{ name: 'application_case_text', type: 'string' }     ,
 		
 		
 		

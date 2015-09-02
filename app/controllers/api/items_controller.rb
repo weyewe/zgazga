@@ -291,19 +291,19 @@ class Api::ItemsController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+      @total = Item.roll_blankets.joins(:exchange, :item_type, :uom).where{ 
                ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.count
     else
-      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+      @objects = Item.roll_blankets.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+      @total = Item.roll_blankets.where{ (id.eq selected_id)   
                               }.count 
     end
     
@@ -331,19 +331,19 @@ class Api::ItemsController < Api::BaseApiController
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Item.adhesive_rollers.joins(:exchange, :item_type, :uom).where{ 
+      @total = Item.bars.joins(:exchange, :item_type, :uom).where{ 
                ( sku  =~ query ) | 
         ( name =~ query ) | 
         ( description  =~ query  )  
                               }.count
     else
-      @objects = Item.adhesive_rollers.where{ (id.eq selected_id)  
+      @objects = Item.bars.where{ (id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = Item.adhesive_rollers.where{ (id.eq selected_id)   
+      @total = Item.bars.where{ (id.eq selected_id)   
                               }.count 
     end
     

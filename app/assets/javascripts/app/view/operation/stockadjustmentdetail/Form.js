@@ -42,6 +42,10 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 					mapping : 'name'
 				},
 				{
+					name : 'uom_name',
+					mapping : 'uom_name'
+				},
+				{
 					name : 'item_id',
 					mapping : "id"
 				}, 
@@ -124,8 +128,9 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 					getInnerTpl: function(){
 						return  	'<div data-qtip="{item_name}">' +  
 												'<div class="combo-name">'  + 
-															" ({item_name}) " 		+ "<br />" 	 + 
-															'{item_sku}' 			+  
+															"Name : {item_name} " 		+ "<br />" 	 + 
+															'SKU  : {item_sku}' 			+  
+															'UoM  : {uom_name}' 			+  
 												 "</div>" +  
 						 					'</div>';
 					}

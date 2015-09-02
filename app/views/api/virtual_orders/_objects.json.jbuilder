@@ -13,6 +13,7 @@ json.virtual_orders objects do |object|
 	end
 	
 	json.is_confirmed 			 object.is_confirmed
+	json.description 			 object.description
 	
 	json.contact_name 			object.contact.name 
 	json.contact_id 				object.contact.id 

@@ -3,6 +3,8 @@ json.blankets objects do |object|
 	json.id     object.id  
 	json.sku    object.sku
 	json.name    object.name
+	json.uom_id    object.uom_id
+	json.uom_name 	object.uom.name
 	json.amount    object.amount
 	json.description    object.description
 	json.contact_id     object.contact_id  
@@ -43,9 +45,23 @@ json.blankets objects do |object|
 	json.has_left_bar     object.has_left_bar  
 	json.has_right_bar    object.has_right_bar  
 	json.cropping_type    object.cropping_type  
+	if object.cropping_type = CROPPING_TYPE[:normal]
+		json.cropping_type_text "Normal"
+	elsif object.cropping_type_text = CROPPING_TYPE[:special]
+		json.cropping_type_text "Special"
+	elsif object.cropping_type_text = CROPPING_TYPE[:none]
+		json.cropping_type_text "None"
+	end
 	json.left_over_ac     object.left_over_ac  
 	json.special    object.special  
 	json.application_case     object.application_case  
+	if object.application_case == APPLICATION_CASE[:sheetfed]
+		json.application_case_text "Sheetfed" 
+	elsif object.application_case == APPLICATION_CASE[:web]
+		json.application_case_text "Web" 
+	elsif object.application_case == APPLICATION_CASE[:both]
+		json.application_case_text "Both" 
+	end
 end
 
 

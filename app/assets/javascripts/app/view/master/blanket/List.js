@@ -10,7 +10,9 @@ Ext.define('AM.view.master.blanket.List' ,{
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Sku', dataIndex: 'sku'},
 			{ header: 'Name', dataIndex: 'name'},
+			{ header: 'Description', dataIndex: 'description'},
 			{ header: 'QTY', dataIndex: 'amount'},
+			{ header: 'UoM', dataIndex: 'uom_name'},
 			{ header: 'AC', dataIndex: 'ac'},	
 			{ header: 'AR', dataIndex: 'ar'},
 			{ header: 'Thickness', dataIndex: 'thickness'},
@@ -21,10 +23,8 @@ Ext.define('AM.view.master.blanket.List' ,{
 			{ header: 'Bar1', dataIndex: 'left_bar_item_name'},
 			{ header: 'Bar2', dataIndex: 'right_bar_item_name'},
 			{ header: 'Customer', dataIndex: 'contact_name'},
-			{ header: 'Application', dataIndex: 'application_case'},
-			{ header: 'Cropping', dataIndex: 'cropping_type'},
-			{ header: 'AC', dataIndex: 'ac'},
-			{ header: 'AR', dataIndex: 'ar'},
+			{ header: 'Application', dataIndex: 'application_case_text'},
+			{ header: 'Cropping', dataIndex: 'cropping_type_text'},
 		];
 
 		this.addObjectButton = new Ext.Button({

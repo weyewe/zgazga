@@ -2,7 +2,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
   belongs_to :blanket_order
   has_many :blanket_warehouse_mutation_details
   validates_presence_of :blanket_order_id
-  validates_presence_of :warehouse_from_id
+  # validates_presence_of :warehouse_from_id
   validates_presence_of :warehouse_to_id
   validates_presence_of :mutation_date
   validate :valid_warehouse_from_id_and_warehouse_to_id
@@ -55,10 +55,11 @@ class BlanketWarehouseMutation < ActiveRecord::Base
   def self.create_object(params)
     new_object = self.new
     new_object.blanket_order_id = params[:blanket_order_id]
-    new_object.warehouse_from_id = params[:warehouse_from_id]
+    # new_object.warehouse_from_id = params[:warehouse_from_id]
     new_object.warehouse_to_id = params[:warehouse_to_id]
     new_object.mutation_date = params[:mutation_date] 
     if new_object.save
+      new_object.warehouse_from_id = new_object.blanket_order.warehouse_id
       new_object.code = "BWM-" + new_object.id.to_s  
       new_object.save
     end
@@ -78,9 +79,13 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     end
     
     self.blanket_order_id = params[:blanket_order_id]
-    self.warehouse_from_id = params[:warehouse_from_id]
+    # self.warehouse_from_id = params[:warehouse_from_id]
     self.warehouse_to_id = params[:warehouse_to_id]
     self.mutation_date = params[:mutation_date] 
+    if self.save
+      self.warehouse_from_id = self.blanket_order.warehouse_id
+      self.save
+    end
     return self
   end
   
@@ -112,7 +117,7 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     
     self.blanket_warehouse_mutation_details.each do |bwmd|
       if bwmd.quantity > bwmd.blanket_order_detail.undelivered_quantity
-        self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk blanket #{bwmd.blanket_order_detail.blanket.name}")
+        self.errors.add(:generic_errors, "Tidak cukup kuantitas dari warehouse sumber untuk blanket #{bwmd.blanket_order_detail.blanket.name}")
         return self 
       end
       item_in_warehouse_from = WarehouseItem.find_or_create_object(

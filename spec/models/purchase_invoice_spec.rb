@@ -200,14 +200,18 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
         :invoice_date => @invoice_date_1,
         :nomor_surat => @nomor_surat_1,
         :description => @description_1,
-        :due_date => @due_date_1
+        :due_date => @due_date_1,
+        :is_taxable => false
         )
     end
     
     it "should create PurchaseInvoice" do
       @pi.should be_valid
       @pi.errors.size.should == 0
-      
+    end
+    
+    it "tax_value should == 10" do
+      @pi.tax.should == 10
     end
     
     it "should update PurchaseInvoice" do
@@ -319,6 +323,7 @@ it "should not create PurchaseInvoice if invoice_date is not valid" do
         it "should create TransactionData" do
           TransactionData.count.should == 2
           TransactionData.first.is_confirmed == true
+          
         end
         
         it "should set Purchase_receival is_invoice_completed to true" do

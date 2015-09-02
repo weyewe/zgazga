@@ -66,10 +66,13 @@ Ext.define('AM.view.master.rollertype.List' ,{
 		this.editObjectButton.enable();
 		this.deleteObjectButton.enable();
 		
+		selectedObject = this.getSelectedObject();
 	},
 
 	disableRecordButtons: function() {
 		this.editObjectButton.disable();
-		this.deleteObjectButton.disable();
+
+		selectedObject = this.getSelectedObject();
+ 
 	}
 });

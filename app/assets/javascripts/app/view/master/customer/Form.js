@@ -88,6 +88,26 @@ Ext.define('AM.view.master.customer.Form', {
 		
 		var me = this; 
 		
+		var localJsonTaxCodeCase = Ext.create(Ext.data.Store, {
+			type : 'array',
+			storeId : 'tax_code_case',
+			fields	: [ 
+				{ name : "tax_code_case"}, 
+				{ name : "tax_code_case_text"}  
+			], 
+			data : [
+				{ tax_code_case : "01", tax_code_case_text : "01"},
+				{ tax_code_case : "02", tax_code_case_text : "02"},
+				{ tax_code_case : "03", tax_code_case_text : "03"},
+				{ tax_code_case : "04", tax_code_case_text : "04"},
+				{ tax_code_case : "05", tax_code_case_text : "05"},
+				{ tax_code_case : "06", tax_code_case_text : "06"},
+				{ tax_code_case : "07", tax_code_case_text : "07"},
+				{ tax_code_case : "08", tax_code_case_text : "08"},
+				{ tax_code_case : "09", tax_code_case_text : "09"}
+			] 
+		});
+		
 		var remoteJsonStoreContactGroup = Ext.create(Ext.data.JsonStore, {
 			storeId : 'member_search',
 			fields	: [
@@ -142,10 +162,26 @@ Ext.define('AM.view.master.customer.Form', {
 							name : 'is_taxable' 
 						}, 
 						{
-							xtype: 'textfield',
-							fieldLabel : 'Tax Code',
+							fieldLabel: 'Type',
+							xtype: 'combo',
+							queryMode: 'remote',
+							forceSelection: true, 
+							displayField : 'tax_code_case_text',
+							valueField : 'tax_code_case',
+							pageSize : 5,
+							minChars : 1, 
+							allowBlank : false, 
+							triggerAction: 'all',
+							store : localJsonTaxCodeCase , 
+							listConfig : {
+								getInnerTpl: function(){
+									return  	'<div data-qtip="{tax_code_case_text}">' +  
+															'<div class="combo-name">{tax_code_case_text}</div>' +  
+									 					'</div>';
+								}
+							},
 							name : 'tax_code' 
-						}, 
+				},
 						{
 							xtype: 'textfield',
 							fieldLabel : 'Nama Faktur Pajak',
@@ -307,10 +343,25 @@ Ext.define('AM.view.master.customer.Form', {
 		});
 	},
 	
+	setSelectedTaxCode: function( tax_code ){ 
+		var comboBox = this.down('form').getForm().findField('tax_code'); 
+		var me = this; 
+		var store = comboBox.store; 
+		store.load({
+			params: {
+				selected_id : tax_code 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( tax_code );
+			}
+		});
+	},
+	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);
-		
+		me.setSelectedTaxCode( record.get("tax_code")  ) ;
 		me.setSelectedContactGroup( record.get("contact_group_id")  ) ;
 	}
 });

@@ -20,8 +20,8 @@ Ext.define('AM.view.master.blanket.Form', {
 				{ name : "is_bar_required_text"}  
 			], 
 			data : [
-				{ is_bar_required : 0, is_bar_required_text : "Non Bar"},
-				{ is_bar_required : 1, is_bar_required_text : "With Bar"},
+				{ is_bar_required : false, is_bar_required_text : "Non Bar"},
+				{ is_bar_required : true, is_bar_required_text : "With Bar"},
 			] 
 		});
 		
@@ -107,7 +107,33 @@ Ext.define('AM.view.master.blanket.Form', {
 			autoLoad : false 
 		});
 		
-	
+		var remoteJsonStoreAdhesive2 = Ext.create(Ext.data.JsonStore, {
+			storeId : 'item_adhesive_search',
+			fields	: [
+	 				{
+						name : 'item_adhesive_name',
+						mapping : "name"
+					},
+					{
+						name : 'item_adhesive_sku',
+						mapping : "sku"
+					},
+					{
+						name : 'item_adhesive_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_item_adhesive_blankets',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
 		var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
 		storeId : 'contact_search',
@@ -298,7 +324,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					minChars : 1, 
 					allowBlank : true, 
 					triggerAction: 'all',
-					store : remoteJsonStoreAdhesive , 
+					store : remoteJsonStoreAdhesive2 , 
 					listConfig : {
 						getInnerTpl: function(){
 							return  	'<div data-qtip="{item_adhesive_name}">' + 
@@ -396,6 +422,7 @@ Ext.define('AM.view.master.blanket.Form', {
 			data : [
 				{ cropping_type : 1, cropping_type_text : "Normal"},
 				{ cropping_type : 2, cropping_type_text : "Special"},
+				{ cropping_type : 3, cropping_type_text : "None"},
 			] 
 		});
 		
@@ -403,6 +430,34 @@ Ext.define('AM.view.master.blanket.Form', {
 		
 		
 		var remoteJsonStoreBar = Ext.create(Ext.data.JsonStore, {
+			storeId : 'item_bar_search',
+			fields	: [
+	 				{
+						name : 'item_bar_name',
+						mapping : "name"
+					},
+					{
+						name : 'item_bar_sku',
+						mapping : "sku"
+					},
+					{
+						name : 'item_bar_id',
+						mapping : 'id'
+					}
+			],
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_item_bars',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
+		
+		var remoteJsonStoreBar2 = Ext.create(Ext.data.JsonStore, {
 			storeId : 'item_bar_search',
 			fields	: [
 	 				{
@@ -476,7 +531,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					minChars : 1, 
 					allowBlank : true, 
 					triggerAction: 'all',
-					store : remoteJsonStoreBar , 
+					store : remoteJsonStoreBar2 , 
 					listConfig : {
 						getInnerTpl: function(){
 							return  	'<div data-qtip="{item_bar_name}">' + 
@@ -784,10 +839,11 @@ Ext.define('AM.view.master.blanket.Form', {
 		me.setLoading(true);
 		me.setSelectedMachine( record.get("machine_id")  ) ;
 		me.setSelectedContact( record.get("contact_id")  ) ;
+		me.setSelectedRollBlanket( record.get("roll_blanket_item_id")  ) ;
 		me.setSelectedUom( record.get("uom_id")  ) ;
 		me.setSelectedAdhesive( record.get("adhesive_id")  ) ;
 		me.setSelectedAdhesive2( record.get("adhesive2_id")  ) ;
-		me.setSelectedRollBlanket( record.get("roll_blanket_item_id")  ) ;
+	
 		me.setSelectedLeftBar( record.get("left_bar_item_id")  ) ;
 		me.setSelectedRightBar( record.get("right_bar_item_id")  ) ;
 		me.setSelectedCroppingType( record.get("cropping_type")  ) ;

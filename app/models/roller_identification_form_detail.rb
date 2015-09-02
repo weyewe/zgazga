@@ -59,6 +59,13 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   
   def self.create_object(params)
     new_object = self.new
+    rif = RollerIdentificationForm.find_by_id(params[:roller_identification_form_id])
+    if not rif.nil?
+      if rif.is_confirmed?
+        new_object.errors.add(:generic_errors, "Sudah di konfirmasi")
+        return new_object 
+      end
+    end
     new_object.roller_identification_form_id = params[:roller_identification_form_id]
     new_object.material_case = params[:material_case]
     new_object.core_builder_id = params[:core_builder_id]
@@ -84,6 +91,10 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   end
   
   def update_object(params)
+    if self.roller_identification_form.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.roller_identification_form_id = params[:roller_identification_form_id]
     self.detail_id = params[:detail_id]
     self.material_case = params[:material_case]
@@ -109,6 +120,10 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.roller_identification_form.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah di konfirmasi")
+      return self 
+    end
     self.destroy
     return self
   end

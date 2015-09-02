@@ -84,6 +84,10 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 					mapping : "code"
 				} ,
 				{
+					name : 'recovery_order_warehouse_name',
+					mapping : "warehouse_name"
+				} ,
+				{
 					name : 'roller_identification_form_nomor_disasembly',
 					mapping : "roller_identification_form_nomor_disasembly"
 				} ,
@@ -155,33 +159,17 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 	    												'<div class="combo-name">{recovery_order_code}</div>' + 
 	    												'<div class="combo-name">Code RIF : {roller_identification_form_code}</div>' + 
 	    												'<div class="combo-name">No Diss : {roller_identification_form_nomor_disasembly}</div>' + 
+	    												'<div class="combo-name">Warehouse : {recovery_order_warehouse_name}</div>' + 
 	    						 					'</div>';
 	    					}
 	    				},
 	    				name : 'recovery_order_id' 
     				},
     				{
-	    				fieldLabel: 'Warehouse From',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'warehouse_name',
-	    				valueField : 'warehouse_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreWarehouseSource , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{warehouse_name}">' + 
-	    												'<div class="combo-name">{warehouse_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {warehouse_description}</div>' + 
-	    						 					'</div>';
-	    					}
-	    				},
-	    				name : 'warehouse_from_id' 
-    				},
+				        xtype: 'displayfield',
+				        name : 'warehouse_from_name',
+				        fieldLabel: 'Warehouse From'
+    		  	},
     				{
 	    				fieldLabel: 'Warehouse To',
 	    				xtype: 'combo',
@@ -294,7 +282,7 @@ Ext.define('AM.view.operation.rollerwarehousemutation.Form', {
 		me.setLoading(true);
 		
 		me.setSelectedRecoveryOrder( record.get("recovery_order_id")  ) ;
-		me.setSelectedWarehouseSource( record.get("warehouse_from_id")  ) ;
+		// me.setSelectedWarehouseSource( record.get("warehouse_from_id")  ) ;
 		me.setSelectedWarehouseTarget( record.get("warehouse_to_id")  ) ;
  
 	}

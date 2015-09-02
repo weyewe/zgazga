@@ -173,11 +173,11 @@ Ext.define('AM.view.operation.recoveryorder.Form', {
 		    				},
 		    				name : 'warehouse_id' 
 		    			},
-	    	      {
-	    					xtype: 'numberfield',
-	    					name : 'amount_received',
-	    					fieldLabel: 'Quantity',
-	    				},
+	    	   //   {
+	    				// 	xtype: 'displayfield',
+	    				// 	name : 'amount_received',
+	    				// 	fieldLabel: 'Quantity',
+	    				// },
 			]
     }];
 

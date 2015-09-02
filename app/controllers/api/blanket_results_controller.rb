@@ -2,17 +2,19 @@ class Api::BlanketResultsController < Api::BaseApiController
   def index
      
     
-    query = BlanketOrderDetail.joins(:blanket_order, :blanket).where{ blanket_order.is_confirmed.eq true }
+    query = BlanketOrderDetail.joins(:blanket_order, :blanket =>[:item]).where{ 
+      blanket_order.is_confirmed.eq true 
+    }
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%" 
       
       query = query.where{
         (
-          ( blanket.contact.name  =~ livesearch ) | 
-          ( blanket.machine.name =~ livesearch ) | 
-          ( blanket.sku  =~ livesearch  )  | 
-          ( blanket.name  =~ livesearch  )  
+          ( blanket.item.sku  =~ livesearch  )  | 
+          ( blanket_order.production_no  =~ livesearch  )  | 
+          ( blanket_order.code =~ livesearch  )  | 
+          ( blanket.item.name  =~ livesearch  )  
         ) 
       }  
     end

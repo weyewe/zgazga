@@ -153,7 +153,9 @@ Ext.define('AM.controller.BlanketOrders', {
  
 		if( record ){
 			record.set( values );
-			  
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});   
 			
 			form.setLoading(true);
 			record.save({
@@ -183,7 +185,9 @@ Ext.define('AM.controller.BlanketOrders', {
 			console.log("This is the new record")
 			var me  = this; 
 			var newObject = new AM.model.BlanketOrder( values ) ; 
-			
+			form.query('checkbox').forEach(function(checkbox){
+				newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});   
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 

@@ -8,13 +8,21 @@ Ext.define('AM.view.operation.receivabledetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 		 
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_service_text', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+			{
+				xtype : 'templatecolumn',
+				text : "Penerimaan",
+				flex : 3,
+				tpl : 'No Bukti RV: <br /><b>{receipt_voucher_no_bukti}</b>' + '<br />' + '<br />' +
+						'Jumlah Diterima: <br /><b>{amount_paid}</b>' + '<br />' + '<br />' +
+							'Rate forex:<br />  <b>{rate}</b>'   
+			},
+			
+			{
+				xtype : 'templatecolumn',
+				text : "Jumlah",
+				flex : 3,
+				tpl : 'Pengurangan Piutang: <br /><b>{amount}</b>'    
+			},
 			
 			 
 		];
@@ -41,7 +49,7 @@ Ext.define('AM.view.operation.receivabledetail.List' ,{
 		});
 
 
-		this.tbar = [this.addObjectButton,  this.editObjectButton, this.deleteObjectButton ]; 
+		this.tbar = []; 
 		this.bbar = Ext.create("Ext.PagingToolbar", {
 			store	: this.store, 
 			displayInfo: true,

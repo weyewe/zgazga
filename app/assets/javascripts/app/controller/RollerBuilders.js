@@ -135,6 +135,10 @@ Ext.define('AM.controller.RollerBuilders', {
 			var me  = this; 
 			var newObject = new AM.model.RollerBuilder( values ) ;
 			
+			form.query('checkbox').forEach(function(checkbox){
+				newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 

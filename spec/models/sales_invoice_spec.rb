@@ -58,7 +58,7 @@ describe SalesInvoice do
     :sic_contact_no => "123242133",
     :email => "email2@email.com",
     :is_taxable => true,
-    :tax_code => TAX_CODE[:code_01],
+    :tax_code => TAX_CODE[:code_09],
     :contact_type => CONTACT_TYPE[:supplier],
     :default_payment_term => 30,
     :nama_faktur_pajak => "nama_faktur_pajak_1",
@@ -239,6 +239,10 @@ it "should not create SalesInvoice if invoice_date is not valid" do
       
     end
     
+    it "tax_value should == 10" do
+      @si.tax.should == 10
+    end
+    
     it "should update SalesInvoice" do
       @si.update_object(
         :delivery_order_id => @dor.id,
@@ -344,7 +348,7 @@ it "should not create SalesInvoice if invoice_date is not valid" do
             )
           td.count.should == 1
           TransactionDataDetail.where(:transaction_data_id => td.first.id).each do |x|
-            puts x.inspect
+            puts x.description + "   " + x.amount.to_s
           end
           td.first.is_confirmed.should == true
         end

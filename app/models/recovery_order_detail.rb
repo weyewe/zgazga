@@ -42,12 +42,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
     if self.persisted?
        if itemcount > 1
          self.errors.add(:roller_identification_form_detail_id, "Item sudah terpakai")
-      return self 
+         return self 
        end
     else
        if itemcount > 0
          self.errors.add(:roller_identification_form_detail_id, "Item sudah terpakai")
-      return self 
+         return self 
        end
     end
   end  
@@ -79,11 +79,16 @@ class RecoveryOrderDetail < ActiveRecord::Base
     new_object.roller_builder_id = params[:roller_builder_id]
     new_object.core_type_case = params[:core_type_case]
     if new_object.save
+       new_object.update_recovery_order_amount_received(:recovery_order_id => new_object.recovery_order_id,:amount => 1)
     end
     return new_object
   end
   
   def update_object(params)
+    if self.recovery_order.is_confirmed == true
+      self.errors.add(:generic,"Sudah di confirm")
+      return self
+    end
     self.roller_identification_form_detail_id = params[:roller_identification_form_detail_id]
     self.roller_builder_id = params[:roller_builder_id]
     self.core_type_case = params[:core_type_case]
@@ -93,6 +98,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
   end
   
   def delete_object
+    if self.recovery_order.is_confirmed == true
+      self.errors.add(:generic,"Sudah di confirm")
+      return self
+    end
+    self.update_recovery_order_amount_received(:recovery_order_id => self.recovery_order_id ,:amount => -1)
     self.destroy
     return self
   end
@@ -168,7 +178,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
         :item_id => self.roller_builder.compound_id) 
     if (compound_in_warehouse.amount.to_i - self.compound_usage) < 0 
         self.errors.add(:generic_errors, 
-        "Stock quantity Compound #{self.roller_builder.compound.name} kurang dari #{self.compound_usage}")
+        "Stock quantity Compound SKU #{self.roller_builder.compound.sku} #{self.roller_builder.compound.name} kurang dari #{self.compound_usage}")
         return self 
     end 
     
@@ -179,7 +189,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :item_id => self.compound_under_layer_id) 
       if (compound_under_layer_in_warehouse.amount.to_i - self.compound_under_layer_usage) < 0 
           self.errors.add(:generic_errors, 
-          "Stock quantity Compound #{self.compound_under_layer.name} kurang dari #{self.compound_under_layer_usage}")
+          "Stock quantity Compound Underlayer SKU #{self.compound_under_layer.sku} #{self.compound_under_layer.name} kurang dari #{self.compound_under_layer_usage}")
           return self 
       end 
     end
@@ -196,7 +206,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :item_id => core_id) 
     if (core_in_warehouse.amount.to_i - self.compound_usage) < 0 
       self.errors.add(:generic_errors, 
-      "Stock quantity Compound #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
+      "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
       return self 
     end       
     
@@ -207,7 +217,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :item_id => rad.item_id) 
       if (accessories_in_warehouse.amount.to_i - rad.amount) < 0 
         self.errors.add(:generic_errors, 
-        "Stock quantity Accessories #{accessories_in_warehouse.item.name} kurang dari #{rad.amount}")
+        "Stock quantity Accessories SKU #{accessories_in_warehouse.item.sku} #{accessories_in_warehouse.item.name} kurang dari #{rad.amount}")
         return self 
       end  
     end
@@ -258,13 +268,38 @@ class RecoveryOrderDetail < ActiveRecord::Base
       elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
         core_id = self.roller_identification_form_detail.core_builder.used_core_item.item.id
       end
-      update_warehouse_item_amount(
-        :item_id => core_id,
-        :mutation_date => self.finished_date,
-        :case_addition =>ADJUSTMENT_STATUS[:deduction],
-        :amount => self.compound_usage,
-        )
-        
+      
+      if self.recovery_order.roller_identification_form.is_in_house == true
+        update_warehouse_item_amount(
+          :item_id => core_id,
+          :mutation_date => self.finished_date,
+          :case_addition =>ADJUSTMENT_STATUS[:deduction],
+          :amount => self.compound_usage,
+          )
+      else
+        item_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => core_id)
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => item_in_warehouse.id
+          )
+        new_stock_mutation = CustomerStockMutation.create_object(
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :customer_item_id => customer_item.id,
+          :amount => 1,  
+          :status => ADJUSTMENT_STATUS[:deduction
+          ],  
+          :mutation_date => self.finished_date ,  
+          :warehouse_id => self.recovery_order.warehouse_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => core_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.recovery_order.code
+          ) 
+      end
       # add roller
       roller_id = 0
       if self.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
@@ -334,6 +369,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     if not self.is_finished? 
       self.errors.add(:generic_errors, "Belum selesai")
+      return self 
+    end
+    
+    if RollerWarehouseMutation.where(:recovery_order_id => self.recovery_order_id).count > 0 
+      self.errors.add(:generic_errors, "Sudah ada pemindahan roller warehouse mutation")
       return self 
     end
     
@@ -449,8 +489,6 @@ class RecoveryOrderDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah finish")
       return self 
     end
-    
-
     
     # self.ensure_compound_batch_and_amount_is_valid
     return self if self.errors.size != 0 
@@ -611,6 +649,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
         elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
           core_avg_price = self.roller_identification_form_detail.core_builder.used_core_item.item.avg_price
       end
+      self.core_cost = core_avg_price
       self.total_cost = core_avg_price + self.compound_cost + self.accessories_cost
     else
       self.total_cost = self.compound_cost + self.accessories_cost

@@ -7,10 +7,10 @@ Ext.define('AM.view.operation.recoveryresultunderlayerdetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'Underlayer Batch', dataIndex: 'batch_instance_name', flex: 1},
-			{ header: 'Finish (meter)',  dataIndex: 'finish_amount', flex: 1},
-    		{ header: 'Reject (meter)',  dataIndex: 'reject_amount', flex: 1},
-    		{ header: 'Defect (meter)',  dataIndex: 'defect_amount', flex: 2},  
+			{ header: 'Compound Underlayer Batch', dataIndex: 'batch_instance_name', flex: 1},
+			{ header: 'Finish (kg)',  dataIndex: 'finish_amount', flex: 1},
+    		{ header: 'Reject (kg)',  dataIndex: 'reject_amount', flex: 1},
+    		{ header: 'Defect (kg)',  dataIndex: 'defect_amount', flex: 2},  
 		];
 		
 

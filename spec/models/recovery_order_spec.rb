@@ -383,6 +383,11 @@ describe RecoveryOrder do
         @rod.should be_valid
       end
       
+      it "RecoveryOrder amount_received should = 1" do
+        @ro.reload
+        @ro.amount_received.should == 1
+      end
+      
       context "Confirm RecoveryOrder" do
         before(:each) do 
           @ro.confirm_object(:confirmed_at => DateTime.now)

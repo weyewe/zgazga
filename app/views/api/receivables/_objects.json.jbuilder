@@ -11,7 +11,7 @@ json.receivables objects do |object|
     json.exchange_rate_amount 	object.exchange_rate_amount 
     json.contact_id 	object.contact_id 
     json.contact_name	object.contact.name 
-    json.due_date 	object.due_date 
+    json.due_date 						format_date_friendly( 	object.due_date ) 
     json.pending_clearence_amount 	object.pending_clearence_amount 
     json.is_completed 	object.is_completed 
 end

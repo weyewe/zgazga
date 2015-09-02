@@ -688,12 +688,11 @@ ACCOUNT_CODE = {
     :purchase_down_payment_journal => 190,
     :sales_down_payment_allocation_journal  => 200,
     :purchase_down_payment_allocation_journal  => 210,
-
     :savings_account => 220,
     :membership_savings_account => 230,
     :locked_savings_account => 240,
     :memorial_general => 250,
-    
+    :recovery_order_journal => 260,
     :payable_migration_journal => 666,
     :receivable_migration_journal => 667,
     

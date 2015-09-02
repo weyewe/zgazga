@@ -184,7 +184,9 @@ Ext.define('AM.controller.PaymentVouchers', {
  
 		if( record ){
 			record.set( values );
-			  
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});  
 			
 			form.setLoading(true);
 			record.save({
@@ -218,6 +220,9 @@ Ext.define('AM.controller.PaymentVouchers', {
 			// learnt from here
 			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
 			// form.mask("Loading....."); 
+			form.query('checkbox').forEach(function(checkbox){
+				newObject.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});  
 			form.setLoading(true);
 			newObject.save({
 				success: function(record){
@@ -463,14 +468,38 @@ Ext.define('AM.controller.PaymentVouchers', {
 
 
   deleteObject: function() {
-    var record = this.getList().getSelectedObject();
-
+   var record = this.getList().getSelectedObject();
+		if(!record){return;} 
+		var list  = this.getList();
+		list.setLoading(true); 
+		
     if (record) {
-      var store = this.getPaymentVouchersStore();
-			store.remove(record);
-			store.sync( );
- 
-			this.getList().query('pagingtoolbar')[0].doRefresh();
+			record.destroy({
+				success : function(record){
+					list.setLoading(false);
+					// list.fireEvent('deleted');	
+					// this.getList().query('pagingtoolbar')[0].doRefresh();
+					// console.log("Gonna reload the shite");
+					// this.getPurchaseOrdersStore.load();
+					list.getStore().load();
+				},
+				failure : function(record,op ){
+					list.setLoading(false);
+					
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					
+					if( errors["generic_errors"] ){
+						Ext.MessageBox.show({
+						           title: 'DELETE FAIL',
+						           msg: errors["generic_errors"],
+						           buttons: Ext.MessageBox.OK, 
+						           icon: Ext.MessageBox.ERROR
+						       });
+					}
+					
+				}
+			});
     }
 
   },

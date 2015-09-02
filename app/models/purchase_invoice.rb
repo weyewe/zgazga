@@ -49,10 +49,11 @@ class PurchaseInvoice < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.due_date = params[:due_date]
     if new_object.save  
-    new_object.exchange_id = new_object.purchase_receival.purchase_order.exchange_id
-    new_object.is_taxable =  new_object.purchase_receival.purchase_order.contact.is_taxable   
-    new_object.code = "PI-" + new_object.id.to_s  
-    new_object.save
+      new_object.exchange_id = new_object.purchase_receival.purchase_order.exchange_id
+      new_object.is_taxable =  new_object.purchase_receival.purchase_order.contact.is_taxable   
+      new_object.code = "PI-" + new_object.id.to_s  
+      new_object.save
+      new_object.select_tax
     end
     return new_object
   end
@@ -75,7 +76,8 @@ class PurchaseInvoice < ActiveRecord::Base
       
     self.exchange_id = self.purchase_receival.purchase_order.exchange_id
     self.is_taxable =  self.purchase_receival.purchase_order.contact.is_taxable   
-      self.save
+    self.save
+    self.select_tax
     end
     return self
   end
@@ -171,38 +173,35 @@ class PurchaseInvoice < ActiveRecord::Base
     return self
   end
   
-  def update_amount_payable(amount)
-    self.amount_payable = amount
-    if self.is_taxable = true
-      tax_value = 0
-      case self.purchase_receival.purchase_order.contact.tax_code # a_variable is the variable we want to compare
-      when TAX_CODE[:code_01]  
-        tax_value = TAX_VALUE[:code_01]
-      when TAX_CODE[:code_02] 
-        tax_value = TAX_VALUE[:code_02]
-      when TAX_CODE[:code_03] 
-        tax_value = TAX_VALUE[:code_03]
-      when TAX_CODE[:code_04] 
-        tax_value = TAX_VALUE[:code_04]
-      when TAX_CODE[:code_05] 
-        tax_value = TAX_VALUE[:code_05]
-      when TAX_CODE[:code_06] 
-        tax_value = TAX_VALUE[:code_06]
-      when TAX_CODE[:code_07] 
-        tax_value = TAX_VALUE[:code_07]
-      when TAX_CODE[:code_08] 
-        tax_value = TAX_VALUE[:code_08]
-      when TAX_CODE[:code_09] 
-        tax_value = TAX_VALUE[:code_09]
+  def select_tax()
+    tax_value = 0
+    if self.is_taxable == true
+      if self.purchase_receival.purchase_order.contact.is_taxable == true
+        case self.purchase_receival.purchase_order.contact.tax_code
+        when TAX_CODE[:code_01]  
+          tax_value = TAX_VALUE[:code_01]
+        when TAX_CODE[:code_02] 
+          tax_value = TAX_VALUE[:code_02]
+        when TAX_CODE[:code_03] 
+          tax_value = TAX_VALUE[:code_03]
+        when TAX_CODE[:code_04] 
+          tax_value = TAX_VALUE[:code_04]
+        when TAX_CODE[:code_05] 
+          tax_value = TAX_VALUE[:code_05]
+        when TAX_CODE[:code_06] 
+          tax_value = TAX_VALUE[:code_06]
+        when TAX_CODE[:code_07] 
+          tax_value = TAX_VALUE[:code_07]
+        when TAX_CODE[:code_08] 
+          tax_value = TAX_VALUE[:code_08]
+        when TAX_CODE[:code_09] 
+          tax_value = TAX_VALUE[:code_09]
+        end
       end
-      self.tax = tax_value
-      self.amount_payable += amount * tax_value / 100
     end
+    self.tax = tax_value 
     self.save
-    return self
   end
-  
-  
   
   def generate_payable
     Payable.create_object(

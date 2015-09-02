@@ -51,11 +51,10 @@ module AccountingService
         :amount              => (tax   * sales_invoice.exchange_rate_amount).round(2),
         :description => "Credit PPnkeluaran"
         )
-      puts td.errors.messages
     end
 #     Credit Revenue
     amount_revenue = 0 
-    amount_revenue = (sales_invoice.amount_receivable * sales_invoice.exchange_rate_amount).round(2)
+    amount_revenue = (taxable_amount * sales_invoice.exchange_rate_amount).round(2)
     
     TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
