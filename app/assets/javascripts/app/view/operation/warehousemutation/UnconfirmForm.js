@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.warehousemutation.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmwarehousemutationform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Unconfirm WarehouseMutation',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?

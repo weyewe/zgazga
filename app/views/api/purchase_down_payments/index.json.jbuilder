@@ -14,6 +14,7 @@ json.purchase_down_payments @objects do |object|
 		json.receivable_source_code		""
 		else
 		json.receivable_source_code		object.receivable.source_code
+		json.receivable_remaining_amount object.receivable.remaining_amount
 	end
 	json.payable_id		object.payable_id
 	if object.payable.nil?
@@ -21,7 +22,7 @@ json.purchase_down_payments @objects do |object|
 		else
 		json.payable_source_code		object.payable.source_code
 	end
-	
+
 	
 	json.code		object.code
 	json.down_payment_date	format_date_friendly( 	object.down_payment_date ) 

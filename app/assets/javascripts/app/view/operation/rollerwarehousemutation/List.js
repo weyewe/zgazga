@@ -9,11 +9,15 @@ Ext.define('AM.view.operation.rollerwarehousemutation.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Order No',  dataIndex: 'recovery_order_code', flex: 1},
-			{ header: 'Tanggal Mutasi', dataIndex: 'mutation_date', flex: 2 },
-		 	{ header: 'Warehouse From',  dataIndex: 'warehouse_from_name', flex: 1},
-			{ header: 'Warehouse To',  dataIndex: 'warehouse_to_name', flex: 1},
- 
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Tanggal Mutasi: <br />  <b>{mutation_date}</b>'  + '<br />' + '<br />' +
+							'Gudang Asal: <br /> <b>{warehouse_from_name}</b>'  + '<br />' + '<br />' +
+							'Gudang tujuan: <br /> <b>{warehouse_to_name}</b>'  + '<br />' + '<br />' +
+							'WorkOrder: <br /><b>{recovery_order_code}</b>'
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

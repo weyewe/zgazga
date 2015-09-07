@@ -24,19 +24,19 @@ module AccountingService
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
         :real_amount         => receipt_voucher.amount ,
-        :exchange_id         => receipt_voucher.exchange_id ,
+        :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
         :description => "Debit GBCHReceivable"
         )
       if receipt_voucher.biaya_bank > 0
-#     Credit GBCH for biaya bank
+#     Debit GBCH for biaya bank
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => receipt_voucher.cash_bank.exchange.gbch_receivable_id  ,
-          :entry_case          => NORMAL_BALANCE[:credit]     ,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
           :real_amount         => receipt_voucher.biaya_bank ,
-          :exchange_id         => receipt_voucher.exchange_id ,
-          :description => "Credit GBCHReceivable for BiayaBank"
+          :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
+          :description => "Debit GBCHReceivable for BiayaBank"
           )
       end
       
@@ -68,15 +68,15 @@ module AccountingService
         :description => "Debit CashBank"
         )
       if receipt_voucher.biaya_bank > 0
-#     Credit CashBank for biaya bank
+#     Debit CashBank for biaya bank
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => receipt_voucher.cash_bank.account_id  ,
-          :entry_case          => NORMAL_BALANCE[:credit]     ,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
           :real_amount         => receipt_voucher.biaya_bank ,
           :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
-          :description => "Credit CashBank for BiayaBank"
+          :description => "Debit CashBank for BiayaBank"
           )
       end
       
@@ -103,9 +103,9 @@ module AccountingService
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_administrasi_bank][:code]).id   ,
-        :entry_case          => NORMAL_BALANCE[:debit]      ,
+        :entry_case          => NORMAL_BALANCE[:credit]      ,
         :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
-        :description => "Debit BiayaBank"
+        :description => "Credit BiayaBank"
         ) 
     end
     
@@ -223,7 +223,7 @@ module AccountingService
       else
         biaya_pembulatan = receipt_voucher.pembulatan
       end
-      total = receipt_voucher.amount - (receipt_voucher.total_pph_23 + receipt_voucher.biaya_bank + biaya_pembulatan)
+      total = receipt_voucher.amount - (receipt_voucher.total_pph_23 - receipt_voucher.biaya_bank + biaya_pembulatan)
       #     Debit CashBank
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        

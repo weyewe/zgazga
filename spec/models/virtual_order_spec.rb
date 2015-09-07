@@ -174,7 +174,6 @@ describe VirtualOrder do
     end
     
     it "should create VirtualOrder" do
-      puts @vo.errors.messages
       @vo.errors.size.should == 0
       @vo.should be_valid
     end

@@ -94,9 +94,23 @@ class Closing < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di close")
       return self
     end
-    
+     if params[:closed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal Closing")
+      return self 
+    end  
     self.is_closed = true
     self.closed_at = params[:closed_at]
+    self.closing_details.each do |cd|
+       latest_exchange_rate = ExchangeRate.get_latest(
+          :ex_rate_date => self.end_date_period,
+          :exchange_id => cd.exchange_id
+        )
+      if latest_exchange_rate.nil?
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{cd.exchange.name} belum di input")
+        return self 
+      end
+    end
+    
     if self.save
       self.generate_valid_combs
       self.generate_valid_combs_for_non_children
@@ -308,12 +322,9 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = self.closing_details.where(
-      :exchange_id => cash_bank.exchange_id).first
-    
-    # latest_rate = ExchangeRate.get_latest( 
-    #   :ex_rate_date => end_transaction , 
-    #   :exchange_id => cash_bank.exchange_id  )
+    latest_rate = ExchangeRate.get_latest( 
+      :ex_rate_date => end_transaction , 
+      :exchange_id => cash_bank.exchange_id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -400,11 +411,9 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = self.closing_details.where(
-      :exchange_id => account_payable.id).first
-    # latest_rate = ExchangeRate.get_latest( 
-    #   :ex_rate_date => end_transaction , 
-    #   :exchange_id => account_payable.id  )
+    latest_rate = ExchangeRate.get_latest( 
+      :ex_rate_date => end_transaction , 
+      :exchange_id => account_payable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -491,11 +500,9 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = self.closing_details.where(
-      :exchange_id => account_receivable.id).first
-    # latest_rate = ExchangeRate.get_latest( 
-    #   :ex_rate_date => end_transaction , 
-    #   :exchange_id => account_receivable.id  )
+    latest_rate = ExchangeRate.get_latest( 
+      :ex_rate_date => end_transaction , 
+      :exchange_id => account_receivable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -582,11 +589,9 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = self.closing_details.where(
-      :exchange_id => gbch_payable.id).first
-    # latest_rate = ExchangeRate.get_latest( 
-    #   :ex_rate_date => end_transaction , 
-    #   :exchange_id => gbch_payable.id  )
+    latest_rate = ExchangeRate.get_latest( 
+      :ex_rate_date => end_transaction , 
+      :exchange_id => gbch_payable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -673,11 +678,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = self.closing_details.where(
-      :exchange_id => gbch_receivable.id).first
-    # latest_rate = ExchangeRate.get_latest( 
-    #   :ex_rate_date => end_transaction , 
-    #   :exchange_id => gbch_receivable.id  )
+    # latest_rate = self.closing_details.where(
+    #   :exchange_id => gbch_receivable.id).first
+    latest_rate = ExchangeRate.get_latest( 
+      :ex_rate_date => end_transaction , 
+      :exchange_id => gbch_receivable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 

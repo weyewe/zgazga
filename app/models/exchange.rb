@@ -107,6 +107,22 @@ class Exchange < ActiveRecord::Base
       self.errors.add(:generic_errors, "Currency sudah terpakai di CashBank")
       return self
     end
+    account_receivable = Account.find_by_id(self.account_receivable_id)
+    if not account_receivable.nil?
+      account_receivable.delete_object_base
+    end
+    account_payable = Account.find_by_id(self.account_payable_id)
+    if not account_payable.nil?
+      account_payable.delete_object_base
+    end
+    gbch_receivable = Account.find_by_id(self.gbch_receivable_id)
+    if not gbch_receivable.nil?
+      gbch_receivable.delete_object_base
+    end
+    gbch_payable = Account.find_by_id(self.gbch_payable)
+    if not gbch_payable.nil?
+      gbch_payable.delete_object_base
+    end
     self.destroy
     return self
   end

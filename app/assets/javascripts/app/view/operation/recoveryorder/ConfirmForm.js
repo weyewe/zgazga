@@ -27,17 +27,6 @@ Ext.define('AM.view.operation.recoveryorder.ConfirmForm', {
 					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-			 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Tanggal Transaksi',
-					name: 'transaction_datetime' 
-				},
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
-				},
 				{
 					xtype: 'datefield',
 					fieldLabel: 'Tanggal Konfirmasi',

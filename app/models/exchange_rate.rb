@@ -59,9 +59,11 @@ class ExchangeRate < ActiveRecord::Base
   end
   
   def self.get_latest( params )
+    ex_date = params[:ex_rate_date]
+    ex_id = params[:exchange_id]
     return self.where{
-      (ex_rate_date.lte params[:ex_rate_date]) &
-      (exchange_id.eq params[:exchange_id])
+      (ex_rate_date.lte ex_date) &
+      (exchange_id.eq ex_id)
       }.first
   end
   

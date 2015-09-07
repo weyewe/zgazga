@@ -150,6 +150,19 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 		});
 	},
 	
+	setExtraParamInPurchaseOrderDetailIdComboBox: function(purchase_order_id){  
+		var comboBox = this.down('form').getForm().findField('purchase_order_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.purchase_order_id =  purchase_order_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInPurchaseOrderDetailIdComboBox( record.get("purchase_order_id") ); 
+	},
+	
 	setComboBoxData : function( record){
 		var me = this; 
 		me.setLoading(true);

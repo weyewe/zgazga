@@ -100,22 +100,26 @@ class Api::PurchaseOrderDetailsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = PurchaseOrderDetail.joins(:purchase_order, :item => [:uom]).where{ 
+      query_code =  PurchaseOrderDetail.joins(:purchase_order, :item => [:uom]).where{ 
             ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )  
-      }.
-      page(params[:page]).
-      per(params[:limit]).
-      order("id DESC")
+            ( item.name =~ query ) | 
+            ( item.description  =~ query  )  | 
+            ( code  =~ query  )  
+      }
+      
+      if params[:purchase_order_id].present?
+        object = PurchaseOrder.find_by_id params[:purchase_order_id]
+        if not object.nil?  
+          query_code = query_code.where(:purchase_order_id => object.id )
+        end
+      end    
+      
+      @objects = query_code.
+                page(params[:page]).
+                per(params[:limit]).
+                order("id DESC")
                         
-      @total = PurchaseOrderDetail.joins(:purchase_order, :item => [:uom]).where{ 
-            ( item.sku  =~ query ) | 
-        ( item.name =~ query ) | 
-        ( item.description  =~ query  )  | 
-        ( code  =~ query  )   
-      }.count
+      @total = query_code.count
     else
       @objects = PurchaseOrderDetail.where{ 
               (id.eq selected_id)  

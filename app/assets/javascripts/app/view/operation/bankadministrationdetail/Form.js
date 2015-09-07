@@ -3,7 +3,7 @@ Ext.define('AM.view.operation.bankadministrationdetail.Form', {
   extend: 'Ext.window.Window',
   alias : 'widget.bankadministrationdetailform',
 
-  title : 'Add / Edit Memorial Detail',
+  title : 'Add / Edit BankAdministration Detail',
   layout: 'fit',
 	width	: 500,
   autoShow: true,  // does it need to be called?

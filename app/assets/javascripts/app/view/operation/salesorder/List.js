@@ -14,9 +14,6 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 			{ header: 'Customer',  dataIndex: 'contact_name' },
 			{ header: 'Currency',  dataIndex: 'exchange_name' },
 			{ header: 'Marketing',  dataIndex: 'employee_name' },
-			{ header: 'Status Konfirmasi',  dataIndex: 'is_confirmed' },
-			{ header: 'Tanggal Konfirmasi',  dataIndex: 'confirmed_at' }, 
-			
 			
 			// { header: 'Kode',  dataIndex: 'code', flex: 1},
 
@@ -37,13 +34,13 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 			
 			
  
-			// {
-			// 	xtype : 'templatecolumn',
-			// 	text : "Konfirmasi",
-			// 	flex : 3,
-			// 	tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-			// 				'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
-			// },
+			{
+				xtype : 'templatecolumn',
+				text : "Konfirmasi",
+				flex : 3,
+				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			},
 			
 			
 		];

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821081125) do
+ActiveRecord::Schema.define(version: 20150907150320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -849,6 +849,29 @@ ActiveRecord::Schema.define(version: 20150821081125) do
     t.datetime "updated_at"
   end
 
+  create_table "purchase_request_details", force: true do |t|
+    t.integer  "purchase_request_id"
+    t.string   "name"
+    t.string   "code"
+    t.string   "uom"
+    t.text     "description"
+    t.integer  "category"
+    t.decimal  "amount",              precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "purchase_requests", force: true do |t|
+    t.string   "code"
+    t.string   "nomor_surat"
+    t.integer  "employee_id"
+    t.datetime "request_date"
+    t.boolean  "is_confirmed", default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "receipt_voucher_details", force: true do |t|
     t.integer  "receipt_voucher_id"
     t.decimal  "amount",             precision: 14, scale: 2,  default: 0.0
@@ -1220,6 +1243,39 @@ ActiveRecord::Schema.define(version: 20150821081125) do
     t.datetime "updated_at"
   end
 
+  create_table "sales_quotation_details", force: true do |t|
+    t.string   "code"
+    t.integer  "sales_quotation_id"
+    t.integer  "item_id"
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.decimal  "rrp",                precision: 14, scale: 2, default: 0.0
+    t.decimal  "quotation_price",    precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                                default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sales_quotations", force: true do |t|
+    t.string   "code"
+    t.string   "version_no"
+    t.string   "nomor_surat"
+    t.integer  "contact_id"
+    t.text     "description"
+    t.datetime "quotation_date"
+    t.decimal  "total_quote_amount",       precision: 14, scale: 2, default: 0.0
+    t.decimal  "total_rrp_amount",         precision: 14, scale: 2, default: 0.0
+    t.decimal  "cost_saved",               precision: 14, scale: 2, default: 0.0
+    t.decimal  "percentage_saved",         precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_confirmed",                                      default: false
+    t.datetime "confirmed_at"
+    t.boolean  "is_approved",                                       default: false
+    t.boolean  "is_rejected",                                       default: false
+    t.boolean  "is_sales_order_confirmed",                          default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sections", force: true do |t|
     t.string   "name"
     t.string   "controller_name"
@@ -1347,6 +1403,35 @@ ActiveRecord::Schema.define(version: 20150821081125) do
     t.integer  "transaction_data_detail_id"
     t.integer  "exchange_id"
     t.decimal  "amount",                     precision: 18, scale: 11, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unit_conversion_details", force: true do |t|
+    t.integer  "unit_conversion_id"
+    t.integer  "item_id"
+    t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unit_conversion_orders", force: true do |t|
+    t.string   "code"
+    t.integer  "unit_conversion_id"
+    t.text     "description"
+    t.datetime "conversion_date"
+    t.integer  "warehouse_id"
+    t.boolean  "is_confirmed",       default: false
+    t.datetime "confirmed_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unit_conversions", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "target_item_id"
+    t.decimal  "target_amount",  precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -6,7 +6,7 @@ class CashBank < ActiveRecord::Base
   belongs_to :receipt_voucher
   belongs_to :exchange
   
-  has_one :account 
+  belongs_to :account 
   
   validate :valid_exchange_id
   
@@ -28,7 +28,8 @@ class CashBank < ActiveRecord::Base
     new_object.exchange_id = params[:exchange_id]
     new_object.code = params[:code]
     if new_object.save
-      new_object.account_id = Account.create_object_from_cash_bank(new_object).id
+      account_id = Account.create_object_from_cash_bank(new_object).id
+      new_object.account_id = account_id
       new_object.save
     end
     return new_object
@@ -73,8 +74,12 @@ class CashBank < ActiveRecord::Base
     self.is_bank = params[:is_bank]
     self.exchange_id = params[:exchange_id]
     if self.save
-      Account.where(:id => self.account_id).first.delete_object
-      self.account_id = Account.create_object_from_cash_bank(self).id
+      account = Account.find_by_id(self.account_id)
+      if not account.nil?
+        account.delete_object_base
+      end
+      account_id = Account.create_object_from_cash_bank(self).id
+      self.account_id = account_id
       self.save
     end
     return self
@@ -109,7 +114,10 @@ class CashBank < ActiveRecord::Base
       self.errors.add(:generic_errors,"Account CashBank sudah terpakai")
       return self
     end
-    Account.where(:id => self.account_id).first.delete_object
+    account = Account.find_by_id(self.account_id)
+    if not account.nil?
+      account.delete_object_base
+    end
     self.destroy
     return self
   end

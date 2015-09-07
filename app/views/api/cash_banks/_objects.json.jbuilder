@@ -9,5 +9,7 @@ json.cash_banks objects do |object|
 	
 	json.exchange_id object.exchange_id
 	json.exchange_name object.exchange.name 
+	json.account_id object.account_id 
+	json.account_name object.account.name 
 	 
 end

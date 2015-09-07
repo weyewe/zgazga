@@ -6,6 +6,7 @@ Ext.define('AM.model.PurchaseDownPayment', {
     	{ name: 'contact_name', type: 'string' },
     	{ name: 'receivable_id', type: 'int' },
     	{ name: 'receivable_source_code', type: 'string' },
+    	{ name: 'receivable_remaining_amount', type: 'string' },
     	{ name: 'payable_id', type: 'int' },
     	{ name: 'payable_source_code', type: 'string' },
     	{ name: 'code', type: 'string' },

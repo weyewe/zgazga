@@ -290,8 +290,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :contact_id => self.recovery_order.roller_identification_form.contact_id,
           :customer_item_id => customer_item.id,
           :amount => 1,  
-          :status => ADJUSTMENT_STATUS[:deduction
-          ],  
+          :status => ADJUSTMENT_STATUS[:deduction],  
           :mutation_date => self.finished_date ,  
           :warehouse_id => self.recovery_order.warehouse_id ,
           :warehouse_item_id => item_in_warehouse.id,

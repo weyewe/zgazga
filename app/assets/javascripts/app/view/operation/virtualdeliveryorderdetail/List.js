@@ -11,6 +11,15 @@ Ext.define('AM.view.operation.virtualdeliveryorderdetail.List' ,{
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'virtual_order_detail_item_sku', flex: 1},
 			{ header: 'Name',  dataIndex: 'virtual_order_detail_item_name', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "QTY",
+				flex : 3,
+				tpl : 	'Delivery QTY: <br />  <b>{amount}</b>'  + '<br />' + '<br />' +
+						'PendingDelivery QTY: <br /> <b>{virtual_order_detail_pending_delivery_amount}</b>'  + '<br />' + '<br />' +
+						'Restock QTY: <br /><b>{virtual_order_code}</b>'  + '<br />' + '<br />' +
+						'Waste QTY: <br /><b>{virtual_order_nomor_surat}</b>'  
+			},
     		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
     		{ header: 'PendingDelivery Qty',  dataIndex: 'virtual_order_detail_pending_delivery_amount', flex: 2},
 			 

@@ -84,9 +84,23 @@ class PurchaseDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end  
     if Closing.is_date_closed(self.down_payment_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
+    end
+    if self.exchange.is_base == false 
+       latest_exchange_rate = ExchangeRate.get_latest(
+          :ex_rate_date => self.down_payment_date,
+          :exchange_id => self.exchange_id
+          )
+      if latest_exchange_rate.nil?
+          self.errors.add(:generic_errors, "ExchangeRate untuk #{self.exchange.name} belum di input")
+          return self 
+      end
     end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
@@ -110,6 +124,7 @@ class PurchaseDownPayment < ActiveRecord::Base
       # generate journal
       AccountingService::CreatePurchaseDownPaymentJournal.create_confirmation_journal(self)  
     end
+    return self
   end
   
   def unconfirm_object

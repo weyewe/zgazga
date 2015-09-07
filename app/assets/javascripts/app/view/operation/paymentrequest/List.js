@@ -8,12 +8,17 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-			{ header: 'No Bukti', dataIndex: 'no_bukti', flex: 2 },
 			{ header: 'Code',  dataIndex: 'code', flex: 1},
-		 	{ header: 'Contact',  dataIndex: 'contact_name', flex: 2},
-		 	{ header: 'Description',  dataIndex: 'description', flex: 2},
-		 	{ header: 'Amount',  dataIndex: 'amount', flex: 2},
-			{ header: 'Request Date', dataIndex: 'request_date', flex: 2 },
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Tanggal Request: <b>{request_date}</b>' + '<br />' + '<br />' +
+						'No Bukti: <b>{no_bukti}</b>' + '<br />' + '<br />' +
+						'Contact: <b>{contact_name}</b>' + '<br />' + '<br />' +
+						'Account Payable: <b>{account_name}</b>' + '<br />' + '<br />' +
+						'<b>{description}</b>'   
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

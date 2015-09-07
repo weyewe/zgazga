@@ -296,7 +296,18 @@ Ext.define("AM.controller.Master", {
 					}
 				]
 			}, 
- 
+ 			{ 
+				text:'Unit Conversion', 
+				viewClass:'AM.view.master.UnitConversion', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'unit_conversions',
+						action : 'index'
+					}
+				]
+			}, 
 	 
  
  

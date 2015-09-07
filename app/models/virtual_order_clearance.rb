@@ -29,6 +29,7 @@ class VirtualOrderClearance < ActiveRecord::Base
     new_object = self.new
     new_object.virtual_delivery_order_id = params[:virtual_delivery_order_id]
     new_object.clearance_date = params[:clearance_date]
+    new_object.is_waste = params[:is_waste]
     if new_object.save  
     new_object.code = "VOC-" + new_object.id.to_s  
     new_object.save
@@ -48,6 +49,7 @@ class VirtualOrderClearance < ActiveRecord::Base
     end
     self.virtual_delivery_order_id = params[:virtual_delivery_order_id]
     self.clearance_date = params[:clearance_date]
+    self.is_waste = params[:is_waste]
     self.save
     return self
   end
@@ -81,6 +83,18 @@ class VirtualOrderClearance < ActiveRecord::Base
       return self 
     end    
     
+    if self.is_waste == true 
+      self.virtual_order_clearance_details.each do |vdod|
+      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.virtual_delivery_order.warehouse_id,:item_id => vdod.virtual_delivery_order_detail.item_id) 
+      if item_in_warehouse.amount < vdod.amount
+        self.errors.add(:generic_errors, "Amount #{vdod.virtual_delivery_order_detail.item.name} tidak mencukupi di gudang #{self.virtual_delivery_order.warehouse.name}")
+        return self
+      end
+    end
+    end
+    
+    
+
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -113,7 +127,7 @@ class VirtualOrderClearance < ActiveRecord::Base
       new_stock_mutation = StockMutation.create_object(
         :source_class => self.class.to_s, 
         :source_id => self.id ,  
-        :amount => vdod.virtual_delivery_order_detail.amount ,  
+        :amount => vdod.amount ,  
         :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.clearance_date ,  
         :item_id => vdod.virtual_delivery_order_detail.item_id,
@@ -121,36 +135,42 @@ class VirtualOrderClearance < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
-      
-      diffamountclear = vdod.virtual_delivery_order_detail.amount - vdod.amount
-      if diffamountclear > 0
+      if self.is_waste == true 
+        item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.virtual_delivery_order.warehouse_id,:item_id => vdod.virtual_delivery_order_detail.item_id)      
         new_stock_mutation = StockMutation.create_object(
-        :source_class => self.class.to_s, 
-        :source_id => self.id ,  
-        :amount => diffamountclear ,  
-        :status => ADJUSTMENT_STATUS[:deduction],  
-        :mutation_date => self.clearance_date ,  
-        :item_id => vdod.virtual_delivery_order_detail.item_id,
-        :item_case => ITEM_CASE[:ready],
-        :source_code => self.code
-        ) 
-      new_stock_mutation.stock_mutate_object
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :amount => vdod.amount ,  
+          :status => ADJUSTMENT_STATUS[:deduction],  
+          :mutation_date => self.clearance_date ,  
+          :warehouse_id => self.virtual_delivery_order.warehouse_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => vdod.virtual_delivery_order_detail.item_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.code
+          ) 
+        new_stock_mutation.stock_mutate_object
       end
-      vdod.virtual_delivery_order_detail.restock_amount = vdod.amount
-      vdod.virtual_delivery_order_detail.waste_amount = diffamountclear
-      vdod.waste_cogs = diffamountclear * vdod.virtual_delivery_order_detail.item.avg_price
-      total_waste_cogs += vdod.waste_cogs 
-      vdod.virtual_delivery_order_detail.is_reconciled = true
-      vdod.virtual_delivery_order_detail.save
+      
+      if self.is_waste == true 
+        vdod.virtual_delivery_order_detail.waste_amount += vdod.amount
+        vdod.waste_cogs = vdod.amount * vdod.virtual_delivery_order_detail.item.avg_price
+      else
+        vdod.virtual_delivery_order_detail.restock_amount += vdod.amount
+      end
       vdod.save
-      self.total_waste_cogs = total_waste_cogs
-      if self.virtual_delivery_order.virtual_delivery_order_details.where(
-        :is_reconciled => false
-        ).count == 0
-         self.virtual_delivery_order.is_reconciled = true
-         self.virtual_delivery_order.save
-      end
-      self.save
+      vdod.virtual_delivery_order_detail.save
+      total_waste_cogs += vdod.waste_cogs 
+      self.update_virtual_delivery_order_detail_reconcile(vdod.virtual_delivery_order_detail.id)
+    end
+    
+    self.total_waste_cogs = total_waste_cogs
+    self.save
+    if VirtualDeliveryOrder.find_by_id(self.virtual_delivery_order_id).virtual_delivery_order_details.where(
+      :is_reconciled => false
+      ).count == 0
+       self.virtual_delivery_order.is_reconciled = true
+       self.virtual_delivery_order.save
     end
   end
   
@@ -165,15 +185,25 @@ class VirtualOrderClearance < ActiveRecord::Base
         sm.reverse_stock_mutate_object  
         sm.delete_object
       end
-      vdod.virtual_delivery_order_detail.waste_amount = 0
+      if self.is_waste == true 
+        vdod.virtual_delivery_order_detail.waste_amount -= vdod.amount
+      else
+        vdod.virtual_delivery_order_detail.restock_amount -= vdod.amount
+      end
       vdod.waste_cogs = 0
       vdod.virtual_delivery_order_detail.is_reconciled = false
       vdod.virtual_delivery_order_detail.save
-      self.virtual_delivery_order.is_reconciled = false
-      self.virtual_delivery_order.save
-      self.total_waste_cogs = 0
-      self.save
+      vdod.save
     end
+    self.virtual_delivery_order.is_reconciled = false
+    self.virtual_delivery_order.save
+    self.total_waste_cogs = 0
+    self.save
+  end
+  
+  def update_virtual_delivery_order_detail_reconcile(virtual_delivery_order_detail_id)
+    virtual_delivery_order_detail = VirtualDeliveryOrderDetail.find_by_id(virtual_delivery_order_detail_id)
+    virtual_delivery_order_detail.update_is_reconcile_completed
   end
   
 end

@@ -190,13 +190,29 @@ class StockAdjustment < ActiveRecord::Base
       return self 
     end
     
-    item_id_list = self.stock_adjustment_details.map{|x| x.item_id  } 
-    if BatchSourceAllocation.joins(:batch_source).where{
-      batch_sources.item_id.in item_id_list
-    }.count != 0 
-      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
-      return self 
+   
+    self.stock_adjustment_details.each do |sod|
+        item_id = sod.item_id
+        source_id = sod.id
+        source_class = sod.class.to_s
+      if BatchSourceAllocation.joins(:batch_source).where{
+        (batch_source.item_id.eq item_id) &
+        (batch_source.source_id.eq source_id) &
+        (batch_source.source_class.eq source_class)
+      }.count != 0
+        self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+        return self 
+      end
     end
+    # item_id_list = self.stock_adjustment_details.map{|x| x.item_id  } 
+    # if BatchSourceAllocation.joins(:batch_source).where{
+    #   (batch_sources.item_id.in item_id_list) &
+    #   (batch_sources.source_id.eq stock_adjustment_id) &
+    #   (batch_sources.source_class.eq source_class)
+    # }.count != 0 
+    #   self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+    #   return self 
+    # end
     
 #   validate remaining amount in warehouse_item
     self.stock_adjustment_details.each do |sad|

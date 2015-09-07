@@ -86,18 +86,38 @@ class DeliveryOrder < ActiveRecord::Base
     
 #     validate warehouse_item_amount and pending_delivery_amount
     self.delivery_order_details.each do |dod|
-      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
-      amount_delivery = 0 
-      DeliveryOrderDetail.where(:item_id => dod.item_id,:delivery_order_id =>self.id).each do |doda|
-        amount_delivery = amount_delivery + doda.amount
-      end
-      if dod.sales_order_detail.pending_delivery_amount < amount_delivery 
-        self.errors.add(:generic_errors, "Pending delivery amount  #{dod.item.name} lebih kecil amount delivery ")
-        return self 
-      end
-      if item_in_warehouse.amount < amount_delivery
-        self.errors.add(:generic_errors, "Amount item #{item_in_warehouse.item.sku}  di warehouse #{item_in_warehouse.warehouse.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
-        return self 
+      if dod.sales_order_detail.is_service == true
+        item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.sales_order.contact_id,
+          :warehouse_item_id => item_in_warehouse.id
+          )
+        amount_delivery = 0 
+        DeliveryOrderDetail.where(:item_id => dod.item_id,:delivery_order_id =>self.id).each do |doda|
+          amount_delivery = amount_delivery + doda.amount
+        end
+        if dod.sales_order_detail.pending_delivery_amount < amount_delivery 
+          self.errors.add(:generic_errors, "Pending delivery amount  #{dod.item.name} lebih kecil amount delivery ")
+          return self 
+        end
+        if customer_item.amount < amount_delivery
+          self.errors.add(:generic_errors, "Amount item Customer #{item_in_warehouse.item.sku}  di warehouse #{item_in_warehouse.warehouse.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
+          return self 
+        end
+      else
+        item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)  
+        amount_delivery = 0 
+        DeliveryOrderDetail.where(:item_id => dod.item_id,:delivery_order_id =>self.id).each do |doda|
+          amount_delivery = amount_delivery + doda.amount
+        end
+        if dod.sales_order_detail.pending_delivery_amount < amount_delivery 
+          self.errors.add(:generic_errors, "Pending delivery amount  #{dod.item.name} lebih kecil amount delivery ")
+          return self 
+        end
+        if item_in_warehouse.amount < amount_delivery
+          self.errors.add(:generic_errors, "Amount item #{item_in_warehouse.item.sku}  di warehouse #{item_in_warehouse.warehouse.name} tidak mencukupi. Amount: #{item_in_warehouse.amount}")
+          return self 
+        end
       end
     end
     
@@ -116,7 +136,6 @@ class DeliveryOrder < ActiveRecord::Base
       self.exchange_rate_amount = 1
     end
     
-    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -132,15 +151,19 @@ class DeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-    
-    item_id_list = self.delivery_order_details.map{|x| x.item_id  } 
-    if BatchSourceAllocation.joins(:batch_source).where{
-      batch_source.item_id.in item_id_list
-    }.count != 0 
-      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
-      return self 
+    self.delivery_order_details.each do |dod|
+        item_id = dod.item_id
+        source_id = dod.id
+        source_class = dod.class.to_s
+      if BatchSourceAllocation.joins(:batch_source).where{
+        (batch_source.item_id.eq item_id) &
+        (batch_source.source_id.eq source_id) &
+        (batch_source.source_class.eq source_class)
+      }.count != 0
+        self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+        return self 
+      end
     end
-    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
@@ -225,7 +248,7 @@ class DeliveryOrder < ActiveRecord::Base
         :source_class => self.class.to_s, 
         :source_id => self.id ,  
         :amount => dod.amount ,  
-        :status => ADJUSTMENT_STATUS[:addition],  
+        :status => ADJUSTMENT_STATUS[:deduction],  
         :mutation_date => self.delivery_date ,  
         :item_id => dod.item_id,
         :item_case => ITEM_CASE[:virtual],
@@ -233,20 +256,44 @@ class DeliveryOrder < ActiveRecord::Base
         ) 
       end
 #       Update WarehouseItem Amount
-      item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)      
-      new_stock_mutation = StockMutation.create_object(
-        :source_class => self.class.to_s, 
-        :source_id => self.id ,  
-        :amount => dod.amount ,  
-        :status => ADJUSTMENT_STATUS[:deduction],  
-        :mutation_date => self.delivery_date ,  
-        :warehouse_id => self.warehouse_id ,
-        :warehouse_item_id => item_in_warehouse.id,
-        :item_id => dod.item_id,
-        :item_case => ITEM_CASE[:ready],
-        :source_code => self.code
-        ) 
-      new_stock_mutation.stock_mutate_object
+      if dod.sales_order_detail.is_service == true
+        item_in_warehouse = WarehouseItem.find_or_create_objectfind_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id) 
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.sales_order.contact_id,
+          :warehouse_item_id => item_in_warehouse.id
+          )
+        new_stock_mutation = CustomerStockMutation.create_object(
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :contact_id => self.sales_order.contact_id,
+          :customer_item_id => customer_item.id,
+          :amount => dod.amount,  
+          :status => ADJUSTMENT_STATUS[:deduction],  
+          :mutation_date => self.delivery_date  ,  
+          :warehouse_id => self.warehouse_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => dod.item_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.code
+          ) 
+        new_stock_mutation.stock_mutate_object
+      else
+        item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.warehouse_id,:item_id => dod.item_id)      
+        new_stock_mutation = StockMutation.create_object(
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :amount => dod.amount ,  
+          :status => ADJUSTMENT_STATUS[:deduction],  
+          :mutation_date => self.delivery_date ,  
+          :warehouse_id => self.warehouse_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => dod.item_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.code
+          ) 
+        new_stock_mutation.stock_mutate_object
+      end
+      
       
       dod.reload
 #       set detail cogs

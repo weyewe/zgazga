@@ -38,7 +38,7 @@ class Api::ReceivablesController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      query = Receivable.joins(:exchange,:contact).where{ 
+      query_code = Receivable.joins(:exchange,:contact).where{ 
           ( source_class =~  query )  | 
           ( source_code =~ query ) | 
           ( contact.name =~ query ) | 
@@ -48,7 +48,7 @@ class Api::ReceivablesController < Api::BaseApiController
       if params[:contact_id].present?
         object = Contact.find_by_id params[:contact_id] 
         if not object.nil?  
-          query = query.where{  
+          query_code = query_code.where{  
             ( 
                ( contact_id.eq object.id )  &
                ( is_completed.eq false )  
@@ -57,10 +57,10 @@ class Api::ReceivablesController < Api::BaseApiController
         end
       end    
       
-      @objects = query.page(params[:page]).
+      @objects = query_code.page(params[:page]).
                   per(params[:limit]).
                   order("id DESC")
-      @total = query.count 
+      @total = query_code.count 
     else
       @objects = Receivable.joins(:exchange,:contact).where{ 
           (id.eq selected_id) 

@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.rolleridentificationform.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmrolleridentificationformform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Unconfirm RollerIdentificationForm',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?

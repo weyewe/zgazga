@@ -225,6 +225,31 @@ class Account < ActiveRecord::Base
     end
   end
   
+  def delete_object_base
+    if self.has_children_of_business_objects_account?
+      self.errors.add(:generic_errors, "Tidak dapat menghapus account ini")
+      return self 
+    end
+    
+    if self.account_case == ACCOUNT_CASE[:ledger] and
+        self.transaction_data_details.count != 0 
+      self.errors.add(:generic_errors, "Tidak dapat dihapus karena ada posting berdasar akun ini")
+      return self 
+    else
+      self.destroy 
+    end
+    
+    if self.account_case == ACCOUNT_CASE[:group] and
+      self.has_transaction_activities_from_child_account?  
+      msg = "Tidak dapat dihapus karena sudah ada posting berdasar ledger dari akun ini"
+      self.errors.add(:generic_errors, msg )
+      return self 
+    else
+      self.destroy_child_accounts
+      self.destroy 
+    end
+  end
+  
   def delete_object 
     if self.is_base_account?
       self.errors.add(:generic_errors, "Tidak dapat menghapus base account")

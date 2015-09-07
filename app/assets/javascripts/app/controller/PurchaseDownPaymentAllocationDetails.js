@@ -117,7 +117,7 @@ Ext.define('AM.controller.PurchaseDownPaymentAllocationDetails', {
 			parentRecord : record 
 		});
 		view.setParentData( record );
-		
+		view.setComboBoxExtraParams( record ) ;
     view.show(); 
   },
 
@@ -141,6 +141,7 @@ Ext.define('AM.controller.PurchaseDownPaymentAllocationDetails', {
 		// console.log("selected record id: " + record.get('id'));
 		// console.log("The selected poe id: " + record.get('purchase_order_entry_id'));
 		view.setComboBoxData(record); 
+		view.setComboBoxExtraParams( parentRecord ) ;
   },
 
   updateObject: function(button) {

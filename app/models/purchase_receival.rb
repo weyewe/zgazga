@@ -101,6 +101,10 @@ class PurchaseReceival < ActiveRecord::Base
         :ex_rate_date => self.receival_date,
         :exchange_id => self.purchase_order.exchange_id
         )
+      if latest_exchange_rate.nil?
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.purchase_order.exchange.name} belum di input")
+        return self 
+      end
       self.exchange_rate_amount = latest_exchange_rate.rate
       self.exchange_rate_id =  latest_exchange_rate.id   
     else
@@ -127,13 +131,30 @@ class PurchaseReceival < ActiveRecord::Base
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
-    item_id_list = self.purchase_receival_details.map{|x| x.item_id  } 
-    if BatchSourceAllocation.joins(:batch_source).where{
-      batch_sources.item_id.in item_id_list
-    }.count != 0 
-      self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
-      return self 
+    
+    self.purchase_receival_details.each do |prd|
+        item_id = prd.item_id
+        source_id = prd.id
+        source_class = prd.class.to_s
+      if BatchSourceAllocation.joins(:batch_source).where{
+        (batch_source.item_id.eq item_id) &
+        (batch_source.source_id.eq source_id) &
+        (batch_source.source_class.eq source_class)
+      }.count != 0
+        self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+        return self 
+      end
     end
+    
+    # item_id_list = self.purchase_receival_details.map{|x| x.item_id  } 
+    # if BatchSourceAllocation.joins(:batch_source).where{
+    #   (batch_sources.item_id.in item_id_list) &
+    #   (batch_sources.source_id.eq ) &
+    #   ()
+    # }.count != 0 
+    #   self.errors.add(:generic_errors , "Sudah ada peng-alokasian batch")
+    #   return self 
+    # end
     
     self.is_confirmed = false
     self.confirmed_at = nil 

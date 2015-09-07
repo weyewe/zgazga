@@ -7,6 +7,11 @@ json.virtual_order_clearances objects do |object|
 	json.clearance_date 		format_date_friendly( object.clearance_date )
 	json.total_waste_cogs 		object.total_waste_cogs 
 	json.is_waste 		object.is_waste 
+	if object.is_waste == CLEARANCE_TYPE[:approved]
+		json.is_waste_text "APPROVE"
+	else
+		json.is_waste_text "REJECT"
+	end
 	json.is_confirmed 			 object.is_confirmed
 	json.confirmed_at 						format_date_friendly( 	object.confirmed_at ) 
 	

@@ -20,7 +20,9 @@ json.sales_down_payments @objects do |object|
 		json.payable_source_code ""
 		else
 		json.payable_source_code		object.payable.source_code
+		json.payable_remaining_amount	object.payable.remaining_amount
 	end
+	
 	
 	
 	json.code		object.code

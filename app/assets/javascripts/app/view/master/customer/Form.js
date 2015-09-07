@@ -96,15 +96,15 @@ Ext.define('AM.view.master.customer.Form', {
 				{ name : "tax_code_case_text"}  
 			], 
 			data : [
-				{ tax_code_case : "01", tax_code_case_text : "01"},
-				{ tax_code_case : "02", tax_code_case_text : "02"},
-				{ tax_code_case : "03", tax_code_case_text : "03"},
-				{ tax_code_case : "04", tax_code_case_text : "04"},
-				{ tax_code_case : "05", tax_code_case_text : "05"},
-				{ tax_code_case : "06", tax_code_case_text : "06"},
-				{ tax_code_case : "07", tax_code_case_text : "07"},
-				{ tax_code_case : "08", tax_code_case_text : "08"},
-				{ tax_code_case : "09", tax_code_case_text : "09"}
+				{ tax_code_case : "1", tax_code_case_text : "01"},
+				{ tax_code_case : "2", tax_code_case_text : "02"},
+				{ tax_code_case : "3", tax_code_case_text : "03"},
+				{ tax_code_case : "4", tax_code_case_text : "04"},
+				{ tax_code_case : "5", tax_code_case_text : "05"},
+				{ tax_code_case : "6", tax_code_case_text : "06"},
+				{ tax_code_case : "7", tax_code_case_text : "07"},
+				{ tax_code_case : "8", tax_code_case_text : "08"},
+				{ tax_code_case : "9", tax_code_case_text : "09"}
 			] 
 		});
 		

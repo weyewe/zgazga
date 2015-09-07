@@ -213,6 +213,10 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end  
     if Closing.is_date_closed(self.receipt_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
@@ -246,8 +250,8 @@ class ReceiptVoucher < ActiveRecord::Base
         total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total)
-        AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
       end
+      AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end

@@ -106,6 +106,10 @@ class PaymentRequest < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end
     if Closing.is_date_closed(self.request_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
@@ -120,6 +124,10 @@ class PaymentRequest < ActiveRecord::Base
         :ex_rate_date => self.request_date,
         :exchange_id => self.exchange_id
         )
+      if latest_exchange_rate.nil?
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.exchange.name} belum di input")
+        return self 
+      end
       self.exchange_rate_amount = latest_exchange_rate.rate
       self.exchange_rate_id = latest_exchange_rate.id   
     else

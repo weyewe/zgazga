@@ -17,7 +17,7 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 					  'RIF  : <br /><b>{recovery_order_roller_identification_form_nomor_disasembly}</b>' + '<br />' + '<br />' +
 					  'Identification Detail : <br /><b>{roller_identification_form_detail_detail_id}</b>' + '<br />' + '<br />' +
 							'SKU Roller: <br /> <b>{roller_builder_sku}</b>'  + '<br />' + 
-							' Nama: {roller_builder_name}'  + '<br />' + '<br />' +
+							' Nama: <b>{roller_builder_name}</b>'  + '<br />' + '<br />' +
 							
 							'Core Type: <br /> <b>{core_type_case_text}</b>'   
 			},

@@ -17,10 +17,12 @@ json.records @objects do |object|
 	json.payable_id		object.payable_id
 	if object.payable.nil?
 		json.payable_source_code ""
+		json.payable_remaining_amount 0
 		else
 		json.payable_source_code		object.payable.source_code
+		json.payable_remaining_amount	object.payable.remaining_amount
 	end
-	
+
 	
 	json.code		object.code
 	json.down_payment_date	format_date_friendly( 	object.down_payment_date ) 

@@ -55,15 +55,20 @@ Ticketie::Application.routes.draw do
     get 'search_uoms' => 'uoms#search', :as => :search_uom
     get 'search_exchanges' => 'exchanges#search', :as => :search_exchange
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
+    get 'search_sales_quotations' => 'sales_quotations#search', :as => :search_sales_quotation
+    get 'search_sales_quotation_details' => 'sales_quotation_details#search', :as => :search_sales_quotation_detail
     get 'search_warehouse_stock_details' => 'warehouse_stock_details#search', :as => :search_warehouse_stock_detail 
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder
     get 'search_blending_recipes' => 'blending_recipes#search', :as => :search_blending_recipe
     get 'search_blending_recipe_details' => 'blending_recipe_details#search', :as => :search_blending_recipe_detail
+    get 'search_unit_conversions' => 'unit_conversions#search', :as => :search_unit_conversion
+    get 'search_unit_conversion_details' => 'unit_conversion_details#search', :as => :search_unit_conversion_detail
     get 'search_blanket_orders' => 'blanket_orders#search', :as => :search_blanket_order
     get 'search_blanket_order_details' => 'blanket_order_details#search', :as => :search_blanket_order_detail
     get 'search_blending_work_orders' => 'blending_work_orders#search', :as => :search_blending_work_order
+    get 'search_unit_conversion_orders' => 'unit_conversion_orders#search', :as => :search_unit_conversion_order
     get 'search_roller_accessorys' => 'roller_identification_form_details#search', :as => :search_roller_accessorys
     get 'search_roller_accessory_details' => 'roller_accessory_details#search', :as => :search_roller_accessory_detail
     
@@ -96,6 +101,8 @@ Ticketie::Application.routes.draw do
     
     
     
+    get 'search_purchase_requests' => 'purchase_requests#search', :as => :search_purchase_request
+    get 'search_purchase_request_details' => 'purchase_request_details#search', :as => :search_purchase_request_detail
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
     get 'search_purchase_order_details' => 'purchase_order_details#search', :as => :search_purchase_order_detail
     get 'search_purchase_receivals' => 'purchase_receivals#search', :as => :search_purchase_receival
@@ -272,6 +279,17 @@ Ticketie::Application.routes.draw do
     
     resources :transaction_datas
     resources :transaction_data_details
+    
+    resources :sales_quotations
+    resources :sales_quotation_details
+    
+    resources :purchase_requests
+    resources :purchase_request_details
+    
+    resources :unit_conversions
+    resources :unit_conversion_details
+    
+    resources :unit_conversion_orders
   end
   
   

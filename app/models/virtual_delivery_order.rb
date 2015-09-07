@@ -135,6 +135,17 @@ class VirtualDeliveryOrder < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
+      new_stock_mutation = StockMutation.create_object(
+        :source_class => self.class.to_s, 
+        :source_id => self.id ,  
+        :amount => tdod.amount ,  
+        :status => ADJUSTMENT_STATUS[:deduction],  
+        :mutation_date => self.delivery_date ,  
+        :item_id => tdod.item_id,
+        :item_case => ITEM_CASE[:pending_delivery],
+        :source_code => self.code
+        ) 
+      new_stock_mutation.stock_mutate_object
       tdod.virtual_order_detail.pending_delivery_amount -= tdod.amount    
       if tdod.virtual_order_detail.pending_delivery_amount == 0 
         tdod.virtual_order_detail.is_all_delivered == true

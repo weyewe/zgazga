@@ -9,9 +9,15 @@ Ext.define('AM.view.operation.virtualorderclearance.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{	header: 'Virtual DeliveryOrder Code', dataIndex: 'virtual_delivery_order_code', flex: 2 },
-			{	header: 'Total Waste Cogs', dataIndex: 'total_waste_cogs', flex: 2 },
-			{	header: 'Clearance Date', dataIndex: 'clearance_date', flex: 2 },
+			{
+				xtype : 'templatecolumn',
+				text : "Desciption",
+				flex : 3,
+				tpl : 	'Tanggal Clearance:  <b>{clearance_date}</b>'  + '<br />' + '<br />' +
+						'Virtual DeliveryOrder Code: <b>{virtual_delivery_order_code}</b>' + '<br />' + '<br />' +
+						'ClearanceType: <b>{is_waste_text}</b>' + '<br />' + '<br />' +
+						'Total Waste Cogs: <b>{total_waste_cogs}</b>'
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

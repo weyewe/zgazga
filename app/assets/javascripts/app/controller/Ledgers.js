@@ -420,13 +420,42 @@ Ext.define('AM.controller.Ledgers', {
 
   deleteObject: function() {
     var record = this.getList().getSelectedObject();
-
+		if(!record){return;}
+		var parent_id = record.get('bank_administration_id');
+		var list  = this.getList();
+		list.setLoading(true); 
+		
     if (record) {
-      var store = this.getLedgersStore();
-      store.remove(record);
-      store.sync();
-// to do refresh programmatically
-			this.getList().query('pagingtoolbar')[0].doRefresh();
+			record.destroy({
+				success : function(record){
+					list.setLoading(false);
+					list.fireEvent('deleted');	
+					// this.getList().query('pagingtoolbar')[0].doRefresh();
+					// console.log("Gonna reload the shite");
+					// this.getPurchaseOrdersStore.load();
+					list.getStore().load({
+						params : {
+							bank_administration_id : parent_id
+						}
+					});
+				},
+				failure : function(record,op ){
+					list.setLoading(false);
+					
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					
+					if( errors["generic_errors"] ){
+						Ext.MessageBox.show({
+						           title: 'DELETE FAIL',
+						           msg: errors["generic_errors"],
+						           buttons: Ext.MessageBox.OK, 
+						           icon: Ext.MessageBox.ERROR
+						       });
+					}
+					
+				}
+			});
     }
 
   },

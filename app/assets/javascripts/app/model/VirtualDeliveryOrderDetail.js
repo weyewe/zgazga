@@ -10,6 +10,8 @@ Ext.define('AM.model.VirtualDeliveryOrderDetail', {
 			{ name: 'virtual_order_detail_id', type: 'int' }, 
 			{ name: 'virtual_order_detail_code', type: 'string' } ,
 			{ name: 'virtual_order_detail_pending_delivery_amount', type: 'string' } ,
+			{ name: 'virtual_order_detail_waste_amount', type: 'string' } ,
+			{ name: 'virtual_order_detail_restock_amount', type: 'string' } ,
 			
 			{ name: 'virtual_order_detail_item_id', type: 'int' },
     	    { name: 'virtual_order_detail_item_sku', type: 'string' },

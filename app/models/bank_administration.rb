@@ -99,6 +99,10 @@ class BankAdministration < ActiveRecord::Base
           :ex_rate_date => self.administration_date,
           :exchange_id => self.cash_bank.exchange_id
           )
+        if latest_exchange_rate.nil?
+          self.errors.add(:generic_errors, "ExchangeRate untuk #{self.cash_bank.exchange.name} belum di input")
+          return self 
+        end  
         self.exchange_rate_id = latest_exchange_rate.id
         self.exchange_rate_amount = latest_exchange_rate.rate
       else

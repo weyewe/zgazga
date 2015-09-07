@@ -10,7 +10,6 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.List' ,{
 			// { header: 'ID', dataIndex: 'id'},
 		 { header: 'Kode',  dataIndex: 'code', flex: 1},
 			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Receivable Id', dataIndex: 'receivable_id', flex: 2 },
 			{	header: 'Receivable Code', dataIndex: 'receivable_source_code', flex: 2 },
 			{	header: 'Allocation Date', dataIndex: 'allocation_date', flex: 2 },
 			{	header: 'Total amount', dataIndex: 'total_amount', flex: 2 },

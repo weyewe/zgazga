@@ -9,9 +9,13 @@ Ext.define('AM.view.operation.blanketwarehousemutationdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'BWOD id',  dataIndex: 'blanket_order_detail_id', flex: 1},
-			{ header: 'Sku',  dataIndex: 'item_sku', flex: 1},
-			{ header: 'Item',  dataIndex: 'item_name', flex: 1},
+			{
+					xtype : 'templatecolumn',
+					text : "Blanket Info",
+					flex : 3,
+					tpl : 	'SKU:  <br /><b>{item_sku}</b>'    + '<br />' +
+								'Nama: <br /><b>{item_name}</b>' 
+				},
     		{ header: 'Quantity',  dataIndex: 'quantity', flex: 1},
 			
 			 

@@ -102,6 +102,7 @@ class SalesDownPaymentAllocation < ActiveRecord::Base
       end
       AccountingService::CreateSalesDownPaymentAllocationJournal.create_confirmation_journal(self) 
     end
+    return self
   end
   
   def unconfirm_object
@@ -122,6 +123,7 @@ class SalesDownPaymentAllocation < ActiveRecord::Base
       end
       AccountingService::CreateSalesDownPaymentAllocationJournal.undo_create_confirmation_journal(self) 
     end
+    return self
   end    
     
 end

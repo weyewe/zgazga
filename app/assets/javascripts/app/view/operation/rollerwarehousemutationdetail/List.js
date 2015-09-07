@@ -7,13 +7,14 @@ Ext.define('AM.view.operation.rollerwarehousemutationdetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-		 	
-			{ header: 'RIF ID', dataIndex: 'roller_identification_form_detail_id', flex: 1},
-			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-			{ header: 'Name',  dataIndex: 'item_name', flex: 1},
-			
-			
+		 	{ header: 'Code', dataIndex: 'code', flex: 1},
+				{
+					xtype : 'templatecolumn',
+					text : "Roller Info",
+					flex : 3,
+					tpl : 	' SKU:  <br /><b>{item_sku}</b>'    + '<br />' +
+							'Nama: <br /><b>{item_name}</b>' 
+				},
 			 
 		];
 		

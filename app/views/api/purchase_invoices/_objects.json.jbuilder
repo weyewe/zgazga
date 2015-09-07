@@ -19,7 +19,7 @@ json.purchase_invoices objects do |object|
 	json.code 					 object.code
 	json.nomor_surat 					 object.nomor_surat
  	
- 	json.tax_value		object.purchase_receival.purchase_order.contact.is_taxable ? TAX_VALUE[ "code_#{object.purchase_receival.purchase_order.contact.tax_code}".to_sym ] : ""
+ 	json.tax_value		object.tax
  	
 	
 	

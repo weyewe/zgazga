@@ -35,6 +35,7 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
   end
 
   def create
+    params[:sales_down_payment][:down_payment_date] =  parse_date( params[:sales_down_payment][:down_payment_date] )
     @object = SalesDownPayment.create_object( params[:sales_down_payment] )
     if @object.errors.size == 0 
       render :json => { :success => true, 
@@ -48,12 +49,17 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
         }
       }
       
-      render :json => msg                         
+      render :json => msg    
+      return  
     end
   end
 
   def update
+    params[:sales_down_payment][:down_payment_date] =  parse_date( params[:sales_down_payment][:down_payment_date] )
+    params[:sales_down_payment][:confirmed_at] =  parse_date( params[:sales_down_payment][:confirmed_at] )
+    
     @object = SalesDownPayment.find(params[:id]) 
+   
     if params[:confirm].present?  
       if not current_user.has_role?( :sales_down_payments, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
@@ -67,9 +73,6 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
       rescue ActiveRecord::ActiveRecordError  
       else
       end
-      
-      
-      
       
     elsif params[:unconfirm].present?    
       
@@ -90,9 +93,7 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
   end
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :sales_down_payments => [@object],
-                        :total => SalesDownPayment.active_objects.count } 
+      @total = SalesDownPayment.active_objects.count
     else
       msg = {
         :success => false, 
@@ -102,16 +103,14 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
       }
       
       render :json => msg
-      
+      return
       
     end
   end
   
   def show
     @object = SalesDownPayment.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :sales_down_payments => [@object] , 
-                      :total => SalesDownPayment.count }
+    @total = SalesDownPayment.count
   end
 
   def destroy
@@ -169,17 +168,17 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
         
                               }.count
     else
-      @objects = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (id.eq selected_id)  
+      @objects = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (payable_id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = SalesDownPayment.where{ (id.eq selected_id)   
+      @total = SalesDownPayment.where{ (payable_id.eq selected_id)   
                               }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

@@ -148,7 +148,7 @@ class Api::ItemsController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
   
   def search_compound

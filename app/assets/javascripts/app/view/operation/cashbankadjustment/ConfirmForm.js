@@ -27,13 +27,6 @@ Ext.define('AM.view.operation.cashbankadjustment.ConfirmForm', {
 					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-			 
-		 
-				{
-					xtype: 'displayfield',
-					fieldLabel: 'Deskripsi',
-					name: 'description' 
-				},
 				{
 					xtype: 'datefield',
 					fieldLabel: 'Tanggal Konfirmasi',
@@ -57,7 +50,7 @@ Ext.define('AM.view.operation.cashbankadjustment.ConfirmForm', {
   },
 
 	setParentData: function( record ) {
-		// this.down('form').getForm().findField('code').setValue(record.get('code')); 
+		this.down('form').getForm().findField('code').setValue(record.get('code')); 
 		// this.down('form').getForm().findField('transaction_datetime').setValue(record.get('transaction_datetime')); 
 		// this.down('form').getForm().findField('description').setValue(record.get('description')); 
 	}

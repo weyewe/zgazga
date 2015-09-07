@@ -41,7 +41,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       else
         query = query.where(:is_confirmed => false )
       end
-    
+      
       if start_delivery_date.present?
         query = query.where{ delivery_date.gte start_delivery_date}
       end

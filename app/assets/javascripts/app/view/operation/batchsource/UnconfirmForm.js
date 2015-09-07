@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.batchsource.UnconfirmForm', {
   extend: 'Ext.window.Window',
   alias : 'widget.unconfirmbatchsourceform',
 
-  title : 'Unconfirm Memorial',
+  title : 'Unconfirm BatchSource',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?

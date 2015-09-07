@@ -53,6 +53,9 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
   end
 
   def update
+    params[:purchase_down_payment][:down_payment_date] =  parse_date( params[:purchase_down_payment][:down_payment_date] )
+    params[:purchase_down_payment][:confirmed_at] =  parse_date( params[:purchase_down_payment][:confirmed_at] )
+ 
     @object = PurchaseDownPayment.find(params[:id]) 
     
     if params[:confirm].present?  
@@ -86,14 +89,12 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
       rescue ActiveRecord::ActiveRecordError  
       else
       end
-  else
-    @object.update_object( params[:purchase_down_payment] )
-  end
+    else
+      @object.update_object( params[:purchase_down_payment] )
+    end
      
     if @object.errors.size == 0 
-      render :json => { :success => true,   
-                        :purchase_down_payments => [@object],
-                        :total => PurchaseDownPayment.active_objects.count } 
+      @total = PurchaseDownPayment.active_objects.count
     else
       msg = {
         :success => false, 
@@ -110,9 +111,7 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
   
   def show
     @object = PurchaseDownPayment.find_by_id params[:id]
-    render :json => { :success => true, 
-                      :purchase_down_payments => [@object] , 
-                      :total => PurchaseDownPayment.count }
+    @total = PurchaseDownPayment.count
   end
 
   def destroy
@@ -170,17 +169,17 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
         
                               }.count
     else
-      @objects = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (id.eq selected_id)  
+      @objects = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (receivable_id.eq selected_id)  
                               }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
    
-      @total = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable)..where{ (id.eq selected_id)   
+      @total = PurchaseDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (receivable_id.eq selected_id)   
                               }.count 
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

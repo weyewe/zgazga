@@ -42,11 +42,11 @@ Ext.define('AM.controller.SalesDownPayments', {
 	  	'salesdownpaymentlist textfield[name=searchField]': {
         change: this.liveSearch
       },
-			'salesdownpaymentlist button[action=confirmObject]': {
+			'salesdownpaymentProcess salesdownpaymentlist button[action=confirmObject]': {
         click: this.confirmObject
 			}	,
 
-			'salesdownpaymentlist button[action=unconfirmObject]': {
+			'salesdownpaymentProcess salesdownpaymentlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
 			}	,
 	  	'confirmsalesdownpaymentform button[action=confirm]' : {
@@ -69,6 +69,105 @@ Ext.define('AM.controller.SalesDownPayments', {
 	 
 		me.getSalesDownPaymentsStore().load();
 	},
+	
+ 
+
+	loadObjectList : function(me){
+		me.getStore().getProxy().extraParams = {}
+		me.getStore().load();
+	},
+
+  addObject: function() {
+    var view = Ext.widget('salesdownpaymentform');
+    view.show();
+  },
+
+  editObject: function() {
+		var me = this; 
+    var record = this.getList().getSelectedObject();
+    var view = Ext.widget('salesdownpaymentform');
+
+		
+
+    view.down('form').loadRecord(record);
+    view.setComboBoxData( record ) ;
+  },
+
+  updateObject: function(button) {
+		var me = this; 
+    var win = button.up('window');
+    var form = win.down('form');
+
+    var store = this.getSalesDownPaymentsStore();
+    var record = form.getRecord();
+    var values = form.getValues();
+
+
+	 
+		
+		
+		if( record ){
+			record.set( values );
+			
+			form.query('checkbox').forEach(function(checkbox){
+				record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			});
+			 
+			form.setLoading(true);
+			record.save({
+				success : function(new_record){
+					form.setLoading(false);
+					//  since the grid is backed by store, if store changes, it will be updated
+					var list = me.getList();
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );         
+					
+					// store.getProxy().extraParams = {
+					//     livesearch: ''
+					// };
+	 
+					// store.load();
+					win.close();
+				},
+				failure : function(record,op ){
+					button.enable();
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					this.reject();
+				}
+			});
+				
+			 
+		}else{
+			//  no record at all  => gonna create the new one 
+			var me  = this; 
+			var newObject = new AM.model.SalesDownPayment( values ) ;
+			
+			// learnt from here
+			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
+			// form.mask("Loading....."); 
+			form.setLoading(true);
+			newObject.save({
+				success: function(record){
+	
+					store.load();
+					form.setLoading(false);
+					win.close();
+					
+				},
+				failure: function( record, op){
+					button.enable();
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					this.reject();
+				}
+			});
+		} 
+  },
 	
 	confirmObject: function(){
 		// console.log("the startObject callback function");
@@ -116,12 +215,15 @@ Ext.define('AM.controller.SalesDownPayments', {
 				params : {
 					confirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
+					// me.reloadRecord( record ) ; 
 					
-					list.enableRecordButtons(); 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					
 					win.close();
@@ -138,6 +240,8 @@ Ext.define('AM.controller.SalesDownPayments', {
 			});
 		}
 	},
+	
+	
 	
 	executeUnconfirm: function(button){
 		var me = this; 
@@ -162,11 +266,14 @@ Ext.define('AM.controller.SalesDownPayments', {
 				params : {
 					unconfirm: true 
 				},
-				success : function(record){
+				success : function(new_record){
 					form.setLoading(false);
 					
-					me.reloadRecord( record ) ; 
-					list.enableRecordButtons(); 
+					// me.reloadRecord( record ) ; 
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
 					
 					win.close();
 				},
@@ -181,145 +288,44 @@ Ext.define('AM.controller.SalesDownPayments', {
 				}
 			});
 		}
-	}, 
-	
-	loadObjectList : function(me){
-		me.getStore().getProxy().extraParams = {}
-		me.getStore().load();
 	},
-
-  addObject: function() {
-    var view = Ext.widget('salesdownpaymentform');
-    view.show();
-  },
-
-  editObject: function() {
-		var me = this; 
-    var record = this.getList().getSelectedObject();
-    var view = Ext.widget('salesdownpaymentform');
-
+	
+  deleteObject: function() {
+	  var record = this.getList().getSelectedObject();
+		if(!record){return;} 
+		var list  = this.getList();
+		list.setLoading(true); 
 		
-
-    view.down('form').loadRecord(record);
-    view.setComboBoxData( record ) ;
-  },
-
-  updateObject: function(button) {
-		var me = this; 
-    var win = button.up('window');
-    var form = win.down('form');
-
-    var store = this.getSalesDownPaymentsStore();
-    var record = form.getRecord();
-    var values = form.getValues();
-
-
-		// console.log("The values");
-		// console.log( values);
-		form.query('checkbox').forEach(function(checkbox){
-						// 
-						// record.set( checkbox['name']  ,checkbox['checked'] ) ;
-						// console.log("the checkbox name: " +  checkbox['name']   );
-						// console.log("the checkbox value: " + checkbox['checked']  );
-			values[checkbox['name']] = checkbox['checked'];
-		});
-		
-		
-		
-		if( record ){
-			record.set( values );
-			 
-			form.setLoading(true);
-			record.save({
+    if (record) {
+			record.destroy({
 				success : function(record){
-					form.setLoading(false);
-					//  since the grid is backed by store, if store changes, it will be updated
-					
-					// store.getProxy().extraParams = {
-					//     livesearch: ''
-					// };
-	 
-					store.load();
-					win.close();
+					list.setLoading(false);
+					// list.fireEvent('deleted');	
+					// this.getList().query('pagingtoolbar')[0].doRefresh();
+					// console.log("Gonna reload the shite");
+					// this.getPurchaseOrdersStore.load();
+					list.getStore().load();
 				},
 				failure : function(record,op ){
-					form.setLoading(false);
-					var message  = op.request.scope.reader.jsonData["message"];
-					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					this.reject();
-				}
-			});
-				
-			 
-		}else{
-			//  no record at all  => gonna create the new one 
-			var me  = this; 
-			var newObject = new AM.model.SalesDownPayment( values ) ;
-			
-			// learnt from here
-			// http://www.sencha.com/forum/showthread.php?137580-ExtJS-4-Sync-and-success-failure-processing
-			// form.mask("Loading....."); 
-			form.setLoading(true);
-			newObject.save({
-				success: function(record){
-	
-					store.load();
-					form.setLoading(false);
-					win.close();
+					list.setLoading(false);
 					
-				},
-				failure: function( record, op){
-					form.setLoading(false);
 					var message  = op.request.scope.reader.jsonData["message"];
 					var errors = message['errors'];
-					form.getForm().markInvalid(errors);
-					this.reject();
+					
+					if( errors["generic_errors"] ){
+						Ext.MessageBox.show({
+						           title: 'DELETE FAIL',
+						           msg: errors["generic_errors"],
+						           buttons: Ext.MessageBox.OK, 
+						           icon: Ext.MessageBox.ERROR
+						       });
+					}
+					
 				}
 			});
-		} 
-  },
-
-  deleteObject: function() {
-    var record = this.getList().getSelectedObject();
-
-    if (record) {
-      var store = this.getSalesDownPaymentsStore();
-      store.remove(record);
-      store.sync();
-// to do refresh programmatically
-			this.getList().query('pagingtoolbar')[0].doRefresh();
     }
 
   },
-	
-	reloadRecord: function(record){
-		
-		var list = this.getList();
-		var store = this.getList().getStore();
-		var modifiedId = record.get('id');
-		
-		// console.log("modifiedId:  " + modifiedId);
-		 
-		AM.model.SalesDownPayment.load( modifiedId , {
-		    scope: list,
-		    failure: function(record, operation) {
-		        //do something if the load failed
-		    },
-		    success: function(new_record, operation) {
-					// console.log("The new record");
-					// 				console.log( new_record);
-					recToUpdate = store.getById(modifiedId);
-					recToUpdate.set(new_record.getData());
-					recToUpdate.commit();
-					list.getView().refreshNode(store.indexOfId(modifiedId));
-		    },
-		    callback: function(record, operation) {
-		        //do something whether the load succeeded or failed
-		    }
-		});
-	},
-
 
   selectionChange: function(selectionModel, selections) {
     var grid = this.getList();

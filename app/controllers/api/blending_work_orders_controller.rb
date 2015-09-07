@@ -96,9 +96,6 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
       else
       end
       
-      
-      
-      
     elsif params[:unconfirm].present?    
       
       if not current_user.has_role?( :blending_work_orders, :unconfirm)
@@ -218,6 +215,6 @@ class Api::BlendingWorkOrdersController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

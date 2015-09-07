@@ -102,7 +102,7 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       
-      query = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
+      query_code = SalesOrderDetail.joins(:sales_order, :item => [:uom]).where{ 
         ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
@@ -112,7 +112,7 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
       if params[:sales_order_id].present?
         object = SalesOrder.find_by_id params[:sales_order_id]
         if not object.nil?  
-          query = query.where(:sales_order_id => object.id )
+          query_code = query_code.where(:sales_order_id => object.id )
         end
       end    
         
@@ -133,10 +133,10 @@ class Api::SalesOrderDetailsController < Api::BaseApiController
       #   ( code  =~ query  )  
       # }.count
       
-      @objects = query.page(params[:page]).
+      @objects = query_code.page(params[:page]).
                   per(params[:limit]).
                   order("id DESC")
-      @total = query.count 
+      @total = query_code.count 
     else
       @objects = SalesOrderDetail.where{ 
               (id.eq selected_id)  

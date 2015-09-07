@@ -77,7 +77,7 @@ class Api::ContactGroupsController < Api::BaseApiController
     @object = ContactGroup.find(params[:id])
     @object.delete_object
 
-    if @object.is_deleted
+    if not @object.persisted? 
       render :json => { :success => true, :total => ContactGroup.active_objects.count }  
     else
       render :json => { :success => false, :total => ContactGroup.active_objects.count ,

@@ -113,6 +113,7 @@ Ext.define('AM.view.operation.purchasedownpaymentallocationdetail.Form', {
 													'<div class="combo-name">Contact : {payable_contact_name}</div>' +   
 													'<div class="combo-name">Amount : {payable_amount}</div>' +   
 													'<div class="combo-name">Remaining Amount : {payable_remaining_amount}</div>' +   
+							 						'<div class="combo-name">Currency : {payable_exchange_name}</div>' +   
 							 					'</div>';
 						}
 					},
@@ -181,6 +182,21 @@ Ext.define('AM.view.operation.purchasedownpaymentallocationdetail.Form', {
 		me.setSelectedPayable( record.get("payable_id")  ) ; 
 	},
 	
+	setExtraParamInPayableComboBox: function(contact_id){
+		var comboBox = this.down('form').getForm().findField('payable_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.contact_id =  contact_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {
+		console.log("inside setComboBoxExtraParams");
+		
+		console.log( record ) ;
+		var me =this;
+		me.setExtraParamInPayableComboBox( record.get("contact_id") ); 
+	},
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('purchase_down_payment_allocation_id').setValue(record.get('id'));

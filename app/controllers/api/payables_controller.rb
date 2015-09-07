@@ -40,7 +40,7 @@ class Api::PayablesController < Api::BaseApiController
     
     if  selected_id.nil?
       
-      query = Payable.joins(:exchange,:contact).where{ 
+      query_code = Payable.joins(:exchange,:contact).where{ 
         ( source_class =~  query )  | 
         ( source_code =~ query ) | 
         ( contact.name =~ query ) | 
@@ -51,7 +51,7 @@ class Api::PayablesController < Api::BaseApiController
         object = Contact.find_by_id params[:contact_id]
         if not object.nil?  
           puts "banzaiii!!!! contact_id : #{object.id}\n"*5
-          query = query.where{  
+          query_code = query_code.where{  
             ( 
                ( contact_id.eq object.id )  &
                ( is_completed.eq false )  
@@ -82,10 +82,10 @@ class Api::PayablesController < Api::BaseApiController
         
       #                         }.count
                               
-      @objects = query.page(params[:page]).
+      @objects = query_code.page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
-      @total = query.count 
+      @total = query_code.count 
     else
       @objects = Payable.joins(:exchange,:contact).where{ (id.eq selected_id)  
                               }.
@@ -98,6 +98,6 @@ class Api::PayablesController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

@@ -119,7 +119,7 @@ Ext.define('AM.controller.PurchaseReceivalDetails', {
 			parentRecord : record 
 		});
 		view.setParentData( record );
-		
+		view.setComboBoxExtraParams( record ) ;
     view.show(); 
   },
 
@@ -140,6 +140,7 @@ Ext.define('AM.controller.PurchaseReceivalDetails', {
 
     view.down('form').loadRecord(record);
 		view.setParentData( parentRecord );
+		view.setComboBoxExtraParams( parentRecord ) ;
 		// console.log("selected record id: " + record.get('id'));
 		// console.log("The selected poe id: " + record.get('purchase_order_entry_id'));
 		view.setComboBoxData(record); 

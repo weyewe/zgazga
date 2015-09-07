@@ -7,6 +7,7 @@ json.payment_requests objects do |object|
 	json.description 		object.description
 	json.amount 		object.amount
 	json.account_id 		object.account_id
+	json.account_name 		object.account.name
   json.request_date  		format_date_friendly( object.request_date )
   json.due_date  		format_date_friendly( object.due_date )
   json.confirmed_at  		format_date_friendly( object.confirmed_at )  

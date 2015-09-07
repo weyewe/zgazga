@@ -92,6 +92,10 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end
     if Closing.is_date_closed(self.allocation_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
@@ -106,6 +110,7 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       # update receivable remaining amount
       AccountingService::CreatePurchaseDownPaymentAllocationJournal.create_confirmation_journal(self) 
     end
+    return self
   end
   
   def unconfirm_object
@@ -126,6 +131,7 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       end
       AccountingService::CreatePurchaseDownPaymentAllocationJournal.undo_create_confirmation_journal(self) 
     end
+    return self
   end
   
   

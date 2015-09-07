@@ -111,7 +111,10 @@ class RollerWarehouseMutation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self
     end
-    
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end
     if self.roller_warehouse_mutation_details.count == 0
       self.errors.add(:generic_errors, "Tidak memiliki detail")
       return self 

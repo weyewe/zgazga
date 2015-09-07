@@ -129,7 +129,7 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 						return  	'<div data-qtip="{item_name}">' +  
 												'<div class="combo-name">'  + 
 															"Name : {item_name} " 		+ "<br />" 	 + 
-															'SKU  : {item_sku}' 			+  
+															'SKU  : {item_sku}' + "<br />" +  
 															'UoM  : {uom_name}' 			+  
 												 "</div>" +  
 						 					'</div>';

@@ -121,8 +121,8 @@ class RollerIdentificationForm < ActiveRecord::Base
         if total_core > item_in_warehouse.amount
           self.errors.add(
             :generic_errors,
-            "Stock di warehouseId: #{self.warehouse_id} " + 
-            ", itemId: #{item_id}" +
+            "Stock Item: #{item_in_warehouse.item.name} SKU : #{item_in_warehouse.item.sku} " + 
+            "di warehouse: #{self.warehouse.name} " +
             "jumlah: #{item_in_warehouse.amount} " +
             "tidak mencukupi untuk melakukan Roller Identification")
           return self 

@@ -103,7 +103,7 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
     
     if  selected_id.nil?
       
-      query = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
+      query_code = DeliveryOrderDetail.joins(:delivery_order, :item,:sales_order_detail).where{ 
           ( item.sku  =~ query ) | 
         ( item.name =~ query ) | 
         ( item.description  =~ query  )  | 
@@ -113,7 +113,7 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
       if params[:delivery_order_id].present?
         object = DeliveryOrder.find_by_id params[:delivery_order_id]
         if not object.nil?  
-          query = query.where(:delivery_order_id => object.id )
+          query_code = query_code.where(:delivery_order_id => object.id )
         end
       end    
       
@@ -134,10 +134,10 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
       #   ( code  =~ query  )  
       # }.count
       
-      @objects = query.page(params[:page]).
+      @objects = query_code.page(params[:page]).
                   per(params[:limit]).
                   order("id DESC")
-      @total = query.count 
+      @total = query_code.count 
     else
       @objects = DeliveryOrderDetail.where{ 
               (id.eq selected_id)  

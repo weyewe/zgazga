@@ -206,11 +206,89 @@ describe VirtualOrderClearance do
   
   end
   
-  context "Create VirtualOrderClearance" do
+  context "Create VirtualOrderClearance is_waste == true" do
     before(:each) do
     @voc = VirtualOrderClearance.create_object(
         :virtual_delivery_order_id =>  @vdo_1.id,
-        :clearance_date => @clearance_date_1
+        :clearance_date => @clearance_date_1,
+        :is_waste => true
+        )
+    end
+    context "Create VirtualOrderClearanceDetail" do
+      before(:each) do
+          @vocd = VirtualOrderClearanceDetail.create_object(
+              :virtual_order_clearance_id => @voc.id,
+              :virtual_delivery_order_detail_id => @vdod_1.id,
+              :amount => 5,
+              :selling_price => BigDecimal("1000")
+              )
+      end
+      
+      context "Confirm VirtualOrderClearance" do
+            before(:each) do
+              @voc.confirm_object(:confirmed_at => DateTime.now)
+            end
+            
+            it "should confirm VirtualOrderClearance" do
+              @voc.errors.size.should == 0
+              @voc.is_confirmed.should == true
+            end
+            
+            it "should create 2 stock mutation" do
+              sm = StockMutation.where(:source_id => @voc.id,:source_class => @voc.class.to_s)
+              sm.count.should == 2
+            end
+            
+            it "should set cogs to " do
+              @voc.reload
+              @voc.total_waste_cogs.should == 5000
+            end
+            
+            it "should create 1 transaction_data" do
+               td = TransactionData.where(
+                  :transaction_source_type => @voc.class.to_s,
+                  :transaction_source_id => @voc.id
+                  )
+                td.count.should == 1
+                td.first.is_confirmed.should == true
+            end
+              
+            it "should set VirtualDeliveryOrder is_reconciled to true" do
+              @voc.reload
+              @voc.virtual_delivery_order.is_reconciled.should == true
+            end
+                                
+            context "Unconfirm VirtualOrderClearance" do
+                before(:each) do
+                  @voc.unconfirm_object
+                end
+                
+                it "should unconfirm VirtualOrderClearance" do
+                  @voc.is_confirmed.should == false
+                end
+                
+                it "should delete stock mutation" do
+                  sm = StockMutation.where(:source_id => @voc.id,:source_class => @voc.class.to_s)
+                  sm.count.should == 0
+                end
+                
+                it "should set virtual_delivery_order is_reconciled to false"do
+                  @voc.virtual_delivery_order.is_reconciled.should == false
+                end
+            end
+            
+        end
+      
+    end
+    
+  end
+  
+  context "Create VirtualOrderClearance is_waste == false" do
+    before(:each) do
+    @voc = VirtualOrderClearance.create_object(
+        :virtual_delivery_order_id =>  @vdo_1.id,
+        :clearance_date => @clearance_date_1,
+        :is_waste => false
         )
     
     end
@@ -247,7 +325,7 @@ describe VirtualOrderClearance do
         @voc.should_not be_valid
     end
     
-    context "Create VirtualOrderClearanceDetail with no waste" do
+    context "Create VirtualOrderClearanceDetail" do
         before(:each) do
             @vocd = VirtualOrderClearanceDetail.create_object(
                 :virtual_order_clearance_id => @voc.id,
@@ -291,6 +369,7 @@ describe VirtualOrderClearance do
             end
             
             it "should set VirtualDeliveryOrder is_reconciled to true" do
+              @voc.reload
               @voc.virtual_delivery_order.is_reconciled.should == true
             end
                                 
@@ -316,74 +395,6 @@ describe VirtualOrderClearance do
         end
     end
     
-    context "Create VirtualOrderClearanceDetail with waste" do
-      before(:each) do
-            @vocd = VirtualOrderClearanceDetail.create_object(
-                :virtual_order_clearance_id => @voc.id,
-                :virtual_delivery_order_detail_id => @vdod_1.id,
-                :amount => 4,
-                :selling_price => BigDecimal("1000")
-                )
-        end
-        
-        it "should create VirtualOrderClearanceDetail" do
-            @vocd.errors.size.should == 0
-        end
-        
-        it "should not update VirtualOrderClearance if have detail" do
-          @voc.update_object(
-            :virtual_delivery_order_id => @vdo_2.id,
-            :clearance_date => @clearance_date_2
-            )
-            @voc.errors.size.should_not  == 0
-        end
-        
-        
-        it "should not delete VirtualOrderClearance if have detail" do
-          @voc.delete_object
-          @voc.errors.size.should_not == 0
-        end
-     
-        context "Confirm VirtualOrderClearance" do
-            before(:each) do
-              @voc.confirm_object(:confirmed_at => DateTime.now)
-            end
-            
-            it "should confirm VirtualOrderClearance" do
-              @voc.errors.size.should == 0
-              @voc.is_confirmed.should == true
-            end
-            
-            it "should create 2 stock mutation" do
-              sm = StockMutation.where(:source_id => @voc.id,:source_class => @voc.class.to_s)
-              sm.count.should == 2
-            end
-            
-            it "should set VirtualDeliveryOrder is_reconciled to true" do
-              @voc.virtual_delivery_order.is_reconciled.should == true
-            end
-                                
-            context "Unconfirm VirtualOrderClearance" do
-                before(:each) do
-                  @voc.unconfirm_object
-                end
-                
-                it "should unconfirm VirtualOrderClearance" do
-                  @voc.is_confirmed.should == false
-                end
-                
-                it "should delete stock mutation" do
-                  sm = StockMutation.where(:source_id => @voc.id,:source_class => @voc.class.to_s)
-                  sm.count.should == 0
-                end
-                
-                it "should set virtual_delivery_order is_reconciled to false"do
-                  @voc.virtual_delivery_order.is_reconciled.should == false
-                end
-            end
-            
-        end
-    end
   end
   
 end

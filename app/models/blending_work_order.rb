@@ -70,7 +70,10 @@ class BlendingWorkOrder < ActiveRecord::Base
         self.errors.add(:generic_errors, "Sudah di konfirmasi")
         return self 
       end
-      
+      if params[:confirmed_at].nil?
+        self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+      end  
       # check source amount
       self.blending_recipe.blending_recipe_details.each do |brd|
          item_in_warehouse = WarehouseItem.find_or_create_object(

@@ -13,6 +13,20 @@ Ext.define('AM.view.operation.virtualorderclearance.Form', {
 	
   initComponent: function() {
 	var me = this; 
+	
+		var localJsonStoreClearanceType = Ext.create(Ext.data.Store, {
+			type : 'array',
+			storeId : 'is_waste',
+			fields	: [ 
+				{ name : "is_waste"}, 
+				{ name : "is_waste_text"}  
+			], 
+			data : [
+				{ is_waste : false, is_waste_text : "Approved"},
+				{ is_waste : true, is_waste_text : "Rejected"},
+			] 
+		});
+	
 	var remoteJsonStoreVirtualDeliveryOrder = Ext.create(Ext.data.JsonStore, {
 		storeId : 'virtual_delivery_order_search',
 		fields	: [
@@ -80,6 +94,27 @@ Ext.define('AM.view.operation.virtualorderclearance.Form', {
     		        name : 'code',
     		        fieldLabel: 'Kode'
     		  	  },
+    		  	  {
+								fieldLabel: 'ClearanceType',
+								xtype: 'combo',
+								queryMode: 'remote',
+								forceSelection: true, 
+								displayField : 'is_waste_text',
+								valueField : 'is_waste',
+								pageSize : 5,
+								minChars : 1, 
+								allowBlank : false, 
+								triggerAction: 'all',
+								store : localJsonStoreClearanceType , 
+								listConfig : {
+									getInnerTpl: function(){
+										return  	'<div data-qtip="{is_waste_text}">' + 
+																'<div class="combo-name">{is_waste_text}</div>' +
+										 					'</div>';
+									}
+								},
+								name : 'is_waste' 
+							},
 		  	      {
 		    				fieldLabel: 'Delivery VirtualOrder',
 		    				xtype: 'combo',

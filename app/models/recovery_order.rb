@@ -96,6 +96,10 @@ class RecoveryOrder < ActiveRecord::Base
       self.errors.add(:generic,"Tidak memiliki detail")
       return self
     end
+    if params[:confirmed_at].nil?
+      self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
+      return self 
+    end
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true
     if self.save

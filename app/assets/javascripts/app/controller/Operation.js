@@ -52,6 +52,18 @@ Ext.define("AM.controller.Operation", {
 		iconCls		: 'text-folder', 
     	expanded	: true,
 		children 	: [
+			{ 
+				text:'Sales Quotation', 
+				viewClass:'AM.view.operation.SalesQuotation', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'sales_quotations',
+						action : 'index'
+					}
+				]
+			}, 
         	{ 
 				text:'Sales Order', 
 				viewClass:'AM.view.operation.SalesOrder', 
@@ -162,6 +174,19 @@ Ext.define("AM.controller.Operation", {
 		iconCls		: 'text-folder', 
     	expanded	: true,
 		children 	: [
+			{ 
+				text:'PurchaseRequest', 
+				viewClass:'AM.view.operation.PurchaseRequest', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'purchase_requests',
+						action : 'index'
+					}
+				]
+			}, 
+			
         	{ 
 				text:'PurchaseOrder', 
 				viewClass:'AM.view.operation.PurchaseOrder', 
@@ -747,6 +772,18 @@ Ext.define("AM.controller.Operation", {
 				conditions : [
 					{
 						controller : 'blending_work_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'Unit Conversion Order', 
+				viewClass:'AM.view.operation.UnitConversionOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'unit_conversion_orders',
 						action : 'index'
 					}
 				]

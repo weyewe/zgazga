@@ -89,4 +89,13 @@ class VirtualDeliveryOrderDetail < ActiveRecord::Base
     self.destroy
   end
   
+  def update_is_reconcile_completed
+      if BigDecimal(self.amount) == (BigDecimal(self.waste_amount) + BigDecimal(self.restock_amount))
+         self.is_reconciled = true
+      else
+         self.is_reconciled = false
+      end  
+      self.save
+  end
+  
 end

@@ -8,6 +8,7 @@ Ext.define('AM.model.SalesDownPayment', {
     	{ name: 'receivable_source_code', type: 'string' },
     	{ name: 'payable_id', type: 'int' },
     	{ name: 'payable_source_code', type: 'string' },
+    	{ name: 'payable_remaining_amount', type: 'string' },
     	{ name: 'code', type: 'string' },
     	{ name: 'down_payment_date', type: 'string' },
     	{ name: 'due_date', type: 'string' },

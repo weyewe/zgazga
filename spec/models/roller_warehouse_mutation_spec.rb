@@ -207,7 +207,7 @@ describe RollerWarehouseMutation do
     @rif = RollerIdentificationForm.create_object(
       :warehouse_id => @wrh_1.id,
       :contact_id => @ct_1.id,
-      :is_in_house => false,
+      :is_in_house => true,
       :amount => 1,
       :identified_date => DateTime.now,
       :nomor_disasembly => "nomor_disasembly_1"
@@ -313,7 +313,7 @@ describe RollerWarehouseMutation do
             item_in_warehouse = WarehouseItem.joins(:item).where(
               :warehouse_id => @rwm.warehouse_from_id,
               :item_id => @rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id).first
-            item_in_warehouse.customer_amount.should == 0
+            item_in_warehouse.amount.should == 0
           end
           
           
@@ -321,7 +321,7 @@ describe RollerWarehouseMutation do
             item_in_warehouse = WarehouseItem.joins(:item).where(
               :warehouse_id => @rwm.warehouse_to_id,
               :item_id => @rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id).first
-            item_in_warehouse.customer_amount.should == 1
+            item_in_warehouse.amount.should == 1
           end
           
           it "should confirm RollerWarehouseMutation" do

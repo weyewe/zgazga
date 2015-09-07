@@ -171,6 +171,19 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 		me.setSelectedPurchaseReceivalDetail( record.get("purchase_receival_detail_id")  ) ;  
 	},
 	
+	setExtraParamInPurchaseReceivalDetailIdComboBox: function(purchase_receival_id){  
+		var comboBox = this.down('form').getForm().findField('purchase_receival_detail_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.purchase_receival_id =  purchase_receival_id;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) {  
+		var me =this;
+		me.setExtraParamInPurchaseReceivalDetailIdComboBox( record.get("purchase_receival_id") ); 
+	},
+	
 	
 	setParentData: function( record) {
 		this.down('form').getForm().findField('purchase_invoice_code').setValue(record.get('code')); 

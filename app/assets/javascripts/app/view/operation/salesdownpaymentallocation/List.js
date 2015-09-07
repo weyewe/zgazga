@@ -8,9 +8,8 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.List' ,{
 	initComponent: function() {
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
-		{ header: 'Kode',  dataIndex: 'code', flex: 1},
+			{ header: 'Kode',  dataIndex: 'code', flex: 1},
 			{	header: 'Contact', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Payable Id', dataIndex: 'payable_id', flex: 2 },
 			{	header: 'Payable Code', dataIndex: 'payable_source_code', flex: 2 },
 			{	header: 'Allocation Date', dataIndex: 'allocation_date', flex: 2 },
 			{	header: 'Total amount', dataIndex: 'total_amount', flex: 2 },

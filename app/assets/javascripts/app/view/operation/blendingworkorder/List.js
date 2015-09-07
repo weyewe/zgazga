@@ -7,14 +7,24 @@ Ext.define('AM.view.operation.blendingworkorder.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Blending Recipe',  dataIndex: 'blending_recipe_name', flex: 1},
-			{ header: 'Target Sku',  dataIndex: 'blending_recipe_target_item_sku', flex: 1},
-			{ header: 'Target Item',  dataIndex: 'blending_recipe_target_item_name', flex: 1},
-			{ header: 'UoM',  dataIndex: 'blending_recipe_target_item_uom_name', flex: 1},
-			{ header: 'Warehouse',  dataIndex: 'warehouse_name', flex: 1},
-			{ header: 'Description', dataIndex: 'description', flex: 2 },
-			{ header: 'Blending Date', dataIndex: 'blending_date', flex: 2 },
+			{ header: 'Order',  dataIndex: 'code', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Tanggal Blending: <br />  <b>{blending_date}</b>'  + '<br />' + '<br />' +
+						'Blending Recipe: <br /> <b>{blending_recipe_name}</b>'  + '<br />' + '<br />' +
+						'Gudang : <br /> <b>{warehouse_name}</b>' + '<br />' + '<br />' +
+						'Note : <br /> <b>{description}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Target",
+				flex : 3,
+				tpl : 	'Sku :   <b>{blending_recipe_target_item_sku}</b>'  + '<br />' + '<br />' +
+						'Item : <br /> <b>{blending_recipe_target_item_name}  {blending_recipe_target_item_uom_name} </b>' + '<br />' + '<br />' +
+						'QTY :<br /> <b>{blending_recipe_target_amount}</b>'  
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Transaksi",

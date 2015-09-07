@@ -120,15 +120,15 @@ ADJUSTMENT_STATUS = {
 }
 
 TAX_CODE = {
-  :code_01 => "01",
-  :code_02 => "02",
-  :code_03 => "03",
-  :code_04 => "04",
-  :code_05 => "05",
-  :code_06 => "06",
-  :code_07 => "07",
-  :code_08 => "08",
-  :code_09 => "09",
+  :code_01 => "1",
+  :code_02 => "2",
+  :code_03 => "3",
+  :code_04 => "4",
+  :code_05 => "5",
+  :code_06 => "6",
+  :code_07 => "7",
+  :code_08 => "8",
+  :code_09 => "9",
   }
 
 TAX_VALUE = {
@@ -216,6 +216,12 @@ CORE_BUILDER_TYPE = {
   }	
 
 
+CLEARANCE_TYPE = {		
+  :approved => false,	
+  :rejected => true,
+  }	
+  
+
 MATERIAL_CASE ={
   :new => 1,
   :used => 2
@@ -232,6 +238,12 @@ REPAIR_REQUEST_CASE ={
   :all => 8,
   }
 
+PURCHASE_CATEGORY = {
+  :penting_dan_mendesak => 1,
+  :tidak_penting_dan_mendesak => 2,
+  :penting_dan_tidak_mendesak => 3,
+  :tidak_penting_dan_tidak_mendesak => 4,
+}
 
 
 BASE_JS_APP = "#{Dir.pwd}/app/assets/javascripts/app"

@@ -57,9 +57,13 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 					name : 'sales_down_payment_payable_source_code',
 					mapping : "payable_source_code"
 				} ,
+				{
+					name : 'sales_down_payment_exchange_name',
+					mapping : "exchange_name"
+				} ,
 		 		{
 					name : 'sales_down_payment_payable_total_amount',
-					mapping : "payable_total_amount"
+					mapping : "total_amount"
 				} ,
 				{
 					name : 'sales_down_payment_payable_remaining_amount',
@@ -156,6 +160,7 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 	    												'<div class="combo-name">Source: {sales_down_payment_payable_source_code}</div>' + 
 	    												'<div class="combo-name">Total: {sales_down_payment_payable_total_amount}</div>' + 
 	    												'<div class="combo-name">Remaining: {sales_down_payment_payable_remaining_amount}</div>' + 
+	    												'<div class="combo-name">Currency: {sales_down_payment_exchange_name}</div>' + 
 	    						 					'</div>';
 	    					}
     					},
@@ -215,22 +220,6 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 		});
 	},
 	
-	setSelectedExchange: function( exchange_id ){
-		var comboBox = this.down('form').getForm().findField('exchange_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : exchange_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( exchange_id );
-			}
-		});
-	},
 	
 	setComboBoxData : function( record){ 
 
@@ -238,7 +227,6 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 		me.setLoading(true);
 		
 		me.setSelectedPayable( record.get("payable_id")  ) ;
-		me.setSelectedExchange( record.get("exchange_id")  ) ;
 		me.setSelectedCustomer( record.get("contact_id")  ) ;
  
 	}

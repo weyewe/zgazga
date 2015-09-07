@@ -31,8 +31,6 @@ class Api::PaymentRequestsController < Api::BaseApiController
      end
      
      
-     
-     
   end
 
   def create
@@ -203,6 +201,6 @@ class Api::PaymentRequestsController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

@@ -109,6 +109,10 @@ class CashBankMutation < ActiveRecord::Base
         :ex_rate_date => self.mutation_date,
         :exchange_id => self.source_cash_bank.exchange_id
         )
+      if latest_exchange_rate.nil?
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.source_cash_bank.exchange.name} belum di input")
+        return self 
+      end
       self.exchange_rate_amount = latest_exchange_rate.rate
       self.exchange_rate_id =   latest_exchange_rate.id   
     else

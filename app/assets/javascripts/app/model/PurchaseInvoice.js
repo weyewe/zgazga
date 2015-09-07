@@ -11,7 +11,7 @@ Ext.define('AM.model.PurchaseInvoice', {
 			{ name: 'amount_payable', type: 'string' } ,
 			{ name: 'total_cos', type: 'string' } ,
 			{ name: 'tax_value', type: 'string' } ,
-			
+			{ name: 'exchange_rate_amount', type: 'string' } ,
 			{ name: 'purchase_receival_id', type: 'int' },
     	    { name: 'purchase_receival_code', type: 'string' },
     	    

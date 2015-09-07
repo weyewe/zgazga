@@ -22,7 +22,7 @@ module AccountingService
       :amount              => (payment_request.amount * payment_request.exchange_rate_amount).round(2),
       :real_amount         => payment_request.amount ,
       :exchange_id         => payment_request.exchange_id ,
-      :description => "Credit AccountPayable"
+      :description => "Credit #{payment_request.account.name}"
       )
 
 #     Debit Account User Input
@@ -32,7 +32,7 @@ module AccountingService
         :account_id          => prd.account_id ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (prd.amount * payment_request.exchange_rate_amount).round(2),
-        :description => "Debit Account User Input"
+        :description => "Debit Account #{prt.acccount.name}"
       )
     end
     ta.confirm
