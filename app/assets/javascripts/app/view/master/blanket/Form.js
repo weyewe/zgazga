@@ -406,6 +406,7 @@ Ext.define('AM.view.master.blanket.Form', {
 				{ name : "application_case_text"}  
 			], 
 			data : [
+				{ application_case : 4, application_case_text : "None"},
 				{ application_case : 1, application_case_text : "Sheetfed"},
 				{ application_case : 2, application_case_text : "Web"},
 				{ application_case : 3, application_case_text : "Both"},

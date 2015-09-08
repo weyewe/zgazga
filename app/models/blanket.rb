@@ -34,7 +34,7 @@ class Blanket < ActiveRecord::Base
   def valid_application_case
     return if application_case.nil?
  
-    if not [APPLICATION_CASE[:web],APPLICATION_CASE[:sheetfed],APPLICATION_CASE[:both]].include?( application_case.to_i) 
+    if not [APPLICATION_CASE[:web],APPLICATION_CASE[:sheetfed],APPLICATION_CASE[:both],APPLICATION_CASE[:none]].include?( application_case.to_i) 
       self.errors.add(:application_case, "Application Type harus ada")
  
       return self 

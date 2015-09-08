@@ -171,9 +171,10 @@ class ReceiptVoucher < ActiveRecord::Base
   def confirm_detail
     self.receipt_voucher_details.each do |rvd|
       rcb = Receivable.find_by_id(rvd.receivable_id)
-      rcb.update_remaining_amount(rvd.amount * -1)
       if self.is_gbch?
         rcb.update_pending_clearence_amount(rvd.amount)
+      else
+         rcb.update_remaining_amount(rvd.amount * -1)
       end
       rcb.set_completed_receivable
     end
@@ -182,9 +183,10 @@ class ReceiptVoucher < ActiveRecord::Base
   def unconfirm_detail
     self.receipt_voucher_details.each do |rvd|        
       rcb = Receivable.find_by_id(rvd.receivable_id)
-      rcb.update_remaining_amount(rvd.amount)
       if self.is_gbch?
         rcb.update_pending_clearence_amount(rvd.amount * -1)
+      else
+        rcb.update_remaining_amount(rvd.amount)
       end
       rcb.set_completed_receivable
     end
@@ -193,6 +195,7 @@ class ReceiptVoucher < ActiveRecord::Base
   def reconciled_detail
     self.receipt_voucher_details.each do |rvd|
       rcb = Receivable.find_by_id(rvd.receivable_id)
+      rcb.update_remaining_amount(rvd.amount * -1)
       rcb.update_pending_clearence_amount(rvd.amount * -1)
       rcb.set_completed_receivable
     end
@@ -201,6 +204,7 @@ class ReceiptVoucher < ActiveRecord::Base
   def unreconciled_detail
     self.receipt_voucher_details.each do |rvd|        
       rcb = Receivable.find_by_id(rvd.receivable_id)
+      rcb.update_remaining_amount(rvd.amount)
       rcb.update_pending_clearence_amount(rvd.amount)
       rcb.set_completed_receivable
     end
@@ -225,7 +229,14 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Tidak memiliki detail")
       return self 
     end 
-   
+    self.receipt_voucher_details.each do |rvd|        
+      rcb = Receivable.find_by_id(rvd.receivable_id)
+      if rcb.remaining_amount < rvd.amount
+        self.errors.add(:generic_errors, "Remaining Amount Receivable #{rcb.source_code} lebih kecil dari jumlah amount di detail")
+        return self 
+      end
+    end
+    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     self.pembulatan = BigDecimal(params[:pembulatan] || '0')
@@ -244,14 +255,11 @@ class ReceiptVoucher < ActiveRecord::Base
         puts "The pph_23 is nil" if self.total_pph_23.nil?
         puts "The biaya_bank is nil " if self.biaya_bank.nil?
         puts "The biaya_pembulatan is nil after deploy, while the object variable: #{self.pembulatan}" if biaya_pembulatan.nil?
-        
-        
-        
         total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total)
+        AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
       end
-      AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end
@@ -316,6 +324,13 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di reconcile")
       return self 
     end
+    self.receipt_voucher_details.each do |rvd|        
+      rcb = Receivable.find_by_id(rvd.receivable_id)
+      if rcb.remaining_amount < rvd.amount
+        self.errors.add(:generic_errors, "Remaining Amount Receivable #{rcb.source_code} lebih kecil dari jumlah amount di detail")
+        return self 
+      end
+    end
     self.is_reconciled = true
     self.reconciliation_date = params[:reconciliation_date]
     if Closing.is_date_closed(self.reconciliation_date).count > 0 
@@ -333,7 +348,7 @@ class ReceiptVoucher < ActiveRecord::Base
       total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
       self.generate_cash_mutation(total)
       self.update_cash_bank_amount(total)
-      AccountingService::CreateReceiptVoucherJournal.create_reconcile_journal(self)
+      AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end
@@ -379,7 +394,7 @@ class ReceiptVoucher < ActiveRecord::Base
       end
       total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
       self.update_cash_bank_amount(total * -1)
-      AccountingService::CreateReceiptVoucherJournal.undo_create_reconcile_journal(self)
+      AccountingService::CreateReceiptVoucherJournal.undo_create_confirmation_journal(self)
     end
     return self
   end

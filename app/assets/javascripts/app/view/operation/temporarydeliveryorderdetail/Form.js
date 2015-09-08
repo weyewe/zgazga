@@ -99,7 +99,6 @@ Ext.define('AM.view.operation.temporarydeliveryorderdetail.Form', {
 													'<div class="combo-name">Sku : {sales_order_detail_item_sku}</div>' +  
 													'<div class="combo-name">Name : {sales_order_detail_item_name}</div>' +  
 													'<div class="combo-name">Amount : {sales_order_detail_pending_delivery_amount}</div>' +  
-													'<div class="combo-name">Price : {sales_order_detail_pricet}</div>' +  
 							 					'</div>';
 						}
 					},

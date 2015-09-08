@@ -1,6 +1,6 @@
-
-json.delivery_orders objects do |object|
-
+json.success true 
+json.total @total
+json.records @objects do |object|
 	json.id 								object.id 
 	json.delivery_date 			 format_date_friendly( object.delivery_date )   
 	json.is_confirmed 			 object.is_confirmed
@@ -17,5 +17,5 @@ json.delivery_orders objects do |object|
 	json.code 					 object.code
  	json.nomor_surat 			 object.nomor_surat
 	
-	
 end
+

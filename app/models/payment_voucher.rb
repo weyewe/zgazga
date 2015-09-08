@@ -178,20 +178,23 @@ class PaymentVoucher < ActiveRecord::Base
   def confirm_detail
     self.payment_voucher_details.each do |pvd|
       pyb = Payable.find_by_id(pvd.payable_id)
-      pyb.update_remaining_amount(pvd.amount * -1)
       if self.is_gbch?
         pyb.update_pending_clearence_amount(pvd.amount)
+      else
+        pyb.update_remaining_amount(pvd.amount * -1)
       end
       pyb.set_completed_payable
     end
   end
   
+  
   def unconfirm_detail
-    self.payment_voucher_details.each do |pvd|        
+    self.payment_voucher_details.each do |pvd|    
       pyb = Payable.find_by_id(pvd.payable_id)
-      pyb.update_remaining_amount(pvd.amount)
       if self.is_gbch?
         pyb.update_pending_clearence_amount(pvd.amount * -1)
+      else
+        pyb.update_remaining_amount(pvd.amount)
       end
       pyb.set_completed_payable
     end
@@ -200,6 +203,7 @@ class PaymentVoucher < ActiveRecord::Base
   def reconciled_detail
     self.payment_voucher_details.each do |pvd|
       pyb = Payable.find_by_id(pvd.payable_id)
+      pyb.update_remaining_amount(pvd.amount * -1)
       pyb.update_pending_clearence_amount(pvd.amount * -1)
       pyb.set_completed_payable
     end
@@ -209,6 +213,7 @@ class PaymentVoucher < ActiveRecord::Base
     self.payment_voucher_details.each do |pvd|        
       pyb = Payable.find_by_id(pvd.payable_id)
       pyb.update_pending_clearence_amount(pvd.amount)
+      pyb.update_remaining_amount(pvd.amount)
       pyb.set_completed_payable
     end
   end
@@ -229,6 +234,13 @@ class PaymentVoucher < ActiveRecord::Base
     if Closing.is_date_closed(self.payment_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
+    end
+    self.payment_voucher_details.each do |pvd| 
+      pyb = Payable.find_by_id(pvd.payable_id)
+      if pyb.remaining_amount < pvd.amount
+        self.errors.add(:generic_errors, "Remaining Amount Payable #{pyb.source_code} lebih kecil dari jumlah amount di detail")
+        return self 
+      end
     end
     
     self.pembulatan = BigDecimal(params[:pembulatan] || '0')
@@ -259,30 +271,30 @@ class PaymentVoucher < ActiveRecord::Base
         total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total * -1)
+        AccountingService::CreatePaymentVoucherJournal.create_confirmation_journal(self)
       end
-      AccountingService::CreatePaymentVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end
   
   def unconfirm_object
+    if Closing.is_date_closed(self.payment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
-     if Closing.is_date_closed(self.payment_date).count > 0 
-      self.errors.add(:generic_errors, "Period sudah di closing")
-      return self 
-    end
-     if (self.is_gbch == true) & (self.is_reconciled == true)
+    if (self.is_gbch == true) & (self.is_reconciled == true)
       self.errors.add(:generic_errors, "belum di unreconcile")
       return self 
     end
     self.is_confirmed = false
     self.confirmed_at = nil
      if self.save
-      self.unconfirm_detail
        if not self.is_gbch?
+         self.unconfirm_detail
          biaya_pembulatan = 0 
          if self.status_pembulatan == NORMAL_BALANCE[:credit]
            biaya_pembulatan = self.pembulatan * -1
@@ -322,6 +334,13 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:generic_errors, "Dana tidak mencukupi")
       return self 
     end
+    self.payment_voucher_details.each do |pvd| 
+      pyb = Payable.find_by_id(pvd.payable_id)
+      if pyb.remaining_amount < pyb.amount
+        self.errors.add(:generic_errors, "Remaining Amount Payable #{pyb.source_code} lebih kecil dari jumlah amount di detail")
+        return self 
+      end
+    end
     self.is_reconciled = true
     self.reconciliation_date = params[:reconciliation_date]
     if Closing.is_date_closed(self.reconciliation_date).count > 0 
@@ -339,7 +358,7 @@ class PaymentVoucher < ActiveRecord::Base
       total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
       self.generate_cash_mutation(total)
       self.update_cash_bank_amount(total * -1)
-      AccountingService::CreatePaymentVoucherJournal.create_reconcile_journal(self)
+      AccountingService::CreatePaymentVoucherJournal.create_confirmation_journal(self)
     end
     return self
   end
@@ -374,7 +393,7 @@ class PaymentVoucher < ActiveRecord::Base
       end
       total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
       self.update_cash_bank_amount(total)
-      AccountingService::CreatePaymentVoucherJournal.undo_create_reconcile_journal(self)
+      AccountingService::CreatePaymentVoucherJournal.undo_create_confirmation_journal(self)
     end
     return self
   end

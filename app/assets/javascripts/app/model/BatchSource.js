@@ -11,6 +11,7 @@ Ext.define('AM.model.BatchSource', {
 			
 			{ name: 'source_id', type: 'int' },
     	    { name: 'source_class', type: 'string' },
+    	    { name: 'source_code', type: 'string' },
     	    
     	    { name: 'amount', type: 'string' },
     	    { name: 'unallocated_amount', type: 'string' },

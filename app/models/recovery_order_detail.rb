@@ -204,7 +204,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
     core_in_warehouse = WarehouseItem.find_or_create_object(
           :warehouse_id => self.recovery_order.warehouse_id,
           :item_id => core_id) 
-    if (core_in_warehouse.amount.to_i - self.compound_usage) < 0 
+    if (core_in_warehouse.amount.to_i - 1) < 0 
       self.errors.add(:generic_errors, 
       "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
       return self 

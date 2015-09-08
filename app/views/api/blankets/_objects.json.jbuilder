@@ -61,6 +61,8 @@ json.blankets objects do |object|
 		json.application_case_text "Web" 
 	elsif object.application_case == APPLICATION_CASE[:both]
 		json.application_case_text "Both" 
+	elsif object.application_case == APPLICATION_CASE[:none]
+		json.application_case_text "None" 
 	end
 end
 

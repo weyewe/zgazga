@@ -2,7 +2,7 @@ module AccountingService
   class CreateUnitConversionOrderJournal
   def CreateUnitConversionOrderJournal.create_confirmation_journal(unit_conversion_order,total_cost) 
       
-    message = "UnitConversionOrder"
+    message = "UnitConversionOrder #{unit_conversion_order.code}"
 
       ta = TransactionData.create_object({
         :transaction_datetime => unit_conversion_order.conversion_date,

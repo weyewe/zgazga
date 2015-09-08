@@ -19,6 +19,7 @@ Ext.define('AM.view.operation.batchsource.List' ,{
 				tpl : 'Item SKU: <br /><b>{item_sku}</b>' + '<br />' +  
 						'{item_name}' + '<br />' + '<br />' +
 							'Sumber:  <b>{source_class}</b>'    + '<br />' + '<br />' +
+							'Code:  <b>{source_code}</b>'    + '<br />' + '<br />' +
 							'Tanggal:  <b>{generated_date}</b>' 
 			},
 			

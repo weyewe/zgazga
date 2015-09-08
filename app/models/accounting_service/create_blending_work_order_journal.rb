@@ -2,7 +2,7 @@ module AccountingService
   class CreateBlendingWorkOrderJournal
   def CreateBlendingWorkOrderJournal.create_confirmation_journal(blending_work_order,total_cost) 
       
-    message = "BlendingWorkOrder"
+    message = "BlendingWorkOrder #{blending_work_order.code}"
 
       ta = TransactionData.create_object({
         :transaction_datetime => blending_work_order.blending_date,

@@ -15,47 +15,47 @@ module AccountingService
 #     Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
 #     Debit GBCH/CashBank, Credit HutangPPh21 Hutang PPh23
 
-    if payment_voucher.is_gbch == true
-#     Credit GBCHPayable
-      TransactionDataDetail.create_object(
-        :transaction_data_id => ta.id,        
-        :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
-        :entry_case          => NORMAL_BALANCE[:credit]     ,
-        :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
-        :real_amount         => payment_voucher.amount ,
-        :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-        :description => "Credit GBCHPayable"
-        )
-      if payment_voucher.biaya_bank > 0
-#     Credit GBCH for biaya bank
-        TransactionDataDetail.create_object(
-          :transaction_data_id => ta.id,        
-          :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
-          :entry_case          => NORMAL_BALANCE[:credit]     ,
-          :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
-          :real_amount         => payment_voucher.biaya_bank ,
-          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => "Credit GBCH for BiayaBank"
-          )
-      end
+#     if payment_voucher.is_gbch == true
+# #     Credit GBCHPayable
+#       TransactionDataDetail.create_object(
+#         :transaction_data_id => ta.id,        
+#         :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
+#         :entry_case          => NORMAL_BALANCE[:credit]     ,
+#         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
+#         :real_amount         => payment_voucher.amount ,
+#         :exchange_id         => payment_voucher.cash_bank.exchange_id ,
+#         :description => "Credit GBCHPayable"
+#         )
+#       if payment_voucher.biaya_bank > 0
+# #     Credit GBCH for biaya bank
+#         TransactionDataDetail.create_object(
+#           :transaction_data_id => ta.id,        
+#           :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id  ,
+#           :entry_case          => NORMAL_BALANCE[:credit]     ,
+#           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
+#           :real_amount         => payment_voucher.biaya_bank ,
+#           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
+#           :description => "Credit GBCH for BiayaBank"
+#           )
+#       end
       
-      #     Credit/Debit GBCH for Pembulatan
-      if not payment_voucher.pembulatan == 0
-        entry_case = NORMAL_BALANCE[:credit]  
-        if payment_voucher.status_pembulatan == NORMAL_BALANCE[:credit]    
-          entry_case =  NORMAL_BALANCE[:debit]
-        end
-        TransactionDataDetail.create_object(
-          :transaction_data_id => ta.id,        
-          :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id   ,
-          :entry_case          => entry_case     ,
-          :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
-          :real_amount         => payment_voucher.pembulatan ,
-          :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => "Credit/Debit GBCH for Pembulatan"
-          ) 
-      end
-    else
+#       #     Credit/Debit GBCH for Pembulatan
+#       if not payment_voucher.pembulatan == 0
+#         entry_case = NORMAL_BALANCE[:credit]  
+#         if payment_voucher.status_pembulatan == NORMAL_BALANCE[:credit]    
+#           entry_case =  NORMAL_BALANCE[:debit]
+#         end
+#         TransactionDataDetail.create_object(
+#           :transaction_data_id => ta.id,        
+#           :account_id          => payment_voucher.cash_bank.exchange.gbch_payable_id   ,
+#           :entry_case          => entry_case     ,
+#           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
+#           :real_amount         => payment_voucher.pembulatan ,
+#           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
+#           :description => "Credit/Debit GBCH for Pembulatan"
+#           ) 
+#       end
+#     else
 #       Credit CashBank
       cd = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
@@ -95,7 +95,7 @@ module AccountingService
           :description => "Credit/Debit CashBank for Pembulatan"
           ) 
       end
-    end
+    # end
     
 #     Debit BiayaBank
     if payment_voucher.biaya_bank > 0 
@@ -121,15 +121,28 @@ module AccountingService
     
     payment_voucher.payment_voucher_details.each do |pvd|
 #     Debit Account Payable
-      TransactionDataDetail.create_object(
-        :transaction_data_id => ta.id,        
-        :account_id          => pvd.payable.exchange.account_payable_id  ,
-        :entry_case          => NORMAL_BALANCE[:debit]     ,
-        :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
-        :real_amount         => (pvd.amount_paid / pvd.rate) ,
-        :exchange_id         => pvd.payable.exchange_id ,
-        :description => "Debit AccountPayable"
-      )
+      if pvd.payable.source_class == PaymentRequest.to_s
+        TransactionDataDetail.create_object(
+          :transaction_data_id => ta.id,        
+          :account_id          => pvd.payable.source.account_id,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
+          :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
+          :real_amount         => (pvd.amount_paid / pvd.rate) ,
+          :exchange_id         => pvd.payable.exchange_id ,
+          :description => "Debit #{pvd.payable.source.account.name}"
+        )
+      else
+        TransactionDataDetail.create_object(
+          :transaction_data_id => ta.id,        
+          :account_id          => pvd.payable.exchange.account_payable_id  ,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
+          :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
+          :real_amount         => (pvd.amount_paid / pvd.rate) ,
+          :exchange_id         => pvd.payable.exchange_id ,
+          :description => "Debit AccountPayable"
+        )
+      end
+     
 #       Credit ExchangeGain or Debit ExchangeLost
       if pvd.payable.exchange_rate_amount < (payment_voucher.rate_to_idr * pvd.rate)
          TransactionDataDetail.create_object(
@@ -159,18 +172,18 @@ module AccountingService
           :amount              => pph_21,
           :description => "Credit HutangPPh21"
           )  
-        if payment_voucher.is_gbch == true
-#           Debit GBCH for Hutang PPh 21 
-          TransactionDataDetail.create_object(
-            :transaction_data_id => ta.id,        
-            :account_id          => pvd.payable.exchange.gbch_payable_id   ,
-            :entry_case          => NORMAL_BALANCE[:debit]     ,
-            :amount              => pph_21,
-            :real_amount         => pvd.pph_21 ,
-            :exchange_id         => pvd.payable.exchange_id ,
-            :description => "Debit GBCH for HutangPPh21"
-            )  
-        else
+#         if payment_voucher.is_gbch == true
+# #           Debit GBCH for Hutang PPh 21 
+#           TransactionDataDetail.create_object(
+#             :transaction_data_id => ta.id,        
+#             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
+#             :entry_case          => NORMAL_BALANCE[:debit]     ,
+#             :amount              => pph_21,
+#             :real_amount         => pvd.pph_21 ,
+#             :exchange_id         => pvd.payable.exchange_id ,
+#             :description => "Debit GBCH for HutangPPh21"
+#             )  
+#         else
 #           Debit CashBank for Hutang PPh 21
           TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -181,7 +194,7 @@ module AccountingService
             :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit CashBank for HutangPPh21"
             )  
-        end
+        # end
       end
       
       if pvd.pph_23 > 0
@@ -194,18 +207,18 @@ module AccountingService
           :amount              => pph_23,
           :description => "Credit HutangPPh23"
           )  
-        if payment_voucher.is_gbch == true
-#           Debit GBCH for Hutang PPh 23
-          TransactionDataDetail.create_object(
-            :transaction_data_id => ta.id,        
-            :account_id          => pvd.payable.exchange.gbch_payable_id   ,
-            :entry_case          => NORMAL_BALANCE[:debit]     ,
-            :amount              => pph_23,
-            :real_amount         => pvd.pph_23 ,
-            :exchange_id         => pvd.payable.exchange_id ,
-            :description => "Debit GBCH for HutangPPh23"
-            )  
-        else
+#         if payment_voucher.is_gbch == true
+# #           Debit GBCH for Hutang PPh 23
+#           TransactionDataDetail.create_object(
+#             :transaction_data_id => ta.id,        
+#             :account_id          => pvd.payable.exchange.gbch_payable_id   ,
+#             :entry_case          => NORMAL_BALANCE[:debit]     ,
+#             :amount              => pph_23,
+#             :real_amount         => pvd.pph_23 ,
+#             :exchange_id         => pvd.payable.exchange_id ,
+#             :description => "Debit GBCH for HutangPPh23"
+#             )  
+#         else
 #           Debit CashBank for Hutang PPh 23
           TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -216,7 +229,7 @@ module AccountingService
             :exchange_id         => pvd.payable.exchange_id ,
             :description => "Debit CashBank for HutangPPh23"
             )  
-        end
+        # end
       end
       
     end    

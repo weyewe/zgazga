@@ -17,7 +17,7 @@ Ext.define('AM.view.operation.batchsourcedetail.List' ,{
 				text : "Tujuan Alokasi",
 				flex : 3,
 				tpl : 'Batch: <br /><b>{batch_instance_name}</b>' + '<br />' + '<br />' +
-						'Total Tersedia: <b>{batch_instance_total_allocated_amount}</b>' + '<br />' + '<br />' +
+						'Total Jumlah Batch : <b>{batch_instance_total_allocated_amount}</b>' + '<br />' + '<br />' +
 							'Yg belum digunakan:  <b>{batch_instance_amount}</b>'   
 			},
 			

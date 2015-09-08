@@ -192,7 +192,8 @@ CROPPING_TYPE = {
 APPLICATION_CASE = {
   :sheetfed => 1,
   :web => 2,
-  :both => 3
+  :both => 3,
+  :none => 4
 }
 
 ORDER_TYPE_CASE = {		

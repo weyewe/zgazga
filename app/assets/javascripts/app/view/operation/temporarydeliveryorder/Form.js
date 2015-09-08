@@ -23,7 +23,7 @@ Ext.define('AM.view.operation.temporarydeliveryorder.Form', {
 				} ,
 				{
 					name : 'delivery_order_nomor_surat',
-					mapping : "nomor_surat"
+					mapping : "sales_order_nomor_surat"
 				} ,
 		 		{
 					name : 'delivery_order_contact_name',
@@ -129,7 +129,8 @@ Ext.define('AM.view.operation.temporarydeliveryorder.Form', {
 		    				listConfig : {
 		    					getInnerTpl: function(){
 		    						return  	'<div data-qtip="{delivery_order_code}">' + 
-		    												'<div class="combo-name">{delivery_order_nomor_surat}</div>' + 
+		    												'<div class="combo-name">Code :{delivery_order_code}</div>' + 
+		    												'<div class="combo-name">Nomor Surat :{delivery_order_nomor_surat}</div>' + 
 		    												'<div class="combo-name">Contact: {delivery_order_contact_name}</div>' + 
 		    						 					'</div>';
 		    					}

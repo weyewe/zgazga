@@ -6,7 +6,7 @@ json.batch_sources objects do |object|
 	json.item_name object.item.name 
 	json.source_class		object.source_class
 	json.source_id		object.source_id 
-	
+	json.source_code object.source
 	
 	json.amount		object.amount
 	json.unallocated_amount		object.unallocated_amount 

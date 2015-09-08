@@ -122,30 +122,44 @@ class RollerWarehouseMutation < ActiveRecord::Base
     
     # check roller amount
     
-    # self.roller_warehouse_mutation_details.each do |rwmd|
-    #   roller_id = 0
-    #   if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
-    #     roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
-    #   elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
-    #     roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
-    #   end
-    #   item = item_find_by_id(roller_id)
-    #   item_in_warehouse_from = WarehouseItem.find_or_create_object(
-    #     :warehouse_id => self.warehouse_from_id,
-    #     :item_id => roller_id)
-    #   if self.recovery_order.roller_identification_form.is_in_house == true
-    #       if rwmd.amount > item_in_warehouse_from.amount
-    #         self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
-    #         return self 
-    #       end
-    #     else
-    #       if rwmd.amount > item_in_warehouse_from.customer_amount
-    #         self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{bwmd.blanket_order_detail.blanket.name}")
-    #         return self 
-    #       end
-    #     end
-    #   end
-    # end
+    self.roller_warehouse_mutation_details.each do |rwmd|
+      roller_id = 0
+      if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+      elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+      end
+      item_in_warehouse_from = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.warehouse_from_id,
+        :item_id => roller_id)
+      total_item_used = 0
+      self.roller_warehouse_mutation_details.each do|rwmdd|
+        roller_id_detail = 0
+        if rwmdd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+          roller_id_detail = rwmdd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+        elsif rwmdd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+          roller_id_detail = rwmdd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+        end
+        if roller_id == roller_id_detail
+          total_item_used = total_item_used + 1
+        end
+      end
+      if self.recovery_order.roller_identification_form.is_in_house == true
+        if total_item_used > item_in_warehouse_from.amount
+          self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{item_in_warehouse_from.item.name} SKU #{item_in_warehouse_from.item.sku}")
+          return self 
+        end
+      else
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => item_in_warehouse_from.id
+          )
+        if total_item_used > customer_item.amount
+          self.errors.add(:generic_errors, "Tidak cukup customer kuantitas untuk roller #{item_in_warehouse_from.item.name} SKU #{item_in_warehouse_from.item.sku}")
+          return self 
+        end
+      end
+    end
     
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
@@ -161,6 +175,48 @@ class RollerWarehouseMutation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Belum di konfirmasi")
       return self
     end
+    
+    # check roller amount
+    
+    self.roller_warehouse_mutation_details.each do |rwmd|
+      roller_id = 0
+      if rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+      elsif rwmd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+        roller_id = rwmd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+      end
+      item_in_warehouse_to = WarehouseItem.find_or_create_object(
+        :warehouse_id => self.warehouse_to_id,
+        :item_id => roller_id)
+      total_item_used = 0
+      self.roller_warehouse_mutation_details.each do|rwmdd|
+        roller_id_detail = 0
+        if rwmdd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:new]
+          roller_id_detail = rwmdd.recovery_order_detail.roller_builder.roller_new_core_item.item.id
+        elsif rwmdd.recovery_order_detail.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
+          roller_id_detail = rwmdd.recovery_order_detail.roller_builder.roller_used_core_item.item.id
+        end
+        if roller_id == roller_id_detail
+          total_item_used = total_item_used + 1
+        end
+      end
+      if self.recovery_order.roller_identification_form.is_in_house == true
+        if total_item_used > item_in_warehouse_to.amount
+          self.errors.add(:generic_errors, "Tidak cukup kuantitas untuk roller #{item_in_warehouse_to.item.name} SKU #{item_in_warehouse_to.item.sku}")
+          return self 
+        end
+      else
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => item_in_warehouse_to.id
+          )
+        if total_item_used > customer_item.amount
+          self.errors.add(:generic_errors, "Tidak cukup customer kuantitas untuk roller #{item_in_warehouse_to.item.name} SKU #{item_in_warehouse_to.item.sku}")
+          return self 
+        end
+      end
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save

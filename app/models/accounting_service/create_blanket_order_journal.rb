@@ -119,7 +119,7 @@ module AccountingService
     
     
     def CreateBlanketOrderJournal.create_finish_journal(blanket_order_detail) 
-      message = "[BlanketOrder FINISH] finish: #{blanket_order_detail.finished_quantity} " + 
+      message = "[BlanketOrder FINISH] #{blanket_order_detail.blanket_order.code} finish: #{blanket_order_detail.finished_quantity} " + 
                     "|  reject: #{blanket_order_detail.rejected_quantity} " + 
                     " | defect: #{blanket_order_detail.roll_blanket_defect} m2"
         ta = TransactionData.create_object({

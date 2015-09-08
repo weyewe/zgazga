@@ -12,6 +12,19 @@ class BatchSource < ActiveRecord::Base
         self.batch_source_allocations
     end
     
+    def source
+      case self.source_class
+      when StockAdjustmentDetail.to_s
+        return StockAdjustmentDetail.find_by_id(self.source_id).stock_adjustment.code
+      when BlanketOrderDetail.to_s
+        return BlanketOrderDetail.find_by_id(self.source_id).blanket_order.code
+      when PurchaseReceivalDetail.to_s
+        return PurchaseReceivalDetail.find_by_id(self.source_id).purchase_receival.code
+      when DeliveryOrderDetail.to_s
+        return DeliveryOrderDetail.find_by_id(self.source_id).delivery_order.code
+      end
+    end
+    
     def self.create_object( params ) 
       new_object = self.new 
 
