@@ -6,6 +6,7 @@ Ext.define('AM.model.TemporaryDeliveryOrder', {
     	    { name: 'code', type: 'string' },
     	    { name: 'order_type', type: 'int' },
     	    { name: 'delivery_order_id', type: 'int' },
+    	    { name: 'sales_order_id', type: 'int' },
     	    { name: 'delivery_order_code', type: 'string' },
     	    { name: 'delivery_order_nomor_surat', type: 'string' },
     	    { name: 'delivery_date', type: 'string' },

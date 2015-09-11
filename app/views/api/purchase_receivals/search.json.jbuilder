@@ -1,6 +1,11 @@
-json.purchase_receivals objects do |object|
 
-	json.id 								object.id 
+json.success true 
+json.total @total
+ 
+
+json.records @objects do |object|
+    
+    json.id 								object.id 
 	json.receival_date 			 format_date_friendly( object.receival_date )   
 	json.is_confirmed 			 object.is_confirmed
 	

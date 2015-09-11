@@ -66,9 +66,11 @@ class DeliveryOrderDetail < ActiveRecord::Base
     end
     sales_order_detail = SalesOrderDetail.find_by_id(params[:sales_order_detail_id])
     if not sales_order_detail.nil?
-      if sales_order_detail.pending_delivery_amount < BigDecimal(params[:amount]) 
-         new_object.errors.add(:generic_errors, "Amount pending delivery tidak boleh lebih kecil dr amount")
-         return new_object 
+      if not params[:order_type] == ORDER_TYPE_CASE[:part_delivery_order] 
+        if sales_order_detail.pending_delivery_amount < BigDecimal(params[:amount]) 
+           new_object.errors.add(:generic_errors, "Amount pending delivery tidak boleh lebih kecil dr amount")
+           return new_object 
+        end
       end
     end
     new_object.delivery_order_id = params[:delivery_order_id]

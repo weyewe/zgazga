@@ -56,17 +56,23 @@ Ext.define('AM.controller.DeliveryOrders', {
         click: this.deleteObject
 			}	,
 			
+			'deliveryorderProcess deliveryorderlist button[action=confirmtemporaryObject]': {
+        click: this.confirmtemporaryObject
+      },
+      
 			'deliveryorderProcess deliveryorderlist button[action=confirmObject]': {
         click: this.confirmObject
       },
-
+			
 			'deliveryorderProcess deliveryorderlist button[action=unconfirmObject]': {
         click: this.unconfirmObject
       },
 			'confirmdeliveryorderform button[action=confirm]' : {
 				click : this.executeConfirm
 			},
-			
+			'confirmfromtemporarydeliveryorderform button[action=confirm]' : {
+				click : this.executeTemporaryConfirm
+			},
 			'unconfirmdeliveryorderform button[action=confirm]' : {
 				click : this.executeUnconfirm
 			},
@@ -223,8 +229,8 @@ Ext.define('AM.controller.DeliveryOrders', {
   editObject: function() {
     var record = this.getList().getSelectedObject();
     var view = Ext.widget('deliveryorderform');
-		view.setComboBoxExtraParams() ;
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 
@@ -241,7 +247,21 @@ Ext.define('AM.controller.DeliveryOrders', {
 		
 		// this.reloadRecordView( record, view ) ; 
 	},
+	
+	confirmtemporaryObject: function(){
+		// console.log("the startObject callback function");
+		var record = this.getList().getSelectedObject();
+		if(record){
+			var view = Ext.widget('confirmfromtemporarydeliveryorderform');
 
+			view.setParentData( record );
+	    view.show();
+		}
+		
+		
+		// this.reloadRecordView( record, view ) ; 
+	},
+	
   updateObject: function(button) {
   	button.disable();
   	var me  = this; 
@@ -374,7 +394,55 @@ Ext.define('AM.controller.DeliveryOrders', {
 		}
 	},
 	
-	
+	executeTemporaryConfirm: function(button){
+		var me = this; 
+		var win = button.up('window');
+    var form = win.down('form');
+		var list = this.getList();
+
+    var store = this.getDeliveryOrdersStore();
+		var record = this.getList().getSelectedObject();
+    var values = form.getValues();
+ 
+		if(record){
+			var rec_id = record.get("id");
+			record.set( 'confirmed_at' , values['confirmed_at'] );
+			 
+			// form.query('checkbox').forEach(function(checkbox){
+			// 	record.set( checkbox['name']  ,checkbox['checked'] ) ;
+			// });
+			// 
+			form.setLoading(true);
+			record.save({
+				params : {
+					confirmtemporary: true 
+				},
+				success : function(new_record){
+					form.setLoading(false);
+					
+					// me.reloadRecord( record ) ; 
+					
+					list.enableRecordButtons();  
+					AM.view.Constants.updateRecord( record, new_record );  
+					AM.view.Constants.highlightSelectedRow( list );      
+					AM.view.Constants.highlightSelectedRow( list );     
+					
+					
+					win.close();
+					me.updateChildGrid(record );
+				},
+				failure : function(record,op ){
+					// console.log("Fail update");
+					form.setLoading(false);
+					var message  = op.request.scope.reader.jsonData["message"];
+					var errors = message['errors'];
+					form.getForm().markInvalid(errors);
+					record.reject(); 
+					// this.reject(); 
+				}
+			});
+		}
+	},
 	
 	executeUnconfirm: function(button){
 		var me = this; 

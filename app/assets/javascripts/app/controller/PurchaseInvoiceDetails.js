@@ -156,8 +156,6 @@ Ext.define('AM.controller.PurchaseInvoiceDetails', {
     var store = this.getPurchaseInvoiceDetailsStore();
     var record = form.getRecord();
     var values = form.getValues();
-		console.log("The values: " );
-		console.log( values ) 
 		
 		if( record ){
 			record.set( values );

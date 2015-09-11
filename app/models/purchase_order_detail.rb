@@ -84,11 +84,38 @@ class PurchaseOrderDetail < ActiveRecord::Base
         return self 
       end
     end
-    self.item_id = params[:item_id]
+    if self.pending_receival_amount != self.amount
+      if self.pending_receival_amount > BigDecimal(params[:amount]) 
+        self.errors.add(:generic_errors, "Jumlah amount lebih kecil dari barang yg telah diterima")
+        return self 
+      else
+        total_receive = 0
+        PurchaseReceivalDetail.where(:purchase_order_detail => self.id).each do |prd|
+          total_receive = total_receive + prd.amount
+        end
+        new_pending_receival_amount = BigDecimal(params[:amount]) - total_receive
+        if new_pending_receival_amount < 0
+          self.errors.add(:generic_errors, "Jumlah amount lebih kecil dari barang yg telah diterima")
+          return self
+        end
+        if new_pending_receival_amount == 0 
+          self.is_all_received = true
+        else
+          self.is_all_received = false
+        end
+        self.pending_receival_amount = new_pending_receival_amount
+      end
+    else
+      self.pending_receival_amount = BigDecimal( params[:amount] || '0')
+    end
+    
+    self.item_id = params[:item_id] 
     self.amount = BigDecimal( params[:amount] || '0')
-    self.pending_receival_amount = BigDecimal( params[:amount] || '0')
+    
     self.price = BigDecimal( params[:price] || '0')
-    self.save
+    if self.save
+      self.purchase_order.update_is_receival_completed
+    end
     return self
   end
   
@@ -100,5 +127,4 @@ class PurchaseOrderDetail < ActiveRecord::Base
     self.destroy
     return self
   end
-  
 end

@@ -124,6 +124,14 @@ class RollerIdentificationFormDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
+    rifd_id = self.id
+    recovery_count = RecoveryOrderDetail.where{
+      (roller_identification_form_detail_id.eq rifd_id) 
+    }.count
+    if recovery_count > 0 
+      self.errors.add(:generic_errors, "Sudah di gunakan di RecoveryOrderDetail")
+      return self 
+    end
     self.destroy
     return self
   end

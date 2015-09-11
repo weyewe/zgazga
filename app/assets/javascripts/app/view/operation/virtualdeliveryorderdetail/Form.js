@@ -100,10 +100,10 @@ Ext.define('AM.view.operation.virtualdeliveryorderdetail.Form', {
 					getInnerTpl: function(){
 						return  	'<div data-qtip="{virtual_order_detail_item_name}">' +  
 												'<div class="combo-name">'  +
-															" {virtual_order_detail_code} " 		+ "<br />" 	 + 
-															" ({virtual_order_detail_item_name}) " 		+ "<br />" 	 + 
-															'{virtual_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{virtual_order_detail_pending_delivery_amount}' 	+
+															"VOD Code : {virtual_order_detail_code} " 		+ "<br />" 	 + 
+															"Item SKU : {virtual_order_detail_item_sku} " 		+ "<br />" 	 + 
+															'Item Name : {virtual_order_detail_item_name}' 			+ "<br />" 	 +
+															'Pending QTY :{virtual_order_detail_pending_delivery_amount}' 	+
 												 "</div>" +  
 						 					'</div>';
 					}

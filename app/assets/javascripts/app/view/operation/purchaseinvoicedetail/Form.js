@@ -89,11 +89,11 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
         },
 
 			{
-				fieldLabel: 'Item',
+				fieldLabel: 'PRD Code',
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'purchase_receival_detail_purchase_order_detail_item_name',
+				displayField : 'purchase_receival_detail_code',
 				valueField : 'purchase_receival_detail_id',
 				pageSize : 5,
 				minChars : 1, 
@@ -104,11 +104,11 @@ Ext.define('AM.view.operation.purchaseinvoicedetail.Form', {
 					getInnerTpl: function(){
 						return  '<div data-qtip="{purchase_receival_detail_purchase_order_detail_item_name}">' +  
 												'<div class="combo-name">'  +
-															" {purchase_receival_detail_code} " 		+ "<br />" 	 + 
-															" ({purchase_receival_detail_purchase_order_detail_item_name}) " 		+ "<br />" 	 + 
-															'{purchase_receival_detail_purchase_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{purchase_receival_detail_amount}' 	+ "<br />"	+
-															'{purchase_receival_detail_purchase_order_detail_price}' 	+
+															"PRD Code: {purchase_receival_detail_code} " 		+ "<br />" 	 + 
+															"Item Name: {purchase_receival_detail_purchase_order_detail_item_name} " 		+ "<br />" 	 + 
+															'Item SKU: {purchase_receival_detail_purchase_order_detail_item_sku}' 			+ "<br />" 	 +
+															'Amount: {purchase_receival_detail_amount}' 	+ "<br />"	+
+															'Price: {purchase_receival_detail_purchase_order_detail_price}' 	+
 												 "</div>" +  
 						 					'</div>';
 					}

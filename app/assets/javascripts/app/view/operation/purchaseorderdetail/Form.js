@@ -100,11 +100,6 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
     	        fieldLabel: 'Quantity'
     	     },
     	     {
-    	        xtype: 'displayfield',
-    	        name : 'item_uom_name',
-    	        fieldLabel: 'UoM'
-    	     },
-    	     {
     	        xtype: 'textfield',
     	        name : 'price',
     	        fieldLabel: 'Value per item'

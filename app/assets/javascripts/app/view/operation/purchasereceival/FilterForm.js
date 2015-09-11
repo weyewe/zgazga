@@ -45,36 +45,36 @@ Ext.define('AM.view.operation.purchasereceival.FilterForm', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStorePurchaseReceival = Ext.create(Ext.data.JsonStore, {
-		storeId : 'purchase_order_search',
+	var remoteJsonStoreVendor = Ext.create(Ext.data.JsonStore, {
+		storeId : 'vendor_search',
 		fields	: [
 		 		{
-					name : 'purchase_order_code',
-					mapping : "code"
+					name : 'vendor_name',
+					mapping : "name"
 				} ,
 				{
-					name : 'purchase_order_nomor_surat',
-					mapping : "nomor_surat"
+					name : 'vendor_description',
+					mapping : "description"
 				} ,
 		 
 				{
-					name : 'purchase_order_id',
+					name : 'vendor_id',
 					mapping : 'id'
 				}  
-		],
+			],
 		
 	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_purchase_orders',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_suppliers',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
     this.items = [{
       xtype: 'form',
@@ -145,27 +145,27 @@ Ext.define('AM.view.operation.purchasereceival.FilterForm', {
     			},
     			
     			{
-    				fieldLabel: 'PO',
-    				xtype: 'combo',
-    				queryMode: 'remote',
-    				forceSelection: true, 
-    				displayField : 'purchase_order_code',
-    				valueField : 'purchase_order_id',
-    				pageSize : 5,
-    				minChars : 1, 
-    				allowBlank : false, 
-    				triggerAction: 'all',
-    				store : remoteJsonStorePurchaseReceival , 
-    				listConfig : {
-    					getInnerTpl: function(){
-    						return  	'<div data-qtip="{purchase_order_code}">' + 
-    												'<div class="combo-name">{purchase_order_code}</div>' + 
-    												'<div class="combo-name">NomorSurat: {purchase_order_nomor_surat}</div>' + 
-    						 					'</div>';
-    					}
-    				},
-    				name : 'purchase_order_id' 
-    			},
+	    				fieldLabel: 'Contact',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'vendor_name',
+	    				valueField : 'vendor_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreVendor , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{vendor_name}">' + 
+	    												'<div class="combo-name">{vendor_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {vendor_description}</div>' + 
+	    						 					'</div>';
+	    					}
+    					},
+    					name : 'contact_id' 
+    	    	},
 			
 			]
     }];

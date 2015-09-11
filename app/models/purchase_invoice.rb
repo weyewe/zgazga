@@ -49,8 +49,8 @@ class PurchaseInvoice < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.due_date = params[:due_date]
     if new_object.save  
-      new_object.exchange_id = new_object.purchase_receival.purchase_order.exchange_id
-      new_object.is_taxable =  new_object.purchase_receival.purchase_order.contact.is_taxable   
+      new_object.exchange_id = new_object.purchase_receival.exchange_id
+      new_object.is_taxable =  new_object.purchase_receival.contact.is_taxable   
       new_object.code = "PI-" + new_object.id.to_s  
       new_object.save
       new_object.select_tax
@@ -74,8 +74,8 @@ class PurchaseInvoice < ActiveRecord::Base
     self.due_date = params[:due_date]
     if self.save 
       
-    self.exchange_id = self.purchase_receival.purchase_order.exchange_id
-    self.is_taxable =  self.purchase_receival.purchase_order.contact.is_taxable   
+    self.exchange_id = self.purchase_receival.exchange_id
+    self.is_taxable =  self.purchase_receival.contact.is_taxable   
     self.save
     self.select_tax
     end
@@ -101,13 +101,13 @@ class PurchaseInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
-    if self.purchase_receival.purchase_order.exchange.is_base == false 
+    if self.purchase_receival.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.invoice_date,
         :exchange_id => self.exchange_id
         )
       if latest_exchange_rate.nil?
-        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.purchase_receival.purchase_order.exchange.name} belum di input")
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.purchase_receival.exchange.name} belum di input")
         return self 
       end 
       self.exchange_rate_amount = latest_exchange_rate.rate
@@ -180,8 +180,8 @@ class PurchaseInvoice < ActiveRecord::Base
   def select_tax()
     tax_value = 0
     if self.is_taxable == true
-      if self.purchase_receival.purchase_order.contact.is_taxable == true
-        case self.purchase_receival.purchase_order.contact.tax_code
+      if self.purchase_receival.contact.is_taxable == true
+        case self.purchase_receival.contact.tax_code
         when TAX_CODE[:code_01]  
           tax_value = TAX_VALUE[:code_01]
         when TAX_CODE[:code_02] 
@@ -214,7 +214,7 @@ class PurchaseInvoice < ActiveRecord::Base
       :source_class => self.class.to_s, 
       :source_id => self.id ,  
       :source_date => self.invoice_date ,  
-      :contact_id => self.purchase_receival.purchase_order.contact_id,
+      :contact_id => self.purchase_receival.contact_id,
       :amount => self.amount_payable ,  
       :due_date => self.due_date ,  
       :exchange_id => self.exchange_id,

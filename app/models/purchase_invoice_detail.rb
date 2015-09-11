@@ -1,6 +1,6 @@
 class PurchaseInvoiceDetail < ActiveRecord::Base
   
-   
+  validates_presence_of :purchase_receival_detail_id
   validate :valid_purchase_invoice
   validate :valid_purchase_receival_detail
   validate :valid_amount
@@ -12,9 +12,9 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
   end
   
   
-  def item
-    self.purchase_receival_detail.item 
-  end
+  # def item
+  #   self.purchase_receival_detail.item 
+  # end
   
   
   def valid_amount
@@ -40,12 +40,15 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
       self.errors.add(:purchase_receival_detail_id, "Harus ada Item_Id")
       return self 
     end
+    if prd.amount < amount
+      self.errors.add(:amount, "Amount Invoice lebih besar dari amount receive")
+      return self 
+    end
     
     itemcount = PurchaseInvoiceDetail.where(
       :purchase_receival_detail_id => purchase_receival_detail_id,
       :purchase_invoice_id => purchase_invoice_id,
       ).count  
-    
     if self.persisted?
        if itemcount > 1
          self.errors.add(:purchase_receival_detail_id, "Item sudah terpakai")
@@ -68,8 +71,6 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
         return new_object 
       end
     end
-    
-   
     new_object.purchase_invoice_id = params[:purchase_invoice_id]
     new_object.purchase_receival_detail_id = params[:purchase_receival_detail_id]
     new_object.amount = BigDecimal( params[:amount] || '0')
@@ -91,7 +92,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     self.purchase_receival_detail_id = params[:purchase_receival_detail_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
-      self.price = new_object.purchase_receival_detail.purchase_order_detail.price * new_object.amount
+      self.price = self.purchase_receival_detail.purchase_order_detail.price * self.amount
       self.save
       self.calculateTotalAmount
     end

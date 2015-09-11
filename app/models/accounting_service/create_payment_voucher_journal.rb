@@ -147,7 +147,7 @@ module AccountingService
       if pvd.payable.exchange_rate_amount < (payment_voucher.rate_to_idr * pvd.rate)
          TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
-          :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selish_kurs][:code]).id  ,
+          :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selisih_kurs][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => ((payment_voucher.rate_to_idr * pvd.rate * (pvd.amount_paid / pvd.rate)) - (pvd.payable.exchange_rate_amount * pvd.amount)).round(2),
           :description => "Debit ExchangeLost"

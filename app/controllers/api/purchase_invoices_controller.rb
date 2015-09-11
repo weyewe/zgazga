@@ -3,7 +3,7 @@ class Api::PurchaseInvoicesController < Api::BaseApiController
   def index
      
     query = PurchaseInvoice.active_objects.
-          joins(:purchase_receival =>[:purchase_order =>[:contact,:exchange]])
+          joins(:purchase_receival =>[:contact,:exchange])
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"

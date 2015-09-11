@@ -8,8 +8,13 @@ Ext.define('AM.view.operation.virtualorderclearancedetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'virtual_delivery_order_detail_item_sku', flex: 1},
-    		{ header: 'Item Name',  dataIndex: 'virtual_delivery_order_detail_item_name', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{virtual_delivery_order_detail_item_sku}</b>'  + '<br />' + '<br />' +
+						'Name: <br /> <b>{virtual_delivery_order_detail_item_name}</b>' 
+			},
     		{ header: 'Qty',  dataIndex: 'amount', flex: 2},
     		{ header: 'Waste Cogs',  dataIndex: 'waste_cogs', flex: 1},
 		];

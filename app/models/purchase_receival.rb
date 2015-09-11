@@ -1,15 +1,17 @@
 class PurchaseReceival < ActiveRecord::Base
   
-  belongs_to :purchase_order
+  belongs_to :contact
   belongs_to :warehouse 
+  belongs_to :exchange
   has_many :purchase_receival_details
-  validates_presence_of :purchase_order_id
   validates_presence_of :nomor_surat
   validates_presence_of :warehouse_id
   validates_presence_of :receival_date
+  validates_presence_of :contact_id
   
   validate :valid_warehouse_id
-  validate :valid_purchase_order_id
+  validate :valid_contact_id
+  validate :valid_exchange_id
   
   
   def self.active_objects
@@ -29,14 +31,23 @@ class PurchaseReceival < ActiveRecord::Base
     end
   end
 
-  def valid_purchase_order_id
-    return if  purchase_order_id.nil?
-    po = PurchaseOrder.find_by_id purchase_order_id
+  def valid_contact_id
+    return if  contact_id.nil?
+    po = Contact.find_by_id contact_id
     if po.nil? 
-      self.errors.add(:purchase_order_id, "Harus ada PurchaseOrder Id")
+      self.errors.add(:contact_id, "Harus ada Contact Id")
       return self 
     end
   end    
+  
+  def valid_exchange_id
+    return if  exchange_id.nil?
+    ec = Exchange.find_by_id exchange_id
+    if ec.nil? 
+      self.errors.add(:exchange_id, "Harus ada Exchange Id")
+      return self 
+    end
+  end  
   
   def self.create_object( params )
     new_object = self.new
@@ -44,6 +55,8 @@ class PurchaseReceival < ActiveRecord::Base
     new_object.receival_date = params[:receival_date]
     new_object.nomor_surat = params[:nomor_surat]
     new_object.purchase_order_id = params[:purchase_order_id]
+    new_object.contact_id = params[:contact_id]
+    new_object.exchange_id = params[:exchange_id]
     new_object.save
     new_object.code = "PRE-" + new_object.id.to_s  
     new_object.save
@@ -64,6 +77,8 @@ class PurchaseReceival < ActiveRecord::Base
     self.receival_date = params[:receival_date]
     self.nomor_surat = params[:nomor_surat]
     self.purchase_order_id = params[:purchase_order_id]
+    self.contact_id = params[:contact_id]
+    self.exchange_id = params[:exchange_id]
     self.save 
     return self
   end
@@ -96,13 +111,13 @@ class PurchaseReceival < ActiveRecord::Base
       return self 
     end
     
-    if self.purchase_order.exchange.is_base == false 
+    if self.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.receival_date,
-        :exchange_id => self.purchase_order.exchange_id
+        :exchange_id => self.exchange_id
         )
       if latest_exchange_rate.nil?
-        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.purchase_order.exchange.name} belum di input")
+        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.exchange.name} belum di input")
         return self 
       end
       self.exchange_rate_amount = latest_exchange_rate.rate
@@ -241,12 +256,12 @@ class PurchaseReceival < ActiveRecord::Base
             :amount => prd.amount 
           )
         end
+        prd.purchase_order.update_is_receival_completed
     end
     
     self.total_cogs = total_cogs
     self.total_amount = total_amount
     self.save
-    self.purchase_order.update_is_receival_completed
   end
   
   def update_purchase_receival_unconfirm
@@ -273,8 +288,7 @@ class PurchaseReceival < ActiveRecord::Base
       prd.purchase_order_detail.is_all_received == false
       prd.purchase_order_detail.save
       prd.save
-      
-      
+      prd.purchase_order.update_is_receival_completed
       if prd.item.is_batched?
         BatchSource.where( 
           :source_class => prd.class.to_s, 
@@ -286,7 +300,7 @@ class PurchaseReceival < ActiveRecord::Base
     self.total_cogs = 0
     self.total_amount = 0
     self.save
-    self.purchase_order.update_is_receival_completed
+   
   end
   
   def update_is_invoice_completed

@@ -152,21 +152,25 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ 
+      
+      query_code = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ 
             ( code =~  query )  | 
             ( contact.name =~ query ) | 
-            ( exchange.name =~ query ) 
-                              }.
+            ( exchange.name =~ query ) | 
+            ( is_confirmed.eq true )  
+                              }
+                              
+      query_code = query_code.where{
+              (is_confirmed.eq true)  &
+              (payable_remaining_amount.gt 0)
+            }
+            
+      @objects = query_code.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ 
-            ( code =~  query )  | 
-            ( contact.name =~ query ) | 
-            ( exchange.name =~ query ) 
-        
-                              }.count
+      @total = query_code.count
     else
       @objects = SalesDownPayment.active_objects.joins(:contact,:exchange,:payable,:receivable).where{ (payable_id.eq selected_id)  
                               }.

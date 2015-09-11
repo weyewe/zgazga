@@ -19,7 +19,6 @@ Ext.define('AM.view.operation.stockadjustment.List' ,{
 				flex : 3,
 				tpl :  	'Tanggal Penyesuaian: <br /> <b>{adjustment_date}</b>' + '<br />' + '<br />' +
 							'Gudang:  <br /> <b>{warehouse_name}</b>'   + '<br />' + '<br />' +
-							
 							'{description}'   
 			},
 			

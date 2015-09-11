@@ -19,6 +19,14 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 			storeId : 'purchase_order_detail_search',
 			fields	: [
 					{
+						name : 'purchase_order_nomor_surat',
+						mapping : "purchase_order_nomor_surat"
+					}, 
+					{
+						name : 'purchase_order_code',
+						mapping : "purchase_order_code"
+					}, 
+					{
 						name : 'purchase_order_detail_id',
 						mapping : "id"
 					}, 
@@ -100,10 +108,12 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 					getInnerTpl: function(){
 						return  	'<div data-qtip="{purchase_order_detail_item_name}">' +  
 												'<div class="combo-name">'  +
-															" {purchase_order_detail_code} " 		+ "<br />" 	 + 
-															" ({purchase_order_detail_item_name}) " 		+ "<br />" 	 + 
-															'{purchase_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{purchase_order_detail_pending_receival_amount}' 	+
+															"PO Code : {purchase_order_code} " + "<br />" 	 + 
+															"PO Nomor Surat : {purchase_order_nomor_surat} " + "<br />" 	 + 
+															"PO Detail Code : {purchase_order_detail_code} " 	+ "<br />" 	 + 
+															"Item Name : {purchase_order_detail_item_name} " 		+ "<br />" 	 + 
+															'Item Sku : {purchase_order_detail_item_sku}' + "<br />" 	 +
+															'QTY Pending Receival : {purchase_order_detail_pending_receival_amount}' 	+
 												 "</div>" +  
 						 					'</div>';
 					}
@@ -150,17 +160,18 @@ Ext.define('AM.view.operation.purchasereceivaldetail.Form', {
 		});
 	},
 	
-	setExtraParamInPurchaseOrderDetailIdComboBox: function(purchase_order_id){  
+	setExtraParamInPurchaseOrderDetailIdComboBox: function(contact_id,exchange_id){  
 		var comboBox = this.down('form').getForm().findField('purchase_order_detail_id'); 
 		var store = comboBox.store;
 		
-		store.getProxy().extraParams.purchase_order_id =  purchase_order_id;
+		store.getProxy().extraParams.contact_id =  contact_id;
+		store.getProxy().extraParams.exchange_id =  exchange_id;
 	},
 	
 	
 	setComboBoxExtraParams: function( record ) {  
 		var me =this;
-		me.setExtraParamInPurchaseOrderDetailIdComboBox( record.get("purchase_order_id") ); 
+		me.setExtraParamInPurchaseOrderDetailIdComboBox( record.get("contact_id"),record.get("exchange_id") ); 
 	},
 	
 	setComboBoxData : function( record){

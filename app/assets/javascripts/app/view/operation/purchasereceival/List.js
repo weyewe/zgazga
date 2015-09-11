@@ -9,27 +9,22 @@ Ext.define('AM.view.operation.purchasereceival.List' ,{
 		this.columns = [
 			
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'Nomor Surat', dataIndex: 'nomor_surat', flex: 2 },
-			
 			{
 				xtype : 'templatecolumn',
 				text : "Description",
 				flex : 3,
-				tpl : 	'Tanggal Receival: <br />  <b>{receival_date}</b>'  + '<br />' + '<br />' +
-							'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
-							'PO: <br /><b>{purchase_order_nomor_surat}</b>'
+				tpl : 	'Nomor Surat: <br />  <b>{nomor_surat}</b>'  + '<br />' + '<br />' +
+						'Gudang: <br /> <b>{warehouse_name}</b>'  + '<br />' + '<br />' +
+						'Currency: <br /> <b>{exchange_name}</b>'  + '<br />' + '<br />' +
+						'Supplier: <br /><b>{contact_name}</b>'
 			},
-			
-		
-			
-			
- 
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+				tpl : 	'Tanggal Receival: <br />  <b>{receival_date}</b>'  + '<br />' + '<br />' +
+						'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+						'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
 			},
 			
 			

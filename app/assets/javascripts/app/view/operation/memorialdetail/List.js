@@ -9,8 +9,12 @@ Ext.define('AM.view.operation.memorialdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Account Code',  dataIndex: 'account_code', flex: 1},
-    		{ header: 'Account',  dataIndex: 'account_name', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Account",
+				flex : 3,
+				tpl : 	' [{account_code}] {account_name}' 
+			},
     		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{ header: 'Amount', dataIndex: 'amount', flex: 1 } ,
 			

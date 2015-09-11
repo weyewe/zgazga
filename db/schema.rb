@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150907150320) do
+ActiveRecord::Schema.define(version: 20150909083543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -822,6 +822,7 @@ ActiveRecord::Schema.define(version: 20150907150320) do
   create_table "purchase_receival_details", force: true do |t|
     t.string   "code"
     t.integer  "purchase_receival_id"
+    t.integer  "purchase_order_id"
     t.integer  "purchase_order_detail_id"
     t.integer  "item_id"
     t.decimal  "amount",                   precision: 14, scale: 2, default: 0.0
@@ -835,6 +836,7 @@ ActiveRecord::Schema.define(version: 20150907150320) do
   create_table "purchase_receivals", force: true do |t|
     t.string   "code"
     t.integer  "purchase_order_id"
+    t.integer  "contact_id"
     t.datetime "receival_date"
     t.integer  "warehouse_id"
     t.string   "nomor_surat"
@@ -847,6 +849,7 @@ ActiveRecord::Schema.define(version: 20150907150320) do
     t.boolean  "is_invoice_completed",                           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "exchange_id"
   end
 
   create_table "purchase_request_details", force: true do |t|
@@ -1250,8 +1253,6 @@ ActiveRecord::Schema.define(version: 20150907150320) do
     t.decimal  "amount",             precision: 14, scale: 2, default: 0.0
     t.decimal  "rrp",                precision: 14, scale: 2, default: 0.0
     t.decimal  "quotation_price",    precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_confirmed",                                default: false
-    t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

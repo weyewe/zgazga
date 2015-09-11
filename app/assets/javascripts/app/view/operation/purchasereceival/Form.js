@@ -46,20 +46,20 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
 		autoLoad : false 
 	});
 	
-	var remoteJsonStorePurchaseOrder = Ext.create(Ext.data.JsonStore, {
-		storeId : 'purchase_order_search',
+		var remoteJsonStoreExchange = Ext.create(Ext.data.JsonStore, {
+		storeId : 'exchange_search',
 		fields	: [
 		 		{
-					name : 'purchase_order_code',
-					mapping : "code"
+					name : 'exchange_name',
+					mapping : "name"
 				} ,
 				{
-					name : 'purchase_order_nomor_surat',
-					mapping : "nomor_surat"
+					name : 'exchange_description',
+					mapping : "description"
 				} ,
 		 
 				{
-					name : 'purchase_order_id',
+					name : 'exchange_id',
 					mapping : 'id'
 				}  
 		],
@@ -67,7 +67,7 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
 	 
 		proxy  	: {
 			type : 'ajax',
-			url : 'api/search_purchase_orders',
+			url : 'api/search_exchanges',
 			reader : {
 				type : 'json',
 				root : 'records', 
@@ -76,6 +76,37 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
 		},
 		autoLoad : false 
 	});
+	
+	var remoteJsonStoreVendor = Ext.create(Ext.data.JsonStore, {
+		storeId : 'vendor_search',
+		fields	: [
+		 		{
+					name : 'vendor_name',
+					mapping : "name"
+				} ,
+				{
+					name : 'vendor_description',
+					mapping : "description"
+				} ,
+		 
+				{
+					name : 'vendor_id',
+					mapping : 'id'
+				}  
+			],
+		
+	 
+			proxy  	: {
+				type : 'ajax',
+				url : 'api/search_suppliers',
+				reader : {
+					type : 'json',
+					root : 'records', 
+					totalProperty  : 'total'
+				}
+			},
+			autoLoad : false 
+		});
 		
     this.items = [{
       xtype: 'form',
@@ -133,27 +164,50 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
     			},
     			
     			{
-    				fieldLabel: 'PurchaseOrder',
-    				xtype: 'combo',
-    				queryMode: 'remote',
-    				forceSelection: true, 
-    				displayField : 'purchase_order_code',
-    				valueField : 'purchase_order_id',
-    				pageSize : 5,
-    				minChars : 1, 
-    				allowBlank : false, 
-    				triggerAction: 'all',
-    				store : remoteJsonStorePurchaseOrder , 
-    				listConfig : {
-    					getInnerTpl: function(){
-    						return  	'<div data-qtip="{purchase_order_code}">' + 
-    												'<div class="combo-name">{purchase_order_code}</div>' + 
-    												'<div class="combo-name">NomorSurat: {purchase_order_nomor_surat}</div>' + 
-    						 					'</div>';
-    					}
+	    				fieldLabel: 'Contact',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'vendor_name',
+	    				valueField : 'vendor_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreVendor , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{vendor_name}">' + 
+	    												'<div class="combo-name">{vendor_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {vendor_description}</div>' + 
+	    						 					'</div>';
+	    					}
+    					},
+    					name : 'contact_id' 
+    	    	},
+    	    		{
+	    				fieldLabel: 'Currency',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'exchange_name',
+	    				valueField : 'exchange_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreExchange , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{exchange_name}">' + 
+	    												'<div class="combo-name">{exchange_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
+	    						 					'</div>';
+	    					}
+    					},
+    					name : 'exchange_id' 
     				},
-    				name : 'purchase_order_id' 
-    			},
+    				
 			]
     }];
 
@@ -187,28 +241,28 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
 		});
 	},
 	
-	setSelectedPurchaseOrder: function( purchase_order_id ){
-		var comboBox = this.down('form').getForm().findField('purchase_order_id'); 
+	setSelectedContact: function( contact_id ){
+		var comboBox = this.down('form').getForm().findField('contact_id'); 
 		var me = this; 
 		var store = comboBox.store; 
 		// console.log( 'setSelectedMember');
 		// console.log( store ) ;
 		store.load({
 			params: {
-				selected_id : purchase_order_id 
+				selected_id : contact_id 
 			},
 			callback : function(records, options, success){
 				me.setLoading(false);
-				comboBox.setValue( purchase_order_id );
+				comboBox.setValue( contact_id );
 			}
 		});
 	},
 	
 	setExtraParamInPurchaseOrderIdComboBox: function(){  
-		var comboBox = this.down('form').getForm().findField('purchase_order_id'); 
-		var store = comboBox.store;
+		// var comboBox = this.down('form').getForm().findField('contact_id'); 
+		// var store = comboBox.store;
 		
-		store.getProxy().extraParams.purchase_receival =  true;
+		// store.getProxy().extraParams.purchase_receival =  true;
 	},
 	
 	setComboBoxExtraParams: function( ) {  
@@ -217,13 +271,30 @@ Ext.define('AM.view.operation.purchasereceival.Form', {
 	},
 	
 	
+	setSelectedExchange: function( exchange_id ){
+		var comboBox = this.down('form').getForm().findField('exchange_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : exchange_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( exchange_id );
+			}
+		});
+	},
+	
 	setComboBoxData : function( record){ 
 		var me = this; 
 		me.setLoading(true);
 		
 		me.setSelectedWarehouse( record.get("warehouse_id")  ) ;
-		me.setSelectedPurchaseOrder( record.get("purchase_order_id")  ) ;
- 
+		me.setSelectedContact( record.get("contact_id")  ) ;
+ 		me.setSelectedExchange( record.get("exchange_id")  ) ;
 	}
  
 });

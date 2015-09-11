@@ -7,16 +7,29 @@ Ext.define('AM.view.operation.purchasereceivaldetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-		 
-		 
-
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Kode POD', dataIndex: 'purchase_order_detail_code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'purchase_order_detail_item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'purchase_order_detail_pending_receival_amount', flex: 2},
-      		{	header: 'Uom', dataIndex: 'purchase_order_detail_item_uom_name', flex: 1 } ,
-			
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'Kode PO: <br />  <b>{purchase_order_code}</b>'  + '<br />' + '<br />' +
+						'Nomor Surat PO : <br /> <b>{purchase_order_nomor_surat}</b>'  + '<br />' + '<br />' +
+						'Kode Po Detail : <br /> <b>{purchase_order_detail_code}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{purchase_order_detail_item_sku}</b>'  + '<br />' + '<br />' +
+						'Name : <br /> <b>{purchase_order_detail_item_name}</b>'
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Amount",
+				flex : 3,
+				tpl : 	'Qty : <br /> <b>{amount} {purchase_order_detail_item_uom_name}</b>'  + '<br />' + '<br />' +
+						'Pending Receival QTY : <br /> <b>{purchase_order_detail_pending_receival_amount} {purchase_order_detail_item_uom_name}</b>' 
+			},
 		];
 		
 

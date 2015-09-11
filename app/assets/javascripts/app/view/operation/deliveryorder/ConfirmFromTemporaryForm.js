@@ -1,8 +1,8 @@
-Ext.define('AM.view.operation.deliveryorder.UnconfirmForm', {
+Ext.define('AM.view.operation.deliveryorder.ConfirmFormTemporaryDeliveryForm', {
   extend: 'Ext.window.Window',
-  alias : 'widget.unconfirmdeliveryorderform',
+  alias : 'widget.confirmfromtemporarydeliveryorderform',
 
-  title : 'Unconfirm DeliveryOrder',
+  title : 'Confirm From TemporaryDeliveryOrder',
   layout: 'fit',
 	width	: 400,
   autoShow: true,  // does it need to be called?
@@ -27,12 +27,18 @@ Ext.define('AM.view.operation.deliveryorder.UnconfirmForm', {
 					fieldLabel: 'Kode',
 					name: 'code' 
 				},
-			 
+				{
+					xtype: 'datefield',
+					fieldLabel: 'Tanggal Konfirmasi',
+					name: 'confirmed_at' ,
+					format: 'Y-m-d',
+				},  
+		 
 			]
     }];
 
     this.buttons = [{
-      text: 'Unconfirm',
+      text: 'Confirm',
       action: 'confirm'
     }, {
       text: 'Cancel',

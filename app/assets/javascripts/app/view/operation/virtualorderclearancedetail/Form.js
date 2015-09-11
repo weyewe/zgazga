@@ -94,10 +94,12 @@ Ext.define('AM.view.operation.virtualorderclearancedetail.Form', {
 					listConfig : {
 						getInnerTpl: function(){
 							return  	'<div data-qtip="{virtual_delivery_order_detail_code}">' +  
-													'<div class="combo-name">{virtual_delivery_order_detail_id}</div>' +  
-													'<div class="combo-name">Item Sku : {virtual_order_detail_item_sku}</div>' +  
-													'<div class="combo-name">Item Name : {virtual_order_detail_item_name}</div>' +  
-													'<div class="combo-name">Amount : {virtual_delivery_order_detail_amount}</div>' +  
+												'<div class="combo-name">'  +
+													"VODD Code : {virtual_delivery_order_detail_code} " 		+ "<br />" 	 + 
+															"Item SKU : {virtual_order_detail_item_sku} " 		+ "<br />" 	 + 
+															'Item Name : {virtual_order_detail_item_name}' 			+ "<br />" 	 +
+															'QTY Delivery :{virtual_delivery_order_detail_amount}' 	+
+													
 							 					'</div>';
 						}
 					},

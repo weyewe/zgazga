@@ -9,8 +9,8 @@ json.purchase_invoices objects do |object|
 	json.purchase_receival_code 			object.purchase_receival.code 
 	json.purchase_receival_id 				object.purchase_receival.id 
 	
-	json.purchase_receival_purchase_order_contact_name	object.purchase_receival.purchase_order.contact.name
-	json.purchase_receival_purchase_order_exchange_name	object.purchase_receival.purchase_order.exchange.name
+	json.purchase_receival_purchase_order_contact_name	object.purchase_receival.contact.name
+	json.purchase_receival_purchase_order_exchange_name	object.purchase_receival.exchange.name
 	json.exchange_rate_amount	object.exchange_rate_amount
 	json.amount_payable	object.amount_payable
 	

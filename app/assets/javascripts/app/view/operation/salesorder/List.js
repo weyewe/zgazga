@@ -9,37 +9,31 @@ Ext.define('AM.view.operation.salesorder.List' ,{
 	initComponent: function() {
 		this.columns = [ 
 			{ header: 'Kode',  dataIndex: 'code' },
-			{ header: 'Sales Date',  dataIndex: 'sales_date' },
-			{ header: 'No Surat',  dataIndex: 'nomor_surat' },
-			{ header: 'Customer',  dataIndex: 'contact_name' },
-			{ header: 'Currency',  dataIndex: 'exchange_name' },
-			{ header: 'Marketing',  dataIndex: 'employee_name' },
-			
-			// { header: 'Kode',  dataIndex: 'code', flex: 1},
-
-			// {
-			// 	xtype : 'templatecolumn',
-			// 	text : "Description",
-			// 	flex : 3,
-			// 	tpl : 	'Sales Date: <br />  <b>{sales_date}</b>'  + '<br />' + '<br />' +
-			// 				'No Surat: <b>{nomor_surat}</b>' 
-			// },
-			
-			// {	header: 'Customer', dataIndex: 'contact_name', flex: 2 },
-			// {	header: 'Currency', dataIndex: 'exchange_name', flex: 2 },
-			// {	header: 'Marketing', dataIndex: 'employee_name', flex: 2 },
-		 
-			
-			
-			
-			
- 
+		   {
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	
+							'No Surat: <b>{nomor_surat}</b>' + '<br />' + '<br />' +
+							'Supplier: <b>{contact_name}</b>' + '<br />' + '<br />' +
+							'Marketing: <b>{employee_name}</b>' + '<br />' + '<br />' +
+							'Currency: <b>{exchange_name}</b>' + '<br />' + '<br />' +
+							'Quantity Editable: <b>{allow_edit_detail}</b>' 
+			}, 
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+				tpl : 	
+							'Purchase Date: <b>{sales_date}</b>'  + '<br />' + '<br />'  +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
 							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Status",
+				flex : 3,
+				tpl : 	'Delivery Complete: <br />  <b>{is_delivery_completed}</b>'
 			},
 			
 			

@@ -107,10 +107,18 @@ class Api::PurchaseOrderDetailsController < Api::BaseApiController
             ( code  =~ query  )  
       }
       
-      if params[:purchase_order_id].present?
-        object = PurchaseOrder.find_by_id params[:purchase_order_id]
+      if params[:contact_id].present? & params[:exchange_id].present?
+        object = Contact.find_by_id params[:contact_id]
+        object2 = Exchange.find_by_id params[:exchange_id]
         if not object.nil?  
-          query_code = query_code.where(:purchase_order_id => object.id )
+          object_id = object.id
+          object2_id = object2.id
+          query_code = query_code.where{
+              ( purchase_order.contact_id.eq  object_id ) &
+              ( purchase_order.exchange_id.eq  object2_id ) &
+              ( purchase_order.is_confirmed.eq true )   &
+              ( purchase_order.is_receival_completed.eq false ) 
+          }
         end
       end    
       

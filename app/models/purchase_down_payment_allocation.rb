@@ -103,10 +103,16 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
+      total_amount_paid = BigDecimal('0')
       self.purchase_down_payment_allocation_details.each do |pdpad|
-        self.receivable.remaining_amount -= pdpad.amount_paid
+        total_amount_paid -= pdpad.amount_paid
         pdpad.payable.remaining_amount -= pdpad.amount
+        pdpad.payable.save
+        pdpad.save
       end
+      self.receivable.remaining_amount -= total_amount_paid
+      self.receivable.save
+      self.save
       # update receivable remaining amount
       AccountingService::CreatePurchaseDownPaymentAllocationJournal.create_confirmation_journal(self) 
     end
@@ -125,10 +131,16 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save
+      total_amount_paid = BigDecimal('0')
       self.purchase_down_payment_allocation_details.each do |pdpad|
-        self.receivable.remaining_amount += pdpad.amount_paid
+        total_amount_paid += pdpad.amount_paid
         pdpad.payable.remaining_amount += pdpad.amount
+        pdpad.payable.save
+        pdpad.save
       end
+      self.receivable.remaining_amount += total_amount_paid
+      self.receivable.save
+      self.save
       AccountingService::CreatePurchaseDownPaymentAllocationJournal.undo_create_confirmation_journal(self) 
     end
     return self

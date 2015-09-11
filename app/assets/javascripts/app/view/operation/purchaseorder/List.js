@@ -19,20 +19,26 @@ Ext.define('AM.view.operation.purchaseorder.List' ,{
 				xtype : 'templatecolumn',
 				text : "Description",
 				flex : 3,
-				tpl : 	'Purchase Date: <br />  <b>{purchase_date}</b>'  + '<br />' + '<br />' +
+				tpl : 	
 							'No Surat: <b>{nomor_surat}</b>' + '<br />' + '<br />' +
+							'Supplier: <b>{contact_name}</b>' + '<br />' + '<br />' +
+							'Currency: <b>{exchange_name}</b>' + '<br />' + '<br />' +
 							'Quantity Editable: <b>{allow_edit_detail}</b>' 
 			},
-			
-			{	header: 'Supplier', dataIndex: 'contact_name', flex: 2 },
-			{	header: 'Currency', dataIndex: 'exchange_name', flex: 2 }, 
-		  
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",
 				flex : 3,
-				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
+				tpl : 	
+							'Purchase Date: <b>{purchase_date}</b>'  + '<br />' + '<br />'  +
+							'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
 							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Status",
+				flex : 3,
+				tpl : 	'Received Complete: <br />  <b>{is_receival_completed}</b>'
 			},
 			
 			

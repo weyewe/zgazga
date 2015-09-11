@@ -211,9 +211,6 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	
 	
 	setExtraParamInReceivableComboBox: function(contact_id){
-		console.log("inside setExtraParamInReceivable");
-		console.log("The contact_id");
-		console.log( contact_id);
 		var comboBox = this.down('form').getForm().findField('receivable_id'); 
 		var store = comboBox.store;
 		
@@ -222,9 +219,6 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	
 	
 	setComboBoxExtraParams: function( record ) {
-		console.log("inside setComboBoxExtraParams");
-		
-		console.log( record ) ;
 		var me =this;
 		me.setExtraParamInReceivableComboBox( record.get("contact_id") ); 
 	},

@@ -113,6 +113,7 @@ Ext.define('AM.controller.SalesDownPaymentAllocations', {
 
   addObject: function() {
 	var view = Ext.widget('salesdownpaymentallocationform');
+	view.setComboBoxExtraParams() ;
   view.show();
 
 	 
@@ -123,6 +124,7 @@ Ext.define('AM.controller.SalesDownPaymentAllocations', {
     var view = Ext.widget('salesdownpaymentallocationform');
 
     view.down('form').loadRecord(record);
+    view.setComboBoxExtraParams() ;
     view.setComboBoxData( record ) ;
   },
 

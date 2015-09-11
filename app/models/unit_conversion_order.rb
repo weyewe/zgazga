@@ -72,7 +72,7 @@ class UnitConversionOrder < ActiveRecord::Base
       end
       if params[:confirmed_at].nil?
         self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
-      return self 
+        return self 
       end  
       # check source amount
       self.unit_conversion.unit_conversion_details.each do |brd|

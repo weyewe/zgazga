@@ -15,6 +15,7 @@ Ext.define('AM.model.PurchaseOrder', {
     	    { name: 'exchange_name', type: 'string' },
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
+			{ name: 'is_receival_completed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
 			
 	 		{ name: 'allow_edit_detail', type: 'boolean' }, 

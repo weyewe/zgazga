@@ -11,8 +11,8 @@ Ext.define('AM.view.operation.stockadjustmentdetail.List' ,{
 			{ header: 'Code', dataIndex: 'code', flex: 1},
 			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
 			{ header: 'Name',  dataIndex: 'item_name', flex: 1},
-    		 { header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		  { header: 'Status',  dataIndex: 'status_text', flex: 1},
+    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
+    		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
       		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
 			

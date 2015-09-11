@@ -5,6 +5,7 @@ class RecoveryOrder < ActiveRecord::Base
   validates_presence_of :roller_identification_form_id
   validates_presence_of :code
   validates_presence_of :warehouse_id
+  validates_uniqueness_of :roller_identification_form_id
   validate :valid_roller_identification_form_id
   validate :valid_warehouse_id
   
@@ -110,7 +111,14 @@ class RecoveryOrder < ActiveRecord::Base
   
   def unconfirm_object
     if self.is_confirmed == false 
-      self.errors.add(:generic,"Belum di confirm")
+      self.errors.add(:generic_errors,"Belum di confirm")
+      return self
+    end
+    if self.recovery_order_details.where{
+      (is_rejected.eq true) |
+      (is_finished.eq true) 
+    }.count > 0
+      self.errors.add(:generic_errors,"Sudah ada RWC yang di finish atau reject")
       return self
     end
     self.confirmed_at = nil

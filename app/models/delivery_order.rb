@@ -183,28 +183,32 @@ class DeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors,"Tidak boleh memiliki detail")
       return self
     end
-    self.temporary_delivery_orders.each do |tdo|
+    TemporaryDeliveryOrder.where(:delivery_order_id => self.id,:is_confirmed => true).each do |tdo|
       tdo.temporary_delivery_order_details.each do |tdod|
         delivery_order_detail = self.delivery_order_details.where(:item_id => tdod.item_id)
-        # if delivery_order_detail.count == 0 
+        if delivery_order_detail.count == 0 
           # create new detail
-          DeliveryOrderDetail.create_object(
+          td = DeliveryOrderDetail.create_object(
           :delivery_order_id =>  self.id,
           :sales_order_detail_id => tdod.sales_order_detail_id,
           :order_type => ORDER_TYPE_CASE[:part_delivery_order],
           :order_code => tdod.code,
           :amount => tdod.amount
           )
-        # else
+        else
         #   # update detail
-        #   delivery_order_detail.first.update_object(
-        #     :delivery_order_id =>  self.id,
-        #     :sales_order_detail_id => tdod.sales_order_detail_id,
-        #     :order_type => ORDER_TYPE_CASE[:part_delivery_order],
-        #     :amount => delivery_order_detail.first.amount + tdod.amount
-        #     )
-        # end
+          delivery_order_detail.first.update_object(
+            :delivery_order_id =>  self.id,
+            :sales_order_detail_id => tdod.sales_order_detail_id,
+            :order_type => ORDER_TYPE_CASE[:part_delivery_order],
+            :amount => delivery_order_detail.first.amount + tdod.amount
+            )
+        end
       end
+    end
+    if DeliveryOrder.find_by_id(self.id).delivery_order_details.count == 0
+      self.errors.add(:generic_errors,"Tidak ada Temporary Delivery Order yg terbuat")
+      return self
     end
    return self.confirm_object(:confirmed_at => params[:confirmed_at])
   end
@@ -326,8 +330,9 @@ class DeliveryOrder < ActiveRecord::Base
     end
     
     self.total_cogs = total_cogs
-    self.save
     self.sales_order.update_is_delivery_completed
+    self.save
+   
     
     
 
@@ -359,10 +364,10 @@ class DeliveryOrder < ActiveRecord::Base
       dod.cogs = 0
 #       set detail sales_order,pending_delivery_amount
       
-      if not dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
+      # if not dod.order_type == ORDER_TYPE_CASE[:part_delivery_order]
         dod.sales_order_detail.pending_delivery_amount += dod.amount
         dod.sales_order_detail.is_all_delivered == false
-      end
+      # end
       dod.sales_order_detail.save
       dod.save
       
@@ -378,8 +383,8 @@ class DeliveryOrder < ActiveRecord::Base
       
     end
     self.total_cogs = 0
-    self.save
     self.sales_order.update_is_delivery_completed
+    self.save
   end
   
   def update_is_invoice_completed

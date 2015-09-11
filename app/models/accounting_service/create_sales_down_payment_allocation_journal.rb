@@ -13,24 +13,70 @@ module AccountingService
     
     #      Credit AccountReceivable, Debit Hutang Lain-Lain
     
-#     Credir AccountReceivable
+#     Credit AccountReceivable
     td = TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
-      :account_id          => sales_down_payment_allocation.payable.exchange.account_payable_id  ,
+      :account_id          => sales_down_payment_allocation.payable.exchange.account_receivable_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (sales_down_payment_allocation.total_amount   * sales_down_payment_allocation.payable.exchange_rate_amount).round(2),
       :real_amount         => sales_down_payment_allocation.total_amount,
       :exchange_id         => sales_down_payment_allocation.payable.exchange_id,
-      :description => "Debit Account Receivable"
+      :description => "Credit Account Receivable"
       )
-#     Debit Hutang Lain-Lain
+#     Debit AccountPayable
     td = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
-        :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_lainnya][:code]).id  ,
+        :account_id          => sales_down_payment_allocation.payable.exchange.account_payable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (sales_down_payment_allocation.total_amount   * sales_down_payment_allocation.payable.exchange_rate_amount).round(2),
-        :description         => "Credit Revenue"
+        :real_amount         => sales_down_payment_allocation.total_amount,
+        :exchange_id         => sales_down_payment_allocation.payable.exchange_id,
+        :description         => "Debit Account Payable"
         )
+    
+   
+    if sales_down_payment_allocation.payable.exchange_rate_amount < sales_down_payment_allocation.rate_to_idr
+        TransactionDataDetail.create_object(
+        :transaction_data_id => ta.id,        
+        :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selisih_kurs][:code]).id  ,
+        :entry_case          => NORMAL_BALANCE[:credit]     ,
+        :amount              => ((sales_down_payment_allocation.rate_to_idr * sales_down_payment_allocation.total_amount) - 
+                                 (sales_down_payment_allocation.total_amount * sales_down_payment_allocation.payable.exchange_rate_amount) ).round(2),
+        :description => "Credit ExchangeLoss"
+        )     
+    elsif sales_down_payment_allocation.payable.exchange_rate_amount > sales_down_payment_allocation.rate_to_idr
+        TransactionDataDetail.create_object(
+        :transaction_data_id => ta.id,        
+        :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
+        :entry_case          => NORMAL_BALANCE[:credit]     ,
+        :amount              => ((sales_down_payment_allocation.total_amount * sales_down_payment_allocation.payable.exchange_rate_amount) -
+                                 (sales_down_payment_allocation.rate_to_idr * sales_down_payment_allocation.total_amount)).round(2),
+        :description => "Debit ExchangeGain"
+        ) 
+    end  
+    
+    sales_down_payment_allocation.sales_down_payment_allocation_details.each do |pdpad|
+      if (pdpad.rate * sales_down_payment_allocation.rate_to_idr) > pdpad.receivable.exchange_rate_amount
+        TransactionDataDetail.create_object(
+          :transaction_data_id => ta.id,        
+          :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
+          :entry_case          => NORMAL_BALANCE[:debit]     ,
+          :amount              => ((pdpad.amount * pdpad.rate * sales_down_payment_allocation.rate_to_idr) -
+                                   (pdpad.amount * pdpad.receivable.exchange_rate_amount)).round(2),
+          :description => "Debit ExchangeGain"
+          ) 
+      elsif (pdpad.rate * sales_down_payment_allocation.rate_to_idr) < pdpad.receivable.exchange_rate_amount
+        TransactionDataDetail.create_object(
+          :transaction_data_id => ta.id,        
+          :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selisih_kurs][:code]).id  ,
+          :entry_case          => NORMAL_BALANCE[:credit]     ,
+          :amount              => ((pdpad.amount * pdpad.receivable.exchange_rate_amount) - 
+                                   (pdpad.amount * pdpad.rate * sales_down_payment_allocation.rate_to_idr)).round(2),
+          :description => "Credit ExchangeLoss"
+          )    
+      end
+    end
+    
     ta.confirm
   end
     

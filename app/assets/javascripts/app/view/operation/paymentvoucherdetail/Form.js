@@ -112,6 +112,7 @@ Ext.define('AM.view.operation.paymentvoucherdetail.Form', {
 													'<div class="combo-name">Contact : {payable_contact_name}</div>' +   
 													'<div class="combo-name">Amount : {payable_amount}</div>' +   
 													'<div class="combo-name">Remaining Amount : {payable_remaining_amount}</div>' +   
+													'<div class="combo-name">Currency : {payable_exchange_name}</div>' +   
 							 					'</div>';
 						}
 					},

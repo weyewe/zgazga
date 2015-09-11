@@ -9,10 +9,20 @@ Ext.define('AM.view.operation.deliveryorderdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'sales_order_detail_item_sku', flex: 1},
-			{ header: 'Name',  dataIndex: 'sales_order_detail_item_name', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'sales_order_detail_pending_delivery_amount', flex: 2},
+				{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{sales_order_detail_item_sku}</b>'  + '<br />' + '<br />' +
+						'Name: <br /> <b>{sales_order_detail_item_name}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "QTY",
+				flex : 3,
+				tpl : 	'Delivery QTY: <br />  <b>{amount}</b>'  + '<br />' + '<br />' +
+						'PendingDelivery QTY: <br /> <b>{sales_order_detail_pending_delivery_amount}</b>'  
+			},
 		];
 		
 

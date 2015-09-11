@@ -157,8 +157,6 @@ Ext.define('AM.controller.PurchaseReceivalDetails', {
     var store = this.getPurchaseReceivalDetailsStore();
     var record = form.getRecord();
     var values = form.getValues();
-		console.log("The values: " );
-		console.log( values ) 
 		
 		if( record ){
 			record.set( values );

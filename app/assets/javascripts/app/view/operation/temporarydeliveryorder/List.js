@@ -17,6 +17,7 @@ Ext.define('AM.view.operation.temporarydeliveryorder.List' ,{
 				text : "Deskripsi",
 				flex : 3,
 				tpl : 	'No Surat: <br />  <b>{nomor_surat}</b>'  + '<br />' + '<br />' +
+							'Code DO: <br /> <b>{delivery_order_code}</b>'  + '<br />' + '<br />' +
 							'No Surat DO: <br /> <b>{delivery_order_nomor_surat}</b>'  + '<br />' + '<br />' +
 							'Tujuan: <br /><b>{contact_name}</b>'
 			},

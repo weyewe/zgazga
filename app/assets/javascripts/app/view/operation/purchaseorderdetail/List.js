@@ -9,13 +9,27 @@ Ext.define('AM.view.operation.purchaseorderdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingReceival Qty',  dataIndex: 'pending_receival_amount', flex: 2},
-    		{ header: 'Status',  dataIndex: 'is_all_received', flex: 1},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
-			
+			{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{item_sku}</b>'  + '<br />' + '<br />' +
+						'Name : <br /> <b>{item_name}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Amount",
+				flex : 3,
+				tpl : 	'Qty : <br /> <b>{amount} {item_uom_name} </b>'  + '<br />' + '<br />' +
+						'Value Per Pcs : <br /> <b>{price}</b>'  + '<br />' + '<br />' +
+						'Pending Receival QTY : <br /> <b>{pending_receival_amount} {item_uom_name}</b>' 
+			},
+				{
+				xtype : 'templatecolumn',
+				text : "Status",
+				flex : 3,
+				tpl : 	'All Received: <br />  <b>{is_all_received}</b>'
+			},
 		];
 		
 

@@ -114,6 +114,12 @@ class VirtualDeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
+    
+    if VirtualOrderClearance.where(:virtual_delivery_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "Virtual Delivery Order sudah terpakai di Virtual Order Clearance")
+      return self
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

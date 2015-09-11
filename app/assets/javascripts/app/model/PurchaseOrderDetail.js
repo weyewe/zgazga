@@ -10,11 +10,12 @@ Ext.define('AM.model.PurchaseOrderDetail', {
     	    { name: 'pending_receival_amount', type: 'string' },
 			{ name: 'price', type: 'string' } ,
 			{ name: 'code', type: 'string' } ,
-			
+			{ name: 'purchase_order_code', type: 'string' },
+    	    { name: 'purchase_order_nomor_surat', type: 'string' },
 			{ name: 'item_id', type: 'int' },
     	    { name: 'item_sku', type: 'string' },
     	    { name: 'item_name', type: 'string' },
-    	    
+    	    { name: 'is_all_received', type: 'boolean' },
     	    { name: 'item_uom_id', type: 'int' },
     	    { name: 'item_uom_name', type: 'string' }, 
 			

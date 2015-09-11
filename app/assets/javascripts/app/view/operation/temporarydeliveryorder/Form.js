@@ -174,6 +174,18 @@ Ext.define('AM.view.operation.temporarydeliveryorder.Form', {
     this.callParent(arguments);
   },
   
+  
+	  setExtraParamInDeliveryOrderDetailIdComboBox: function(){  
+			var comboBox = this.down('form').getForm().findField('delivery_order_id'); 
+			var store = comboBox.store;
+			store.getProxy().extraParams.temporary_delivery_order =  true;
+		},
+		
+		setComboBoxExtraParams: function( ) {  
+			var me = this;
+			me.setExtraParamInDeliveryOrderDetailIdComboBox( ); 
+		},
+	
     setSelectedDeliveryOrder: function( delivery_order_id ){
 			var comboBox = this.down('form').getForm().findField('delivery_order_id'); 
 			var me = this; 

@@ -3,6 +3,7 @@ class CreatePurchaseReceivalDetails < ActiveRecord::Migration
     create_table :purchase_receival_details do |t|
       t.string :code
       t.integer :purchase_receival_id
+      t.integer :purchase_order_id
       t.integer :purchase_order_detail_id
       t.integer :item_id
       t.decimal :amount, :default => 0,  :precision => 14, :scale => 2

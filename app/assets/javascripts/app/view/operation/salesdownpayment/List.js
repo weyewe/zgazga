@@ -12,6 +12,7 @@ Ext.define('AM.view.operation.salesdownpayment.List' ,{
 			{ header: 'DownPaymentDate', dataIndex: 'down_payment_date'},
 			{ header: 'DueDate', dataIndex: 'due_date'},
 			{ header: 'Total Amount', dataIndex: 'total_amount'},
+			{ header: 'Remaining Amount', dataIndex: 'payable_remaining_amount'},
 			{ header: 'Currency', dataIndex: 'exchange_name'},
 			{ header: 'Rate', dataIndex: 'exchange_rate_amount'},
 			{

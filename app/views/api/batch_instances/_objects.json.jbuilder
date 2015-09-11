@@ -5,6 +5,7 @@ json.batch_instances @objects do |object|
 	json.description object.description 
 	
 	json.manufactured_at   format_date_friendly( object.manufactured_at ) 
+	json.expiry_date   format_date_friendly( object.expiry_date ) 
 	json.amount object.amount 
 	
 	json.item_id object.item_id 

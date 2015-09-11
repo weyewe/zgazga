@@ -9,21 +9,22 @@ Ext.define('AM.view.operation.virtualdeliveryorderdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'virtual_order_detail_item_sku', flex: 1},
-			{ header: 'Name',  dataIndex: 'virtual_order_detail_item_name', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{virtual_order_detail_item_sku}</b>'  + '<br />' + '<br />' +
+						'Name: <br /> <b>{virtual_order_detail_item_name}</b>' 
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "QTY",
 				flex : 3,
 				tpl : 	'Delivery QTY: <br />  <b>{amount}</b>'  + '<br />' + '<br />' +
 						'PendingDelivery QTY: <br /> <b>{virtual_order_detail_pending_delivery_amount}</b>'  + '<br />' + '<br />' +
-						'Restock QTY: <br /><b>{virtual_order_code}</b>'  + '<br />' + '<br />' +
-						'Waste QTY: <br /><b>{virtual_order_nomor_surat}</b>'  
+						'Restock QTY: <br /><b>{virtual_order_detail_restock_amount}</b>'  + '<br />' + '<br />' +
+						'Waste QTY: <br /><b>{virtual_order_detail_waste_amount}</b>'  
 			},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'virtual_order_detail_pending_delivery_amount', flex: 2},
-			 
-			 
 		];
 		
 

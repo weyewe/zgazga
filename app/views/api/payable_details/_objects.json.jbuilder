@@ -1,20 +1,27 @@
 json.payable_details objects do |object|
 	json.id 								object.id 
-    json.payment_voucher_id 		  object.payment_voucher_id  
     json.payable_id 			 object.payable_id
     
     
-    json.payment_voucher_payment_date   format_date_friendly( object.payment_voucher.payment_date ) 
+    if object.class.to_s == "PaymentVoucherDetail"
+        json.payment_voucher_no_bukti   object.payment_voucher.no_bukti
+        json.amount 						object.amount 
+        json.amount_paid 						object.amount_paid 
+        json.rate 						object.rate 
+        json.description 						object.description 
+    elsif object.class.to_s == "SalesDownPaymentAllocation"
+        json.payment_voucher_no_bukti object.code
+        json.amount 						object.total_amount 
+        json.amount_paid 						object.total_amount 
+        json.rate 						object.rate_to_idr
+    elsif object.class.to_s == "PurchaseDownPaymentAllocationDetail"
+        json.receipt_voucher_no_bukti object.purchase_down_payment_allocation.code
+        json.amount 						object.amount 
+        json.amount_paid 						object.amount_paid 
+        json.rate 						object.rate   
+    end
     
-    json.payment_voucher_no_bukti       object.payment_voucher.no_bukti
     
-    
-    
-    json.amount 						object.amount 
-    json.amount_paid 						object.amount_paid 
-    json.pph_21 						object.pph_21 
-    json.pph_23 						object.pph_23 
-    json.rate 						object.rate 
-    json.description 						object.description 
+   
 	
 end

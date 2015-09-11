@@ -155,6 +155,28 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 					},
 					name : 'contact_id' 
 	      },
+	      {
+	    				fieldLabel: 'Currency',
+	    				xtype: 'combo',
+	    				queryMode: 'remote',
+	    				forceSelection: true, 
+	    				displayField : 'exchange_name',
+	    				valueField : 'exchange_id',
+	    				pageSize : 5,
+	    				minChars : 1, 
+	    				allowBlank : false, 
+	    				triggerAction: 'all',
+	    				store : remoteJsonStoreExchange , 
+	    				listConfig : {
+	    					getInnerTpl: function(){
+	    						return  	'<div data-qtip="{exchange_name}">' + 
+	    												'<div class="combo-name">{exchange_name}</div>' + 
+	    												'<div class="combo-name">Deskripsi: {exchange_description}</div>' + 
+	    						 					'</div>';
+	    					}
+    					},
+    					name : 'exchange_id' 
+    				},
 				{
 	        xtype: 'textarea',
 	        name : 'description',
@@ -194,6 +216,11 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 					},
 					name : 'account_id' 
 				},
+				{
+	        xtype: 'numberfield',
+	        name : 'exchange_rate_amount',
+	        fieldLabel: 'Rate To Idr'
+	  	  },
 				{
 	        xtype: 'displayfield',
 	        name : 'amount',
@@ -247,12 +274,29 @@ Ext.define('AM.view.operation.paymentrequest.Form', {
 			}
 		});
 	},
+		setSelectedExchange: function( exchange_id ){
+		var comboBox = this.down('form').getForm().findField('exchange_id'); 
+		var me = this; 
+		var store = comboBox.store; 
+		// console.log( 'setSelectedMember');
+		// console.log( store ) ;
+		store.load({
+			params: {
+				selected_id : exchange_id 
+			},
+			callback : function(records, options, success){
+				me.setLoading(false);
+				comboBox.setValue( exchange_id );
+			}
+		});
+	},
 	
 	setComboBoxData : function( record){ 
 
 		var me = this; 
 		me.setLoading(true);
 		me.setSelectedAccountPayable( record.get("account_id")  ) ;
+		me.setSelectedExchange( record.get("exchange_id")  ) ;
 		me.setSelectedVendor( record.get("contact_id")  ) ;
  
 	}

@@ -43,9 +43,13 @@ class PaymentRequest < ActiveRecord::Base
     new_object.no_bukti = params[:no_bukti]
     new_object.due_date = params[:due_date]
     new_object.account_id = params[:account_id]
+    new_object.exchange_id = params[:exchange_id]
+    new_object.exchange_rate_amount = params[:exchange_rate_amount]
     if new_object.save
       new_object.code = "PR-" + new_object.id.to_s
-      new_object.exchange_id = new_object.account.exchange.id
+      if new_object.exchange.is_base == true
+        new_object.exchange_rate_amount = 1
+      end
       new_object.save
     end
     return new_object
@@ -68,8 +72,12 @@ class PaymentRequest < ActiveRecord::Base
     self.due_date = params[:due_date]
     self.no_bukti = params[:no_bukti]
     self.account_id = params[:account_id]
+    self.exchange_id = params[:exchange_id]
+    self.exchange_rate_amount = params[:exchange_rate_amount]
     if self.save
-      self.exchange_id = self.account.exchange.id
+      if self.exchange.is_base == true
+        self.exchange_rate_amount = 1
+      end
       self.save
     end
     return self
@@ -119,20 +127,20 @@ class PaymentRequest < ActiveRecord::Base
       return self 
     end
    
-    if self.exchange.is_base == false 
-      latest_exchange_rate = ExchangeRate.get_latest(
-        :ex_rate_date => self.request_date,
-        :exchange_id => self.exchange_id
-        )
-      if latest_exchange_rate.nil?
-        self.errors.add(:generic_errors, "ExchangeRate untuk #{self.exchange.name} belum di input")
-        return self 
-      end
-      self.exchange_rate_amount = latest_exchange_rate.rate
-      self.exchange_rate_id = latest_exchange_rate.id   
-    else
-      self.exchange_rate_amount = 1
-    end
+    # if self.exchange.is_base == false 
+    #   latest_exchange_rate = ExchangeRate.get_latest(
+    #     :ex_rate_date => self.request_date,
+    #     :exchange_id => self.exchange_id
+    #     )
+    #   if latest_exchange_rate.nil?
+    #     self.errors.add(:generic_errors, "ExchangeRate untuk #{self.exchange.name} belum di input")
+    #     return self 
+    #   end
+    #   self.exchange_rate_amount = latest_exchange_rate.rate
+    #   self.exchange_rate_id = latest_exchange_rate.id   
+    # else
+    #   self.exchange_rate_amount = 1
+    # end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save  

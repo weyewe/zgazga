@@ -17,6 +17,7 @@ json.sales_orders objects do |object|
 	
 	json.code 					 object.code
  	json.nomor_surat 					 object.nomor_surat
+ 	json.is_delivery_completed 					 object.is_delivery_completed
 	
 	
 end

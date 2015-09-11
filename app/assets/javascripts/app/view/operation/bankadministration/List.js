@@ -9,13 +9,22 @@ Ext.define('AM.view.operation.bankadministration.List' ,{
 		this.columns = [
 			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Kode',  dataIndex: 'code', flex: 1},
-			{ header: 'No Bukti',  dataIndex: 'no_bukti', flex: 1},
-			{	header: 'CashBank', dataIndex: 'cash_bank_name', flex: 2 },
-			
-			{	header: 'Exchange Rate', dataIndex: 'exchange_rate_amount', flex: 2 },
-			{	header: 'Amount', dataIndex: 'amount', flex: 2 },
-			{	header: 'Catatan', dataIndex: 'description', flex: 2 },
-			{	header: 'Administration Date', dataIndex: 'administration_date', flex: 2 },
+			{
+				xtype : 'templatecolumn',
+				text : "Description",
+				flex : 3,
+				tpl : 	'No Bukti: <br />  <b>{no_bukti}</b>'  + '<br />' + '<br />' +
+							'CashBank: <br /> <b>{cash_bank_name}</b>'  + '<br />' + '<br />' +
+							'Tanggal Administration: <br /><b>{administration_date}</b>'+ '<br />' + '<br />' +
+							'<b>{description}</b>'
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Amount",
+				flex : 3,
+				tpl : 	'Amount: <br />  <b>{amount}</b>'  + '<br />' + '<br />' +
+							'Exchange Rate: <br /> <b>{exchange_rate_amount}</b>'
+			},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

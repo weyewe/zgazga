@@ -100,7 +100,42 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
-		 
+		 	{ 
+				text:'Virtual Order', 
+				viewClass:'AM.view.operation.VirtualOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'DO Virtual Order', 
+				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_delivery_orders',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
+				text:'DO Virtual Order Clearance', 
+				viewClass:'AM.view.operation.VirtualOrderClearance', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'virtual_order_clearances',
+						action : 'index'
+					}
+				]
+			}, 
 			{ 
 				text:'Sales Invoice', 
 				viewClass:'AM.view.operation.SalesInvoice', 
@@ -807,7 +842,7 @@ Ext.define("AM.controller.Operation", {
  			this.blanketFolder,
  			this.blendingFolder,
 			this.salesFolder,
-			this.virtualSalesFolder, 
+			// this.virtualSalesFolder, 
 			this.purchaseFolder,
  			this.financeFolder,
  			this.accountingFolder,

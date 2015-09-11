@@ -7,6 +7,7 @@ Ext.define('AM.model.BatchInstance', {
     	{ name: 'amount', type: 'string' },
     	{ name: 'total_allocated_amount', type: 'string' },
 		{ name: 'manufactured_at', type: 'string' } , 
+		{ name: 'expiry_date', type: 'string' } , 
 		{ name: 'item_id', type: 'int' }     ,
 		{ name: 'item_sku', type: 'string' }     ,
 		{ name: 'item_name', type: 'string' }     ,

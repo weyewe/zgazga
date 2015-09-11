@@ -64,7 +64,11 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 			disabled: true,
 			hidden : true
 		});
-		
+		this.confirmtemporaryObjectButton = new Ext.Button({
+			text: 'Confirm From TDO',
+			action: 'confirmtemporaryObject',
+			disabled: true,
+		});
 		this.searchField = new Ext.form.field.Text({
 			name: 'searchField',
 			hideLabel: true,
@@ -86,7 +90,7 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.confirmObjectButton,this.confirmtemporaryObjectButton, this.unconfirmObjectButton,
 					this.downloadButton, 
 					'->',
 					this.filterButton,
@@ -120,11 +124,14 @@ Ext.define('AM.view.operation.deliveryorder.List' ,{
 		
 		if( selectedObject && selectedObject.get("is_confirmed") == true ){
 			this.confirmObjectButton.hide();
+			this.confirmtemporaryObjectButton.hide();
 			this.unconfirmObjectButton.show();
 			this.unconfirmObjectButton.enable();
 		}else{
 			this.confirmObjectButton.enable();
 			this.confirmObjectButton.show();
+			this.confirmtemporaryObjectButton.enable();
+			this.confirmtemporaryObjectButton.show();
 			this.unconfirmObjectButton.hide();
 		}
 	},

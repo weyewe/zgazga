@@ -14,6 +14,7 @@ json.purchase_orders objects do |object|
 	
 	json.code 					 object.code
  	json.nomor_surat 					 object.nomor_surat
+ 	json.is_receival_completed 					 object.is_receival_completed
 	
 	json.allow_edit_detail  object.allow_edit_detail
 	if object.allow_edit_detail == true

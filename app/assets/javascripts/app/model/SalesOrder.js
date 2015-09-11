@@ -18,6 +18,7 @@ Ext.define('AM.model.SalesOrder', {
 			
 			{ name: 'is_confirmed', type: 'boolean' } , 
 			{ name: 'confirmed_at', type: 'string' }   ,
+			{ name: 'is_delivery_completed', type: 'boolean' }   ,
 			
 			
   	],

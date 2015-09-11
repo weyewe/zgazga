@@ -24,6 +24,10 @@ Ext.define('AM.view.operation.bankadministration.Form', {
 						mapping : "name"
 					} ,
 					{
+						name : 'cash_bank_exchange_name',
+						mapping : "exchange_name"
+					} ,
+					{
 						name : 'cash_bank_id',
 						mapping : "id"
 					}  ,
@@ -91,8 +95,9 @@ Ext.define('AM.view.operation.bankadministration.Form', {
 								listConfig : {
 									getInnerTpl: function(){
 										return  	'<div data-qtip="{cash_bank_name}">' + 
-																'<div class="combo-name">{cash_bank_name}</div>' + 
-				                      '<div class="combo-name">{cash_bank_amount}</div>'
+																'<div class="combo-name">Name : {cash_bank_name}</div>' + 
+				                      '<div class="combo-name">Amount : {cash_bank_amount}</div> ' +
+				                      '<div class="combo-name">Currency : {cash_bank_exchange_name}</div>' +
 										 					'</div>';
 									}
 								},

@@ -6,6 +6,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
   validate :valid_purchase_order_detail
   validate :valid_amount
   belongs_to :purchase_receival
+  belongs_to :purchase_order
   belongs_to :purchase_order_detail
   belongs_to :item
   def self.active_objects
@@ -70,6 +71,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
     new_object.pending_invoiced_amount = BigDecimal( params[:amount] || '0')
     if new_object.save
       new_object.code = "PRED-" + new_object.id.to_s  
+      new_object.purchase_order_id = new_object.purchase_order_detail.purchase_order_id
       new_object.item_id = new_object.purchase_order_detail.item_id
       new_object.save
     end
@@ -86,6 +88,7 @@ class PurchaseReceivalDetail < ActiveRecord::Base
     self.amount = BigDecimal( params[:amount] || '0')
     self.pending_invoiced_amount = BigDecimal( params[:amount] || '0')
     if self.save
+       self.purchase_order_id = self.purchase_order_detail.purchase_order_id
        self.item_id = self.purchase_order_detail.item_id
        self.save
     end

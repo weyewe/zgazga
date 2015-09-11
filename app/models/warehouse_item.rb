@@ -46,6 +46,7 @@ class WarehouseItem < ActiveRecord::Base
   def update_customer_amount(amount)
     self.customer_amount += amount
     self.save
+    puts "clases"
   end
   
   def delete_object

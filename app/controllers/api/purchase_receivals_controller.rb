@@ -2,7 +2,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
   
   def index
      
-     query = PurchaseReceival.active_objects.joins(:warehouse,:purchase_order)
+     query = PurchaseReceival.active_objects.joins(:warehouse,:contact,:exchange)
      
      if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
@@ -200,7 +200,7 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?  
-      query_code = PurchaseReceival.where{  
+      query_code = PurchaseReceival.joins(:warehouse,:contact).where{  
         ( 
            ( code =~ query )  
          )
@@ -233,6 +233,6 @@ class Api::PurchaseReceivalsController < Api::BaseApiController
     end
     
     
-    render :json => { :records => @objects , :total => @total, :success => true }
+    # render :json => { :records => @objects , :total => @total, :success => true }
   end
 end

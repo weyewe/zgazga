@@ -161,6 +161,20 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       else
       end
       
+     elsif params[:confirmtemporary].present?    
+      
+      if not current_user.has_role?( :delivery_orders, :confirm)
+        render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
+        return
+      end
+      
+      begin
+        ActiveRecord::Base.transaction do 
+          @object.confirm_object_from_temporary_delivery_order(:confirmed_at => params[:delivery_order][:confirmed_at] ) 
+        end
+      rescue ActiveRecord::ActiveRecordError  
+      else
+      end
       
     else
       @object.update_object(params[:delivery_order])
@@ -223,6 +237,13 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       }
                  
       if params[:sales_invoices].present?
+        query_code = query_code.where{
+          (is_confirmed.eq true) &
+          (is_invoice_completed.eq false) 
+        }
+      end
+      
+      if params[:temporary_delivery_order].present?
         query_code = query_code.where{
           (is_confirmed.eq true) &
           (is_invoice_completed.eq false) 

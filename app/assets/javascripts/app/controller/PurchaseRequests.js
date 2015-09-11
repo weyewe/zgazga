@@ -74,14 +74,14 @@ Ext.define('AM.controller.PurchaseRequests', {
 				change: this.liveSearch
 			},
 			
-			'deliveryorderProcess deliveryorderlist button[action=filterObject]': {
+			'purchaserequestProcess purchaserequestlist button[action=filterObject]': {
         click: this.filterObject
       },
-			'filterdeliveryorderform button[action=save]' : {
+			'filterpurchaserequestform button[action=save]' : {
 				click : this.executeFilterObject  
 			},
 			
-			'filterdeliveryorderform button[action=reset]' : {
+			'filterpurchaserequestform button[action=reset]' : {
 				click : this.executeResetFilterObject  
 			},
 			

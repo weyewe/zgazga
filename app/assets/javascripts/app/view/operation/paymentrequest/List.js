@@ -16,9 +16,11 @@ Ext.define('AM.view.operation.paymentrequest.List' ,{
 				tpl : 	'Tanggal Request: <b>{request_date}</b>' + '<br />' + '<br />' +
 						'No Bukti: <b>{no_bukti}</b>' + '<br />' + '<br />' +
 						'Contact: <b>{contact_name}</b>' + '<br />' + '<br />' +
-						'Account Payable: <b>{account_name}</b>' + '<br />' + '<br />' +
-						'<b>{description}</b>'   
+						'Account: Payable: <b>{account_name}</b>' + '<br />' + '<br />' +
+						'Currency: <b>{exchange_name}</b>'   + '<br />' + '<br />' +
+						'Rate: <b>{exchange_rate_amount}</b>'  
 			},
+			
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

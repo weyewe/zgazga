@@ -7,14 +7,24 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-		 
+		 	
 			{ header: 'Payable Code',  dataIndex: 'payable_source_code', flex: 1},
 			{ header: 'Currency',  dataIndex: 'payable_exchange_name', flex: 1},
-			{ header: 'Amount Paid',  dataIndex: 'amount_paid', flex: 1},
-			{ header: 'Rate Invoice to CashBank',  dataIndex: 'rate', flex: 1},
-			{ header: 'Actual Amount',  dataIndex: 'amount', flex: 1},
-			{ header: 'PPh 23',  dataIndex: 'pph_23', flex: 1},
-			{ header: 'PPh 21',  dataIndex: 'pph_21', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Amount",
+				flex : 3,
+				tpl :  	'Amount Paid: <br /> <b>{amount_paid}</b>' + '<br />' + '<br />' +
+							'Rate to CashBank:  <br /> <b>{rate}</b>'   + '<br />' + '<br />' +
+							'Actual Amount:  <br /> <b>{amount}</b'   
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "Tax",
+				flex : 3,
+				tpl :  	'PPh 23: <br /> <b>{pph_23}</b>' + '<br />' + '<br />' +
+							'PPh 21:  <br /> <b>{pph_21}</b>'
+			},
 			 
 		];
 		

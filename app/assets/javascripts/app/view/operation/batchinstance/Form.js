@@ -101,7 +101,12 @@ Ext.define('AM.view.operation.batchinstance.Form', {
 			fieldLabel: 'Tanggal Manufacture',
 			format: 'Y-m-d',
 		  },
-	    
+	      {
+			xtype: 'datefield',
+			name : 'expiry_date',
+			fieldLabel: 'Tanggal Expired',
+			format: 'Y-m-d',
+		  },
 		]	
     }];
 

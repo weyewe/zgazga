@@ -144,10 +144,10 @@ class RollerIdentificationForm < ActiveRecord::Base
       return self 
     end
     
-    recovery_count = RecoveryOrder.where(:roller_identification_form_id => self.id).count
+    recovery_count = RecoveryOrder.where(:roller_identification_form_id => self.id,:is_confirmed => true).count
     
     if recovery_count > 0 
-      self.errors.add(:generic_errors, "Sudah di buat RecoveryOrder")
+      self.errors.add(:generic_errors, "Sudah di buat RecoveryOrder dan telah di confirm")
       return self
     end
     

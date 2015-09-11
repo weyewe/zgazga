@@ -66,14 +66,14 @@ class RecoveryOrderDetail < ActiveRecord::Base
   end
   
   def self.create_object(params)
+    new_object = self.new
     recovery_order = RecoveryOrder.find_by_id(params[:recovery_order_id])
     if not recovery_order.nil?
       if recovery_order.is_confirmed == true
-        self.errors.add(:generic,"Sudah di confirm")
-        return self
+        new_object.errors.add(:generic_errors,"Sudah di confirm")
+        return new_object
       end
     end
-    new_object = self.new
     new_object.recovery_order_id = params[:recovery_order_id]
     new_object.roller_identification_form_detail_id = params[:roller_identification_form_detail_id]
     new_object.roller_builder_id = params[:roller_builder_id]
@@ -99,7 +99,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
   
   def delete_object
     if self.recovery_order.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     self.update_recovery_order_amount_received(:recovery_order_id => self.recovery_order_id ,:amount => -1)
@@ -146,8 +146,8 @@ class RecoveryOrderDetail < ActiveRecord::Base
     self.is_faced_off = params[:is_faced_off]
     self.is_conventional_grinded = params[:is_conventional_grinded]
     self.is_cnc_grinded = params[:is_cnc_grinded]
-    self.is_polished_and_gc = params[:is_cnc_grinded]
-    self.is_packaged = params[:is_cnc_grinded]
+    self.is_polished_and_gc = params[:is_polished_and_gc]
+    self.is_packaged = params[:is_packaged]
     self.compound_under_layer_id = params[:compound_under_layer_id]
     if self.save
     end
@@ -204,12 +204,23 @@ class RecoveryOrderDetail < ActiveRecord::Base
     core_in_warehouse = WarehouseItem.find_or_create_object(
           :warehouse_id => self.recovery_order.warehouse_id,
           :item_id => core_id) 
+    if self.recovery_order.roller_identification_form.is_in_house == true
     if (core_in_warehouse.amount.to_i - 1) < 0 
       self.errors.add(:generic_errors, 
-      "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
+      "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
       return self 
-    end       
-    
+    end
+      else
+      customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => core_in_warehouse.id
+          )
+      if (customer_item.amount.to_i - 1) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock Customer quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
+        return self 
+      end
+    end
     # check accessories amount
     self.recovery_accessory_details.each do |rad|
       accessories_in_warehouse = WarehouseItem.find_or_create_object(
@@ -274,7 +285,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :item_id => core_id,
           :mutation_date => self.finished_date,
           :case_addition =>ADJUSTMENT_STATUS[:deduction],
-          :amount => self.compound_usage,
+          :amount => 1,
           )
       else
         item_in_warehouse = WarehouseItem.find_or_create_object(
@@ -298,6 +309,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           :item_case => ITEM_CASE[:ready],
           :source_code => self.recovery_order.code
           ) 
+         new_stock_mutation.stock_mutate_object
       end
       # add roller
       roller_id = 0
@@ -524,11 +536,23 @@ class RecoveryOrderDetail < ActiveRecord::Base
     core_in_warehouse = WarehouseItem.find_or_create_object(
           :warehouse_id => self.recovery_order.warehouse_id,
           :item_id => core_id) 
-    if (core_in_warehouse.amount.to_i - self.compound_usage) < 0 
-      self.errors.add(:generic_errors, 
-      "Stock quantity Compound #{core_in_warehouse.item.name} kurang dari #{self.compound_usage}")
-      return self 
-    end       
+    if self.recovery_order.roller_identification_form.is_in_house == true
+      if (core_in_warehouse.amount.to_i - 1) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
+        return self 
+      end
+      else
+      customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => core_in_warehouse.id
+          )
+      if (customer_item.amount.to_i - 1) < 0 
+        self.errors.add(:generic_errors, 
+        "Stock Customer quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
+        return self 
+      end
+    end      
     
     # check accessories amount
     self.recovery_accessory_details.each do |rad|
@@ -575,12 +599,37 @@ class RecoveryOrderDetail < ActiveRecord::Base
       elsif self.roller_identification_form_detail.material_case == MATERIAL_CASE[:used]
         core_id = self.roller_identification_form_detail.core_builder.used_core_item.item.id
       end
-      update_warehouse_item_amount(
-        :item_id => core_id,
-        :mutation_date => self.rejected_date,
-        :case_addition =>ADJUSTMENT_STATUS[:deduction],
-        :amount => self.compound_usage,
-        )
+      if self.recovery_order.roller_identification_form.is_in_house == true
+        update_warehouse_item_amount(
+          :item_id => core_id,
+          :mutation_date => self.rejected_date,
+          :case_addition =>ADJUSTMENT_STATUS[:deduction],
+          :amount => 1,
+          )
+      else
+        item_in_warehouse = WarehouseItem.find_or_create_object(
+          :warehouse_id => self.recovery_order.warehouse_id,
+          :item_id => core_id)
+        customer_item = CustomerItem.find_or_create_object(
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :warehouse_item_id => item_in_warehouse.id
+          )
+        new_stock_mutation = CustomerStockMutation.create_object(
+          :source_class => self.class.to_s, 
+          :source_id => self.id ,  
+          :contact_id => self.recovery_order.roller_identification_form.contact_id,
+          :customer_item_id => customer_item.id,
+          :amount => 1,  
+          :status => ADJUSTMENT_STATUS[:deduction],  
+          :mutation_date => self.rejected_date ,  
+          :warehouse_id => self.recovery_order.warehouse_id ,
+          :warehouse_item_id => item_in_warehouse.id,
+          :item_id => core_id,
+          :item_case => ITEM_CASE[:ready],
+          :source_code => self.recovery_order.code
+          ) 
+         new_stock_mutation.stock_mutate_object
+      end
       AccountingService::CreateRecoveryOrderJournal.create_reject_journal(self)  
     end
     

@@ -23,13 +23,15 @@ module AccountingService
       :exchange_id         => purchase_down_payment.exchange_id,
       :description => "Credit Account Payable"
       )
-#     Debit Hutang Lain-Lain
+#     Debit AccountReceivable
     TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
-        :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_lainnya][:code]).id  ,
+        :account_id          => purchase_down_payment.exchange.account_receivable_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (purchase_down_payment.total_amount   * purchase_down_payment.exchange_rate_amount).round(2),
-        :description         => "Debit Revenue"
+        :real_amount         => purchase_down_payment.total_amount,
+        :exchange_id         => purchase_down_payment.exchange_id,
+        :description         => "Debit Account Receivable"
         )
     ta.confirm
   end

@@ -123,6 +123,10 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
+    if self.delivery_order.is_confirmed?
+      self.errors.add(:generic_errors, "Sudah terdaftar di Delivery order")
+      return self 
+    end
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save
@@ -144,11 +148,11 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
         :source_code => self.code
         ) 
       new_stock_mutation.stock_mutate_object
-      tdod.sales_order_detail.pending_delivery_amount -= tdod.amount    
-      if tdod.sales_order_detail.pending_delivery_amount == 0 
-        tdod.sales_order_detail.is_all_delivered == true
-      end
-      tdod.sales_order_detail.save
+      # tdod.sales_order_detail.pending_delivery_amount -= tdod.amount    
+      # if tdod.sales_order_detail.pending_delivery_amount == 0 
+      #   tdod.sales_order_detail.is_all_delivered == true
+      # end
+      # tdod.sales_order_detail.save
     end
   end
   
@@ -163,9 +167,9 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
         sm.reverse_stock_mutate_object  
         sm.delete_object
       end
-      tdod.sales_order_detail.pending_delivery_amount += tdod.amount
-      tdod.sales_order_detail.is_all_delivered == false
-      tdod.sales_order_detail.save
+      # tdod.sales_order_detail.pending_delivery_amount += tdod.amount
+      # tdod.sales_order_detail.is_all_delivered == false
+      # tdod.sales_order_detail.save
     end
   end
   

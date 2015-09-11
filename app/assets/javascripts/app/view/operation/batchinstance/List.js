@@ -38,6 +38,7 @@ Ext.define('AM.view.operation.batchinstance.List' ,{
 			
 			 
 			{	header: 'Tanggal Manufacture', dataIndex: 'manufactured_at', flex: 1 }, 
+			{	header: 'Tanggal Expired', dataIndex: 'expiry_date', flex: 1 }, 
 			
   
 			

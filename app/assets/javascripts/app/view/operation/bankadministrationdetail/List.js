@@ -9,11 +9,20 @@ Ext.define('AM.view.operation.bankadministrationdetail.List' ,{
 		this.columns = [
 		 
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Account Code',  dataIndex: 'account_code', flex: 1},
-    		{ header: 'Account',  dataIndex: 'account_name', flex: 1},
-    		{ header: 'Status',  dataIndex: 'status', flex: 1},
+			{
+				xtype : 'templatecolumn',
+				text : "Account",
+				flex : 3,
+				tpl : 	' [{account_code}] {account_name}' 
+			},
+    		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{	header: 'Amount', dataIndex: 'amount', flex: 1 } ,
-			{	header: 'Keterangan', dataIndex: 'description', flex: 1 } ,
+			{
+				xtype : 'templatecolumn',
+				text : "Keterangan",
+				flex : 3,
+				tpl : 	'{description}' 
+			},
 			
 			 
 		];

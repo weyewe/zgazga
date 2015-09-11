@@ -8,11 +8,21 @@ Ext.define('AM.view.operation.virtualorderdetail.List' ,{
 	initComponent: function() {
 		this.columns = [
 			{ header: 'Code', dataIndex: 'code', flex: 1},
-			{ header: 'Item Sku',  dataIndex: 'item_sku', flex: 1},
-    		{ header: 'Quantity',  dataIndex: 'amount', flex: 1},
-    		{ header: 'PendingDelivery Qty',  dataIndex: 'pending_delivery_amount', flex: 2},
-			{	header: 'Value per pcs', dataIndex: 'price', flex: 1 } ,
-      		{	header: 'Uom', dataIndex: 'item_uom_name', flex: 1 } ,
+			{
+				xtype : 'templatecolumn',
+				text : "Item",
+				flex : 3,
+				tpl : 	'Sku: <br />  <b>{item_sku}</b>'  + '<br />' + '<br />' +
+						'Name: <br /> <b>{item_name}</b>' 
+			},
+			{
+				xtype : 'templatecolumn',
+				text : "QTY",
+				flex : 3,
+				tpl : 	'QTY: <br />  <b>{amount} {item_uom_name}</b>'  + '<br />' + '<br />' +
+						'Value Per Pcs : <br /> <b>{price}</b>'  + '<br />' + '<br />' +
+						'PendingDelivery QTY: <br /> <b>{pending_delivery_amount} {item_uom_name}</b>'
+			},
       		
 		];
 		

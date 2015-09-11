@@ -3,6 +3,7 @@ json.temporary_delivery_orders objects do |object|
 	json.id 								object.id 
 	json.code 								object.code 
 	json.delivery_order_id 								object.delivery_order_id 
+	json.sales_order_id 								object.delivery_order.sales_order_id 
 	json.delivery_order_code 								object.delivery_order.code 
 	json.delivery_order_nomor_surat 								object.delivery_order.nomor_surat 
 	json.delivery_date 			 format_date_friendly( object.delivery_date )   

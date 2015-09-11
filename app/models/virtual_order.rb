@@ -118,6 +118,11 @@ class VirtualOrder < ActiveRecord::Base
       return self 
     end
     
+    if VirtualDeliveryOrder.where(:virtual_order_id => self.id).count > 0 
+      self.errors.add(:generic_errors, "VirtualOrder sudah terpakai di Virtual Delivery Order")
+      return self
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

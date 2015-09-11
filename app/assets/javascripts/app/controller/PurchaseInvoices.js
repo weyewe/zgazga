@@ -218,8 +218,9 @@ downloadObject: function(){
     var view = Ext.widget('purchaseinvoiceform');
 
     view.down('form').loadRecord(record);
-    view.setComboBoxData( record ) ;
     view.setComboBoxExtraParams() ;
+    view.setComboBoxData( record ) ;
+    
   },
 
 	confirmObject: function(){
