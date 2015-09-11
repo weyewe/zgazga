@@ -4,7 +4,6 @@ class CreateClosingDetails < ActiveRecord::Migration
       t.integer :closing_id
       t.integer :exchange_id
       t.decimal :rate , :default          => 0,  :precision => 18, :scale => 11
-      t.decimal :tax_rate , :default          => 0,  :precision => 18, :scale => 11
       t.timestamps
     end
   end
