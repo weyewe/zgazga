@@ -3,7 +3,7 @@ class Closing < ActiveRecord::Base
   has_many :closing_details
   validates_presence_of :period
   validates_presence_of :year_period
-  validates_presence_of :beginning_period
+  # validates_presence_of :beginning_period
   validates_presence_of :end_date_period
   # validates_presence_of :is_year
   
@@ -100,16 +100,16 @@ class Closing < ActiveRecord::Base
     end  
     self.is_closed = true
     self.closed_at = params[:closed_at]
-    self.closing_details.each do |cd|
-       latest_exchange_rate = ExchangeRate.get_latest(
-          :ex_rate_date => self.end_date_period,
-          :exchange_id => cd.exchange_id
-        )
-      if latest_exchange_rate.nil?
-        self.errors.add(:generic_errors, "ExchangeRate untuk #{cd.exchange.name} belum di input")
-        return self 
-      end
-    end
+    # self.closing_details.each do |cd|
+    #   latest_exchange_rate = ExchangeRate.get_latest(
+    #       :ex_rate_date => self.end_date_period,
+    #       :exchange_id => cd.exchange_id
+    #     )
+    #   if latest_exchange_rate.nil?
+    #     self.errors.add(:generic_errors, "ExchangeRate untuk #{cd.exchange.name} belum di input")
+    #     return self 
+    #   end
+    # end
     
     if self.save
       self.generate_valid_combs
@@ -127,7 +127,7 @@ class Closing < ActiveRecord::Base
   end
   
   def open_object
-    if not self.is_closed?
+    if self.is_closed == false
       self.errors.add(:generic_errors, "belum di close")
       return self 
     end
@@ -165,7 +165,7 @@ class Closing < ActiveRecord::Base
   
   def previous_closing 
     previous_closing = nil 
-    current_end_period = self.end_date_period
+    current_end_period = self.beginning_period
     if self.persisted?
       current_id = self.id 
       previous_closing = Closing.where{
@@ -179,7 +179,6 @@ class Closing < ActiveRecord::Base
         (end_date_period.lt current_end_period)
       }.order("id DESC").first
     end
-    
     return previous_closing 
   end
   
@@ -220,21 +219,21 @@ class Closing < ActiveRecord::Base
         
         if cash_bank.count > 0 or account_payable.count > 0 or account_receivable.count > 0 or 
           gbch_payable.count > 0 or gbch_receivable.count > 0
-            total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
+            total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
             .where{
-            ( transaction_data.transaction_datetime.gte start_transaction) & 
-            ( transaction_data.transaction_datetime.lt end_transaction) & 
-            ( account_id.eq leaf_account.id ) & 
-            ( entry_case.eq NORMAL_BALANCE[:debit])
-            }.sum("transaction_data_non_base_exchange_details.amount")
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
           
-            total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
+            total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
             .where{
-            ( transaction_data.transaction_datetime.gte start_transaction) & 
-            ( transaction_data.transaction_datetime.lt end_transaction) & 
-            ( account_id.eq leaf_account.id ) & 
-            ( entry_case.eq NORMAL_BALANCE[:credit])
-            }.sum("transaction_data_non_base_exchange_details.amount")
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
         end
       else
         total_debit = TransactionDataDetail.joins(:transaction_data).where{
@@ -253,7 +252,6 @@ class Closing < ActiveRecord::Base
           gbch_payable.count > 0 or gbch_receivable.count > 0
             total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
             .where{
-            ( transaction_data.transaction_datetime.gte start_transaction) & 
             ( transaction_data.transaction_datetime.lt end_transaction) & 
             ( account_id.eq leaf_account.id ) & 
             ( entry_case.eq NORMAL_BALANCE[:debit])
@@ -261,7 +259,6 @@ class Closing < ActiveRecord::Base
           
             total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
             .where{
-            ( transaction_data.transaction_datetime.gte start_transaction) & 
             ( transaction_data.transaction_datetime.lt end_transaction) & 
             ( account_id.eq leaf_account.id ) & 
             ( entry_case.eq NORMAL_BALANCE[:credit])
@@ -322,9 +319,8 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => cash_bank.exchange_id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => cash_bank.exchange_id).first
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -340,21 +336,21 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
     
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-      
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     else
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.lt end_transaction) & 
@@ -368,19 +364,19 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
       
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-          .where{
-          ( transaction_data.transaction_datetime.lt end_transaction) & 
-          ( account_id.eq leaf_account.id ) & 
-          ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-        
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     end
     
     if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
@@ -411,9 +407,8 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => account_payable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => account_payable.id).first
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -429,21 +424,21 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
     
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-      
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     else
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.lt end_transaction) & 
@@ -457,19 +452,19 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
       
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-          .where{
-          ( transaction_data.transaction_datetime.lt end_transaction) & 
-          ( account_id.eq leaf_account.id ) & 
-          ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-        
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     end
     
     if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
@@ -500,9 +495,8 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => account_receivable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => account_receivable.id).first
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -518,21 +512,21 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
     
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-      
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     else
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.lt end_transaction) & 
@@ -546,19 +540,19 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
       
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-          .where{
-          ( transaction_data.transaction_datetime.lt end_transaction) & 
-          ( account_id.eq leaf_account.id ) & 
-          ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-        
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     end
     
     if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
@@ -589,9 +583,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => gbch_payable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => gbch_payable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => gbch_payable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -607,21 +603,21 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
     
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-      
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     else
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.lt end_transaction) & 
@@ -635,19 +631,19 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
       
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-          .where{
-          ( transaction_data.transaction_datetime.lt end_transaction) & 
-          ( account_id.eq leaf_account.id ) & 
-          ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-        
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     end
     
     if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
@@ -678,11 +674,11 @@ class Closing < ActiveRecord::Base
     total_credit = BigDecimal("0")
     total_debit_non_idr = BigDecimal("0")
     total_credit_non_idr = BigDecimal("0")
-    # latest_rate = self.closing_details.where(
-    #   :exchange_id => gbch_receivable.id).first
-    latest_rate = ExchangeRate.get_latest( 
-      :ex_rate_date => end_transaction , 
-      :exchange_id => gbch_receivable.id  )
+    latest_rate = self.closing_details.where(
+      :exchange_id => gbch_receivable.id).first
+    # latest_rate = ExchangeRate.get_latest( 
+    #   :ex_rate_date => end_transaction , 
+    #   :exchange_id => gbch_receivable.id  )
     if not start_transaction.nil?
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.gte start_transaction) & 
@@ -698,21 +694,21 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
     
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-      
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.gte start_transaction) & 
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.gte start_transaction) & 
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     else
       total_debit = TransactionDataDetail.joins(:transaction_data).where{
         ( transaction_data.transaction_datetime.lt end_transaction) & 
@@ -726,19 +722,19 @@ class Closing < ActiveRecord::Base
         ( entry_case.eq NORMAL_BALANCE[:credit])
       }.sum("amount")
       
-      total_debit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-          .where{
-          ( transaction_data.transaction_datetime.lt end_transaction) & 
-          ( account_id.eq leaf_account.id ) & 
-          ( entry_case.eq NORMAL_BALANCE[:debit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
-        
-      total_credit_non_idr = TransactionDataDetail.joins(:transaction_data,:transaction_data_non_base_exchange_details)
-        .where{
-        ( transaction_data.transaction_datetime.lt end_transaction) & 
-        ( account_id.eq leaf_account.id ) & 
-        ( entry_case.eq NORMAL_BALANCE[:credit])
-      }.sum("transaction_data_non_base_exchange_details.amount")
+      total_debit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:debit])
+            }.sum("amount")
+          
+      total_credit_non_idr = TransactionDataNonBaseExchangeDetail.joins(:transaction_data_detail => [:transaction_data])
+            .where{
+            ( transaction_data_detail.transaction_data.transaction_datetime.lt end_transaction) & 
+            ( transaction_data_detail.account_id.eq leaf_account.id ) & 
+            ( transaction_data_detail.entry_case.eq NORMAL_BALANCE[:credit])
+            }.sum("amount")
     end
     
     if leaf_account.normal_balance == NORMAL_BALANCE[:debit]
@@ -774,30 +770,34 @@ class Closing < ActiveRecord::Base
     leaves_account = Account.all_ledger_accounts
     
     leaves_account.each do |leaf_account|
-    cash_bank = CashBank.where(:account_id => leaf_account.id)
-    account_payable = Exchange.where(:account_payable_id => leaf_account.id)
-    account_receivable = Exchange.where(:account_receivable_id => leaf_account.id)
-    gbch_payable = Exchange.where(:gbch_payable_id => leaf_account.id)
-    gbch_receivable = Exchange.where(:gbch_receivable_id => leaf_account.id)
+    leaid = leaf_account.id
+    cash_bank = CashBank.joins(:exchange).where{
+                (account_id.eq leaid) &
+                (exchange.is_base.eq false)
+                }
+    account_payable = Exchange.where(:account_payable_id => leaf_account.id,:is_base => false)
+    account_receivable = Exchange.where(:account_receivable_id => leaf_account.id,:is_base => false)
+    gbch_payable = Exchange.where(:gbch_payable_id => leaf_account.id,:is_base => false)
+    gbch_receivable = Exchange.where(:gbch_receivable_id => leaf_account.id,:is_base => false)
     if cash_bank.count > 0 or account_payable.count > 0 or account_receivable.count > 0 or 
       gbch_payable.count > 0 or gbch_receivable.count > 0
       if cash_bank.count > 0 
         generate_exchange_for_cash_bank(transaction_data.id,cash_bank.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end
       
-      if account_payable.count > 0 && self.is_year_closing == true
+      if account_payable.count > 0
         generate_exchange_for_account_payable(transaction_data.id,account_payable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if account_receivable.count > 0  && self.is_year_closing == true
+      if account_receivable.count > 0  
         generate_exchange_for_account_receivable(transaction_data.id,account_receivable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if gbch_payable.count > 0  && self.is_year_closing == true
+      if gbch_payable.count > 0  
         generate_exchange_for_gbch_payable(transaction_data.id,gbch_payable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
       
-      if gbch_receivable.count > 0  && self.is_year_closing == true
+      if gbch_receivable.count > 0  
         generate_exchange_for_gbch_receivable(transaction_data.id,gbch_receivable.first,start_transaction,end_transaction,leaf_account.id,leaf_account)
       end 
     end
@@ -854,7 +854,8 @@ class Closing < ActiveRecord::Base
       end
       
       
-      final_valid_comb_amount = valid_comb_amount + ValidComb.previous_closing_valid_comb_amount( previous_closing, node )
+      final_valid_comb_amount = valid_comb_amount 
+      # + ValidComb.previous_closing_valid_comb_amount( previous_closing, node )
       puts " #{node.name} (#{node.code}) :: #{final_valid_comb_amount} "
       entry_case = node.normal_balance  
       

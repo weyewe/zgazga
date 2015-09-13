@@ -191,7 +191,7 @@ Ext.define('AM.controller.SalesInvoices', {
 			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
 			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'sales_invoices_' + 'download_report' + "?auth_token=" +auth_token_value);
+				window.open( 'sales_invoices_' + 'download_report' + "?auth_token=" +auth_token_value );
 			}
 			
 	},

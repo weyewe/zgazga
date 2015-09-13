@@ -16,7 +16,8 @@ class Api::StockAdjustmentDetailsController < Api::BaseApiController
        query  = query.where{
          (
            ( item.name =~  livesearch ) | 
-           ( item.sku =~ livesearch)   
+           ( item.sku =~ livesearch)   |
+           ( item.uom.name =~ livesearch)   
          )         
        } 
      end

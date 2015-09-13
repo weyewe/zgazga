@@ -52,7 +52,6 @@ class ClosingDetail < ActiveRecord::Base
       return self 
     end
     self.rate = BigDecimal( params[:rate] || '0')
-    self.tax_rate = BigDecimal( params[:tax_rate] || '0')
     if self.save
     end
     return self

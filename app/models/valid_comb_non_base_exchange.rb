@@ -4,9 +4,9 @@ class ValidCombNonBaseExchange < ActiveRecord::Base
   def ValidCombNonBaseExchange.previous_closing_valid_comb_amount( previous_closing, leaf_account )
   return BigDecimal("0") if previous_closing.nil?
   
-  previous_valid_comb = self.joins(:valid_comb)..where{
+  previous_valid_comb = self.joins(:valid_comb).where{
         ( valid_comb.closing_id.eq previous_closing.id) & 
-        ( valid_comb.leaf_account_id.eq leaf_account.id)
+        ( valid_comb.account_id.eq leaf_account.id)
       }.first
   
   return BigDecimal("0") if previous_valid_comb.nil?

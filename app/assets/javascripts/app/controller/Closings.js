@@ -337,7 +337,7 @@ Ext.define('AM.controller.Closings', {
 			var currentUser = Ext.decode( localStorage.getItem('currentUser'));
 			var auth_token_value = currentUser['auth_token'];
 			if( record ){
-				window.open( 'closings_' + 'download_report' + "?auth_token=" +auth_token_value);
+				window.open( 'closings_' + 'download_report' + "?auth_token=" +auth_token_value+ ";closing_id=" + id);
 			}
 			
 	},

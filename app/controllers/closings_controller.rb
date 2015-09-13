@@ -8,8 +8,8 @@ class ClosingsController < ApplicationController
     end_date = DateTime.now
     start_date = end_date - 1.weeks 
     
-    # NeracaReport.create_report( filepath, start_date, end_date, Closing.first  )
-    VendorPaymentReport.create_report( filepath, start_date, end_date )
+    NeracaReport.create_report( filepath, start_date, end_date, Closing.find_by_id(params[:closing_id])  )
+    # VendorPaymentReport.create_report( filepath, start_date, end_date )
     
     file = File.open( filepath , "rb")
     contents = file.read

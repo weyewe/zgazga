@@ -7,7 +7,6 @@ class CreatePurchaseReceivals < ActiveRecord::Migration
       t.datetime :receival_date
       t.integer :warehouse_id
       t.string :nomor_surat
-      t.integer :exchange_id
       t.integer :exchange_rate_id
       t.decimal :exchange_rate_amount, :default => 0 , :default => 0,  :precision => 18, :scale => 11
       t.decimal :total_cogs, :default => 0 , :default => 0,  :precision => 14, :scale => 2

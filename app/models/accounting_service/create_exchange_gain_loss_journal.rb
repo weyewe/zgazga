@@ -2,7 +2,7 @@ module AccountingService
   class CreateExchangeGainLossJournal
     
     def CreateExchangeGainLossJournal.create_master_transaction_journal(params)
-      message = "Exchange Gain Loss Closing"
+      message = "Exchange Gain Loss Closing params[:transaction_datetime]"
       ta = TransactionData.create_object({
           :transaction_datetime => params[:transaction_datetime],
           :description =>  message,
@@ -17,11 +17,11 @@ module AccountingService
     def CreateExchangeGainLossJournal.create_exchange_gain_loss_cash_bank_journal(params) 
         if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
-            :id => transaction_data_id
+            :id => params[:transaction_data_id]
           ).first 
-          if (closing.valid_comb_amount > closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] > params[:valid_comb_amount_non_idr])
             # Credit CashBank Debit ExchangeLoss
-             TransactionDataDetail.create_object(
+          TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
             :account_id          => params[:account_id]   ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
@@ -38,7 +38,7 @@ module AccountingService
             )
           end
           
-          if (closing.valid_comb_amount < closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] < params[:valid_comb_amount_non_idr])
             # Debit CashBank Credit ExchangeGain
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -57,6 +57,7 @@ module AccountingService
             )
             
           end
+          ta.confirm
         end
     end
     
@@ -64,10 +65,10 @@ module AccountingService
       message = "Exchange Gain Loss Closing"
         if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
-            :id => transaction_data_id
+            :id => params[:transaction_data_id]
           ).first 
         
-          if (closing.valid_comb_amount > closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] > params[:valid_comb_amount_non_idr])
             # Debit AccountPayable Credit ExchangeGain
              TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -86,7 +87,7 @@ module AccountingService
             )
           end
           
-          if (closing.valid_comb_amount < closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] < params[:valid_comb_amount_non_idr])
             # Credit AccountPayable Debit ExchangeLoss
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -98,13 +99,14 @@ module AccountingService
     
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
-            :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id        ,
+            :account_id          => Account.find_by_code(ACCOUNT_CODE[:rugi_selisih_kurs][:code]).id        ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => (params[:valid_comb_amount_non_idr] - params[:valid_comb_amount]).round(2) ,
             :description => "Debit ExchangeLoss"
             )
             
           end
+           ta.confirm
         end
     end
     
@@ -112,10 +114,10 @@ module AccountingService
       message = "Exchange Gain Loss Closing"
         if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
-            :id => transaction_data_id
+            :id => params[:transaction_data_id]
           ).first 
         
-          if (closing.valid_comb_amount > closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] > params[:valid_comb_amount_non_idr])
             # Debit AccountGBCHPayable Credit ExchangeGain
              TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -134,7 +136,7 @@ module AccountingService
             )
           end
           
-          if (closing.valid_comb_amount < closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] < params[:valid_comb_amount_non_idr])
             # Credit AccountGBCHPayable Debit ExchangeLoss
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -153,6 +155,7 @@ module AccountingService
             )
             
           end
+           ta.confirm
         end
     end
     
@@ -160,10 +163,10 @@ module AccountingService
       message = "Exchange Gain Loss Closing"
         if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
-            :id => transaction_data_id
+            :id => params[:transaction_data_id]
           ).first 
         
-          if (closing.valid_comb_amount > closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] > params[:valid_comb_amount_non_idr])
             # Credit AccountReceivable Debit ExchangeLoss
              TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -182,7 +185,7 @@ module AccountingService
             )
           end
           
-          if (closing.valid_comb_amount < closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] < params[:valid_comb_amount_non_idr])
             # Debit AccountReceivable Credit ExchangeGain
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -201,6 +204,7 @@ module AccountingService
             )
             
           end
+           ta.confirm
         end
     end
     
@@ -208,10 +212,10 @@ module AccountingService
       message = "Exchange Gain Loss Closing"
         if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
-            :id => transaction_data_id
+            :id => params[:transaction_data_id]
           ).first
         
-          if (closing.valid_comb_amount > closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] > params[:valid_comb_amount_non_idr])
             # Credit GBCHReceivable Debit ExchangeLoss
              TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -230,7 +234,7 @@ module AccountingService
             )
           end
           
-          if (closing.valid_comb_amount < closing.valid_comb_amount_non_idr)
+          if (params[:valid_comb_amount] < params[:valid_comb_amount_non_idr])
             # Debit GBCHReceivable Credit ExchangeGain
             TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
@@ -249,6 +253,7 @@ module AccountingService
             )
             
           end
+           ta.confirm
         end
     end
     
