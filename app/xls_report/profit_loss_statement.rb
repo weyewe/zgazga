@@ -3,7 +3,25 @@ require 'rubyXL'
 
 class ProfitLossStatement
     
-    
+    def self.create_report( filepath, closing  )
+        @closing  = closing
+        @start_date = closing.beginning_period
+        @end_date = closing.end_date_period       
+        @row = 0 
+
+
+        @workbook = RubyXL::Workbook.new 
+        
+        @worksheet = @workbook[0]
+        
+        self.create_header
+        
+        self.create_table_header
+        
+        self.populate_content
+        
+        @workbook.write( filepath )
+    end
     
     def self.create_header() 
         @worksheet.add_cell(0,0, "PT ZENTRUM GRAPHICS ASIA")
@@ -194,23 +212,5 @@ class ProfitLossStatement
         @row = @row + 2    
     end
     
-    def self.create_report( filepath, start_date, end_date, closing  )
-        @closing  = closing
-        @start_date = start_date
-        @end_date = end_date         
-        @row = 0 
-
-
-        @workbook = RubyXL::Workbook.new 
-        
-        @worksheet = @workbook[0]
-        
-        self.create_header
-        
-        self.create_table_header
-        
-        self.populate_content
-        
-        @workbook.write( filepath )
-    end
+    
 end

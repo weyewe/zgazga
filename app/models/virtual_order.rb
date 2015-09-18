@@ -102,7 +102,12 @@ class VirtualOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
-   
+    
+    if Closing.is_date_closed(self.order_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -121,6 +126,11 @@ class VirtualOrder < ActiveRecord::Base
     if VirtualDeliveryOrder.where(:virtual_order_id => self.id).count > 0 
       self.errors.add(:generic_errors, "VirtualOrder sudah terpakai di Virtual Delivery Order")
       return self
+    end
+    
+    if Closing.is_date_closed(self.order_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
     end
     
     self.is_confirmed = false

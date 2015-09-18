@@ -11,7 +11,7 @@ namespace :master_extjs do
     puts "the first"
 
  
-    main_view_name = 'AM.view.operation.UnitConversionOrder'
+    main_view_name = 'AM.view.report.PosNeraca'
  
     tokenized_main_view_name = main_view_name.split('.')
 

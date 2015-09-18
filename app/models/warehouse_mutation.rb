@@ -167,6 +167,11 @@ class WarehouseMutation < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.validate_warehouse_item_amount
     return self if self.errors.size != 0 
    
@@ -203,6 +208,11 @@ class WarehouseMutation < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     

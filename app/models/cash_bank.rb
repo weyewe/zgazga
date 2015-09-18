@@ -27,6 +27,7 @@ class CashBank < ActiveRecord::Base
     new_object.is_bank = params[:is_bank]
     new_object.exchange_id = params[:exchange_id]
     new_object.code = params[:code]
+    new_object.payment_code = params[:payment_code]
     if new_object.save
       account_id = Account.create_object_from_cash_bank(new_object).id
       new_object.account_id = account_id
@@ -73,6 +74,8 @@ class CashBank < ActiveRecord::Base
     self.description = params[:description]
     self.is_bank = params[:is_bank]
     self.exchange_id = params[:exchange_id]
+    self.code = params[:code]
+    self.payment_code = params[:payment_code]
     if self.save
       account = Account.find_by_id(self.account_id)
       if not account.nil?

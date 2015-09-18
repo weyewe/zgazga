@@ -71,7 +71,7 @@ class PayableReport
                     total_debit = BigDecimal('0')
                     source_date = "#{pyb.source_date.day}-#{pyb.source_date.month}-#{pyb.source_date.year}"
                     @worksheet.add_cell(row,0, source_date)
-                    if not pyb.source.methods.include?("nomor_surat")
+                    if not pyb.source.methods.include?(:nomor_surat)
                         @worksheet.add_cell(row,1,pyb.source_code)
                         else
                         @worksheet.add_cell(row,1,pyb.source.nomor_surat) 
@@ -94,7 +94,7 @@ class PayableReport
                         (payable.exchange_id.eq exc.id)
                         }.each do |pvd|
                         @worksheet.add_cell(row,0, source_date)
-                        if not pyb.source.methods.include?("nomor_surat")
+                        if not pyb.source.methods.include?(:nomor_surat)
                             @worksheet.add_cell(row,1,pyb.source_code)
                         else
                             @worksheet.add_cell(row,1,pyb.source.nomor_surat) 
@@ -113,7 +113,7 @@ class PayableReport
                         total_debit = total_debit + pvd.amount
                         row = row + 1
                     end
-                    if not pyb.source.methods.include?("nomor_surat")
+                    if not pyb.source.methods.include?(:nomor_surat)
                         @worksheet.add_cell(row,2,"Balance For #{pyb.source_code}")
                     else
                         @worksheet.add_cell(row,2,"Balance For #{pyb.source.nomor_surat}") 

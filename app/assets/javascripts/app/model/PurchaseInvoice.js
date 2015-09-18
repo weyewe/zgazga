@@ -4,6 +4,7 @@ Ext.define('AM.model.PurchaseInvoice', {
 
     	    { name: 'id', type: 'int' },
     	    { name: 'invoice_date', type: 'string' },
+    	    { name: 'tax_rate_date', type: 'string' },
     	    { name: 'due_date', type: 'string' },
 			{ name: 'description', type: 'string' } ,
 			{ name: 'code', type: 'string' } ,

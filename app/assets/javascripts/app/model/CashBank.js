@@ -4,6 +4,8 @@ Ext.define('AM.model.CashBank', {
     		{ name: 'id', type: 'int' },
 			{ name: 'name', type: 'string' },
 			{ name: 'description', type: 'string' },
+			{ name: 'code', type: 'string' },
+			{ name: 'payment_code', type: 'string' },
     		{ name: 'is_bank', type: 'boolean' },
 			{ name: 'amount', type: 'string' },
 			{ name: 'account_id', type: 'int' },

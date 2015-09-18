@@ -117,7 +117,7 @@ Ext.define('AM.view.operation.stockadjustmentdetail.Form', {
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'item_name',
+				displayField : 'item_sku',
 				valueField : 'item_id',
 				pageSize : 5,
 				minChars : 1, 

@@ -93,7 +93,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'delivery_order_detail_sales_order_detail_item_name',
+				displayField : 'delivery_order_detail_code',
 				valueField : 'delivery_order_detail_id',
 				pageSize : 5,
 				minChars : 1, 

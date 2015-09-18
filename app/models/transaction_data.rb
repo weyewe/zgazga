@@ -8,6 +8,60 @@ class TransactionData < ActiveRecord::Base
     self
   end
   
+  def source 
+    case self.transaction_source_type
+    when BankAdministration.to_s
+      return BankAdministration.find_by_id(self.transaction_source_id)
+    when BlanketOrderDetail.to_s
+      return BlanketOrderDetail.find_by_id(self.transaction_source_id)
+    when BlendingWorkOrder.to_s
+      return BlendingWorkOrder.find_by_id(self.transaction_source_id)
+    when CashBankAdjustment.to_s
+      return CashBankAdjustment.find_by_id(self.transaction_source_id)
+    when CashBankMutation.to_s
+      return CashBankMutation.find_by_id(self.transaction_source_id)
+    when DeliveryOrder.to_s
+      return DeliveryOrder.find_by_id(self.transaction_source_id)
+    when Memorial.to_s
+      return Memorial.find_by_id(self.transaction_source_id)
+    when PayableMigration.to_s
+      return PayableMigration.find_by_id(self.transaction_source_id)
+    when PaymentRequest.to_s
+      return PaymentRequest.find_by_id(self.transaction_source_id)
+    when PaymentVoucher.to_s
+      return PaymentVoucher.find_by_id(self.transaction_source_id)
+    when PurchaseDownPaymentAllocation.to_s
+      return PurchaseDownPaymentAllocation.find_by_id(self.transaction_source_id)
+    when PurchaseDownPayment.to_s
+      return PurchaseDownPayment.find_by_id(self.transaction_source_id)
+    when PurchaseInvoice.to_s
+      return PurchaseInvoice.find_by_id(self.transaction_source_id)
+    when PurchaseInvoiceMigration.to_s
+      return PurchaseInvoiceMigration.find_by_id(self.transaction_source_id)
+    when PurchaseReceival.to_s
+      return PurchaseReceival.find_by_id(self.transaction_source_id)  
+    when ReceiptVoucher.to_s
+      return ReceiptVoucher.find_by_id(self.transaction_source_id)
+    when ReceivableMigration.to_s
+      return ReceivableMigration.find_by_id(self.transaction_source_id)
+    when RecoveryOrder.to_s
+      return RecoveryOrder.find_by_id(self.transaction_source_id)  
+    when SalesDownPaymentAllocation.to_s
+      return SalesDownPaymentAllocation.find_by_id(self.transaction_source_id)
+    when SalesDownPayment.to_s
+      return SalesDownPayment.find_by_id(self.transaction_source_id)
+    when SalesInvoice.to_s
+      return SalesInvoice.find_by_id(self.transaction_source_id)
+    when SalesInvoiceMigration.to_s
+      return SalesInvoiceMigration.find_by_id(self.transaction_source_id)
+    when UnitConversionOrder.to_s
+      return UnitConversionOrder.find_by_id(self.transaction_source_id)
+    when VirtualOrderClearance.to_s
+      return VirtualOrderClearance.find_by_id(self.transaction_source_id)
+    end
+  end
+  
+  
   def self.create_object( params, is_automated_transaction ) 
     new_object = self.new 
     new_object.transaction_datetime = params[:transaction_datetime]

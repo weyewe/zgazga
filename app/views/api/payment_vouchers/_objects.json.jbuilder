@@ -3,8 +3,10 @@ json.payment_vouchers objects do |object|
 	json.id 								object.id 
   json.payment_date 			 format_date_friendly( object.payment_date )   
 	json.no_bukti 			 object.no_bukti
+	json.no_voucher 			 object.no_voucher
   json.contact_id 			 object.contact_id
   json.contact_name 			 object.contact.name
+  
   json.cash_bank_id 			 object.cash_bank_id
   json.cash_bank_name 			 object.cash_bank.name
   json.cash_bank_exchange_name 			 object.cash_bank.exchange.name

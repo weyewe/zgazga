@@ -61,7 +61,16 @@ Ext.define('AM.view.master.cashbank.Form', {
 	        name : 'name',
 	        fieldLabel: 'CashBank name'
 	      },
-				
+				{
+	        xtype: 'textfield',
+	        name : 'payment_code',
+	        fieldLabel: 'Payment Code'
+	      },
+	      {
+	        xtype: 'textfield',
+	        name : 'code',
+	        fieldLabel: 'Receipt Code'
+	      },
         {
 					xtype: 'textarea',
 					name : 'description',

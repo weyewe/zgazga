@@ -119,6 +119,11 @@ class CashBankMutation < ActiveRecord::Base
       self.exchange_rate_amount = 1
     end
     
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true
     
@@ -169,6 +174,11 @@ class CashBankMutation < ActiveRecord::Base
     if target_cash_bank.amount < self.amount
       self.errors.add(:generic_errors,"Jumlah dana pada target cash bank tidak mencukupi")
       return self
+    end
+    
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
     end
     
     self.confirmed_at = nil

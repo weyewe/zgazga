@@ -9,9 +9,11 @@ Ext.define('AM.view.master.cashbank.List' ,{
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-      { header: 'Amount',  dataIndex: 'amount', flex: 1},
+			{ header: 'Payment Code',  dataIndex: 'payment_code', flex: 1},
+			{ header: 'Receipt Code',  dataIndex: 'code', flex: 1},
+      		{ header: 'Amount',  dataIndex: 'amount', flex: 1},
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
-      {	header: 'Is Bank', dataIndex: 'is_bank', flex: 1 } ,
+      		{	header: 'Is Bank', dataIndex: 'is_bank', flex: 1 } ,
 		];
 
 		this.addObjectButton = new Ext.Button({

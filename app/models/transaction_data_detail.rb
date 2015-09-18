@@ -2,6 +2,7 @@ class TransactionDataDetail < ActiveRecord::Base
   
   belongs_to :account
   belongs_to :transaction_data
+  belongs_to :contact
   has_many :transaction_data_non_base_exchange_details
   validate :valid_account_id
   validate :valid_transaction_data_id 
@@ -86,6 +87,7 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object = self.new 
     new_object.transaction_data_id = params[:transaction_data_id]
     new_object.account_id = params[:account_id]
+    new_object.contact_id = params[:contact_id]
     new_object.entry_case = params[:entry_case]
     new_object.amount = BigDecimal(params[:amount] || '0')
     new_object.description = params[:description] 
@@ -110,6 +112,7 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object = self.class.new 
     new_object.transaction_data_id = new_transaction_data.id
     new_object.account_id = self.account_id
+    new_object.contact_id = self.contact_id
     if self.entry_case ==  NORMAL_BALANCE[:credit]  
       new_object.entry_case =  NORMAL_BALANCE[:debit]  
     else

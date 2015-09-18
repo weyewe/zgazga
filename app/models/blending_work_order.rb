@@ -85,6 +85,11 @@ class BlendingWorkOrder < ActiveRecord::Base
         end        
       end
       
+      if Closing.is_date_closed(self.blending_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+      end
+    
       self.is_confirmed = true
       self.confirmed_at = params[:confirmed_at]
       if self.save
@@ -105,6 +110,12 @@ class BlendingWorkOrder < ActiveRecord::Base
         self.errors.add(:generic_errors, "Stock quantity untuk Target item tidak cukup")
         return self 
       end      
+      
+      if Closing.is_date_closed(self.blending_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+      end
+    
       self.is_confirmed = false
       self.confirmed_at = nil
       if self.save

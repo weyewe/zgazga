@@ -93,7 +93,9 @@ class PaymentVoucherDetail < ActiveRecord::Base
     new_object.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
  
     new_object.pph_21 = BigDecimal( params[:pph_21] || '0')
+    new_object.pph_21_rate = BigDecimal( params[:pph_21_rate] || '0')
     new_object.pph_23 = BigDecimal( params[:pph_23] || '0')
+    new_object.pph_23_rate = BigDecimal( params[:pph_23_rate] || '0')
     new_object.rate = BigDecimal( params[:rate] || '0')
     if new_object.save
       new_object.calculateTotalAmount
@@ -112,7 +114,9 @@ class PaymentVoucherDetail < ActiveRecord::Base
     self.amount = (BigDecimal( params[:amount_paid]) / BigDecimal( params[:rate]))
  
     self.pph_21 = BigDecimal( params[:pph_21] || '0')
+    self.pph_21_rate = BigDecimal( params[:pph_21_rate] || '0')
     self.pph_23 = BigDecimal( params[:pph_23] || '0')
+    self.pph_23_rate = BigDecimal( params[:pph_23_rate] || '0')
     self.rate = BigDecimal( params[:rate] || '0')
     if self.save
       self.calculateTotalAmount

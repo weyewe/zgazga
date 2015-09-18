@@ -22,8 +22,10 @@ Ext.define('AM.view.operation.paymentvoucherdetail.List' ,{
 				xtype : 'templatecolumn',
 				text : "Tax",
 				flex : 3,
-				tpl :  	'PPh 23: <br /> <b>{pph_23}</b>' + '<br />' + '<br />' +
-							'PPh 21:  <br /> <b>{pph_21}</b>'
+				tpl :  	'PPh 21: <br /> <b>{pph_21}</b>' + '<br />' + '<br />' +
+						'PPh 21 Rate: <br /> <b>{pph_21_rate}</b>' + '<br />' + '<br />' +
+						'PPh 23: <br /> <b>{pph_23}</b>' + '<br />' + '<br />' +
+						'PPh 23 Rate:  <br /> <b>{pph_23_rate}</b>'
 			},
 			 
 		];

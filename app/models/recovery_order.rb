@@ -101,6 +101,12 @@ class RecoveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end
+    
+    if Closing.is_date_closed(self.roller_identification_form.identified_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true
     if self.save
@@ -121,6 +127,12 @@ class RecoveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors,"Sudah ada RWC yang di finish atau reject")
       return self
     end
+    
+    if Closing.is_date_closed(self.roller_identification_form.identified_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.confirmed_at = nil
     self.is_confirmed = false
     if self.save

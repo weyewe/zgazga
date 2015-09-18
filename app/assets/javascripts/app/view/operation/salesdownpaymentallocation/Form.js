@@ -54,6 +54,10 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 					mapping : "code"
 				} ,
 				{
+					name : 'sales_down_payment_contact_name',
+					mapping : "contact_name"
+				} ,
+				{
 					name : 'sales_down_payment_payable_source_code',
 					mapping : "payable_source_code"
 				} ,
@@ -119,30 +123,8 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
     					fieldLabel: 'Tanggal Alokasi',
     					format: 'Y-m-d',
     				},
-    	      {
-	    				fieldLabel: 'Contact',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
     				{
-	    				fieldLabel: 'Payable',
+	    				fieldLabel: 'DownPayment',
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
@@ -157,6 +139,7 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{sales_down_payment_code}">' + 
 	    												'<div class="combo-name">{sales_down_payment_code}</div>' + 
+	    												'<div class="combo-name">Contact: {sales_down_payment_contact_name}</div>' + 
 	    												'<div class="combo-name">Source: {sales_down_payment_payable_source_code}</div>' + 
 	    												'<div class="combo-name">Total: {sales_down_payment_payable_total_amount}</div>' + 
 	    												'<div class="combo-name">Remaining: {sales_down_payment_payable_remaining_amount}</div>' + 
@@ -186,22 +169,6 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
     this.callParent(arguments);
   },
   
-    setSelectedCustomer: function( contact_id ){
-		var comboBox = this.down('form').getForm().findField('contact_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : contact_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( contact_id );
-			}
-		});
-	},
 	
 	setSelectedPayable: function( payable_id ){
 		var comboBox = this.down('form').getForm().findField('payable_id'); 
@@ -227,7 +194,6 @@ Ext.define('AM.view.operation.salesdownpaymentallocation.Form', {
 		me.setLoading(true);
 		
 		me.setSelectedPayable( record.get("payable_id")  ) ;
-		me.setSelectedCustomer( record.get("contact_id")  ) ;
  
 	}
  

@@ -1,6 +1,6 @@
 class ReceiptVoucher < ActiveRecord::Base
   validates_presence_of :receipt_date
-  validates_presence_of :due_date
+  # validates_presence_of :due_date
   validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
@@ -64,7 +64,8 @@ class ReceiptVoucher < ActiveRecord::Base
       new_object.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
       return new_object
     end
-    new_object.no_bukti = params[:no_bukti]
+    # new_object.no_bukti = params[:no_bukti]
+    new_object.no_voucher = params[:no_voucher]
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
@@ -79,6 +80,11 @@ class ReceiptVoucher < ActiveRecord::Base
     new_object.save
     if new_object.save
       new_object.code = "RV-" + new_object.id.to_s
+      code = ""
+      if not new_object.cash_bank.code.nil?
+        code = new_object.cash_bank.code.to_s + " "
+      end
+      new_object.no_bukti = code +  new_object.no_voucher.to_s
       new_object.save
     end
     return new_object
@@ -100,7 +106,8 @@ class ReceiptVoucher < ActiveRecord::Base
       self.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
       return self
     end
-    self.no_bukti = params[:no_bukti]
+    # self.no_bukti = params[:no_bukti]
+    self.no_voucher = params[:no_voucher]
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]
     self.due_date = params[:due_date]
@@ -111,7 +118,13 @@ class ReceiptVoucher < ActiveRecord::Base
     self.receipt_date = params[:receipt_date]
     self.contact_id = params[:contact_id]
     self.cash_bank_id = params[:cash_bank_id]
-    self.save
+    if self.save
+      code = ""
+      if not self.cash_bank.code.nil?
+        code = self.cash_bank.code.to_s + " "
+      end
+      self.no_bukti = code +  self.no_voucher.to_s
+    end
     return self
   end
   

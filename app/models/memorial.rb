@@ -67,6 +67,7 @@ class Memorial < ActiveRecord::Base
       return self 
     end    
     
+    
     debit = 0
     credit = 0
     self.memorial_details.each do |md|
@@ -83,6 +84,12 @@ class Memorial < ActiveRecord::Base
     
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
+    
+    if Closing.is_date_closed(self.confirmed_at).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     if self.save
       AccountingService::CreateMemorialJournal.create_confirmation_journal(self)
     end  
@@ -94,6 +101,12 @@ class Memorial < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
+    
+    if Closing.is_date_closed(self.confirmed_at).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save

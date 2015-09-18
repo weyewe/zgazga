@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909083543) do
+ActiveRecord::Schema.define(version: 20150918034521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,11 +284,12 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.string   "code"
     t.integer  "exchange_id"
     t.text     "description"
-    t.boolean  "is_bank",                              default: true
-    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
+    t.boolean  "is_bank",                               default: true
+    t.decimal  "amount",       precision: 14, scale: 2, default: 0.0
     t.integer  "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "payment_code"
   end
 
   create_table "cash_mutations", force: true do |t|
@@ -675,7 +676,9 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.decimal  "amount",             precision: 14, scale: 2,  default: 0.0
     t.decimal  "amount_paid",        precision: 14, scale: 2,  default: 0.0
     t.decimal  "pph_21",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_21_rate",        precision: 18, scale: 11, default: 0.0
     t.decimal  "pph_23",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_23_rate",        precision: 18, scale: 11, default: 0.0
     t.integer  "payable_id"
     t.decimal  "rate",               precision: 18, scale: 11, default: 0.0
     t.string   "description"
@@ -705,6 +708,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "no_voucher"
   end
 
   create_table "purchase_down_payment_allocation_details", force: true do |t|
@@ -747,6 +751,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "status_dp"
   end
 
   create_table "purchase_invoice_details", force: true do |t|
@@ -787,6 +792,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.boolean  "is_confirmed",                                   default: false
     t.datetime "confirmed_at"
     t.datetime "invoice_date"
+    t.datetime "tax_rate_date"
     t.datetime "due_date"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -880,6 +886,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.decimal  "amount",             precision: 14, scale: 2,  default: 0.0
     t.decimal  "amount_paid",        precision: 14, scale: 2,  default: 0.0
     t.decimal  "pph_23",             precision: 14, scale: 2,  default: 0.0
+    t.decimal  "pph_23_rate",        precision: 18, scale: 11, default: 0.0
     t.integer  "receivable_id"
     t.decimal  "rate",               precision: 18, scale: 11, default: 0.0
     t.string   "description"
@@ -908,6 +915,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "no_voucher"
   end
 
   create_table "receivable_migrations", force: true do |t|
@@ -1398,6 +1406,7 @@ ActiveRecord::Schema.define(version: 20150909083543) do
     t.boolean  "is_bank_transaction",                          default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "contact_id"
   end
 
   create_table "transaction_data_non_base_exchange_details", force: true do |t|

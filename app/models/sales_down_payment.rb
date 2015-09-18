@@ -133,6 +133,21 @@ class SalesDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Receivable tidak boleh sudah diuangkan")
       return self
     end
+    
+    siclass = self.class.to_s
+    siid = self.id
+    receipt_voucher_count = ReceiptVoucherDetail.joins(:receivable).where{
+      ( 
+        (receivable.source_class.eq siclass) &
+        (receivable.source_id.eq siid) 
+      )
+      }.count
+      
+    if receipt_voucher_count > 0
+      self.errors.add(:generic_errors, "Sudah terpakai di ReceiptVoucher")
+      return self
+    end
+    
     if Closing.is_date_closed(self.down_payment_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 

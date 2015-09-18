@@ -2,7 +2,7 @@ module AccountingService
   class CreateExchangeGainLossJournal
     
     def CreateExchangeGainLossJournal.create_master_transaction_journal(params)
-      message = "Exchange Gain Loss Closing params[:transaction_datetime]"
+      message = "Exchange Gain Loss Closing #{params[:transaction_datetime]}"
       ta = TransactionData.create_object({
           :transaction_datetime => params[:transaction_datetime],
           :description =>  message,
@@ -57,7 +57,6 @@ module AccountingService
             )
             
           end
-          ta.confirm
         end
     end
     
@@ -106,7 +105,6 @@ module AccountingService
             )
             
           end
-           ta.confirm
         end
     end
     
@@ -155,13 +153,12 @@ module AccountingService
             )
             
           end
-           ta.confirm
         end
     end
     
     def CreateExchangeGainLossJournal.create_exchange_gain_loss_account_receivable_journal(params) 
       message = "Exchange Gain Loss Closing"
-        if not  params[:valid_comb_amount] ==  params[:valid_comb_amount_non_idr ]
+        if not  params[:valid_comb_amount] == params[:valid_comb_amount_non_idr ]
           ta = TransactionData.where(
             :id => params[:transaction_data_id]
           ).first 
@@ -204,7 +201,6 @@ module AccountingService
             )
             
           end
-           ta.confirm
         end
     end
     
@@ -253,7 +249,6 @@ module AccountingService
             )
             
           end
-           ta.confirm
         end
     end
     

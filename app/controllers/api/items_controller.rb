@@ -114,7 +114,13 @@ class Api::ItemsController < Api::BaseApiController
                    ( name =~ query ) | 
                    ( description  =~ query  )  
                 }
-                
+      
+      if params[:sales_order].present?
+        query_code = query_code.where{
+          is_tradeable.eq true
+        }
+      end
+      
       if params[:is_batch].present?
         query_code = query_code.where{
           

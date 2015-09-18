@@ -5,7 +5,7 @@ shared_dir = File.expand_path('../../../shared/', __FILE__)
 # Set unicorn options
 worker_processes 2
 preload_app true
-timeout 30
+timeout 600
 
 # Fill path to your app
 working_directory app_dir

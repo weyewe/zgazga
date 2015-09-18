@@ -16,21 +16,29 @@ module AccountingService
     td = TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => purchase_down_payment_allocation.receivable.exchange.account_payable_id  ,
+      :contact_id          => purchase_down_payment_allocation.receivable.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (purchase_down_payment_allocation.total_amount   * purchase_down_payment_allocation.receivable.exchange_rate_amount).round(2),
       :real_amount         => purchase_down_payment_allocation.total_amount,
       :exchange_id         => purchase_down_payment_allocation.receivable.exchange_id,
       :description => "Debit Account Payable"
       )
-#     Credit Account Receivable
+      
+#     Credit Uang Muka Pembelian
+    if purchase_down_payment_allocation.receivable.source.status_dp == STATUS_DP[:local]
+       account_uang_muka = Account.find_by_code(ACCOUNT_CODE[:uang_muka_pembelian_lokal][:code])
+    else
+       account_uang_muka = Account.find_by_code(ACCOUNT_CODE[:uang_muka_pembelian_impor][:code])
+    end
     td = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
-        :account_id          => purchase_down_payment_allocation.receivable.exchange.account_receivable_id  ,
+        :account_id          => account_uang_muka.id ,
+        :contact_id          => purchase_down_payment_allocation.receivable.contact_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (purchase_down_payment_allocation.total_amount   * purchase_down_payment_allocation.receivable.exchange_rate_amount).round(2),
         :real_amount         => purchase_down_payment_allocation.total_amount,
         :exchange_id         => purchase_down_payment_allocation.receivable.exchange_id,
-        :description         => "Credit Account Receivable"
+        :description         => "Credit #{account_uang_muka.name}"
         )
         
     if purchase_down_payment_allocation.receivable.exchange_rate_amount < purchase_down_payment_allocation.rate_to_idr
@@ -46,7 +54,7 @@ module AccountingService
         TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
-        :entry_case          => NORMAL_BALANCE[:credit]     ,
+        :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => ((purchase_down_payment_allocation.total_amount * purchase_down_payment_allocation.receivable.exchange_rate_amount) -
                                  (purchase_down_payment_allocation.rate_to_idr * purchase_down_payment_allocation.total_amount)).round(2),
         :description => "Debit ExchangeGain"

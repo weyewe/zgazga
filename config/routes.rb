@@ -10,7 +10,10 @@ Ticketie::Application.routes.draw do
   
   get 'sales_invoices_download_report' => 'sales_invoices#download_report', :as => :sales_invoices_download_report
   get 'closings_download_report' => 'closings#download_report', :as => :closings_download_report
-  get 'closings_download_labarugi' => 'closings#download_labarugi', :as => :closings_download_labarugi
+  get 'neraca_saldos_download_report' => 'neraca_saldos#download_report', :as => :neraca_saldos_download_report
+  get 'neraca_saldos_download_posneraca_report' => 'neraca_saldos#download_posneraca_report', :as => :neraca_saldos_download_posneraca_report
+  get 'neraca_saldos_download_income_statement_report' => 'neraca_saldos#download_income_statement_report', :as => :neraca_saldos_download_income_statement_report
+  get 'closings_download_kartu_buku_besar' => 'closings#download_kartu_buku_besar', :as => :closings_download_kartu_buku_Besar
     
   resources :purchase_orders
   resources :purchase_receivals
@@ -22,6 +25,7 @@ Ticketie::Application.routes.draw do
   resources :roller_acc_details
   resources :roller_accessory_details
   
+   
   
   resources :action_assignments 
   
@@ -58,6 +62,7 @@ Ticketie::Application.routes.draw do
     get 'search_sales_quotations' => 'sales_quotations#search', :as => :search_sales_quotation
     get 'search_sales_quotation_details' => 'sales_quotation_details#search', :as => :search_sales_quotation_detail
     get 'search_warehouse_stock_details' => 'warehouse_stock_details#search', :as => :search_warehouse_stock_detail 
+    get 'search_stock_item_details' => 'stock_item_details#search', :as => :search_stock_item_detail 
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder
@@ -126,6 +131,7 @@ Ticketie::Application.routes.draw do
  
     
     get 'search_batch_instances' => 'batch_instances#search', :as => :search_batch_instance
+    get 'search_neraca_saldos' => 'neraca_saldos#search', :as => :search_neraca_saldo, :method => :get
     
     
  
@@ -272,6 +278,9 @@ Ticketie::Application.routes.draw do
     resources :warehouse_stocks
     resources :warehouse_stock_details
     
+    resources :stock_items
+    resources :stock_item_details
+    
     resources :menus # select the user  
     resources :menu_details  # select the menu action checkbox
     
@@ -288,8 +297,9 @@ Ticketie::Application.routes.draw do
     
     resources :unit_conversions
     resources :unit_conversion_details
-    
     resources :unit_conversion_orders
+    
+    resources :neraca_saldos
   end
   
   

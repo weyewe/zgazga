@@ -83,6 +83,7 @@ class VirtualOrderClearance < ActiveRecord::Base
       return self 
     end    
     
+    
     if self.is_waste == true 
       self.virtual_order_clearance_details.each do |vdod|
       item_in_warehouse = WarehouseItem.find_or_create_object(:warehouse_id => self.virtual_delivery_order.warehouse_id,:item_id => vdod.virtual_delivery_order_detail.item_id) 
@@ -93,8 +94,11 @@ class VirtualOrderClearance < ActiveRecord::Base
     end
     end
     
+    if Closing.is_date_closed(self.clearance_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     
-
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     

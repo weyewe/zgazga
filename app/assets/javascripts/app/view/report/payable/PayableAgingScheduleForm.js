@@ -57,15 +57,6 @@ Ext.define('AM.view.report.payable.PayableAgingScheduleForm', {
                  el.action = form.url;
                  el.submit(); 
                  
-                 
-                // form.submit({
-                //     success: function(form, action) {
-                //       Ext.Msg.alert('Success', action.result.msg);
-                //     },
-                //     failure: function(form, action) {
-                //         Ext.Msg.alert('Failed', action.result.msg);
-                //     }
-                // });
             }
         }
     }]

@@ -3,7 +3,7 @@ class NeracaReport
   def self.create_report( filepath, start_date, end_date, closing  )
     @closing  = closing
     @start_date = start_date
-    @end_date = end_date         
+    @end_date = closing.end_date_period         
     @row = 0 
     @workbook = RubyXL::Workbook.new 
     @worksheet = @workbook[0]
@@ -22,7 +22,7 @@ class NeracaReport
     @worksheet.add_cell(1,0, "NERACA")
     @worksheet.merge_cells(2, 0, 2, 15) 
     duration_string = "#{@end_date.day}-#{@end_date.month}-#{@end_date.year}"
-    @worksheet.add_cell(2,0, "Per #{@end_date}")
+    @worksheet.add_cell(2,0, "Per #{duration_string}")
     @worksheet.add_cell(3,0, "Unit : RP.")
   end
   
@@ -47,7 +47,7 @@ class NeracaReport
       kas_dan_setara_kas_amount = 0
     end
     @worksheet.add_cell(7, 6, kas_dan_setara_kas_amount  )   
-    
+    @worksheet[7][6].set_number_format '#,###'
     @worksheet.add_cell(8,1, "Deposito Berjangka")  
     acc = Account.find_by_code( "1102" )
     vc = nil
@@ -61,7 +61,7 @@ class NeracaReport
       deposito_berjangka_amount = 0
     end
     @worksheet.add_cell(8, 6, deposito_berjangka_amount  ) 
-    
+    @worksheet[8][6].set_number_format '#,###'
     @worksheet.add_cell(9,1, "Piutang Usaha")  
     acc = Account.find_by_code( "1103" )
     vc = nil
@@ -75,7 +75,7 @@ class NeracaReport
       piutang_usaha_amount = 0
     end
     @worksheet.add_cell(9, 6, piutang_usaha_amount  )  
-    
+    @worksheet[9][6].set_number_format '#,###'
     
     @worksheet.add_cell(10,1, "Piutang Lain-Lain")  
     acc = Account.find_by_code( "1104" )
@@ -90,6 +90,7 @@ class NeracaReport
       piutang_lain_lain_amount = 0
     end
     @worksheet.add_cell(10, 6, piutang_lain_lain_amount  )  
+    @worksheet[10][6].set_number_format '#,###'
     
     @worksheet.add_cell(11,1, "Persediaan Barang")  
     acc = Account.find_by_code( "1105" )
@@ -104,7 +105,7 @@ class NeracaReport
       persediaan_barang_amount = 0
     end
     @worksheet.add_cell(11, 6, persediaan_barang_amount  )  
-    
+    @worksheet[11][6].set_number_format '#,###'
     @worksheet.add_cell(12,1, "Uang Muka Pembelian")  
     acc = Account.find_by_code( "1106" )
     vc = nil
@@ -118,6 +119,7 @@ class NeracaReport
       uang_muka_pembelian_amount = 0
     end
     @worksheet.add_cell(12, 6, uang_muka_pembelian_amount  )  
+    @worksheet[12][6].set_number_format '#,###'
     
     @worksheet.add_cell(13,1, "Pajak dibayar di muka") 
     acc = Account.find_by_code( "1107" )
@@ -132,9 +134,10 @@ class NeracaReport
       pajak_dibayar_di_muka_amount = 0
     end
     @worksheet.add_cell(13, 6, pajak_dibayar_di_muka_amount  )  
+    @worksheet[13][6].set_number_format '#,###'
     
     @worksheet.add_cell(14,1, "Biaya dibayar di muka")  
-    acc = Account.find_by_code( "2" )
+    acc = Account.find_by_code( "1108" )
     vc = nil
     if not acc.nil?
       vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
@@ -146,6 +149,7 @@ class NeracaReport
       biaya_dibayar_di_muka_amount = 0
     end
     @worksheet.add_cell(14, 6, biaya_dibayar_di_muka_amount  )  
+    @worksheet[14][6].set_number_format '#,###'
     
     @worksheet.add_cell(15,2, "Jumlah Aktiva Lancar")
     jumlah_aktiva_lancar = BigDecimal('0')
@@ -154,7 +158,8 @@ class NeracaReport
                           persediaan_barang_amount + uang_muka_pembelian_amount +
                           pajak_dibayar_di_muka_amount + biaya_dibayar_di_muka_amount
     @worksheet.add_cell(15, 6, jumlah_aktiva_lancar  ) 
-     
+    @worksheet[15][6].set_number_format '#,###'
+    
     @worksheet.add_cell(18,0, "AKTIVA TIDAK LANCAR")
     @worksheet.add_cell(19,1, "Aktiva Tetap")
     acc = Account.find_by_code( "14" )
@@ -169,6 +174,7 @@ class NeracaReport
       aktiva_tetap_amount = 0
     end
     @worksheet.add_cell(19,6, aktiva_tetap_amount)
+    @worksheet[19][6].set_number_format '#,###'
   
     @worksheet.add_cell(20,2, "Setelah dikurangi akumulasi")
     acc = Account.find_by_code( "1408" )
@@ -183,14 +189,35 @@ class NeracaReport
       akumulasi_penyusutan_amount = 0
     end
     @worksheet.add_cell(21,2, "Penyusutan sebesar")
-    @worksheet.add_cell(21,6, akumulasi_penyusutan_amount)
-    @worksheet.add_cell(23,2, "Jumlah Aktiva Tidak Lancar")
-    jumlah_aktiva_tidak_lancar = aktiva_tetap_amount - akumulasi_penyusutan_amount
-    @worksheet.add_cell(23,6, jumlah_aktiva_tidak_lancar)
+    @worksheet.add_cell(21,4, akumulasi_penyusutan_amount)
+    @worksheet.add_cell(21,6, aktiva_tetap_amount - akumulasi_penyusutan_amount)
+    @worksheet[21][4].set_number_format '#,###'
+    @worksheet[21][6].set_number_format '#,###'
+    @worksheet.add_cell(23,2, "Uang Jaminan")
+    
+    acc = Account.find_by_code( "1501" )
+    vc = nil
+    if not acc.nil?
+      vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
+    end
+    uang_jaminan_amount = BigDecimal('0')
+    if not vc.nil?
+      uang_jaminan_amount = vc.amount 
+    else
+      uang_jaminan_amount = 0
+    end
+    @worksheet.add_cell(23,6, uang_jaminan_amount)
+    @worksheet[23][6].set_number_format '#,###'
+    
+    @worksheet.add_cell(24,2, "Jumlah Aktiva Tidak Lancar")
+    jumlah_aktiva_tidak_lancar = aktiva_tetap_amount - akumulasi_penyusutan_amount + uang_jaminan_amount
+    @worksheet.add_cell(24,6, jumlah_aktiva_tidak_lancar)
+    @worksheet[24][6].set_number_format '#,###'
     
     @worksheet.add_cell(26,0, "JUMLAH AKTIVA")
     jumlah_aktiva = jumlah_aktiva_lancar + jumlah_aktiva_tidak_lancar
     @worksheet.add_cell(26,6, jumlah_aktiva)
+    @worksheet[26][6].set_number_format '#,###'
   end
   
   def self.populate_kewajiban
@@ -209,6 +236,7 @@ class NeracaReport
       hutang_bank_amount = 0
     end
     @worksheet.add_cell(7,15, hutang_bank_amount)
+    @worksheet[7][15].set_number_format '#,###'
     
     @worksheet.add_cell(8,10, "Hutang Usaha")  
     acc = Account.find_by_code( "2102" )
@@ -223,6 +251,7 @@ class NeracaReport
       hutang_usaha_amount = 0
     end
     @worksheet.add_cell(8,15, hutang_usaha_amount)
+    @worksheet[8][15].set_number_format '#,###'
     
     @worksheet.add_cell(9,10, "Hutang Lain-lain") 
     acc = Account.find_by_code( "2103" )
@@ -237,9 +266,10 @@ class NeracaReport
       hutang_lain_lain_amount = 0
     end
     @worksheet.add_cell(9,15, hutang_lain_lain_amount)
+    @worksheet[9][15].set_number_format '#,###'
     
     @worksheet.add_cell(10,10, "Hutang Pajak")  
-    acc = Account.find_by_code( "2103" )
+    acc = Account.find_by_code( "2105" )
     vc = nil
     if not acc.nil?
       vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
@@ -251,6 +281,7 @@ class NeracaReport
       hutang_pajak_amount = 0
     end
     @worksheet.add_cell(10,15, hutang_pajak_amount)
+    @worksheet[10][15].set_number_format '#,###'
     
     @worksheet.add_cell(11,10, "Biaya Yang Masih Harus Dibayar")  
     acc = Account.find_by_code( "2106" )
@@ -265,16 +296,18 @@ class NeracaReport
       biaya_yang_masih_harus_dibayar_amount = 0
     end
     @worksheet.add_cell(11,15, biaya_yang_masih_harus_dibayar_amount)
+    @worksheet[11][15].set_number_format '#,###'
     
     @worksheet.add_cell(12,12, "Jumlah Kewajiban")  
     jumlah_kewajiban = hutang_bank_amount + hutang_usaha_amount +
                        hutang_lain_lain_amount + hutang_pajak_amount +
                        biaya_yang_masih_harus_dibayar_amount
     @worksheet.add_cell(12,15, jumlah_kewajiban)
+    @worksheet[12][15].set_number_format '#,###'
     
     @worksheet.add_cell(13,9, "KEWAJIBAN JANGKA PANJANG")  
     @worksheet.add_cell(14,10, "Kewajiban Jangka Panjang")  
-    acc = Account.find_by_code( "22" )
+    acc = Account.find_by_code( "2202" )
     vc = nil
     if not acc.nil?
       vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
@@ -286,25 +319,41 @@ class NeracaReport
       kewajiban_jangka_panjang_amount = 0
     end
     @worksheet.add_cell(14,15, kewajiban_jangka_panjang_amount)
+    @worksheet[14][15].set_number_format '#,###'
+    
+    @worksheet.add_cell(15,10, "Hutang Bank")  
+    acc = Account.find_by_code( "2201" )
+    vc = nil
+    if not acc.nil?
+      vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
+    end
+    hutang_bank_jangka_panjang_amount = BigDecimal('0')
+    if not vc.nil?
+      hutang_bank_jangka_panjang_amount = vc.amount
+    else
+      hutang_bank_jangka_panjang_amount = 0
+    end
+    @worksheet.add_cell(15,15, hutang_bank_jangka_panjang_amount)
+    @worksheet[15][15].set_number_format '#,###'
     
     @worksheet.add_cell(18,9, "EKUITAS")
     @worksheet.add_cell(19,10, "Modal Disetor")
-    acc = Account.find_by_code( "31" )
+    acc = Account.find_by_code( "3101" )
     vc = nil
     if not acc.nil?
       vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
     end
     modal_disetor_amount = BigDecimal('0')
     if not vc.nil?
-      modal_disetor_amount = vc.amount
+      modal_disetor_amount = vc.amount 
     else
       modal_disetor_amount = 0
     end
     @worksheet.add_cell(19,15, modal_disetor_amount)
+    @worksheet[19][15].set_number_format '#,###'
     
     @worksheet.add_cell(20,10, "Laba Ditahan")
-    # acc = Account.find_by_code( "3102" )
-    acc = Account.find_by_code( "5" )
+    acc = Account.find_by_code( "3102" )
     vc = nil
     if not acc.nil?
       vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
@@ -316,8 +365,45 @@ class NeracaReport
       laba_ditahan_amount = 0
     end
     @worksheet.add_cell(20,15, laba_ditahan_amount)
+    @worksheet[20][15].set_number_format '#,###'
     
-    @worksheet.add_cell(21,10, "Laba bulan Berjalan")
+    
+    
+    if not @closing.previous_closing.nil?
+      if @closing.previous_closing.is_year == false
+        @worksheet.add_cell(21,10, "Laba Tahun Berjalan")
+        acc = Account.find_by_code( "3103" )
+        vc = nil
+        if not acc.nil?
+          vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
+        end
+        laba_tahun_berjalan_amount = BigDecimal('0')
+        if not vc.nil?
+          laba_tahun_berjalan_amount = vc.amount
+        else
+          laba_tahun_berjalan_amount = 0
+        end
+        @worksheet.add_cell(21,15, laba_tahun_berjalan_amount)
+        @worksheet[21][15].set_number_format '#,###'
+      end
+    else
+      @worksheet.add_cell(21,10, "Laba Tahun Berjalan")
+      acc = Account.find_by_code( "3103" )
+      vc = nil
+      if not acc.nil?
+        vc = ValidComb.where(:closing_id => @closing.id , :account_id => acc.id ).first
+      end
+      laba_tahun_berjalan_amount = BigDecimal('0')
+      if not vc.nil?
+        laba_tahun_berjalan_amount = vc.amount
+      else
+        laba_tahun_berjalan_amount = 0
+      end
+      @worksheet.add_cell(21,15, laba_tahun_berjalan_amount)
+      @worksheet[21][15].set_number_format '#,###'
+    end
+    
+    @worksheet.add_cell(22,10, "Laba bulan Berjalan")
     acc = Account.find_by_code( "3104" )
     vc = nil
     if not acc.nil?
@@ -329,16 +415,19 @@ class NeracaReport
     else
       laba_bulan_berjalan_amount = 0
     end
-    @worksheet.add_cell(21,15, laba_bulan_berjalan_amount)
+    @worksheet.add_cell(22,15, laba_bulan_berjalan_amount)
+    @worksheet[22][15].set_number_format '#,###'
     
     @worksheet.add_cell(23,12, "Jumlah Ekuitas")
     jumlah_ekuitas = modal_disetor_amount + laba_ditahan_amount +
                      laba_bulan_berjalan_amount
     @worksheet.add_cell(23,15, jumlah_ekuitas)     
+    @worksheet[23][15].set_number_format '#,###'
     
     @worksheet.add_cell(26,9, "JUMLAH KEWAJIBAN DAN EKUITAS")  
-    jumlah_kewajiban_dan_ekuitas = jumlah_kewajiban + kewajiban_jangka_panjang_amount + 
+    jumlah_kewajiban_dan_ekuitas = jumlah_kewajiban + kewajiban_jangka_panjang_amount + hutang_bank_jangka_panjang_amount +
                                    jumlah_ekuitas
-    @worksheet.add_cell(26,15, jumlah_kewajiban_dan_ekuitas)                               
+    @worksheet.add_cell(26,15, jumlah_kewajiban_dan_ekuitas)    
+    @worksheet[26][15].set_number_format '#,###'
   end
 end

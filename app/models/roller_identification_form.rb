@@ -94,6 +94,11 @@ class RollerIdentificationForm < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.identified_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     # check amount item in warehouse
     if self.is_in_house?
       self.roller_identification_form_details.each do |rifd|
@@ -141,6 +146,11 @@ class RollerIdentificationForm < ActiveRecord::Base
   def unconfirm_object
     if not self.is_confirmed?
       self.errors.add(:generic_errors, "belum di konfirmasi")
+      return self 
+    end
+    
+    if Closing.is_date_closed(self.identified_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     

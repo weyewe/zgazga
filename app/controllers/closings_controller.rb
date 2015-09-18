@@ -21,6 +21,38 @@ class ClosingsController < ApplicationController
 
   end
   
+  def download_kartu_buku_besar
+    filename = "KartuBukuBesar.xlsx"
+    filepath = Rails.root.join('public', 'images', filename )
+    if params[:end_date] == "null"
+      end_date = DateTime.now
+    else
+      end_date = params[:end_date].to_date
+    end
+    
+    if params[:start_date] == "null"
+      start_date = end_date  - 1.days
+    else
+      start_date = params[:start_date].to_date 
+    end
+    # start_date =  parse_date( params[:start_date] )
+    
+    # end_date =  parse_date( params[:end_date] )
+    
+    account_id = params[:account_id]
+    KartuBukuBesarReport.create_report( filepath, start_date, end_date , account_id )
+    # VendorPaymentReport.create_report( filepath, start_date, end_date )
+    
+    file = File.open( filepath , "rb")
+    contents = file.read
+    file.close
+    
+    File.delete(filepath) if File.exist?(filepath)
+    
+    send_data(contents, :filename => filename)
+
+  end
+  
   def download_labarugi
     filename = "LabaRugiBulanBerjalan.xlsx"
     filepath = Rails.root.join('public', 'images', filename )

@@ -32,12 +32,12 @@ Ext.define('AM.view.operation.receiptvoucher.List' ,{
 				xtype : 'templatecolumn',
 				text : "Jumlah",
 				flex : 3,
-				tpl : 	'Total:  <br /><b>{amount} {cash_bank_exchange_name}</b>'  + '<br />' + '<br />' +
-							'Exchange Rate to IDR: <br /><b>{rate_to_idr}</b>' + '<br />' + '<br />' +
+				tpl : 	'Total:  <br /><b>{amount_text} {cash_bank_exchange_name}</b>'  + '<br />' + '<br />' +
+							'Exchange Rate to IDR: <br /><b>{rate_to_idr_text}</b>' + '<br />' + '<br />' +
 							// 'PPh21: <br /><b>{total_pph_21}</b>' + '<br />' + '<br />' +
-							'PPh23: <br /><b>{total_pph_23}</b>' + '<br />' + '<br />' +
-							'Biaya Bank: <br /><b>{biaya_bank}</b>' + '<br />' + '<br />' + 
-							'Pembulatan: <br /><b>{pembulatan} {status_pembulatan_text}</b>' 
+							'PPh23: <br /><b>{total_pph_23_text}</b>' + '<br />' + '<br />' +
+							'Biaya Bank: <br /><b>{biaya_bank_text}</b>' + '<br />' + '<br />' + 
+							'Pembulatan: <br /><b>{pembulatan_text} {status_pembulatan_text}</b>' 
 			},
 			
 			

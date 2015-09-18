@@ -101,6 +101,11 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
       return self 
     end    
     
+    if Closing.is_date_closed(self.delivery_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     # check sales_order_detail pending_delivery_amount
     self.temporary_delivery_order_details.each do |tdod|
       if tdod.sales_order_detail.pending_delivery_amount < tdod.amount
@@ -127,6 +132,12 @@ class TemporaryDeliveryOrder < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah terdaftar di Delivery order")
       return self 
     end
+    
+    if Closing.is_date_closed(self.delivery_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

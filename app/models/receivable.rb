@@ -21,6 +21,8 @@ class Receivable < ActiveRecord::Base
       return SalesInvoice.find_by_id(self.source_id)
     when SalesInvoiceMigration.to_s
       return SalesInvoiceMigration.find_by_id(self.source_id)
+    when ReceivableMigration.to_s
+      return ReceivableMigration.find_by_id(self.source_id)
     end
   end
   

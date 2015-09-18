@@ -103,7 +103,7 @@ class PayableAgingScheduleReport
         }.each do |pyb|
           source_date = "#{pyb.source_date.day}-#{pyb.source_date.month}-#{pyb.source_date.year}"
           @worksheet.add_cell(@row,0,source_date)
-          if not pyb.source.methods.include?("nomor_surat")
+          if not pyb.source.methods.include?(:nomor_surat)
             @worksheet.add_cell(@row,1,pyb.source_code)
             else
             @worksheet.add_cell(@row,1,pyb.source.nomor_surat) 

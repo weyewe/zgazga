@@ -80,6 +80,12 @@ Ext.define('AM.view.operation.purchaseinvoice.Form', {
     				},
     				{
     					xtype: 'datefield',
+    					name : 'tax_rate_date',
+    					fieldLabel: 'Tanggal Tukar Faktur',
+    					format: 'Y-m-d',
+    				},
+    				{
+    					xtype: 'datefield',
     					name : 'due_date',
     					fieldLabel: 'Due Date',
     					format: 'Y-m-d',

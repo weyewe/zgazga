@@ -305,7 +305,18 @@ Ext.define("AM.controller.Operation", {
 					}
 				]
 			}, 
- 
+ 				{ 
+				text:'Stock Item', 
+				viewClass:'AM.view.operation.StockItem', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'stock_items',
+						action : 'index'
+					}
+				]
+			}, 
  
 			 
 		]

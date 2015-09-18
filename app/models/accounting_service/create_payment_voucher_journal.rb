@@ -125,6 +125,7 @@ module AccountingService
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => pvd.payable.source.account_id,
+          :contact_id          => payment_voucher.contact_id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
           :real_amount         => (pvd.amount_paid / pvd.rate) ,
@@ -135,6 +136,7 @@ module AccountingService
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => pvd.payable.exchange.account_payable_id  ,
+          :contact_id          => payment_voucher.contact_id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
           :real_amount         => (pvd.amount_paid / pvd.rate) ,
@@ -164,7 +166,7 @@ module AccountingService
       
       if  pvd.pph_21.present? and BigDecimal( pvd.pph_21 )  > BigDecimal("0")
 #         Credit Hutang PPh 21
-        pph_21 = (payment_voucher.rate_to_idr * pvd.pph_21).round(2)
+        pph_21 = (pvd.pph_21_rate * pvd.pph_21).round(2)
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_21][:code]).id  ,
@@ -199,7 +201,7 @@ module AccountingService
       
       if pvd.pph_23 > 0
 #         Credit Hutang PPh 23
-        pph_23 = (payment_voucher.rate_to_idr * pvd.pph_23).round(2)
+        pph_23 = (pvd.pph_23_rate * pvd.pph_23).round(2)
         TransactionDataDetail.create_object(
           :transaction_data_id => ta.id,        
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_23][:code]).id  ,

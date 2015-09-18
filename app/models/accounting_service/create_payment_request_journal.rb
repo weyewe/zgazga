@@ -18,6 +18,7 @@ module AccountingService
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => payment_request.account_id  ,
+      :contact_id          => payment_request.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (payment_request.amount * payment_request.exchange_rate_amount).round(2),
       :real_amount         => payment_request.amount ,
@@ -30,6 +31,7 @@ module AccountingService
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => prd.account_id ,
+        :contact_id          => payment_request.contact_id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (prd.amount * payment_request.exchange_rate_amount).round(2),
         :description => "Debit Account #{prd.account.name}"

@@ -48,6 +48,7 @@ class PurchaseDownPayment < ActiveRecord::Base
     new_object.down_payment_date = params[:down_payment_date]
     new_object.due_date = params[:due_date]
     new_object.total_amount = BigDecimal( params[:total_amount] || '0')
+    new_object.status_dp = params[:status_dp]
     if new_object.save
     new_object.code = "PDP-" + new_object.id.to_s  
     new_object.save
@@ -65,6 +66,7 @@ class PurchaseDownPayment < ActiveRecord::Base
     self.down_payment_date = params[:down_payment_date]
     self.due_date = params[:due_date]
     self.total_amount = BigDecimal( params[:total_amount] || '0')
+    self.status_dp = params[:status_dp]
     if self.save
     end
     return self
@@ -136,6 +138,20 @@ class PurchaseDownPayment < ActiveRecord::Base
       self.errors.add(:generic_errors, "Payable tidak boleh sudah diuangkan")
       return self
     end
+    
+    prclass = self.class.to_s
+    prid = self.id
+    payment_voucher_count = PaymentVoucherDetail.joins(:payable).where{
+      (
+        (payable.source_class.eq prclass) &
+        (payable.source_id.eq prid)
+      )
+      }.count
+    if payment_voucher_count > 0
+      self.errors.add(:generic_errors, "Sudah terpakai di PaymentVoucher")
+      return self
+    end
+    
     if Closing.is_date_closed(self.down_payment_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 

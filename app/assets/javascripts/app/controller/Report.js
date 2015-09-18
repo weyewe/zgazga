@@ -69,7 +69,7 @@ Ext.define("AM.controller.Report", {
 			
 			{ 
 				text:'AR', 
-				viewClass:'AM.view.report.User', 
+				viewClass:'AM.view.report.Receivable', 
 				leaf:true, 
 				iconCls:'text',
 				conditions : [
@@ -79,6 +79,53 @@ Ext.define("AM.controller.Report", {
 				}
 				]
 			},  
+    ]
+	},
+	
+	accountingFolder : {
+		text 			: "Accounting Report", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+ 			{ 
+				text:'Neraca', 
+				viewClass:'AM.view.report.NeracaSaldo', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'neraca_saldos',
+					action : 'index'
+				}
+				]
+			},  
+			// { 
+			// 	text:'Perincian Neraca', 
+			// 	viewClass:'AM.view.report.PosNeraca', 
+			// 	leaf:true, 
+			// 	iconCls:'text',
+			// 	conditions : [
+			// 	{
+			// 		controller : 'kartu_buku_besars',
+			// 		action : 'index'
+			// 	}
+			// 	]
+			// },  
+			{ 
+				text:'KartuBukuBesar', 
+				viewClass:'AM.view.report.KartuBukuBesar', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'kartu_buku_besars',
+					action : 'index'
+				}
+				]
+			},   
+			
+			
     ]
 	},
 	
@@ -191,6 +238,7 @@ Ext.define("AM.controller.Report", {
 		
 		me.folderList = [
 			this.financeFolder,
+			this.accountingFolder,
 			this.profitLossFolder,
 			this.balanceSheetFolder
 		];

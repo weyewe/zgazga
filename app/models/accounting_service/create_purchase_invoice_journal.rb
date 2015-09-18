@@ -22,6 +22,7 @@ module AccountingService
    TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => purchase_invoice.exchange.account_payable_id  ,
+      :contact_id          => purchase_invoice.purchase_receival.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
       :real_amount         => purchase_invoice.amount_payable ,

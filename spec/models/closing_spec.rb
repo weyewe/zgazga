@@ -104,7 +104,7 @@ describe Closing do
     @exr_2 = ExchangeRate.create_object(
       :exchange_id => @exc_2.id,
       :ex_rate_date => DateTime.now,
-      :rate => BigDecimal("1")
+      :rate => BigDecimal("10000")
       )
     
     @cb_1 = CashBank.create_object(
@@ -118,7 +118,7 @@ describe Closing do
       :name => "awesome name2" ,
       :description => "ehaufeahifi heaw",
       :is_bank => false ,
-      :exchange_id => @exc_1.id
+      :exchange_id => @exc_2.id
       )
     
     @item_1 = Item.create_object(
@@ -154,14 +154,14 @@ describe Closing do
       :employee_id => @ep_1.id,
       :sales_date => DateTime.now,
       :nomor_surat => "nomor_surat_1",
-      :exchange_id => @exc_1.id
+      :exchange_id => @exc_2.id
       )
       
     @sod_1 = SalesOrderDetail.create_object(
       :sales_order_id => @so_1.id,
       :item_id => @item_1.id,
-      :amount => BigDecimal("10"),
-      :price => BigDecimal("10000"),
+      :amount => BigDecimal("1"),
+      :price => BigDecimal("1"),
       :is_service => true
       )
     
@@ -170,11 +170,12 @@ describe Closing do
       :employee_id => @ep_1.id,
       :sales_date => DateTime.now,
       :nomor_surat => "nomor_surat_2",
-      :exchange_id => @exc_1.id
+      :exchange_id => @exc_2.id
       )
     
     @sa_1.confirm_object(:confirmed_at => DateTime.now)
     
+    @so_1.reload
     @so_1.confirm_object(:confirmed_at => DateTime.now) 
     
     @dor = DeliveryOrder.create_object(
@@ -187,9 +188,9 @@ describe Closing do
     @dord_1 = DeliveryOrderDetail.create_object(
         :delivery_order_id => @dor.id,
         :sales_order_detail_id => @sod_1.id,
-        :amount => BigDecimal("10"),
+        :amount => BigDecimal("1"),
         )
-    
+    @dor.reload
     @dor.confirm_object(:confirmed_at => DateTime.now)
   
     @si_1 = SalesInvoice.create_object(
@@ -202,11 +203,12 @@ describe Closing do
     @sid_1 = SalesInvoiceDetail.create_object(
       :sales_invoice_id => @si_1.id,
       :delivery_order_detail_id => @dord_1.id,
-      :amount => BigDecimal("10"),
+      :amount => BigDecimal("1"),
       )
     @si_1.reload
     @si_1.confirm_object(:confirmed_at => DateTime.now)
-    
+    @si_1.reload
+    # puts @si_1.amount_receivable.to_s
     
     
     @receivable_1 = Receivable.where(
@@ -228,7 +230,7 @@ describe Closing do
     @status_pembulatan_2 = STATUS_PEMBULATAN[:kredit]
     @biaya_bank_1 = BigDecimal("1")
     @biaya_bank_2 = BigDecimal("1")
-    @rate_to_idr_1 = BigDecimal("1")
+    @rate_to_idr_1 = BigDecimal("10000")
     @rate_to_idr_2 = BigDecimal("1000")
     @receipt_date_1 = DateTime.now
     @receipt_date_2 = DateTime.now + 1.days
@@ -236,7 +238,7 @@ describe Closing do
     @rv_1 = ReceiptVoucher.create_object(
       :no_bukti => @no_bukti_1,
       :is_gbch => @is_gbch_2,
-      :gbch_no => @gbch_no_1,
+      :gbch_no => nil,
       :due_date => @due_date_1,
       :pembulatan => @pembulatan_1,
       :status_pembulatan => @status_pembulatan_1,
@@ -244,25 +246,28 @@ describe Closing do
       :rate_to_idr => @rate_to_idr_1,
       :receipt_date => @receipt_date_1,
       :contact_id =>  @ct_1.id,
-      :cash_bank_id => @cb_1.id
+      :cash_bank_id => @cb_2.id
       )
-      
     @rvd_1 = ReceiptVoucherDetail.create_object(
       :receipt_voucher_id => @rv_1.id,
       :receivable_id => @receivable_1.id,
-      :amount => BigDecimal("100000"),
-      :amount_paid => BigDecimal("100000"),
+      :amount => BigDecimal("1"),
+      :amount_paid => BigDecimal("1"),
       :pph_23 => BigDecimal("100"),
-      :rate => BigDecimal("1")
+      :rate => BigDecimal("10000")
       )
-      
+    
     @rv_1.reload 
     @rv_1.confirm_object(
             :confirmed_at => DateTime.now,
             :pembulatan => @pembulatan_1,
             :status_pembulatan => @status_pembulatan_1,
             )
-       
+    @rvd_1.reload
+    puts @rvd_1.receivable.remaining_amount.to_s
+    # @receivable_1.reload 
+    # puts @receivable_1.amount.to_s
+    # puts @receivable_1.remaining_amount.to_s
     end
     
     
@@ -275,6 +280,12 @@ describe Closing do
         :end_date_period => DateTime.now + 1.months,
         :is_year_closing => true
         )
+        
+      @cls.closing_details.each do |clsd|
+        clsd.rate = BigDecimal("11000")
+        clsd.save
+      end
+        
     end
     
     it "check all " do

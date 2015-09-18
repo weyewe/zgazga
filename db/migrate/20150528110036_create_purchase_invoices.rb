@@ -16,6 +16,7 @@ class CreatePurchaseInvoices < ActiveRecord::Migration
       t.boolean :is_confirmed , :default => false
       t.datetime :confirmed_at
       t.datetime :invoice_date
+      t.datetime :tax_rate_date
       t.datetime :due_date
       t.timestamps
     end

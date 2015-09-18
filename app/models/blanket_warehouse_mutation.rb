@@ -132,6 +132,11 @@ class BlanketWarehouseMutation < ActiveRecord::Base
       end 
     end
     
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
@@ -156,6 +161,11 @@ class BlanketWarehouseMutation < ActiveRecord::Base
         self.errors.add(:generic_errors, "Tidak cukup item dari warehouse tujuan ke warehouse sumber")
         return self 
       end
+    end
+    
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
     end
     
     

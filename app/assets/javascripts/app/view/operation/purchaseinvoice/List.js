@@ -29,7 +29,8 @@ Ext.define('AM.view.operation.purchaseinvoice.List' ,{
 				flex : 3,
 				tpl : 	'Total:  <br /> <b>{amount_payable} {purchase_receival_purchase_order_exchange_name}</b>'  + '<br />' + '<br />' +
 						'Exchange Rate:  <b>{exchange_rate_amount}</b>'  + '<br />' + '<br />' +
-						'Tax (%):  <b>{tax_value}</b>'  
+						'Tax (%):  <b>{tax_value}</b>'  + '<br />' + '<br />' +
+						'Tax Rate Date (%):  <b>{tax_rate_date}</b>'  
 			},
  
   

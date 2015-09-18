@@ -8,7 +8,7 @@ json.memorial_details objects do |object|
 	else
 		json.status_text  "Credit"
 	end
-    json.amount		object.amount  
+    json.amount		object.amount
     json.code		object.code  
     json.account_id		object.account_id  
     json.account_name		object.account.name 

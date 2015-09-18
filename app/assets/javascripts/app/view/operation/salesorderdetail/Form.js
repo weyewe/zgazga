@@ -113,7 +113,7 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 				xtype: 'combo',
 				queryMode: 'remote',
 				forceSelection: true, 
-				displayField : 'item_name',
+				displayField : 'item_sku',
 				valueField : 'item_id',
 				pageSize : 5,
 				minChars : 1, 
@@ -193,6 +193,20 @@ Ext.define('AM.view.operation.salesorderdetail.Form', {
 				comboBox.setValue( is_service );
 			}
 		});
+	},
+	
+	setExtraParamInSalesOrderComboBox: function(){
+		var comboBox = this.down('form').getForm().findField('item_id'); 
+		var store = comboBox.store;
+		
+		store.getProxy().extraParams.sales_order =  true;
+	},
+	
+	
+	setComboBoxExtraParams: function( record ) { 
+		
+		var me =this;
+		me.setExtraParamInSalesOrderComboBox( ); 
 	},
 	
 	

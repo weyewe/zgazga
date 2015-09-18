@@ -5,6 +5,7 @@ json.purchase_down_payments objects do |object|
 	json.contact_id		object.contact_id  
 	json.contact_name		object.contact.name  
 	json.receivable_id		object.receivable_id
+	
 	if object.receivable.nil?
 		json.receivable_source_code		""
 		else
@@ -19,7 +20,12 @@ json.purchase_down_payments objects do |object|
 		
 	end
 	
-	
+	json.status_dp object.status_dp
+	if object.status_dp == STATUS_DP[:local]
+		json.status_dp_text "Local"
+		else
+		json.status_dp_text "Import"
+	end
 	json.code		object.code
 	json.down_payment_date	format_date_friendly( 	object.down_payment_date ) 
 	json.due_date	format_date_friendly( 	object.due_date ) 

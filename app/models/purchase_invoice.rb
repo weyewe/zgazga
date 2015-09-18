@@ -45,10 +45,14 @@ class PurchaseInvoice < ActiveRecord::Base
     new_object = self.new
     new_object.purchase_receival_id = params[:purchase_receival_id]
     new_object.invoice_date = params[:invoice_date]
+    new_object.tax_rate_date = params[:tax_rate_date]
     new_object.nomor_surat = params[:nomor_surat]
     new_object.description = params[:description]
     new_object.due_date = params[:due_date]
     if new_object.save  
+      if new_object.tax_rate_date.nil?
+        new_object.tax_rate_date = new_object.invoice_date
+      end
       new_object.exchange_id = new_object.purchase_receival.exchange_id
       new_object.is_taxable =  new_object.purchase_receival.contact.is_taxable   
       new_object.code = "PI-" + new_object.id.to_s  
@@ -69,11 +73,14 @@ class PurchaseInvoice < ActiveRecord::Base
     end
     self.purchase_receival_id = params[:purchase_receival_id]
     self.invoice_date = params[:invoice_date]
+    self.tax_rate_date = params[:tax_rate_date]
     self.nomor_surat = params[:nomor_surat]
     self.description = params[:description]
     self.due_date = params[:due_date]
     if self.save 
-      
+    if self.tax_rate_date.nil?
+      self.tax_rate_date = self.invoice_date
+    end
     self.exchange_id = self.purchase_receival.exchange_id
     self.is_taxable =  self.purchase_receival.contact.is_taxable   
     self.save
@@ -103,7 +110,7 @@ class PurchaseInvoice < ActiveRecord::Base
     end
     if self.purchase_receival.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
-        :ex_rate_date => self.invoice_date,
+        :ex_rate_date => self.tax_rate_date,
         :exchange_id => self.exchange_id
         )
       if latest_exchange_rate.nil?

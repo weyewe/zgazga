@@ -137,6 +137,11 @@ Ext.define('AM.view.operation.receiptvoucherdetail.Form', {
 	        name : 'pph_23',
 	        fieldLabel: 'PPh 23'
 	      },
+	      {
+	        xtype: 'numberfield',
+	        name : 'pph_23_rate',
+	        fieldLabel: 'PPh 23 Rate'
+	      },
 				{
 	        xtype: 'textarea',
 	        name : 'description',

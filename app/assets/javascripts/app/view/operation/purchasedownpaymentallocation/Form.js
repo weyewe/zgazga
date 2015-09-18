@@ -14,37 +14,6 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
   initComponent: function() {
 			var me = this; 
 	
-	var remoteJsonStoreContact = Ext.create(Ext.data.JsonStore, {
-		storeId : 'contact_search',
-		fields	: [
-		 		{
-					name : 'contact_name',
-					mapping : "name"
-				} ,
-				{
-					name : 'contact_description',
-					mapping : "description"
-				} ,
-		 
-				{
-					name : 'contact_id',
-					mapping : 'id'
-				}  
-		],
-		
-	 
-		proxy  	: {
-			type : 'ajax',
-			url : 'api/search_suppliers',
-			reader : {
-				type : 'json',
-				root : 'records', 
-				totalProperty  : 'total'
-			}
-		},
-		autoLoad : false 
-	});
-	
 	
 	var remoteJsonStorePurchaseDownPayment = Ext.create(Ext.data.JsonStore, {
 		storeId : 'purchase_down_payment_search',
@@ -52,6 +21,10 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
 		 		{
 					name : 'purchase_down_payment_code',
 					mapping : "code"
+				} ,
+				{
+					name : 'purchase_down_payment_contact_name',
+					mapping : "contact_name"
 				} ,
 				{
 					name : 'purchase_down_payment_receivable_source_code',
@@ -120,30 +93,8 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
     					fieldLabel: 'Tanggal Alokasi',
     					format: 'Y-m-d',
     				},
-    	      {
-	    				fieldLabel: 'Contact',
-	    				xtype: 'combo',
-	    				queryMode: 'remote',
-	    				forceSelection: true, 
-	    				displayField : 'contact_name',
-	    				valueField : 'contact_id',
-	    				pageSize : 5,
-	    				minChars : 1, 
-	    				allowBlank : false, 
-	    				triggerAction: 'all',
-	    				store : remoteJsonStoreContact , 
-	    				listConfig : {
-	    					getInnerTpl: function(){
-	    						return  	'<div data-qtip="{contact_name}">' + 
-	    												'<div class="combo-name">{contact_name}</div>' + 
-	    												'<div class="combo-name">Deskripsi: {contact_description}</div>' + 
-	    						 					'</div>';
-	    					}
-    					},
-    					name : 'contact_id' 
-    	      },
     				{
-	    				fieldLabel: 'Receivable',
+	    				fieldLabel: 'DownPayment',
 	    				xtype: 'combo',
 	    				queryMode: 'remote',
 	    				forceSelection: true, 
@@ -158,6 +109,7 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
 	    					getInnerTpl: function(){
 	    						return  	'<div data-qtip="{purchase_down_payment_code}">' + 
 	    												'<div class="combo-name">{purchase_down_payment_code}</div>' + 
+	    												'<div class="combo-name">Contact: {purchase_down_payment_contact_name}</div>' + 
 	    												'<div class="combo-name">Source: {purchase_down_payment_receivable_source_code}</div>' + 
 	    												'<div class="combo-name">Total: {purchase_down_payment_receivable_total_amount}</div>' + 
 	    												'<div class="combo-name">Remaining: {purchase_down_payment_receivable_remaining_amount}</div>' + 
@@ -187,23 +139,6 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
     this.callParent(arguments);
   },
   
-    setSelectedCustomer: function( contact_id ){
-		var comboBox = this.down('form').getForm().findField('contact_id'); 
-		var me = this; 
-		var store = comboBox.store; 
-		// console.log( 'setSelectedMember');
-		// console.log( store ) ;
-		store.load({
-			params: {
-				selected_id : contact_id 
-			},
-			callback : function(records, options, success){
-				me.setLoading(false);
-				comboBox.setValue( contact_id );
-			}
-		});
-	},
-	
 	setSelectedReceivable: function( receivable_id ){
 		var comboBox = this.down('form').getForm().findField('receivable_id'); 
 		var me = this; 
@@ -228,7 +163,6 @@ Ext.define('AM.view.operation.purchasedownpaymentallocation.Form', {
 		me.setLoading(true);
 		
 		me.setSelectedReceivable( record.get("receivable_id")  ) ;
-		me.setSelectedCustomer( record.get("contact_id")  ) ;
  
 	}
  

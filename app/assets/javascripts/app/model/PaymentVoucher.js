@@ -6,6 +6,7 @@ Ext.define('AM.model.PaymentVoucher', {
 			
     	    { name: 'id', type: 'int' },
     	    { name: 'code', type: 'string' },
+    	    { name: 'no_voucher', type: 'string' },
     	    { name: 'contact_id', type: 'int' },
     	    { name: 'contact_name', type: 'string' },
     	    { name: 'cash_bank_id', type: 'int' },

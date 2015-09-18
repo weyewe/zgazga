@@ -1,6 +1,6 @@
 class PaymentVoucher < ActiveRecord::Base
   validates_presence_of :payment_date
-  validates_presence_of :due_date
+  # validates_presence_of :due_date
   validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
@@ -60,7 +60,8 @@ class PaymentVoucher < ActiveRecord::Base
       new_object.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
       return new_object
     end
-    new_object.no_bukti = params[:no_bukti]
+    # new_object.no_bukti = params[:no_bukti]
+    new_object.no_voucher = params[:no_voucher]
     new_object.is_gbch = params[:is_gbch]
     new_object.gbch_no = params[:gbch_no]
     new_object.due_date = params[:due_date]
@@ -75,6 +76,11 @@ class PaymentVoucher < ActiveRecord::Base
     new_object.save
     if new_object.save
       new_object.code = "PV-" + new_object.id.to_s
+      code = ""
+      if not new_object.cash_bank.payment_code.nil?
+        code = new_object.cash_bank.payment_code.to_s + " "
+      end
+      new_object.no_bukti = code +  new_object.no_voucher.to_s
       if new_object.cash_bank.exchange.is_base == true
         new_object.rate_to_idr = 1
       end
@@ -99,7 +105,8 @@ class PaymentVoucher < ActiveRecord::Base
       self.errors.add(:gbch_no, "GBCH no harus di isi apabila GBCH")
       return self
     end
-    self.no_bukti = params[:no_bukti]
+    # self.no_bukti = params[:no_bukti]
+    self.no_voucher = params[:no_voucher]
     self.is_gbch = params[:is_gbch]
     self.gbch_no = params[:gbch_no]
     self.due_date = params[:due_date]
@@ -111,6 +118,11 @@ class PaymentVoucher < ActiveRecord::Base
     self.contact_id = params[:contact_id]
     self.cash_bank_id = params[:cash_bank_id]
     if self.save
+      code = ""
+      if not self.cash_bank.payment_code.nil?
+        code = self.cash_bank.payment_code.to_s + " "
+      end
+      self.no_bukti = code +  self.no_voucher.to_s
       if self.cash_bank.exchange.is_base == true
         self.rate_to_idr = 1
       end
@@ -253,10 +265,10 @@ class PaymentVoucher < ActiveRecord::Base
       biaya_pembulatan = self.pembulatan
     end
     total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
-    if total > self.cash_bank.amount 
-      self.errors.add(:generic_errors, "Dana tidak mencukupi")
-      return self 
-    end
+    # if total > self.cash_bank.amount 
+    #   self.errors.add(:generic_errors, "Dana tidak mencukupi")
+    #   return self 
+    # end
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save

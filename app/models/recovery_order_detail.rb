@@ -235,6 +235,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     self.is_finished = true 
     self.finished_date = params[:finished_date]
+    
+    if Closing.is_date_closed(self.finished_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     if self.save
       # create batch stock mutation
       # update amount in the batch_instance
@@ -395,6 +401,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     if self.compound_underlayer_usages.count != 0 
       self.errors.add(:generic_errors, "Sudah ada pengalokasian penggunaan compound underlayer")
+      return self 
+    end
+    
+    if Closing.is_date_closed(self.finished_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
     
@@ -568,6 +579,12 @@ class RecoveryOrderDetail < ActiveRecord::Base
     
     self.is_rejected = true
     self.rejected_date = params[:rejected_date]
+    
+    if Closing.is_date_closed(self.rejected_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     if self.save
 
       # self.create_batch_stock_mutation( "REJECT")
@@ -655,6 +672,11 @@ class RecoveryOrderDetail < ActiveRecord::Base
     end
     
     return self if self.errors.size != 0 
+    
+    if Closing.is_date_closed(self.rejected_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
     
     self.is_rejected = false
     self.rejected_date = nil

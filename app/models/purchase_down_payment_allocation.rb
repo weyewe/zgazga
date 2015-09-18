@@ -5,7 +5,6 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
   validates_presence_of :contact_id
   validates_presence_of :allocation_date
   
-  validate :valid_contact_id 
   validate :valid_receivable
   
   def valid_receivable
@@ -15,19 +14,6 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     
     if co.nil? 
       self.errors.add(:receivable_id, "Harus ada Receivable Id")
-      return self 
-    end
-  end
-  
-  
-  
-  def valid_contact_id
-    return if  contact_id.nil?
-    
-    co = Contact.find_by_id contact_id
-    
-    if co.nil? 
-      self.errors.add(:contact_id, "Harus ada Contact Id")
       return self 
     end
   end
@@ -48,6 +34,7 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
     new_object.rate_to_idr = BigDecimal( params[:rate_to_idr] || '0')
     new_object.total_amount = 0
     if new_object.save
+    new_object.contact_id = new_object.receivable.contact_id
     new_object.code = "PDPA-" + new_object.id.to_s  
     new_object.save
     end
@@ -63,12 +50,13 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah memiliki detail")
       return self 
     end
-    self.contact_id = params[:contact_id]
     self.receivable_id = params[:receivable_id]
     self.allocation_date = params[:allocation_date]
     self.rate_to_idr = BigDecimal( params[:rate_to_idr] || '0')
     self.total_amount = 0
     if self.save
+       self.contact_id = self.receivable.contact_id
+       self.save
     end
     return self
   end
@@ -100,12 +88,27 @@ class PurchaseDownPaymentAllocation < ActiveRecord::Base
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
+    
+    total_amount = BigDecimal('0')
+    self.purchase_down_payment_allocation_details.each do |pdpap|
+       total_amount += pdpap.amount_paid
+       if pdpap.payable.remaining_amount < pdpap.amount
+         self.errors.add(:generic_errors, "Alokasi Detail di DP melebihi jumlah Payable")
+         return self
+       end
+    end
+    if self.receivable.remaining_amount < total_amount
+      self.errors.add(:generic_errors, "Jumlah Alokasi (#{total_amount}) melebihi DP (#{self.receivable.remaining_amount})")
+      return self
+    end
+    
+    
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     if self.save
       total_amount_paid = BigDecimal('0')
       self.purchase_down_payment_allocation_details.each do |pdpad|
-        total_amount_paid -= pdpad.amount_paid
+        total_amount_paid += pdpad.amount_paid
         pdpad.payable.remaining_amount -= pdpad.amount
         pdpad.payable.save
         pdpad.save

@@ -104,10 +104,12 @@ class SalesInvoice < ActiveRecord::Base
       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
       return self 
     end    
+    
     if Closing.is_date_closed(self.invoice_date).count > 0 
       self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
+    
     if self.delivery_order.sales_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.invoice_date,

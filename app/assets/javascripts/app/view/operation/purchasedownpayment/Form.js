@@ -74,6 +74,19 @@ Ext.define('AM.view.operation.purchasedownpayment.Form', {
 		autoLoad : false 
 	});
 	
+	var localJsonStoreStatusDP = Ext.create(Ext.data.Store, {
+			type : 'array',
+			storeId : 'status_dp',
+			fields	: [ 
+				{ name : "status_dp"}, 
+				{ name : "status_dp_text"}  
+			], 
+			data : [
+				{ status_dp : 1, status_dp_text : "Local"},
+				{ status_dp : 2, status_dp_text : "Import"},
+			] 
+		});
+		
     this.items = [{
       xtype: 'form',
 			msgTarget	: 'side',
@@ -149,6 +162,27 @@ Ext.define('AM.view.operation.purchasedownpayment.Form', {
 	        name : 'total_amount',
 	        fieldLabel: 'Total Amount'
 	      },
+	      ,{
+					fieldLabel: 'Status DP',
+					xtype: 'combo',
+					queryMode: 'remote',
+					forceSelection: true, 
+					displayField : 'status_dp_text',
+					valueField : 'status_dp',
+					pageSize : 5,
+					minChars : 1, 
+					allowBlank : false, 
+					triggerAction: 'all',
+					store : localJsonStoreStatusDP , 
+					listConfig : {
+						getInnerTpl: function(){
+							return  	'<div data-qtip="{status_dp_text}">' + 
+													'<div class="combo-name">{status_dp_text}</div>' +
+							 					'</div>';
+						}
+					},
+					name : 'status_dp' 
+				}
 			]
     }];
 

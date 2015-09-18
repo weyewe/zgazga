@@ -21,7 +21,12 @@ json.records @objects do |object|
 		else
 		json.payable_source_code		object.payable.source_code
 	end
-
+	json.status_dp object.status_dp
+	if object.status_dp == STATUS_DP[:local]
+		json.status_dp_text "Local"
+		else
+		json.status_dp_text "Import"
+	end
 	
 	json.code		object.code
 	json.down_payment_date	format_date_friendly( 	object.down_payment_date ) 

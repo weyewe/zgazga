@@ -120,6 +120,11 @@ class RollerWarehouseMutation < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     # check roller amount
     
     self.roller_warehouse_mutation_details.each do |rwmd|
@@ -215,6 +220,11 @@ class RollerWarehouseMutation < ActiveRecord::Base
           return self 
         end
       end
+    end
+    
+    if Closing.is_date_closed(self.mutation_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
     end
     
     self.is_confirmed = false

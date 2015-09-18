@@ -206,7 +206,12 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.rejected_quantity = params[:rejected_quantity] 
     self.is_finished = true
     self.finished_at = params[:finished_at]
- 
+    
+    if Closing.is_date_closed(self.finished_at).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     if self.save
       BatchSource.create_object( 
           :item_id  => self.blanket.item.id,
@@ -284,7 +289,12 @@ class BlanketOrderDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah ada alokasi roll blanket")
       return self
     end
-
+    
+    if Closing.is_date_closed(self.finished_at).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     # set all cost to 0
     self.is_finished = false
     self.finished_at = nil

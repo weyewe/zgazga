@@ -14,7 +14,7 @@ json.transaction_data_details objects do |object|
 	    json.entry_case_text   "Credit" 
 	end
 	 
-	json.amount                     object.amount 
+	json.amount                     number_to_currency(object.amount, unit: "")
 	json.description                object.description
 	json.is_bank_transaction        object.is_bank_transaction 
 	

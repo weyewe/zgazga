@@ -19,6 +19,9 @@ Ext.define('AM.model.PurchaseDownPayment', {
     	{ name: 'total_amount', type: 'string' },
     	{ name: 'is_confirmed', type: 'boolean' },
     	{ name: 'confirmed_at', type: 'string' },
+    	{ name: 'status_dp', type: 'int' },
+    	{ name: 'status_dp_text', type: 'string' },
+    	
   	],
 
 	 

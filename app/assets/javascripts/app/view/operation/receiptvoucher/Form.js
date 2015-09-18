@@ -156,7 +156,7 @@ Ext.define('AM.view.operation.receiptvoucher.Form', {
 	  		  	{
 							xtype: 'textfield',
 							fieldLabel : 'No Bukti',
-							name : 'no_bukti'
+							name : 'no_voucher'
 						},
 				    {
 							xtype: 'datefield',

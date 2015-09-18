@@ -7,9 +7,9 @@ Ext.define('AM.view.operation.warehousestock.List' ,{
 
 	initComponent: function() {
 		this.columns = [
-			{ header: 'ID', dataIndex: 'id'},
+			// { header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
-				{	header: 'Code', dataIndex: 'code', flex: 1 } ,
+			{	header: 'Code', dataIndex: 'code', flex: 1 } ,
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } 
 			
 		];

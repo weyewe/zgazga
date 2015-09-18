@@ -164,6 +164,11 @@ class StockAdjustment < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.adjustment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.validate_warehouse_item_amount
     return self if self.errors.size != 0 
    
@@ -172,6 +177,7 @@ class StockAdjustment < ActiveRecord::Base
     
     if self.save 
       self.update_warehouse_item_confirm    
+      AccountingService::CreateStockAdjustmentJournal.create_confirmation_journal(self)
     end
     
     return self 
@@ -190,6 +196,10 @@ class StockAdjustment < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.adjustment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
    
     self.stock_adjustment_details.each do |sod|
         item_id = sod.item_id
@@ -231,6 +241,7 @@ class StockAdjustment < ActiveRecord::Base
     self.confirmed_at = nil 
     if self.save
       self.update_warehouse_item_unconfirm
+      AccountingService::CreateStockAdjustmentJournal.undo_create_confirmation_journal(self)
     end
     return self
   end

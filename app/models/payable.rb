@@ -20,6 +20,8 @@ class Payable < ActiveRecord::Base
       return PurchaseDownPayment.find_by_id(self.source_id)
     when SalesDownPayment.to_s
       return SalesDownPayment.find_by_id(self.source_id)
+    when PayableMigration.to_s
+      return PayableMigration.find_by_id(self.source_id)
     end
   end
   

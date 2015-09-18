@@ -16,7 +16,7 @@ class ReceivableMigration < ActiveRecord::Base
     
     def self.create_object( params  ) 
         new_object = self.new 
-        new_object.nomor_surat = params[:no_faktur]
+        new_object.nomor_surat = params[:nomor_surat]
         new_object.contact_id = params[:contact_id]
         new_object.exchange_id = params[:exchange_id]
         new_object.amount_base_exchange  = BigDecimal( params[:amount_base_exchange] || '0') 

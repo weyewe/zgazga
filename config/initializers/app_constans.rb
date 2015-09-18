@@ -119,6 +119,12 @@ ADJUSTMENT_STATUS = {
   :deduction => 2 
 }
 
+STATUS_DP = {
+  :local => 1, 
+  :import => 2 
+}
+
+
 TAX_CODE = {
   :code_01 => "1",
   :code_02 => "2",

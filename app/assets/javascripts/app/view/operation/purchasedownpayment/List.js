@@ -14,6 +14,8 @@ Ext.define('AM.view.operation.purchasedownpayment.List' ,{
 			{ header: 'Total Amount', dataIndex: 'total_amount'},
 			{ header: 'Currency', dataIndex: 'exchange_name'},
 			{ header: 'Rate', dataIndex: 'exchange_rate_amount'},
+			{ header: 'Status', dataIndex: 'status_dp_text'},
+			
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

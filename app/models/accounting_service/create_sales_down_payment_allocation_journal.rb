@@ -17,6 +17,7 @@ module AccountingService
     td = TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => sales_down_payment_allocation.payable.exchange.account_receivable_id  ,
+      :contact_id          => sales_down_payment_allocation.payable.contact_id ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (sales_down_payment_allocation.total_amount   * sales_down_payment_allocation.payable.exchange_rate_amount).round(2),
       :real_amount         => sales_down_payment_allocation.total_amount,
@@ -27,6 +28,7 @@ module AccountingService
     td = TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => sales_down_payment_allocation.payable.exchange.account_payable_id  ,
+        :contact_id          => sales_down_payment_allocation.payable.contact_id ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (sales_down_payment_allocation.total_amount   * sales_down_payment_allocation.payable.exchange_rate_amount).round(2),
         :real_amount         => sales_down_payment_allocation.total_amount,
@@ -48,7 +50,7 @@ module AccountingService
         TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_selisih_kurs][:code]).id  ,
-        :entry_case          => NORMAL_BALANCE[:credit]     ,
+        :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => ((sales_down_payment_allocation.total_amount * sales_down_payment_allocation.payable.exchange_rate_amount) -
                                  (sales_down_payment_allocation.rate_to_idr * sales_down_payment_allocation.total_amount)).round(2),
         :description => "Debit ExchangeGain"

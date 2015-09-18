@@ -5,7 +5,10 @@ Ext.define('AM.model.WarehouseStockDetail', {
  
     
 	        { name: 'warehouse_stock_id', type: 'int' }, 
-	 
+	        { name: 'warehouse_name', type: 'string' }, 
+	        { name: 'warehouse_code', type: 'string' }, 
+	        { name: 'warehouse_description', type: 'string' }, 
+	 		
     	    { name: 'id', type: 'int' },
     	    { name: 'item_id', type: 'int' },
     	    { name: 'item_name', type: 'string' },

@@ -2,10 +2,19 @@ Ext.define('AM.model.WarehouseStock', {
   	extend: 'Ext.data.Model',
   	fields: [
 
-    	{ name: 'id', type: 'int' },
-		{ name: 'name', type: 'string' },
-		{ name: 'code', type: 'string' },
-		{ name: 'description', type: 'string' },
+    	   { name: 'warehouse_stock_id', type: 'int' }, 
+	        { name: 'name', type: 'string' }, 
+	        { name: 'code', type: 'string' }, 
+	        { name: 'description', type: 'string' }, 
+	 		
+    	    { name: 'id', type: 'int' },
+    	    { name: 'item_id', type: 'int' },
+    	    { name: 'item_name', type: 'string' },
+    	    { name: 'item_sku', type: 'string' },
+    	    { name: 'item_uom_name', type: 'string' },
+			{ name: 'amount', type: 'string' } ,
+			{ name: 'customer_amount', type: 'string' } ,
+ 
 			
 
 			

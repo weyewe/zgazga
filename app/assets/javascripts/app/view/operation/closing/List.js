@@ -18,7 +18,7 @@ Ext.define('AM.view.operation.closing.List' ,{
 				text : "Closing",
 				flex : 3,
 				tpl : 	'Status Closing:  <b>{is_closed}</b>'  + '<br />' + '<br />' +
-							'Tanggal Konfirmasi: <b>{closed_at}</b>' 
+							'Tanggal Closing: <b>{closed_at}</b>' 
 			},
 		 
 		];
@@ -73,7 +73,7 @@ Ext.define('AM.view.operation.closing.List' ,{
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
-					this.confirmObjectButton, 	this.downloadLabaRugiButton,this.unconfirmObjectButton,
+					this.confirmObjectButton,this.unconfirmObjectButton,
 					'->',
 					this.downloadReportButton,
 					this.searchField ];

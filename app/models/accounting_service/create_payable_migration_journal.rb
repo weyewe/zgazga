@@ -3,7 +3,7 @@ module AccountingService
       
       
   def self.create_confirmation_journal(payable_migration) 
-    message = "Purchase Invoice Migration"
+    message = "Payable Migration #{payable_migration.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => payable_migration.invoice_date,
         :description =>  message,
@@ -17,6 +17,7 @@ module AccountingService
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => payable_migration.exchange.account_payable_id  ,
+      :contact_id          => payable_migration.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:credit]     ,
       :amount              => (payable_migration.amount_payable   * payable_migration.exchange_rate_amount).round(2),
       :real_amount         => payable_migration.amount_payable,
@@ -31,7 +32,6 @@ module AccountingService
         :amount              => (payable_migration.amount_payable   * payable_migration.exchange_rate_amount).round(2),
         # :real_amount         => payable_migration.amount_payable,
         :exchange_id         => payable_migration.exchange_id,
-        
         :description         => "Debit Penyesuaian modal untuk migrasi"
         )
     ta.confirm

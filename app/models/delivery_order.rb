@@ -84,6 +84,11 @@ class DeliveryOrder < ActiveRecord::Base
       return self 
     end    
     
+    if Closing.is_date_closed(self.delivery_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+      
 #     validate warehouse_item_amount and pending_delivery_amount
     self.delivery_order_details.each do |dod|
       if dod.sales_order_detail.is_service == true
@@ -164,6 +169,12 @@ class DeliveryOrder < ActiveRecord::Base
         return self 
       end
     end
+    
+    if Closing.is_date_closed(self.delivery_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil 
     if self.save

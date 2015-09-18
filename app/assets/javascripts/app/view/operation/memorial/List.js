@@ -11,7 +11,7 @@ Ext.define('AM.view.operation.memorial.List' ,{
 			{ 	header: 'Kode',  dataIndex: 'code', flex: 1},
 			{ 	header: 'No Bukti',  dataIndex: 'no_bukti', flex: 1},
 			{	header: 'Description', dataIndex: 'description', flex: 2 },
-			{	header: 'Amount', dataIndex: 'amount', flex: 2 },
+			{	header: 'Amount', dataIndex: 'amount', flex: 2 ,renderer: Ext.util.Format.numberRenderer('0,0.00')},
 			{
 				xtype : 'templatecolumn',
 				text : "Konfirmasi",

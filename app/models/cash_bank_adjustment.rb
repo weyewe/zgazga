@@ -84,10 +84,10 @@ class CashBankAdjustment < ActiveRecord::Base
       return self
     end
     
-    if self.status == ADJUSTMENT_STATUS[:deduction] and self.amount > cash_bank.amount 
-      self.errors.add(:generic_errors, "Jumlah final di cashbank tidak boleh negative")
-      return self 
-    end
+    # if self.status == ADJUSTMENT_STATUS[:deduction] and self.amount > cash_bank.amount 
+    #   self.errors.add(:generic_errors, "Jumlah final di cashbank tidak boleh negative")
+    #   return self 
+    # end
     
 #     if params[:confirmed_at].nil? or not params[:confirmed_at].is_a?(DateTime)
 #       self.errors.add(:generic_errors, "Harus ada tanggal konfirmasi")
@@ -99,6 +99,11 @@ class CashBankAdjustment < ActiveRecord::Base
       return self 
     end
     
+    if Closing.is_date_closed(self.adjustment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+  
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true  
     
@@ -156,10 +161,15 @@ class CashBankAdjustment < ActiveRecord::Base
       return self 
     end
     
-    if self.status == ADJUSTMENT_STATUS[:addition] and self.amount > cash_bank.amount 
-      self.errors.add(:generic_errors, "Jumlah final di cashbank tidak boleh negative")
+    if Closing.is_date_closed(self.adjustment_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
       return self 
     end
+    
+    # if self.status == ADJUSTMENT_STATUS[:addition] and self.amount > cash_bank.amount 
+    #   self.errors.add(:generic_errors, "Jumlah final di cashbank tidak boleh negative")
+    #   return self 
+    # end
     
     self.is_confirmed = false
     self.confirmed_at = nil 

@@ -14,15 +14,16 @@ Ext.define('AM.view.operation.receiptvoucherdetail.List' ,{
 				xtype : 'templatecolumn',
 				text : "Amount",
 				flex : 3,
-				tpl :  	'Amount Paid: <br /> <b>{amount_paid}</b>' + '<br />' + '<br />' +
-							'Rate to CashBank:  <br /> <b>{rate}</b>'   + '<br />' + '<br />' +
-							'Actual Amount:  <br /> <b>{amount}</b'   
+				tpl :  	'Amount Paid: <br /> <b>{amount_paid_text}</b>' + '<br />' + '<br />' +
+							'Rate to CashBank:  <br /> <b>{rate_text}</b>'   + '<br />' + '<br />' +
+							'Actual Amount:  <br /> <b>{amount_text}</b'   
 			},
 			{
 				xtype : 'templatecolumn',
 				text : "Tax",
 				flex : 3,
-				tpl :  	'PPh 23: <br /> <b>{pph_23}</b>'
+				tpl :  	'PPh 23: <br /> <b>{pph_23_text}</b>'  + '<br />' + '<br />' +
+						'PPH 23 Rate :  <br /> <b>{pph_23_rate_text}</b'	
 			},
 		];
 		

@@ -86,11 +86,17 @@ class BankAdministration < ActiveRecord::Base
       return self 
     end   
     
-    total_amount = self.cash_bank.amount + self.amount
-    if total_amount == 0
-      self.errors.add(:generic_errors, "Final CashBank Amount tidak boleh sama dengan 0")
-      return self
+    if Closing.is_date_closed(self.administration_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
     end
+    
+    
+    # total_amount = self.cash_bank.amount + self.amount
+    # if total_amount == 0
+    #   self.errors.add(:generic_errors, "Final CashBank Amount tidak boleh sama dengan 0")
+    #   return self
+    # end
         
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
@@ -110,6 +116,7 @@ class BankAdministration < ActiveRecord::Base
     end
     if self.save
       self.generate_cash_mutation
+      self.cash_bank.update_amount( self.amount )
       AccountingService::CreateBankAdministrationJournal.create_confirmation_journal(self)
     end  
     return self
@@ -120,10 +127,17 @@ class BankAdministration < ActiveRecord::Base
       self.errors.add(:generic_errors, "belum di konfirmasi")
       return self 
     end
+    
+    if Closing.is_date_closed(self.administration_date).count > 0 
+      self.errors.add(:generic_errors, "Period sudah di closing")
+      return self 
+    end
+    
     self.is_confirmed = false
     self.confirmed_at = nil
     if self.save
       self.destroy_cash_mutation
+      self.cash_bank.update_amount( -1 * self.amount )
        AccountingService::CreateBankAdministrationJournal.undo_create_confirmation_journal(self)
     end
     return self
@@ -143,6 +157,7 @@ class BankAdministration < ActiveRecord::Base
         :cash_bank_id => self.cash_bank_id ,
         :source_code => self.code
        ) 
+       
   end
   
   def destroy_cash_mutation

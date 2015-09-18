@@ -125,6 +125,12 @@ class BlanketOrder < ActiveRecord::Base
       self.errors.add(:generic,"Tidak memiliki detail")
       return self
     end
+    
+    if Closing.is_date_closed(self.order_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.confirmed_at = params[:confirmed_at]
     self.is_confirmed = true
     if self.save
@@ -140,6 +146,12 @@ class BlanketOrder < ActiveRecord::Base
       self.errors.add(:generic,"Sudah di pakai di BlanketWarehouseMutation")
       return self
     end
+    
+    if Closing.is_date_closed(self.order_date).count > 0 
+        self.errors.add(:generic_errors, "Period sudah di closing")
+        return self 
+    end
+    
     self.confirmed_at = nil
     self.is_confirmed = false
     if self.save

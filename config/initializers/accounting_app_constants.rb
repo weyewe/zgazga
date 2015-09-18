@@ -317,6 +317,13 @@ ACCOUNT_CODE = {
     :status => 1,
     :parent_code => "7201"
     },  
+  :beban_lainnya => {
+    :code => "72010002",
+    :name => "BEBAN LAINNYA",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "720101"
+    },  
   :rugi_selisih_kurs => {
     :code => "72010001",
     :name => "RUGI SELISIH KURS",

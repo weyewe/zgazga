@@ -6,15 +6,15 @@ class Api::PaymentVoucherDetailsController < Api::BaseApiController
   
   def index
     @parent = PaymentVoucher.find_by_id params[:payment_voucher_id]
-    query = @parent.active_children.joins(:payment_voucher, :payable)
+    query = @parent.active_children.joins(:payment_voucher,:payable)
     if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
        
-       query  = query.where{
-         (
-           ( payable.source_code  =~ livesearch  )   
-         )         
-       } 
+      query  = query.where{
+        (
+          ( payable.source_code  =~ livesearch  )   
+        )         
+      } 
     end
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
     @total = query.count

@@ -4,7 +4,8 @@ class CreateReceiptVoucherDetails < ActiveRecord::Migration
       t.integer :receipt_voucher_id
       t.decimal :amount , :default        => 0,  :precision => 14, :scale => 2 
       t.decimal :amount_paid , :default   => 0,  :precision => 14, :scale => 2 
-      t.decimal :pph_23 , :default        => 0,  :precision => 14, :scale => 2 
+      t.decimal :pph_23 , :default        => 0,  :precision => 14, :scale => 2
+      t.decimal :pph_23_rate , :default          => 0,  :precision => 18, :scale => 11
       t.integer :receivable_id
       t.decimal :rate , :default          => 0,  :precision => 18, :scale => 11
       t.string  :description

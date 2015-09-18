@@ -3,7 +3,7 @@ module AccountingService
       
       
   def self.create_confirmation_journal(receivable_migration) 
-    message = "Receivable Migration"
+    message = "Receivable Migration #{receivable_migration.nomor_surat}"
       ta = TransactionData.create_object({
         :transaction_datetime => receivable_migration.invoice_date,
         :description =>  message,
@@ -25,6 +25,7 @@ module AccountingService
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => receivable_migration.exchange.account_receivable_id  ,
+      :contact_id          => receivable_migration.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (receivable_migration.amount_receivable   * receivable_migration.exchange_rate_amount).round(2),
       :real_amount         => real_amount,

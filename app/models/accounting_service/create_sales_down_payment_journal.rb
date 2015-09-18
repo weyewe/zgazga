@@ -17,6 +17,7 @@ module AccountingService
     TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => sales_down_payment.exchange.account_receivable_id  ,
+      :contact_id          => sales_down_payment.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (sales_down_payment.total_amount   * sales_down_payment.exchange_rate_amount).round(2),
       :real_amount         => sales_down_payment.total_amount,
@@ -27,6 +28,7 @@ module AccountingService
     TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => sales_down_payment.exchange.account_payable_id  ,
+        :contact_id          => sales_down_payment.contact_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (sales_down_payment.total_amount   * sales_down_payment.exchange_rate_amount).round(2),
         :real_amount         => sales_down_payment.total_amount,
