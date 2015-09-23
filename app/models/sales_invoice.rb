@@ -110,6 +110,13 @@ class SalesInvoice < ActiveRecord::Base
       return self 
     end
     
+    self.sales_invoice_details.each do  |sid|
+      if sid.delivery_order_detail.pending_invoiced_amount < sid.amount
+        self.errors.add(:generic_errors, "Amount Invoice melebih jumlah amount delivered")
+        return self
+      end
+    end
+    
     if self.delivery_order.sales_order.exchange.is_base == false 
       latest_exchange_rate = ExchangeRate.get_latest(
         :ex_rate_date => self.invoice_date,

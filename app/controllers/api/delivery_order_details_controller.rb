@@ -113,7 +113,10 @@ class Api::DeliveryOrderDetailsController < Api::BaseApiController
       if params[:delivery_order_id].present?
         object = DeliveryOrder.find_by_id params[:delivery_order_id]
         if not object.nil?  
-          query_code = query_code.where(:delivery_order_id => object.id )
+          query_code = query_code.where{
+            (delivery_order_id.eq object.id ) & 
+            (pending_invoiced_amount.gt 0)
+          }
         end
       end    
       

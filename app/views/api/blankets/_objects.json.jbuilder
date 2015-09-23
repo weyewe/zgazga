@@ -39,6 +39,7 @@ json.blankets objects do |object|
 	end
 	json.ac     object.ac  
 	json.ar     object.ar  
+	json.cut_ar     object.cut_ar  
 	json.thickness    object.thickness  
 	json.ks     object.ks  
 	json.is_bar_required    object.is_bar_required  

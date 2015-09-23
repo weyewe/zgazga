@@ -35,6 +35,7 @@ Ext.define('AM.model.BlanketOrderDetail', {
     	    { name: 'roll_blanket_cost', type: 'string' },
     	    { name: 'roll_blanket_usage', type: 'string' },
     	    { name: 'roll_blanket_defect', type: 'string' },
+    	    
     	    { name: 'quantity', type: 'int' },
     	    { name: 'rejected_quantity', type: 'int' },
     	    { name: 'finished_quantity', type: 'int' },

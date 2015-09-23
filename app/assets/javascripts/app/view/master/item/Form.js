@@ -183,7 +183,7 @@ Ext.define('AM.view.master.item.Form', {
 							fieldLabel: 'Sub Tipe',
 							xtype: 'combo',
 							queryMode: 'remote',
-							forceSelection: true, 
+							forceSelection: false, 
 							displayField : 'sub_type_name',
 							valueField : 'sub_type_id',
 							pageSize : 5,

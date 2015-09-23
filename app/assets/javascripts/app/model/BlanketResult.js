@@ -41,6 +41,8 @@ Ext.define('AM.model.BlanketResult', {
     	    { name: 'quantity', type: 'int' },	
     	    { name: 'rejected_quantity', type: 'int' },	
     	    { name: 'finished_quantity', type: 'int' },	
+    	    { name: 'test_left_bar_usage', type: 'string' },
+    	    { name: 'test_right_bar_usage', type: 'string' },
     	    
 			
 			

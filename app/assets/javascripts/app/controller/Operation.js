@@ -282,6 +282,18 @@ Ext.define("AM.controller.Operation", {
 				]
 			}, 
 			{ 
+				text:'Penyesuaian Stock Customer', 
+				viewClass:'AM.view.operation.CustomerStockAdjustment', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+					{
+						controller : 'customer_stock_adjustments',
+						action : 'index'
+					}
+				]
+			}, 
+			{ 
 				text:'Pindah Gudang', 
 				viewClass:'AM.view.operation.WarehouseMutation', 
 				leaf:true, 

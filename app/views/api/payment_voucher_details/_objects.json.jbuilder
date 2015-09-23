@@ -13,7 +13,9 @@ json.payment_voucher_details objects do |object|
     json.amount 						object.amount 
     json.amount_paid 						object.amount_paid 
     json.pph_21 						object.pph_21 
+    json.pph_21_rate					object.pph_21_rate
     json.pph_23 						object.pph_23 
+    json.pph_23_rate 						object.pph_23_rate
     json.rate 						object.rate 
     json.description 						object.description 
 	

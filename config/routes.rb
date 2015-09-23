@@ -173,6 +173,9 @@ Ticketie::Application.routes.draw do
     resources :stock_adjustments
     resources :stock_adjustment_details
     
+    resources :customer_stock_adjustments
+    resources :customer_stock_adjustment_details
+    
     resources :warehouse_mutations
     resources :warehouse_mutation_details
     

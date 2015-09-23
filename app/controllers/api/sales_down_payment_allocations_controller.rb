@@ -148,7 +148,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
     if @object.errors.size == 0 
       render :json => { :success => true,   
                         :sales_down_payment_allocations => [
-                           :id => @object.id, 
+                          :id => @object.id, 
                           :contact_id => @object.contact_id, 
                           :contact_name => @object.contact.name, 
                           :payable_id => @object.payable_id, 

@@ -12,6 +12,7 @@ Ext.define('AM.model.DeliveryOrderDetail', {
 			{ name: 'sales_order_detail_id', type: 'int' }, 
 			{ name: 'sales_order_detail_code', type: 'string' } ,
 			{ name: 'sales_order_detail_pending_delivery_amount', type: 'string' } ,
+			{ name: 'sales_order_detail_pending_invoiced_amount', type: 'string' } ,
 			
 			{ name: 'sales_order_detail_item_id', type: 'int' },
     	    { name: 'sales_order_detail_item_sku', type: 'string' },

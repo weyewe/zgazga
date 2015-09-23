@@ -75,8 +75,6 @@ class Api::BlanketWorkProcessesController < Api::BaseApiController
       end
       
       
-      
-      
     elsif params[:unfinish].present?    
       
       if not current_user.has_role?( :blanket_order_details, :unfinish)

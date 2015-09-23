@@ -36,7 +36,7 @@ class SalesInvoiceDetail < ActiveRecord::Base
     return if  delivery_order_detail_id.nil?
     prd = DeliveryOrderDetail.find_by_id delivery_order_detail_id
     if prd.nil? 
-      self.errors.add(:delivery_order_detail_id, "Harus ada Item_Id")
+      self.errors.add(:delivery_order_detail_id, "Harus ada Item Id")
       return self 
     end
     

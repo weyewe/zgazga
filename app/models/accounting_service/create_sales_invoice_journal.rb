@@ -25,7 +25,7 @@ module AccountingService
    TransactionDataDetail.create_object(
       :transaction_data_id => ta.id,        
       :account_id          => sales_invoice.exchange.account_receivable_id  ,
-      :contact_id          => sales_invoice.delivery_order.contact_id  ,
+      :contact_id          => sales_invoice.delivery_order.sales_order.contact_id  ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (sales_invoice.amount_receivable   * sales_invoice.exchange_rate_amount).round(2),
       :real_amount         => sales_invoice.amount_receivable,

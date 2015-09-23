@@ -71,11 +71,11 @@ class BlanketOrder < ActiveRecord::Base
   
   def update_object(params)
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if self.blanket_order_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
     if (params[:has_due_date] == true) & (not params[:due_date].present?)
@@ -100,11 +100,11 @@ class BlanketOrder < ActiveRecord::Base
   
   def delete_object
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if self.blanket_order_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
     
@@ -114,7 +114,7 @@ class BlanketOrder < ActiveRecord::Base
   
   def confirm_object(params)
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if params[:confirmed_at].nil?
@@ -122,7 +122,7 @@ class BlanketOrder < ActiveRecord::Base
       return self 
     end  
     if self.blanket_order_details.count == 0 
-      self.errors.add(:generic,"Tidak memiliki detail")
+      self.errors.add(:generic_errors,"Tidak memiliki detail")
       return self
     end
     
@@ -139,11 +139,11 @@ class BlanketOrder < ActiveRecord::Base
   
   def unconfirm_object
     if self.is_confirmed == false 
-      self.errors.add(:generic,"Belum di confirm")
+      self.errors.add(:generic_errors,"Belum di confirm")
       return self
     end
     if BlanketWarehouseMutation.where(:blanket_order_id => self.id).count > 0
-      self.errors.add(:generic,"Sudah di pakai di BlanketWarehouseMutation")
+      self.errors.add(:generic_errors,"Sudah di pakai di BlanketWarehouseMutation")
       return self
     end
     

@@ -10,6 +10,7 @@ json.delivery_order_details objects do |object|
 	json.sales_order_detail_id                object.sales_order_detail.id 
 	json.sales_order_detail_code 			 object.sales_order_detail.code 
 	json.sales_order_detail_pending_delivery_amount 			 object.sales_order_detail.pending_delivery_amount
+	json.sales_order_detail_pending_invoiced_amount 			 object.pending_invoiced_amount
 	json.sales_order_detail_is_service 			object.sales_order_detail.is_service
 	
 	json.sales_order_detail_item_id                object.sales_order_detail.item.id 

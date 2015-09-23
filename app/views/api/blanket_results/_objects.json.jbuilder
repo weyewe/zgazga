@@ -13,7 +13,8 @@ json.blanket_results objects do |object|
 	json.blanket_roll_blanket_item_name 			 object.blanket.roll_blanket_item.name
 	json.blanket_roll_blanket_item_sku   	 object.blanket.roll_blanket_item.sku
 	json.blanket_left_bar_item_id		 object.blanket.left_bar_item_id
-	
+	json.finished_quantity object.finished_quantity
+	json.rejected_quantity object.rejected_quantity
 	if object.blanket.left_bar_item.nil?
 		json.blanket_left_bar_item_name		 ""
 		json.blanket_left_bar_item_sku		 ""
@@ -44,13 +45,14 @@ json.blanket_results objects do |object|
 	json.rejected_date		 object.rejected_date
 	json.is_job_scheduled		 object.is_job_scheduled
 	json.is_finished		 object.is_finished
-	json.finished_at		 object.finished_at
+	json.finished_at		 format_date_friendly(object.finished_at)
 	json.bar_cost		 object.bar_cost
 	json.adhesive_cost		 object.adhesive_cost
 	json.roll_blanket_cost		 object.roll_blanket_cost
 	json.roll_blanket_usage		 object.roll_blanket_usage
 	json.roll_blanket_defect		 object.roll_blanket_defect
-	json.quantity object.quantity 
-	json.finished_quantity object.finished_quantity
-	json.rejected_quantity object.rejected_quantity
+	json.quantity 					object.quantity 
+	json.test_left_bar_usage		 object.test_left_bar_usage
+	json.test_right_bar_usage		 object.test_right_bar_usage
+	
 end

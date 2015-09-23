@@ -88,15 +88,14 @@ class SalesDownPaymentAllocation < ActiveRecord::Base
     self.is_confirmed = true
     self.confirmed_at = params[:confirmed_at]
     total_amount = BigDecimal('0')
-    self.purchase_down_payment_allocation_details.each do |pdpap|
+    self.sales_down_payment_allocation_details.each do |pdpap|
        total_amount += pdpap.amount_paid
        if pdpap.receivable.remaining_amount < pdpap.amount
-         self.errors.add(:generic_errors, "Alokasi Detail di DP melebihi jumlah Payable")
-         return self
+         self.errors.add(:generic_errors, "Alokasi Detail di DP melebihi jumlah Receivable")
        end
     end
     if self.payable.remaining_amount < total_amount
-      self.errors.add(:generic_errors, "Jumlah Alokasi (#{total_amount}) melebihi DP (#{self.payable.remaining_amount})")
+      self.errors.add(:generic_errors, "Jumlah Alokasi (#{total_amount}) melebihi DP (#{self.receivable.remaining_amount})")
       return self
     end
     

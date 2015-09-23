@@ -60,8 +60,14 @@ Ext.define('AM.view.operation.blanketorder.List' ,{
 				flex : 3,
 				tpl : 	'Status Konfirmasi:  <b>{is_confirmed}</b>'  + '<br />' + '<br />' +
 							'Tanggal Konfirmasi: <br /> <b>{confirmed_at}</b>' 
-			},
-			
+			}, 
+			{
+				xtype : 'templatecolumn',
+				text : "Keterangan",
+				flex : 3,
+				tpl : 	'Tanggal buat: <br /> <b>{created_at}</b>'  + '<br />' + '<br />' +
+							'Tanggal Update: <br /> <b>{updated_at}</b>' 
+			}, 
 			
 		];
 

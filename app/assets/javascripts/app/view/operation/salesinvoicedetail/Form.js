@@ -30,6 +30,10 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 					mapping : "amount"
 				},
 				{
+					name : 'delivery_order_detail_pending_invoiced_amount',
+					mapping : "sales_order_detail_pending_invoiced_amount"
+				},
+				{
 					name : 'delivery_order_detail_sales_order_detail_price',
 					mapping : "sales_order_detail_price"
 				}, 
@@ -107,7 +111,7 @@ Ext.define('AM.view.operation.salesinvoicedetail.Form', {
 															" {delivery_order_detail_code} " 		+ "<br />" 	 + 
 															" ({delivery_order_detail_sales_order_detail_item_name}) " 		+ "<br />" 	 + 
 															'{delivery_order_detail_sales_order_detail_item_sku}' 			+ "<br />" 	 +
-															'{delivery_order_detail_amount}' 	+ "<br />"	+
+															'{delivery_order_detail_pending_invoiced_amount}' 	+ "<br />"	+
 															'{delivery_order_detail_sales_order_detail_price}' 	+
 												 "</div>" +  
 						 					'</div>';

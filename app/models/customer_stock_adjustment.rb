@@ -17,6 +17,7 @@ class CustomerStockAdjustment < ActiveRecord::Base
   def active_children
     self.customer_stock_adjustment_details 
   end
+  
   def valid_contact
     return if contact_id.nil?
     
@@ -180,6 +181,7 @@ class CustomerStockAdjustment < ActiveRecord::Base
     
     if self.save 
       self.update_warehouse_item_confirm    
+      AccountingService::CreateCustomerStockAdjustmentJournal.create_confirmation_journal(self)
     end
     
     return self 
@@ -218,6 +220,7 @@ class CustomerStockAdjustment < ActiveRecord::Base
     self.confirmed_at = nil 
     if self.save
       self.update_warehouse_item_unconfirm
+      AccountingService::CreateCustomerStockAdjustmentJournal.undo_create_confirmation_journal(self)
     end
     return self
   end

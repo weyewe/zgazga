@@ -504,7 +504,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					fieldLabel: 'Bar 1',
 					xtype: 'combo',
 					queryMode: 'remote',
-					forceSelection: true, 
+					forceSelection: false, 
 					displayField : 'item_bar_name',
 					valueField : 'item_bar_id',
 					pageSize : 5,
@@ -525,7 +525,7 @@ Ext.define('AM.view.master.blanket.Form', {
 					fieldLabel: 'Bar 2',
 					xtype: 'combo',
 					queryMode: 'remote',
-					forceSelection: true, 
+					forceSelection: false, 
 					displayField : 'item_bar_name',
 					valueField : 'item_bar_id',
 					pageSize : 5,
@@ -550,7 +550,12 @@ Ext.define('AM.view.master.blanket.Form', {
 				{
 					xtype: 'numberfield',
 					name : 'ar',
-					fieldLabel: 'AR'
+					fieldLabel: 'Fix AR'
+				},
+				{
+					xtype: 'numberfield',
+					name : 'cut_ar',
+					fieldLabel: 'Cut AR'
 				},
 				{
 					xtype: 'numberfield',

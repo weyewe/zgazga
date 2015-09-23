@@ -19,7 +19,8 @@ Ext.define('AM.model.BlanketOrder', {
 			{ name: 'has_due_date', type: 'boolean' } ,	
 			{ name: 'confirmed_at', type: 'string' }   ,
 			{ name: 'due_date', type: 'string' } ,	
-			
+			{ name: 'created_at', type: 'string' },
+    	    { name: 'updated_at', type: 'string' },
   	],
 
 	 

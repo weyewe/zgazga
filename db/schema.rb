@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150918034521) do
+ActiveRecord::Schema.define(version: 20150921091935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,6 +149,8 @@ ActiveRecord::Schema.define(version: 20150918034521) do
     t.decimal  "roll_blanket_defect_cost",    precision: 14, scale: 2, default: 0.0
     t.decimal  "finished_blanket_total_cost", precision: 14, scale: 2, default: 0.0
     t.decimal  "rejected_blanket_total_cost", precision: 14, scale: 2, default: 0.0
+    t.integer  "test_right_bar_usage"
+    t.integer  "test_left_bar_usage"
   end
 
   create_table "blanket_orders", force: true do |t|
@@ -217,6 +219,7 @@ ActiveRecord::Schema.define(version: 20150918034521) do
     t.integer  "application_case",                              default: 1
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "cut_ar",               precision: 14, scale: 2, default: 0.0
   end
 
   create_table "blending_recipe_details", force: true do |t|

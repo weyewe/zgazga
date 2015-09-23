@@ -186,7 +186,7 @@ module AccountingService
       last_transaction_data = TransactionData.where(
         :transaction_source_id => object.id , 
         :transaction_source_type => object.class.to_s ,
-        :code => TRANSACTION_DATA_CODE[:blanket_order_detail_journal],
+        :code => TRANSACTION_DATA_CODE[:blanket_order_detail_journal_finish],
         :is_contra_transaction => false
       ).order("id DESC").first 
       last_transaction_data.create_contra_and_confirm if not last_transaction_data.nil?

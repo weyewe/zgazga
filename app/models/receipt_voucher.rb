@@ -1,7 +1,7 @@
 class ReceiptVoucher < ActiveRecord::Base
   validates_presence_of :receipt_date
   # validates_presence_of :due_date
-  validates_presence_of :no_bukti
+  # validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
   validate :valid_contact
@@ -260,15 +260,12 @@ class ReceiptVoucher < ActiveRecord::Base
         biaya_pembulatan = 0 
         puts "The biaya_pembulatan is nil before depoy" if biaya_pembulatan.nil?
         
-        if self.status_pembulatan == NORMAL_BALANCE[:credit]
-          biaya_pembulatan = self.pembulatan * -1
+       if self.status_pembulatan == NORMAL_BALANCE[:credit]
+          biaya_pembulatan = self.pembulatan 
         else
-          biaya_pembulatan = self.pembulatan
+          biaya_pembulatan = self.pembulatan * -1
         end
-        puts "The pph_23 is nil" if self.total_pph_23.nil?
-        puts "The biaya_bank is nil " if self.biaya_bank.nil?
-        puts "The biaya_pembulatan is nil after deploy, while the object variable: #{self.pembulatan}" if biaya_pembulatan.nil?
-        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        total = self.amount - self.total_pph_23 - self.biaya_bank + biaya_pembulatan
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total)
         AccountingService::CreateReceiptVoucherJournal.create_confirmation_journal(self)
@@ -293,11 +290,11 @@ class ReceiptVoucher < ActiveRecord::Base
     if not self.is_gbch
       biaya_pembulatan = 0 
         if self.status_pembulatan == NORMAL_BALANCE[:credit]
-          biaya_pembulatan = self.pembulatan * -1
+          biaya_pembulatan = self.pembulatan 
         else
-          biaya_pembulatan = self.pembulatan
+          biaya_pembulatan = self.pembulatan * -1
         end
-        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        total = self.amount - self.total_pph_23 - self.biaya_bank + biaya_pembulatan
       if total > self.cash_bank.amount 
         self.errors.add(:generic_errors, "Dana tidak mencukupi")
         return self 
@@ -312,11 +309,11 @@ class ReceiptVoucher < ActiveRecord::Base
         self.delete_cash_mutation
         biaya_pembulatan = 0 
         if self.status_pembulatan == NORMAL_BALANCE[:credit]
-          biaya_pembulatan = self.pembulatan * -1
+          biaya_pembulatan = self.pembulatan 
         else
-          biaya_pembulatan = self.pembulatan
+          biaya_pembulatan = self.pembulatan * -1
         end
-        total = self.amount - (self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        total = self.amount - self.total_pph_23 - self.biaya_bank + biaya_pembulatan
         self.update_cash_bank_amount(total * -1)
         AccountingService::CreateReceiptVoucherJournal.undo_create_confirmation_journal(self)
       end

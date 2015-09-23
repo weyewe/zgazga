@@ -44,10 +44,11 @@ json.blanket_order_details objects do |object|
 	json.rejected_date		 object.rejected_date
 	json.is_job_scheduled		 object.is_job_scheduled
 	json.is_finished		 object.is_finished
-	json.finished_at		 object.finished_at
+	json.finished_at		 format_date_friendly(object.finished_at)
 	json.bar_cost		 object.bar_cost
 	json.adhesive_cost		 object.adhesive_cost
 	json.roll_blanket_cost		 object.roll_blanket_cost
 	json.roll_blanket_usage		 object.roll_blanket_usage
 	json.roll_blanket_defect		 object.roll_blanket_defect
+	
 end

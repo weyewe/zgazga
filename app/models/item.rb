@@ -134,13 +134,13 @@ class Item < ActiveRecord::Base
   def valid_selling_price_and_price_list_and_minimum_amount
     return if selling_price.nil? or price_list.nil? or minimum_amount.nil?
     
-    if selling_price <= BigDecimal("0")
-      self.errors.add(:selling_price, "Harus lebih besar dari 0")
+    if selling_price < BigDecimal("0")
+      self.errors.add(:selling_price, "Tidak boleh minus")
       return self
     end
     
-    if price_list <= BigDecimal("0")
-      self.errors.add(:price_list, "Harus lebih besar dari 0")
+    if price_list < BigDecimal("0")
+      self.errors.add(:price_list, "Tidak boleh minus")
       return self
     end
     

@@ -161,7 +161,8 @@ class Api::PurchaseDownPaymentsController < Api::BaseApiController
                               }
         
       query_code = query_code.where{
-              (is_confirmed.eq true)
+              (is_confirmed.eq true) &
+              (receivable.remaining_amount.gt 0)
             }
             
       @objects = query_code.

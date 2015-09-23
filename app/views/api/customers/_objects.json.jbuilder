@@ -11,7 +11,7 @@ json.customers objects do |object|
 	json.default_payment_term	object.default_payment_term
 	
 	
-	json.npwp	object.default_payment_term
+	json.npwp	object.npwp
 	json.is_taxable	object.is_taxable
 	json.tax_code	object.tax_code
 	json.nama_faktur_pajak	object.nama_faktur_pajak
@@ -22,7 +22,7 @@ json.customers objects do |object|
 	json.contact_type object.contact_type
 	json.contact_group_id object.contact_group_id
 	
-	if not object.contact_group_id.nil? 
+	if not object.contact_group_id == 0
 		json.contact_group_name object.contact_group.name 
 	else 
 		json.contact_group_name ""

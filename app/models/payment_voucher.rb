@@ -1,7 +1,7 @@
 class PaymentVoucher < ActiveRecord::Base
   validates_presence_of :payment_date
   # validates_presence_of :due_date
-  validates_presence_of :no_bukti
+  # validates_presence_of :no_bukti
   validate :valid_cash_bank
   validate :valid_rate_to_idr
   validate :valid_contact
@@ -280,7 +280,7 @@ class PaymentVoucher < ActiveRecord::Base
         else
           biaya_pembulatan = self.pembulatan
         end
-        total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+        total = self.amount - self.total_pph_21 - self.total_pph_23 + biaya_pembulatan + self.biaya_bank 
         self.generate_cash_mutation(total)
         self.update_cash_bank_amount(total * -1)
         AccountingService::CreatePaymentVoucherJournal.create_confirmation_journal(self)
@@ -313,7 +313,7 @@ class PaymentVoucher < ActiveRecord::Base
          else
            biaya_pembulatan = self.pembulatan
          end
-         total = self.amount - (self.total_pph_21 + self.total_pph_23 + self.biaya_bank + biaya_pembulatan)
+         total = self.amount - self.total_pph_21 - self.total_pph_23 + biaya_pembulatan + self.biaya_bank
          self.delete_cash_mutation()
          self.update_cash_bank_amount(total)
          AccountingService::CreatePaymentVoucherJournal.undo_create_confirmation_journal(self)

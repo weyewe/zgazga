@@ -18,10 +18,10 @@ Ext.define('AM.view.operation.blanketorderdetail.List' ,{
 							'Roll Blanket SKU:  <br /><b>{blanket_roll_blanket_item_sku}</b>'    + '<br />' +
 								'{blanket_roll_blanket_item_name}'  + '<br />' + '<br />' +	
 								
-							'LeftBar SKU:  <br /><b>{blanket_left_bar_item_sku}</b>'    + '<br />' +
+							'Bar 1 SKU:  <br /><b>{blanket_left_bar_item_sku}</b>'    + '<br />' +
 								'{blanket_left_bar_item_name}'  + '<br />' + '<br />' +
 								
-							'RightBar SKU:  <br /><b>{blanket_right_bar_item_sku}</b>'    + '<br />' +
+							'Bar 2 SKU:  <br /><b>{blanket_right_bar_item_sku}</b>'    + '<br />' +
 								'<b>{blanket_right_bar_item_name}'  
 				},
 				{ header: 'Scheduled Qty', dataIndex: 'quantity', flex: 1},
@@ -41,7 +41,9 @@ Ext.define('AM.view.operation.blanketorderdetail.List' ,{
 								'Quantity Reject: <b>{rejected_quantity}</b>' + '<br />' + '<br />' +
 								
 								'Penggunaan Roll Blanket: <br /> <b>{roll_blanket_usage}</b>' + '<br />' + '<br />' +
-								'Defect Roll Blanket: <br /><b>{roll_blanket_defect}</b>'  
+								'Defect Roll Blanket: <br /><b>{roll_blanket_defect}</b>'  + '<br />' + '<br />' +
+								'Test Bar 1 Usage: <br /><b>{test_left_bar_usage}</b>'  + '<br />' + '<br />' +
+								'Test Bar 2 Usage: <br /><b>{test_right_bar_usage}</b>' 
 				},
 		 
 			// { header: 'Id', dataIndex: 'id', flex: 1},

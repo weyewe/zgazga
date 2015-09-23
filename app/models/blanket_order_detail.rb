@@ -52,20 +52,35 @@ class BlanketOrderDetail < ActiveRecord::Base
       self.errors.add(:blanket_id, "Harus ada Blanket id")
       return self 
     end
+    
+    itemcount = BlanketOrderDetail.where(
+      :blanket_id => blanket_id,
+      :blanket_order_id => blanket_order_id,
+      ).count  
+    
+    if self.persisted?
+      if itemcount > 1
+        self.errors.add(:blanket_id, "Blanket sudah terpakai")
+        return self 
+      end
+    else
+      if itemcount > 0
+        self.errors.add(:blanket_id, "Blanket sudah terpakai")
+        return self 
+      end
+    end
   end
   
   def batch_source
     BatchSource.where(
-        :source_class => self.class.to_s,
-        :source_id => self.id 
-      ).first 
+      :source_class => self.class.to_s,
+      :source_id => self.id 
+    ).first 
   end
   
   def self.create_object(params)
- 
     
     new_object = self.new
-     
     new_object.blanket_order_id = params[:blanket_order_id]
     new_object.blanket_id = params[:blanket_id]
     new_object.quantity = params[:quantity]
@@ -77,7 +92,6 @@ class BlanketOrderDetail < ActiveRecord::Base
         return new_object
       end
     end
-    
   
     if new_object.save
       # add blanket_order.amount_received
@@ -178,8 +192,8 @@ class BlanketOrderDetail < ActiveRecord::Base
       :warehouse_id => self.blanket_order.warehouse_id,
       :item_id => self.blanket.left_bar_item_id
       )
-      if left_bar_item.amount < bar_usage
-        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.left_bar_item.name} kurang dari #{bar_usage}")
+      if left_bar_item.amount < (bar_usage + params[test_left_bar_usage])
+        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.left_bar_item.name} kurang dari #{(bar_usage + params[test_right_bar_usage])}")
         return self
       end
     end
@@ -189,8 +203,8 @@ class BlanketOrderDetail < ActiveRecord::Base
       :warehouse_id => self.blanket_order.warehouse_id,
       :item_id => self.blanket.right_bar_item_id
       )
-      if right_bar_item.amount < bar_usage
-        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.right_bar_item.name} kurang dari #{bar_usage}")
+      if right_bar_item.amount < (bar_usage + params[test_right_bar_usage])
+        self.errors.add(:roll_blanket_usage,"Stock quantity Bar #{self.blanket.right_bar_item.name} kurang dari #{(bar_usage + params[test_right_bar_usage])}")
         return self
       end
     end
@@ -204,6 +218,8 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.roll_blanket_defect =  BigDecimal( params[:roll_blanket_defect] || '0')
     self.finished_quantity = params[:finished_quantity] 
     self.rejected_quantity = params[:rejected_quantity] 
+    self.test_right_bar_usage = params[:test_right_bar_usage]
+    self.test_left_bar_usage = params[:test_left_bar_usage]
     self.is_finished = true
     self.finished_at = params[:finished_at]
     
@@ -245,7 +261,7 @@ class BlanketOrderDetail < ActiveRecord::Base
           :item_id => self.blanket.left_bar_item_id,
           :mutation_date => self.finished_at,
           :case_addition =>ADJUSTMENT_STATUS[:deduction],
-          :amount => self.finished_quantity + self.rejected_quantity,
+          :amount => self.finished_quantity + self.rejected_quantity + self.test_right_bar_usage,
           )
       end  
       if self.blanket.has_right_bar == true
@@ -253,7 +269,7 @@ class BlanketOrderDetail < ActiveRecord::Base
           :item_id => self.blanket.right_bar_item_id,
           :mutation_date => self.finished_at,
           :case_addition =>ADJUSTMENT_STATUS[:deduction],
-          :amount => self.finished_quantity + self.rejected_quantity,
+          :amount => self.finished_quantity + self.rejected_quantity + self.test_right_bar_usage,
           )
       end  
       # deduce roll_blanket amount
@@ -304,6 +320,11 @@ class BlanketOrderDetail < ActiveRecord::Base
     self.roll_blanket_cost = 0
     self.roll_blanket_usage = 0
     self.roll_blanket_defect = 0
+    self.finished_quantity = 0
+    self.rejected_quantity = 0
+    self.test_right_bar_usage = 0
+    self.test_left_bar_usage = 0
+    
     # deduce blanket_order_amount_final
     # self.update_blanket_order_amount_final(
     #   :blanket_order_id => self.blanket_order_id,
@@ -387,10 +408,12 @@ class BlanketOrderDetail < ActiveRecord::Base
     roll_blanket_defect_cost = (self.roll_blanket_defect * self.blanket.roll_blanket_item.avg_price).round(2)
     if self.blanket.has_left_bar == true
       bar_cost += self.blanket.left_bar_item.avg_price
+      bar_cost += self.blanket.left_bar_item.avg_price * self.test_left_bar_usage
     end
     
     if self.blanket.has_right_bar == true
       bar_cost += self.blanket.right_bar_item.avg_price
+      bar_cost += self.blanket.right_bar_item.avg_price * self.test_right_bar_usage
     end
     
     total_cost = roll_blanket_cost + adhesive_cost + bar_cost - roll_blanket_defect_cost

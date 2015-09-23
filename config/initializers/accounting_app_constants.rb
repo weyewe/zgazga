@@ -701,6 +701,8 @@ ACCOUNT_CODE = {
     :memorial_general => 250,
     :recovery_order_journal => 260,
     :unit_conversion_order_journal => 270,
+    :stock_adjustment_journal => 280,
+    :customer_stock_adjustment_journal => 280,
     :payable_migration_journal => 666,
     :receivable_migration_journal => 667,
     

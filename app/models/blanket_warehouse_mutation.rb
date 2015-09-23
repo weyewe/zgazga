@@ -119,6 +119,14 @@ class BlanketWarehouseMutation < ActiveRecord::Base
     end
     
     self.blanket_warehouse_mutation_details.each do |bwmd|
+      total_roll_blanket_usages = BigDecimal("0")
+      bwmd.blanket_order_detail.roll_blanket_usages.each do |rbu|
+        total_roll_blanket_usages = total_roll_blanket_usages + rbu.total_used
+      end
+      if bwmd.blanket_order_detail.roll_blanket_usage != total_roll_blanket_usages
+        self.errors.add(:generic_errors, "Penggunaan Roll Blanket #{bwmd.blanket_order_detail.blanket.name} (#{bwmd.blanket_order_detail.roll_blanket_usage}) tidak sama dengan total RollBlanketAllocation (#{total_roll_blanket_usages})")
+        return self 
+      end
       if bwmd.quantity > bwmd.blanket_order_detail.undelivered_quantity
         self.errors.add(:generic_errors, "Tidak cukup kuantitas dari warehouse sumber untuk blanket #{bwmd.blanket_order_detail.blanket.name}")
         return self 

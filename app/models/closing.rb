@@ -164,22 +164,22 @@ class Closing < ActiveRecord::Base
   end
   
   def previous_closing 
-    previous_closing = nil 
+    previous = nil 
     current_end_period = self.beginning_period
     if self.persisted?
       current_id = self.id 
-      previous_closing = Closing.where{
+      previous = Closing.where{
         (id.not_eq current_id) & (
           (end_date_period.lt current_end_period)
         )
         
       }.order("end_date_period DESC").first
     else
-      previous_closing = Closing.where{
+      previous = Closing.where{
         (end_date_period.lt current_end_period)
       }.order("end_date_period DESC").first
     end
-    return previous_closing 
+    return previous 
   end
   
   
@@ -360,14 +360,14 @@ class Closing < ActiveRecord::Base
     laba_rugi_tahun_berjalan = Account.find_by_code("31030001")
     vc_laba_rugi_tahun_berjalan = ValidComb.find_by_account_id(laba_rugi_tahun_berjalan.id)
     vc_laba_rugi_tahun_berjalan.amount = vc_laba_rugi_tahun_berjalan.amount +
-    vc_laba_rugi_bulan_berjalan.amount + ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_tahun_berjalan.id )
+    vc_laba_rugi_bulan_berjalan.amount + ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_tahun_berjalan )
     vc_laba_rugi_bulan_berjalan.save
     
     if not previous_closing.nil?
-      if previous_closing.is_year == true
+      if previous_closing.is_year_closing == true
         laba_rugi_ditahan = Account.find_by_code("31020001")
         vc_laba_rugi_ditahan = ValidComb.find_by_account_id(laba_rugi_ditahan.id)
-        vc_laba_rugi_ditahan.amount = ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_ditahan.id ) +
+        vc_laba_rugi_ditahan.amount = ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_ditahan ) +
         vc_laba_rugi_bulan_berjalan.amount + vc_laba_rugi_bulan_berjalan.amount
         vc_laba_rugi_ditahan.save
       end

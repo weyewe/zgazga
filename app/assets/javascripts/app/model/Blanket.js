@@ -25,6 +25,7 @@ Ext.define('AM.model.Blanket', {
 		{ name: 'right_bar_item_name', type: 'string' }     ,
 		{ name: 'ac', type: 'string' }     ,
 		{ name: 'ar', type: 'string' }     ,
+		{ name: 'cut_ar', type: 'string' }     ,
 		{ name: 'thickness', type: 'string' }     ,
 		{ name: 'ks', type: 'string' }     ,
 		{ name: 'is_bar_required', type: 'boolean' }     ,

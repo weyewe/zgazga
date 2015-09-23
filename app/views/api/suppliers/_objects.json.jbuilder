@@ -21,7 +21,7 @@ json.suppliers objects do |object|
 	json.contact_type object.contact_type
 	json.contact_group_id object.contact_group_id
 	
-	if not object.contact_group_id.nil? 
+	if not object.contact_group_id == 0 
 		json.contact_group_name object.contact_group.name 
 	else 
 		json.contact_group_name ""

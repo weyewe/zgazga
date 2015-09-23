@@ -17,4 +17,8 @@ json.blanket_orders objects do |object|
 	json.has_due_date		object.has_due_date 
 	json.confirmed_at		format_date_friendly( object.confirmed_at ) 
 	json.due_date	format_date_friendly( object.due_date ) 
+	json.created_at		object.created_at.to_formatted_s(:db) 
+	json.updated_at		object.updated_at.to_formatted_s(:db) 
+	
+	
 end

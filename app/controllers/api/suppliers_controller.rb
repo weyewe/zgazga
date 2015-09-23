@@ -6,7 +6,7 @@ class Api::SuppliersController < Api::BaseApiController
     
     if params[:livesearch].present? 
       livesearch = "%#{params[:livesearch]}%"
-      @objects = Contact.joins(:contact_group).suppliers.where{
+      @objects = Contact.suppliers.where{
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -17,13 +17,11 @@ class Api::SuppliersController < Api::BaseApiController
           ( pic_contact_no =~ livesearch ) | 
           ( email =~ livesearch ) | 
           ( tax_code =~ livesearch ) | 
-          ( nama_faktur_pajak =~ livesearch ) | 
-          ( contact_group.name =~ livesearch ) | 
-          ( contact_group.description =~ livesearch )
+          ( nama_faktur_pajak =~ livesearch )  
         
       }.page(params[:page]).per(params[:limit]).order("id DESC")
       
-      @total = Contact.joins(:contact_group).suppliers.where{  
+      @total = Contact.suppliers.where{  
           ( name =~  livesearch )  | 
           ( address =~ livesearch ) | 
           ( delivery_address =~ livesearch ) | 
@@ -34,9 +32,7 @@ class Api::SuppliersController < Api::BaseApiController
           ( pic_contact_no =~ livesearch ) | 
           ( email =~ livesearch ) | 
           ( tax_code =~ livesearch ) | 
-          ( nama_faktur_pajak =~ livesearch ) | 
-          ( contact_group.name =~ livesearch ) | 
-          ( contact_group.description =~ livesearch )
+          ( nama_faktur_pajak =~ livesearch ) 
         
       }.count
     else
@@ -117,7 +113,7 @@ class Api::SuppliersController < Api::BaseApiController
     # on PostGre SQL, it is ignoring lower case or upper case 
     
     if  selected_id.nil?
-      @objects = Contact.active_objects.joins(:contact_group).suppliers.where{ 
+      @objects = Contact.active_objects.suppliers.where{ 
                         ( name =~  query )  | 
           ( address =~ query ) | 
           ( delivery_address =~ query ) | 
@@ -128,15 +124,13 @@ class Api::SuppliersController < Api::BaseApiController
           ( pic_contact_no =~ query ) | 
           ( email =~ query ) | 
           ( tax_code =~ query ) | 
-          ( nama_faktur_pajak =~ query ) | 
-          ( contact_group.name =~ query ) | 
-          ( contact_group.description =~ query )
+          ( nama_faktur_pajak =~ query ) 
                   }.
                         page(params[:page]).
                         per(params[:limit]).
                         order("id DESC")
                         
-      @total = Contact.active_objects.joins(:contact_group).suppliers.where{ 
+      @total = Contact.active_objects.suppliers.where{ 
                         ( name =~  query )  | 
           ( address =~ query ) | 
           ( delivery_address =~ query ) | 
@@ -147,9 +141,7 @@ class Api::SuppliersController < Api::BaseApiController
           ( pic_contact_no =~ query ) | 
           ( email =~ query ) | 
           ( tax_code =~ query ) | 
-          ( nama_faktur_pajak =~ query ) | 
-          ( contact_group.name =~ query ) | 
-          ( contact_group.description =~ query )
+          ( nama_faktur_pajak =~ query ) 
                               }.count
     else
       @objects = Contact.active_objects.joins(:contact_group).suppliers.where{ (id.eq selected_id)  

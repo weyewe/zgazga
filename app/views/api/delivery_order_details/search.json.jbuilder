@@ -10,6 +10,8 @@ json.records @objects do |object|
 	json.id 								object.id  
 	json.amount 						object.amount 
 	json.sales_order_detail_pending_delivery_amount 						object.sales_order_detail.pending_delivery_amount 
+	json.sales_order_detail_pending_invoiced_amount 			 object.pending_invoiced_amount
+	
 	json.sales_order_detail_price 					 object.sales_order_detail.price
 	json.code 			 object.code 
 	

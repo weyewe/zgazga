@@ -162,7 +162,7 @@ class Api::SalesDownPaymentsController < Api::BaseApiController
                               
       query_code = query_code.where{
               (is_confirmed.eq true)  &
-              (payable_remaining_amount.gt 0)
+              (payable.remaining_amount.gt 0)
             }
             
       @objects = query_code.

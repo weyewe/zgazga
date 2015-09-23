@@ -21,9 +21,6 @@ Ext.define('AM.view.operation.blanketresult.ConfirmForm', {
 					anchor: '100%'
       },
       items: [
- 
-            
-            
 				{
 					xtype: 'hiddenfield',
 					fieldLabel: 'id',
@@ -39,8 +36,6 @@ Ext.define('AM.view.operation.blanketresult.ConfirmForm', {
 					fieldLabel: 'Kuantitas Blanket Reject',
 					name: 'rejected_quantity' 
 				},
-		 
-			 
 				{
 					xtype: 'textfield',
 					fieldLabel: 'Pemakaian Roll Blanket',
@@ -50,6 +45,16 @@ Ext.define('AM.view.operation.blanketresult.ConfirmForm', {
 					xtype: 'textfield',
 					fieldLabel: 'Roll Blanket Defect',
 					name: 'roll_blanket_defect' 
+				},
+				{
+					xtype: 'textfield',
+					fieldLabel: 'Test Bar 1 Usage',
+					name: 'test_left_bar_usage'
+				},
+				{
+					xtype: 'textfield',
+					fieldLabel: 'Test Bar 2 Usage',
+					name: 'test_right_bar_usage' 
 				},
 				{
 					xtype: 'datefield',

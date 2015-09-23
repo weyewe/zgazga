@@ -191,6 +191,7 @@ class Blanket < ActiveRecord::Base
     end
     new_object.ac = BigDecimal(params[:ac] || '0')
     new_object.ar = BigDecimal(params[:ar] || '0')
+    new_object.cut_ar = BigDecimal(params[:cut_ar] || '0')
     new_object.thickness = BigDecimal(params[:thickness] || '0')
     # new_object.ks = BigDecimal(params[:ks] || '0')
     new_object.is_bar_required = params[:is_bar_required]
@@ -199,12 +200,17 @@ class Blanket < ActiveRecord::Base
         new_object.has_left_bar = true
       else
         new_object.has_left_bar = false
+      
       end
       if not params[:right_bar_item_id].nil?
         new_object.has_right_bar = true
       else
         new_object.has_right_bar = false
+        
       end
+    else
+      new_object.left_bar_item_id = nil
+      new_object.right_bar_item_id = nil
     end
     new_object.is_bar_required = params[:is_bar_required]
     new_object.cropping_type = params[:cropping_type]
@@ -254,6 +260,7 @@ class Blanket < ActiveRecord::Base
     end
     self.ac = BigDecimal(params[:ac] || '0')
     self.ar = BigDecimal(params[:ar] || '0')
+    self.cut_ar = BigDecimal(params[:cut_ar] || '0')
     self.thickness = BigDecimal(params[:thickness] || '0')
     # self.ks = BigDecimal(params[:ks] || '0')
     self.is_bar_required = params[:is_bar_required]
@@ -267,7 +274,11 @@ class Blanket < ActiveRecord::Base
         self.has_right_bar = true
       else
         self.has_right_bar = false
+       
       end
+    else
+       self.left_bar_item_id = nil
+      self.right_bar_item_id = nil
     end
     self.cropping_type = params[:cropping_type]
     self.special = params[:special]
