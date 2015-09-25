@@ -19,7 +19,8 @@ module AccountingService
         :account_id          => unit_conversion_order.unit_conversion.target_item.item_type.account_id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => total_cost ,
-        :description => "Debit FinishedGoods"
+        :no_bukti         => unit_conversion_order.code ,
+        :description => "#{unit_conversion_order.unit_conversion.target_item.name} #{unit_conversion_order.code}"
       )
 
       # TransactionDataDetail.create_object(
@@ -36,7 +37,8 @@ module AccountingService
         :account_id          => brd.item.item_type.account_id,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (brd.amount * brd.item.avg_price).round(2),
-        :description => "Credit Inventory"
+        :no_bukti         => unit_conversion_order.code ,
+        :description => "#{brd.item.name} #{unit_conversion_order.code}"
         )
       end
       ta.confirm

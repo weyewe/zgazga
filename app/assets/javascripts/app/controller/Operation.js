@@ -154,54 +154,54 @@ Ext.define("AM.controller.Operation", {
 	},
 	
 	
-	virtualSalesFolder : {
-		text 			: "Virtual Sales", 
-		viewClass : '',
-		iconCls		: 'text-folder', 
-    	expanded	: true,
-		children 	: [
+	// virtualSalesFolder : {
+	// 	text 			: "Virtual Sales", 
+	// 	viewClass : '',
+	// 	iconCls		: 'text-folder', 
+ //   	expanded	: true,
+	// 	children 	: [
          
-			{ 
-				text:'Order', 
-				viewClass:'AM.view.operation.VirtualOrder', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'virtual_orders',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'DO', 
-				viewClass:'AM.view.operation.VirtualDeliveryOrder', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'virtual_delivery_orders',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Clearance', 
-				viewClass:'AM.view.operation.VirtualOrderClearance', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'virtual_order_clearances',
-						action : 'index'
-					}
-				]
-			}, 
+	// 		{ 
+	// 			text:'Order', 
+	// 			viewClass:'AM.view.operation.VirtualOrder', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'virtual_orders',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'DO', 
+	// 			viewClass:'AM.view.operation.VirtualDeliveryOrder', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'virtual_delivery_orders',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Clearance', 
+	// 			viewClass:'AM.view.operation.VirtualOrderClearance', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'virtual_order_clearances',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
  
  
 			 
-		]
-	},
+	// 	]
+	// },
 	
 	purchaseFolder : {
 		text 			: "Pembelian", 
@@ -492,122 +492,122 @@ Ext.define("AM.controller.Operation", {
 		]
 	},
 	
-	manufacturingFolder : {
-		text 			: "Manufacturing", 
-		viewClass : '',
-		iconCls		: 'text-folder', 
-    	expanded	: true,
-		children 	: [
-        	{ 
-				text:'Blending Work Order', 
-				viewClass:'AM.view.operation.BlendingWorkOrder', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'blending_work_orders',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Blanket Work Order', 
-				viewClass:'AM.view.operation.BlanketOrder', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'blanket_orders',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Blanket Work Process', 
-				viewClass:'AM.view.operation.BlanketResult', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'blanket_work_processs',
-						action : 'index'
-					}
-				]
-			},
-			{ 
-				text:'Blanket Warehouse Mutation', 
-				viewClass:'AM.view.operation.BlanketWarehouseMutation', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'blanket_warehouse_mutations',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Roller Identification Form (RIF)', 
-				viewClass:'AM.view.operation.RollerIdentificationForm', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'roller_identification_forms',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Roller Collection Note (RCN)', 
-				viewClass:'AM.view.operation.RecoveryOrder', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'recovery_orders',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Customer Accessories',
-				viewClass:'AM.view.operation.RollerAcc', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'roller_accs',
-						action : 'index_1'
-					}
-				]
-			}, 
-			{ 
-				text:'Recovery Work Chart (RWC)', 
-				viewClass:'AM.view.operation.RecoveryResult', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'recovery_results',
-						action : 'index'
-					}
-				]
-			}, 
-			{ 
-				text:'Recovery Warehouse Mutation', 
-				viewClass:'AM.view.operation.RollerWarehouseMutation', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'roller_warehouse_mutations',
-						action : 'index'
-					}
-				]
-			}, 
-		]
-	},
+	// manufacturingFolder : {
+	// 	text 			: "Manufacturing", 
+	// 	viewClass : '',
+	// 	iconCls		: 'text-folder', 
+ //   	expanded	: true,
+	// 	children 	: [
+ //       	{ 
+	// 			text:'Blending Work Order', 
+	// 			viewClass:'AM.view.operation.BlendingWorkOrder', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'blending_work_orders',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Blanket Work Order', 
+	// 			viewClass:'AM.view.operation.BlanketOrder', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'blanket_orders',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Blanket Work Process', 
+	// 			viewClass:'AM.view.operation.BlanketResult', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'blanket_work_processs',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		},
+	// 		{ 
+	// 			text:'Blanket Warehouse Mutation', 
+	// 			viewClass:'AM.view.operation.BlanketWarehouseMutation', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'blanket_warehouse_mutations',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Roller Identification Form (RIF)', 
+	// 			viewClass:'AM.view.operation.RollerIdentificationForm', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'roller_identification_forms',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Roller Collection Note (RCN)', 
+	// 			viewClass:'AM.view.operation.RecoveryOrder', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'recovery_orders',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Customer Accessories',
+	// 			viewClass:'AM.view.operation.RollerAcc', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'roller_accs',
+	// 					action : 'index_1'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Recovery Work Chart (RWC)', 
+	// 			viewClass:'AM.view.operation.RecoveryResult', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'recovery_results',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 		{ 
+	// 			text:'Recovery Warehouse Mutation', 
+	// 			viewClass:'AM.view.operation.RollerWarehouseMutation', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'roller_warehouse_mutations',
+	// 					action : 'index'
+	// 				}
+	// 			]
+	// 		}, 
+	// 	]
+	// },
 	
 	
 	cashbankFolder : {

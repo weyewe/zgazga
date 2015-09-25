@@ -265,7 +265,7 @@ Ext.define("AM.controller.Master", {
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'sub_types',
+						controller : 'roller_builders',
 						action : 'index'
 					}
 				]
@@ -375,27 +375,27 @@ Ext.define("AM.controller.Master", {
     	]
 	},
 	
-	reportFolder : {
-		text 			: "Employee Report", 
-		viewClass : '',
-		iconCls		: 'text-folder', 
-    expanded	: true,
-		children 	: [
+	// reportFolder : {
+	// 	text 			: "Employee Report", 
+	// 	viewClass : '',
+	// 	iconCls		: 'text-folder', 
+ //   expanded	: true,
+	// 	children 	: [
         
-			{ 
-				text:'By Customer', 
-				viewClass:'AM.view.master.report.employee.WorkCustomer', 
-				leaf:true, 
-				iconCls:'text',
-				conditions : [
-					{
-						controller : 'maintenances',
-						action : 'report'
-					}
-				]
-			}, 
-    ]
-	},
+	// 		{ 
+	// 			text:'By Customer', 
+	// 			viewClass:'AM.view.master.report.employee.WorkCustomer', 
+	// 			leaf:true, 
+	// 			iconCls:'text',
+	// 			conditions : [
+	// 				{
+	// 					controller : 'maintenances',
+	// 					action : 'report'
+	// 				}
+	// 			]
+	// 		}, 
+ //   ]
+	// },
 	   
 	 
 	onActiveProtectedContent: function( panel, options) {

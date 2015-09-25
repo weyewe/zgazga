@@ -65,7 +65,8 @@ module AccountingService
         :amount              => (receipt_voucher.amount * receipt_voucher.rate_to_idr).round(2),
         :real_amount         => receipt_voucher.amount ,
         :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
-        :description => "Debit CashBank"
+        :no_bukti         => receipt_voucher.no_bukti ,
+        :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
         )
       if receipt_voucher.biaya_bank > 0
 #     Credit CashBank for biaya bank
@@ -76,7 +77,8 @@ module AccountingService
           :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
           :real_amount         => receipt_voucher.biaya_bank ,
           :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
-          :description => "Credit CashBank for BiayaBank"
+          :no_bukti         => receipt_voucher.no_bukti ,
+          :description => "Biaya Bank #{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
           )
       end
       
@@ -93,7 +95,8 @@ module AccountingService
           :amount              => (receipt_voucher.pembulatan * receipt_voucher.rate_to_idr).round(2),
           :real_amount         => receipt_voucher.pembulatan ,
           :exchange_id         => receipt_voucher.cash_bank.exchange_id ,
-          :description         => "Credit/Debit CashBank for Pembulatan"
+          :no_bukti         => receipt_voucher.no_bukti ,
+          :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
           ) 
       end
     # end
@@ -105,7 +108,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_administrasi_bank][:code]).id   ,
         :entry_case          => NORMAL_BALANCE[:debit]      ,
         :amount              => (receipt_voucher.biaya_bank * receipt_voucher.rate_to_idr).round(2),
-        :description => "Debit BiayaBank"
+        :no_bukti         => receipt_voucher.no_bukti ,
+        :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
         ) 
     end
     
@@ -117,7 +121,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_pembulatan][:code]).id   ,
         :entry_case          => receipt_voucher.status_pembulatan      ,
         :amount              => (receipt_voucher.pembulatan * receipt_voucher.rate_to_idr).round(2),
-        :description => "Debit/Credit Pembulatan"
+        :no_bukti         => receipt_voucher.no_bukti ,
+        :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
         ) 
     end    
     
@@ -131,7 +136,8 @@ module AccountingService
         :amount              => ((rvd.amount_paid / rvd.rate) * rvd.receivable.exchange_rate_amount).round(2),
         :real_amount         => (rvd.amount_paid / rvd.rate) ,
         :exchange_id         => rvd.receivable.exchange_id ,
-        :description => "Credit AccountReceivable"
+        :no_bukti         => receipt_voucher.no_bukti ,
+        :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
       )
 #       Credit ExchangeGain or Debit ExchangeLost
       if rvd.receivable.exchange_rate_amount < (receipt_voucher.rate_to_idr * rvd.rate)
@@ -159,7 +165,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pph_ps_23][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => pph_23,
-          :description => "Debit Biaya PPh 23"
+          :no_bukti         => receipt_voucher.no_bukti ,
+          :description => "#{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
           )  
         # if receipt_voucher.is_gbch == true
         #   #           Credit GBCH for Biaya PPh 23
@@ -181,7 +188,8 @@ module AccountingService
             :amount              => pph_23,
             :real_amount         => rvd.pph_23 ,
             :exchange_id         => rvd.receivable.exchange_id ,
-            :description => "Credit CashBank for Biaya PPh 23"
+            :no_bukti         => receipt_voucher.no_bukti ,
+            :description => "Pph 23 #{receipt_voucher.contact.name} #{receipt_voucher.no_bukti}"
             )  
         # end
       end

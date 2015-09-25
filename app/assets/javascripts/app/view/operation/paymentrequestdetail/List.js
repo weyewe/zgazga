@@ -17,6 +17,7 @@ Ext.define('AM.view.operation.paymentrequestdetail.List' ,{
 			},
     		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
 			{ header: 'Amount', dataIndex: 'amount', flex: 1 } ,
+			{ header: 'Description', dataIndex: 'description', flex: 1 } ,
 			
 			 
 		];

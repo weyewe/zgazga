@@ -50,9 +50,16 @@ ACCOUNT_CODE = {
     :status => 1,
     :parent_code => "11"
   },
-  :kas_dan_bank  => {
+  :kas  => {
     :code => "110101",
-    :name => "KAS DAN BANK",
+    :name => "KAS",
+    :normal_balance => 1,
+    :status => 1,
+    :parent_code => "1101"
+  },
+  :bank  => {
+    :code => "110102",
+    :name => "BANK",
     :normal_balance => 1,
     :status => 1,
     :parent_code => "1101"
@@ -65,7 +72,7 @@ ACCOUNT_CODE = {
     :parent_code => "11"
   },
   :piutang_usaha_level_2  => {
-    :code => "110301",
+    :code => "110300",
     :name => "PIUTANG USAHA",
     :normal_balance => 1,
     :status => 1,
@@ -86,7 +93,7 @@ ACCOUNT_CODE = {
     :parent_code => "1104"
     },
   :piutang_lainnya  => {
-    :code => "11040103",
+    :code => "11040003",
     :name => "PIUTANG LAINNYA",
     :normal_balance => 1,
     :status => 2,
@@ -137,6 +144,13 @@ ACCOUNT_CODE = {
   :persediaan_barang_lainnya  => {
     :code => "11050004",
     :name => "PERSED. BARANG LAINNYA",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "110501"
+    },
+  :persediaan_bahan_pembantu  => {
+    :code => "11050005",
+    :name => "PERSED. BAHAN PEMBANTU",
     :normal_balance => 1,
     :status => 2,
     :parent_code => "110501"
@@ -211,9 +225,23 @@ ACCOUNT_CODE = {
     :status => 1,
     :parent_code => "1107"
     },
+  :pph_ps_22 => {
+    :code => "11070001",
+    :name => "PPH PS 22",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "110701"
+    },
   :pph_ps_23 => {
     :code => "11070002",
     :name => "PPH PS 23",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "110701"
+    },
+  :pph_ps_25 => {
+    :code => "11070003",
+    :name => "PPH PS 25",
     :normal_balance => 1,
     :status => 2,
     :parent_code => "110701"
@@ -225,8 +253,15 @@ ACCOUNT_CODE = {
     :status => 2,
     :parent_code => "110701"
     },
+  :pph_ps_24 => {
+    :code => "11070005",
+    :name => "PPH PS 24",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "110701"
+    },
   :beban_usaha => {
-    :code => "2",
+    :code => "6",
     :name => "BEBAN USAHA",
     :normal_balance => 1,
     :status => 1,
@@ -237,7 +272,7 @@ ACCOUNT_CODE = {
     :name => "BIAYA ADMINISTRASI & UMUM",
     :normal_balance => 1,
     :status => 1,
-    :parent_code => "2"
+    :parent_code => "6"
     },
   :biaya_operasional_kantor_level_1 => {
     :code => "6202",
@@ -300,7 +335,7 @@ ACCOUNT_CODE = {
     :name => "BEBAN LAIN LAIN",
     :normal_balance => 1,
     :status => 1,
-    :parent_code => "2"
+    :parent_code => "6"
     },
   
   :beban_lain_lain_level_2 => {
@@ -355,7 +390,7 @@ ACCOUNT_CODE = {
     },  
  
   :passiva => {
-    :code => "3",
+    :code => "2",
     :name => "PASSIVA",
     :normal_balance => 2,
     :status => 1,
@@ -366,7 +401,7 @@ ACCOUNT_CODE = {
     :name => "KEWAJIBAN LANCAR",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "3"
+    :parent_code => "2"
     },
   :hutang_lain_Lain => {
     :code => "2103",
@@ -447,7 +482,7 @@ ACCOUNT_CODE = {
     },
  
   :modal_level_1 => {
-    :code => "4",
+    :code => "3",
     :name => "MODAL",
     :normal_balance => 2,
     :status => 1,
@@ -458,7 +493,7 @@ ACCOUNT_CODE = {
     :name => "MODAL",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "4"
+    :parent_code => "3"
     },
   :laba_rugi_bulan_berjalan_level_1 => {
     :code => "3104",
@@ -528,7 +563,7 @@ ACCOUNT_CODE = {
     :name => "HARGA POKOK",
     :normal_balance => 1,
     :status => 1,
-    :parent_code => "2"
+    :parent_code => "6"
     }, 
   :harga_pokok_penjualan_level_1 => {
     :code => "5101",
@@ -545,7 +580,7 @@ ACCOUNT_CODE = {
     :parent_code => "5101"
     },  
   :harga_pokok_penjualan_level_3 => {
-    :code => "51010001",
+      :code => "51010001",
     :name => "HARGA POKOK PENJUALAN",
     :normal_balance => 1,
     :status => 2,
@@ -608,7 +643,7 @@ ACCOUNT_CODE = {
     :parent_code => "71"
     },
   :pendapatan_level_1 => {
-    :code => "5",
+    :code => "4",
     :name => "PENDAPATAN",
     :normal_balance => 2,
     :status => 1,
@@ -619,7 +654,7 @@ ACCOUNT_CODE = {
     :name => "PENDAPATAN",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "5"
+    :parent_code => "4"
     },
   :pendapatan_penjualan_level_1 => {
     :code => "4101",
@@ -647,7 +682,7 @@ ACCOUNT_CODE = {
     :name => "PENDAPATAN LAIN-LAIN",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "5"
+    :parent_code => "4"
     },
   :pendapatan_lainnya_level_1 => {
     :code => "7102",

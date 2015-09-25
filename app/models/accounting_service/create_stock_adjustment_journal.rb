@@ -21,7 +21,8 @@ module AccountingService
             :account_id          => sad.item.item_type.account_id   ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => (sad.amount * sad.price).round(2) ,
-            :description => "Debit #{sad.item.item_type.account.name}"
+            :no_bukti         => stock_adjustment.code ,
+            :description => "#{sad.item.name} #{stock_adjustment.code}"
           )
           
           TransactionDataDetail.create_object(
@@ -29,7 +30,8 @@ module AccountingService
             :account_id          => Account.find_by_code(ACCOUNT_CODE[:penyesuaian_modal_level_3][:code]).id        ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => (sad.amount * sad.price).round(2) ,
-            :description => "Credit Penyesuaian Modal"
+            :no_bukti         => stock_adjustment.code ,
+            :description => "#{sad.item.name} #{stock_adjustment.code}"
           ) 
         else
           TransactionDataDetail.create_object(
@@ -37,14 +39,16 @@ module AccountingService
             :account_id          => sad.item.item_type.account_id   ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => (sad.amount * sad.price).round(2) ,
-            :description => "Debit #{sad.item.item_type.account.name}"
+            :no_bukti         => stock_adjustment.code ,
+            :description => "#{sad.item.name} #{stock_adjustment.code}"
           )
           TransactionDataDetail.create_object(
             :transaction_data_id => ta.id,        
             :account_id          => Account.find_by_code(ACCOUNT_CODE[:beban_lainnya][:code]).id        ,
             :entry_case          => NORMAL_BALANCE[:debit]     ,
             :amount              => (sad.amount * sad.price).round(2) ,
-            :description => "Credit Beban Lainnya"
+            :no_bukti         => stock_adjustment.code ,
+            :description => "#{sad.item.name} #{stock_adjustment.code}"
           ) 
         end
       end

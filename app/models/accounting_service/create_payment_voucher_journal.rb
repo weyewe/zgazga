@@ -64,7 +64,8 @@ module AccountingService
         :amount              => (payment_voucher.amount * payment_voucher.rate_to_idr).round(2),
         :real_amount         => payment_voucher.amount ,
         :exchange_id         => payment_voucher.cash_bank.exchange_id,
-        :description => "Credit CashBank"
+        :no_bukti         => payment_voucher.no_bukti ,
+        :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
         )
       if payment_voucher.biaya_bank > 0
 #     Credit CashBank for biaya bank
@@ -75,7 +76,8 @@ module AccountingService
           :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.biaya_bank ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => "Credit CashBank for BiayaBank"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "Biaya Bank #{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
           )
       end
       
@@ -92,7 +94,8 @@ module AccountingService
           :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
           :real_amount         => payment_voucher.pembulatan ,
           :exchange_id         => payment_voucher.cash_bank.exchange_id ,
-          :description => "Credit/Debit CashBank for Pembulatan"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "Pembulatan #{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
           ) 
       end
     # end
@@ -104,7 +107,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_administrasi_bank][:code]).id   ,
         :entry_case          => NORMAL_BALANCE[:debit]      ,
         :amount              => (payment_voucher.biaya_bank * payment_voucher.rate_to_idr).round(2),
-        :description => "Debit BiayaBank"
+        :no_bukti         => payment_voucher.no_bukti ,
+        :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
         ) 
     end
     
@@ -115,7 +119,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_pembulatan][:code]).id   ,
         :entry_case          => payment_voucher.status_pembulatan ,
         :amount              => (payment_voucher.pembulatan * payment_voucher.rate_to_idr).round(2),
-        :description => "Credit/Debit Pembulatan"
+        :no_bukti         => payment_voucher.no_bukti ,
+        :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
         ) 
     end    
     
@@ -130,7 +135,8 @@ module AccountingService
           :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
           :real_amount         => (pvd.amount_paid / pvd.rate) ,
           :exchange_id         => pvd.payable.exchange_id ,
-          :description => "Debit #{pvd.payable.source.account.name}"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
         )
       else
         TransactionDataDetail.create_object(
@@ -141,7 +147,8 @@ module AccountingService
           :amount              => ((pvd.amount_paid / pvd.rate) * pvd.payable.exchange_rate_amount).round(2),
           :real_amount         => (pvd.amount_paid / pvd.rate) ,
           :exchange_id         => pvd.payable.exchange_id ,
-          :description => "Debit AccountPayable"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
         )
       end
      
@@ -172,7 +179,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_21][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => pph_21,
-          :description => "Credit HutangPPh21"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
           )  
 #         if payment_voucher.is_gbch == true
 # #           Debit GBCH for Hutang PPh 21 
@@ -194,7 +202,8 @@ module AccountingService
             :amount              => pph_21,
             :real_amount         => pvd.pph_21 ,
             :exchange_id         => pvd.payable.exchange_id ,
-            :description => "Debit CashBank for HutangPPh21"
+            :no_bukti         => payment_voucher.no_bukti ,
+            :description => "Pph21 #{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
             )  
         # end
       end
@@ -207,7 +216,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pph_ps_23][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => pph_23,
-          :description => "Credit HutangPPh23"
+          :no_bukti         => payment_voucher.no_bukti ,
+          :description => "#{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
           )  
 #         if payment_voucher.is_gbch == true
 # #           Debit GBCH for Hutang PPh 23
@@ -229,7 +239,8 @@ module AccountingService
             :amount              => pph_23,
             :real_amount         => pvd.pph_23 ,
             :exchange_id         => pvd.payable.exchange_id ,
-            :description => "Debit CashBank for HutangPPh23"
+            :no_bukti         => payment_voucher.no_bukti ,
+            :description => "PPh23 #{payment_voucher.contact.name} #{payment_voucher.no_bukti}"
             )  
         # end
       end

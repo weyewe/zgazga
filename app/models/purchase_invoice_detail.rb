@@ -76,7 +76,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     new_object.amount = BigDecimal( params[:amount] || '0')
     
     if new_object.save
-      new_object.price = new_object.purchase_receival_detail.purchase_order_detail.price * new_object.amount
+      new_object.price = (new_object.purchase_receival_detail.purchase_order_detail.price - new_object.purchase_receival_detail.purchase_order_detail.discount) * new_object.amount
       new_object.code = "PID-" + new_object.id.to_s  
       new_object.save
       new_object.calculateTotalAmount
@@ -92,7 +92,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
     self.purchase_receival_detail_id = params[:purchase_receival_detail_id]
     self.amount = BigDecimal( params[:amount] || '0')
     if self.save
-      self.price = self.purchase_receival_detail.purchase_order_detail.price * self.amount
+      self.price = (self.purchase_receival_detail.purchase_order_detail.price - self.purchase_receival_detail.purchase_order_detail.discount) * self.amount
       self.save
       self.calculateTotalAmount
     end
@@ -104,7 +104,7 @@ class PurchaseInvoiceDetail < ActiveRecord::Base
       self.errors.add(:generic_errors, "Sudah di konfirmasi")
       return self 
     end
-    self.destroy
+    self.destroy 
     self.calculateTotalAmount
     return self
   end

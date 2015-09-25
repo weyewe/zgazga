@@ -56,7 +56,6 @@ data_entry_role = Role.create!(
   admin = User.create_main_user(  :name => "Admin", :email => "admin@gmail.com" ,:password => "willy1234", :password_confirmation => "willy1234") 
   admin.set_as_main_user
 
-
   admin = User.create_main_user(  :name => "Admin2", :email => "admin2@gmail.com" ,:password => "willy1234", :password_confirmation => "willy1234") 
   admin.set_as_main_user
   
@@ -1927,19 +1926,6 @@ if Rails.env.development?
       )
   
   
-  Menu.create_object(
-      :name => "Sales Order",
-      :controller_name => "sales_orders"
-    )
-
-  Menu.create_object(
-      :name => "Delivery Order",
-      :controller_name => "delivery_orders"
-    )
-    
-  Menu.create_object(
-      :name => "Sales Invoice",
-      :controller_name => "sales_invoices"
-    )
+  
 end
   

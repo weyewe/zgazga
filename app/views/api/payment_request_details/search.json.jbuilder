@@ -16,6 +16,7 @@ json.records @objects do |object|
     json.amount		object.amount  
     json.code		object.code  
     json.account_id		object.account_id  
+    json.description		object.description  
     json.account_name		object.account.name 
  
 	

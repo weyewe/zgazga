@@ -67,7 +67,7 @@ class PaymentRequestDetail < ActiveRecord::Base
     new_object.account_id = params[:account_id]
     new_object.status = STATUS_ACCOUNT[:debet]
     new_object.amount = BigDecimal( params[:amount] || '0')
-    
+    new_object.description = params[:description]
     if new_object.save
       new_object.code = "PRD-" + new_object.id.to_s  
       new_object.save
@@ -83,6 +83,8 @@ class PaymentRequestDetail < ActiveRecord::Base
     end
     self.account_id = params[:account_id]
     self.amount = BigDecimal( params[:amount] || '0')
+    self.description = params[:description]
+    
     if self.save
       self.calculateTotalAmount
     end
@@ -102,7 +104,7 @@ class PaymentRequestDetail < ActiveRecord::Base
   
   def calculateTotalAmount
     amount = 0
-    PaymentRequestDetail.where(:payment_request_id =>payment_request_id).each do |prd|
+    PaymentRequestDetail.where(:payment_request_id => payment_request_id).each do |prd|
       amount += prd.amount
     end
     PaymentRequest.find_by_id(payment_request_id).update_amount(amount)

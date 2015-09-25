@@ -44,7 +44,6 @@ Ext.define('AM.view.Navigation', {
 					action : "switchMaster",
 					pressed : false,
 					toggleGroup: this.id+'-nav-views',
-					hidden : true  
 				}
 			)
 		},

@@ -1,7 +1,7 @@
 class CreateSalesOrderDetails < ActiveRecord::Migration
   def change
     create_table :sales_order_details do |t|
-
+  
       t.string :code
       t.string  :order_code
       t.integer :sales_order_id

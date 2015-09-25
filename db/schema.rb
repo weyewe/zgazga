@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921091935) do
+ActiveRecord::Schema.define(version: 20150925094551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -582,6 +582,7 @@ ActiveRecord::Schema.define(version: 20150921091935) do
     t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   create_table "memorials", force: true do |t|
@@ -654,6 +655,7 @@ ActiveRecord::Schema.define(version: 20150921091935) do
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
   end
 
   create_table "payment_requests", force: true do |t|
@@ -805,12 +807,13 @@ ActiveRecord::Schema.define(version: 20150921091935) do
     t.string   "code"
     t.integer  "purchase_order_id"
     t.integer  "item_id"
-    t.decimal  "amount",                  precision: 14, scale: 2, default: 0.0
-    t.decimal  "price",                   precision: 14, scale: 2, default: 0.0
-    t.boolean  "is_all_received",                                  default: false
-    t.decimal  "pending_receival_amount", precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",                  precision: 14, scale: 2,  default: 0.0
+    t.decimal  "price",                   precision: 14, scale: 2,  default: 0.0
+    t.boolean  "is_all_received",                                   default: false
+    t.decimal  "pending_receival_amount", precision: 14, scale: 2,  default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "discount",                precision: 18, scale: 11, default: 0.0
   end
 
   create_table "purchase_orders", force: true do |t|
@@ -1410,6 +1413,7 @@ ActiveRecord::Schema.define(version: 20150921091935) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "contact_id"
+    t.string   "no_bukti"
   end
 
   create_table "transaction_data_non_base_exchange_details", force: true do |t|

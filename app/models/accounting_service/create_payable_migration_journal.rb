@@ -22,7 +22,8 @@ module AccountingService
       :amount              => (payable_migration.amount_payable   * payable_migration.exchange_rate_amount).round(2),
       :real_amount         => payable_migration.amount_payable,
       :exchange_id         => payable_migration.exchange_id,
-      :description => "Credit Account Payable"
+      :no_bukti            => payable_migration.nomor_surat,
+      :description => "#{payable_migration.contact.name} #{payable_migration.nomor_surat}"
       )
     
     TransactionDataDetail.create_object(
@@ -32,7 +33,8 @@ module AccountingService
         :amount              => (payable_migration.amount_payable   * payable_migration.exchange_rate_amount).round(2),
         # :real_amount         => payable_migration.amount_payable,
         :exchange_id         => payable_migration.exchange_id,
-        :description         => "Debit Penyesuaian modal untuk migrasi"
+        :no_bukti            => payable_migration.nomor_surat,
+        :description => "#{payable_migration.contact.name} #{payable_migration.nomor_surat}"
         )
     ta.confirm
   end

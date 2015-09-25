@@ -4,7 +4,7 @@ json.purchase_invoice_details objects do |object|
     
 	json.id 								object.id  
 	json.amount 						object.amount 
-	json.price 					 object.amount * object.purchase_receival_detail.purchase_order_detail.price
+	json.price 					 object.amount * (object.purchase_receival_detail.purchase_order_detail.price - object.purchase_receival_detail.purchase_order_detail.discount)
 	json.code 			 object.code 
 	
 	json.purchase_receival_detail_id                object.purchase_receival_detail.id 

@@ -84,6 +84,12 @@ group :development, :test do
 end
 
 gem 'active_record-acts_as' 
+
+
+# gem 'jasper-rails'
+# gem 'jasper-rails-rspec'
+gem "jasper-rails",  :git => 'git://github.com/ElamT/jasper-rails.git'
+gem 'responders', '~> 1.1.2'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

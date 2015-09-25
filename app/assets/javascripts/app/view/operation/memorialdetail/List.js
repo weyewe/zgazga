@@ -16,7 +16,8 @@ Ext.define('AM.view.operation.memorialdetail.List' ,{
 				tpl : 	' [{account_code}] {account_name}' 
 			},
     		{ header: 'Status',  dataIndex: 'status_text', flex: 1},
-			{ header: 'Amount', dataIndex: 'amount', flex: 1 ,renderer: Ext.util.Format.numberRenderer('0,0.00')} ,
+			{ header: 'Amount', dataIndex: 'amount', flex: 1 } ,
+			{ header: 'Description', dataIndex: 'description', flex: 1 } ,
 			
 			 
 		];

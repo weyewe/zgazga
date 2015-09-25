@@ -20,7 +20,8 @@ module AccountingService
       :account_id          => Account.find_by_code(ACCOUNT_CODE[:harga_pokok_penjualan_level_3][:code]).id    ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (delivery_order.total_cogs).round(2),
-      :description => "Debit COGS"
+      :no_bukti            => delivery_order.nomor_surat,
+      :description => "#{delivery_order.sales_order.contact.name}  #{delivery_order.nomor_surat}"
       )
 
 #     Credit Raw
@@ -30,7 +31,8 @@ module AccountingService
         :account_id          => dod.item.item_type.account_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (dod.cogs).round(2),
-        :description => "Credit Raw"
+        :no_bukti            => delivery_order.nomor_surat,
+        :description => "#{delivery_order.sales_order.contact.name} #{dod.item.name} #{delivery_order.nomor_surat}"
       )
     end
     ta.confirm

@@ -24,7 +24,34 @@ namespace :migrate_zga do
         :the_role    => role.to_json
       )
     end
-
+    
+    role = {
+      :passwords => {
+        :update => true 
+      },
+      :masters => {
+        :index => true, 
+        :create => true,
+        :update => true,
+        :destroy => true,
+        :work_reports => true ,
+        :project_reports => true ,
+        :category_reports => true 
+      },
+      :operations => {
+        :search => true 
+      },
+      :reports => {
+        :search => true 
+      }
+    }
+    
+    data_entry_role = Role.create!(
+      :name        => ROLE_NAME[:manager],
+      :title       => 'Data Entry2',
+      :description => 'Role for data_entry',
+      :the_role    => role.to_json
+    )
 
     
     migration_filename = MIGRATION_FILENAME[:user]

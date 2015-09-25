@@ -30,7 +30,8 @@ module AccountingService
       :amount              => (receivable_migration.amount_receivable   * receivable_migration.exchange_rate_amount).round(2),
       :real_amount         => real_amount,
       :exchange_id         => receivable_migration.exchange_id,
-      :description => "Debit Account Receivable"
+      :no_bukti         => receivable_migration.nomor_surat ,
+      :description => "#{receivable_migration.contact.name} #{receivable_migration.nomor_surat}"
       )
     
     TransactionDataDetail.create_object(
@@ -40,9 +41,8 @@ module AccountingService
         :amount              => (receivable_migration.amount_receivable   * receivable_migration.exchange_rate_amount).round(2),
         # :real_amount         => receivable_migration.amount_receivable,
         :exchange_id         => receivable_migration.exchange_id,
-        
-        
-        :description         => "Credit Penyesuaian Modal"
+        :no_bukti         => receivable_migration.nomor_surat ,
+        :description => "#{receivable_migration.contact.name} #{receivable_migration.nomor_surat}"
         )
     ta.confirm
   end

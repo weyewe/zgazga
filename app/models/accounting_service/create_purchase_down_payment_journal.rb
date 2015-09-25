@@ -22,7 +22,8 @@ module AccountingService
       :amount              => (purchase_down_payment.total_amount   * purchase_down_payment.exchange_rate_amount).round(2),
       :real_amount         => purchase_down_payment.total_amount,
       :exchange_id         => purchase_down_payment.exchange_id,
-      :description => "Credit Account Payable"
+      :no_bukti         => purchase_down_payment.code ,
+      :description => "#{purchase_down_payment.contact.name} #{purchase_down_payment.code}"
       )
 #     Debit Uang Muka Pembelian
     account_uang_muka = nil
@@ -38,7 +39,8 @@ module AccountingService
         :amount              => (purchase_down_payment.total_amount   * purchase_down_payment.exchange_rate_amount).round(2),
         :real_amount         => purchase_down_payment.total_amount,
         :exchange_id         => purchase_down_payment.exchange_id,
-        :description         => "Debit #{account_uang_muka.name}"
+        :no_bukti         => purchase_down_payment.code ,
+        :description => "#{purchase_down_payment.contact.name} #{purchase_down_payment.code}"
         )
     ta.confirm
   end

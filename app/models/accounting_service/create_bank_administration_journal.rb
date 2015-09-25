@@ -30,7 +30,8 @@ module AccountingService
         :amount              => (amount * bank_administration.exchange_rate_amount).round(2) ,
         :real_amount         => amount ,
         :exchange_id         => bank_administration.cash_bank.exchange_id ,
-        :description => "#{status_text} CashBank"
+        :no_bukti         => bank_administration.no_bukti ,
+        :description => "#{no_bukti}"
       )
       bank_administration.bank_administration_details.each do |bad|
         status_text = "Debet"
@@ -42,7 +43,8 @@ module AccountingService
           :account_id          => bad.account_id       ,
           :entry_case          => bad.status     ,
           :amount              => (bad.amount * bank_administration.exchange_rate_amount).round(2),
-          :description => "#{status_text} #{bad.account.name}"
+          :no_bukti         => bank_administration.no_bukti ,
+          :description => "#{no_bukti}"
         )
       end
       ta.confirm

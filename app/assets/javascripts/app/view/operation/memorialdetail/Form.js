@@ -131,6 +131,11 @@ Ext.define('AM.view.operation.memorialdetail.Form', {
 	        name : 'amount',
 	        fieldLabel: 'Amount'
   	    },
+  	     {
+	        xtype: 'textarea',
+	        name : 'description',
+	        fieldLabel: 'Description'
+	      },
 			]
     }];
 

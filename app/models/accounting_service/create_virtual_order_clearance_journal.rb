@@ -20,7 +20,8 @@ module AccountingService
       :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_overhead_pabrik_level_3][:code]).id    ,
       :entry_case          => NORMAL_BALANCE[:debit]     ,
       :amount              => (virtual_order_clearance.total_waste_cogs).round(2),
-      :description => "Debit COGS"
+      :no_bukti         => virtual_order_clearance.code ,
+      :description => "#{virtual_order_clearance.code}"
       )
 
 #     Credit Raw
@@ -30,7 +31,8 @@ module AccountingService
         :account_id          => dod.virtual_delivery_order_detail.item.item_type.account_id ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (dod.waste_cogs).round(2),
-        :description => "Credit Raw"
+        :no_bukti         => virtual_order_clearance.code ,
+        :description => "#{dod.virtual_delivery_order_detail.item.name} #{virtual_order_clearance.code}"
       )
     end
     ta.confirm

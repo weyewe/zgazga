@@ -70,6 +70,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
     new_object.amount = BigDecimal( params[:amount] || '0')
     new_object.pending_receival_amount = BigDecimal( params[:amount] || '0')
     new_object.price = BigDecimal( params[:price] || '0')
+    new_object.discount = BigDecimal( params[:discount] || '0')
     if new_object.save
       new_object.code = "POD-" + new_object.id.to_s  
       new_object.save
@@ -113,6 +114,7 @@ class PurchaseOrderDetail < ActiveRecord::Base
     self.amount = BigDecimal( params[:amount] || '0')
     
     self.price = BigDecimal( params[:price] || '0')
+    self.discount = BigDecimal( params[:discount] || '0')
     if self.save
       self.purchase_order.update_is_receival_completed
     end

@@ -10,13 +10,7 @@ Menu.create_object(
 
 class Menu < ActiveRecord::Base
     has_many :menu_actions 
-    
-    
-    def self.active_objects
-        self
-    end
-    
-    
+
     def self.create_object(params) 
         new_object = self.new 
         

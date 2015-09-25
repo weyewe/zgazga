@@ -22,6 +22,7 @@ Ext.define('AM.view.operation.purchaseorderdetail.List' ,{
 				flex : 3,
 				tpl : 	'Qty : <br /> <b>{amount} {item_uom_name} </b>'  + '<br />' + '<br />' +
 						'Value Per Pcs : <br /> <b>{price}</b>'  + '<br />' + '<br />' +
+						'Discount : <br /> <b>{discount}</b>'  + '<br />' + '<br />' +
 						'Pending Receival QTY : <br /> <b>{pending_receival_amount} {item_uom_name}</b>' 
 			},
 				{

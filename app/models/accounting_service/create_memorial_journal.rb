@@ -21,7 +21,7 @@ module AccountingService
           :account_id          => md.account_id       ,
           :entry_case          => md.status     ,
           :amount              => (md.amount).round(2),
-          :description => "Debit/Credit User Input"
+          :description => "#{memorial.no_bukti} #{md.description}"
         )
       end
       ta.confirm

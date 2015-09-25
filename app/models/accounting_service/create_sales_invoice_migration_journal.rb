@@ -21,7 +21,8 @@ module AccountingService
         :amount              => (sales_invoice_migration.amount_receivable   * sales_invoice_migration.exchange_rate_amount).round(2),
         :real_amount         => sales_invoice_migration.amount_receivable,
         :exchange_id         => sales_invoice_migration.exchange_id,
-        :description => "Debit Account Receivable"
+        :no_bukti         => sales_invoice_migration.nomor_surat ,
+        :description => "#{sales_invoice_migration.contact.name} #{sales_invoice_migration.nomor_surat}"
         )
       
       TransactionDataDetail.create_object(
@@ -29,7 +30,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_penjualan_level_3][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (sales_invoice_migration.amount_receivable   * sales_invoice_migration.exchange_rate_amount).round(2),
-          :description         => "Credit Revenue"
+          :no_bukti         => sales_invoice_migration.nomor_surat ,
+          :description => "#{sales_invoice_migration.contact.name} #{sales_invoice_migration.nomor_surat}"
           )
       ta.confirm
     end

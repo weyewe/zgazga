@@ -1,5 +1,10 @@
 class Api::PurchaseRequestDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "purchase_requests"
+  end
+  
+  
   def index
     @parent = PurchaseRequest.find_by_id params[:purchase_request_id]
     query = @parent.active_children.joins(:purchase_request)

@@ -21,7 +21,8 @@ module AccountingService
       :amount              => (purchase_invoice_migration.amount_payable   * purchase_invoice_migration.exchange_rate_amount).round(2),
       :real_amount         => purchase_invoice_migration.amount_payable,
       :exchange_id         => purchase_invoice_migration.exchange_id,
-      :description => "Credit Account Payable"
+      :no_bukti         => purchase_invoice_migration.nomor_surat ,
+      :description => "#{purchase_invoice_migration.contact.name} #{purchase_invoice.nomor_surat}"
       )
     
     TransactionDataDetail.create_object(
@@ -29,7 +30,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (purchase_invoice_migration.amount_payable   * purchase_invoice_migration.exchange_rate_amount).round(2),
-        :description         => "Debit GoodsPendingClearance"
+        :no_bukti         => purchase_invoice_migration.nomor_surat ,
+        :description => "#{purchase_invoice_migration.contact.name} #{purchase_invoice.nomor_surat}"
         )
     ta.confirm
   end

@@ -91,7 +91,7 @@ class TransactionDataDetail < ActiveRecord::Base
     new_object.entry_case = params[:entry_case]
     new_object.amount = BigDecimal(params[:amount] || '0')
     new_object.description = params[:description] 
-    
+    new_object.no_bukti = params[:no_bukti]
     if new_object.save
       exchange = Exchange.find_by_id params[:exchange_id]
       if not exchange.nil? 
@@ -120,6 +120,7 @@ class TransactionDataDetail < ActiveRecord::Base
     end
     new_object.amount = self.amount
     new_object.description = "contra post #{DateTime.now} " + self.description
+    new_object.no_bukti = self.no_bukti
     if new_object.save
       if not self.transaction_data_non_base_exchange_details.count == 0
       TransactionDataNonBaseExchangeDetail.create_object(

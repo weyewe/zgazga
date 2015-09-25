@@ -12,16 +12,18 @@ module AccountingService
       }, true )
       
 #     debit raw
-    total_amount = 0 
+    total_amount = BigDecimal("0") 
     purchase_receival.purchase_receival_details.each do |prd|
-      amount = 0
-      amount = (prd.amount * prd.purchase_order_detail.price * purchase_receival.exchange_rate_amount).round(2)
+      amount = BigDecimal("0")
+      amount = (prd.amount * (prd.purchase_order_detail.price - prd.purchase_order_detail.discount) * purchase_receival.exchange_rate_amount).round(2)
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => prd.item.item_type.account_id    ,
+        :contact_id          => purchase_receival.contact_id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => amount,
-        :description => "Debit Raw"
+        :no_bukti         => purchase_receival.nomor_surat ,
+        :description => "#{purchase_receival.contact.name} #{prd.item.name} #{purchase_receival.nomor_surat}"
       )
       total_amount += amount
     end
@@ -30,13 +32,15 @@ module AccountingService
       TransactionDataDetail.create_object(
         :transaction_data_id => ta.id,        
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:hutang_pembelian_lainnya][:code]).id     ,
+        :contact_id          => purchase_receival.contact_id    ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => total_amount.round(2) ,
-        :description => "Credit GoodsPendingClearance"
+        :no_bukti         => purchase_receival.nomor_surat ,
+        :description => "#{purchase_receival.contact.name} #{prd.item.name} #{purchase_receival.nomor_surat}"
       )
      ta.confirm
    
-    end
+  end
     
     def CreatePurchaseReceivalJournal.undo_create_confirmation_journal(object)
       last_transaction_data = TransactionData.where(

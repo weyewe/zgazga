@@ -5,6 +5,7 @@ Ext.define('AM.model.PaymentRequestDetail', {
 	        { name: 'id', type: 'int' }, 
 	        { name: 'status', type: 'int' }, 
 	        { name: 'status_text', type: 'string' }, 
+	        { name: 'description', type: 'string' }, 
 	        { name: 'amount', type: 'string' }, 
 	        { name: 'code', type: 'string' }, 
 	        { name: 'account_id', type: 'int' }, 

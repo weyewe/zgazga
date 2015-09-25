@@ -2,5 +2,5 @@ Ext.define('AM.view.master.Default', {
     extend: 'Ext.Container' ,
 		alias: 'widget.masterDefault',
 	 
-		html : "Ini adalah tampilan master. Anda dapat Setup User dan JobCode"
+		html : "Ini adalah tampilan master."
 });

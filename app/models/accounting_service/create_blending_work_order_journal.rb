@@ -19,7 +19,8 @@ module AccountingService
         :account_id          => blending_work_order.blending_recipe.target_item.item_type.account_id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (total_cost * 98 / 100).round(2) ,
-        :description => "Debit FinishedGoods"
+        :no_bukti            => blending_work_order.code ,
+        :description => "#{blending_work_order.code}"
       )
 
       TransactionDataDetail.create_object(
@@ -27,7 +28,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_overhead_pabrik_level_3][:code]).id        ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (total_cost * 2 / 100).round(2),
-        :description => "Debit Blending Expense"
+        :no_bukti            => blending_work_order.code ,
+        :description => "#{blending_work_order.code}"
       )
       
       blending_work_order.blending_recipe.blending_recipe_details.each do |brd|
@@ -36,7 +38,8 @@ module AccountingService
         :account_id          => brd.item.item_type.account_id,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (brd.amount * brd.item.avg_price).round(2),
-        :description => "Credit Inventory"
+        :no_bukti            => blending_work_order.code ,
+        :description => "#{blending_work_order.code}"
         )
       end
       ta.confirm

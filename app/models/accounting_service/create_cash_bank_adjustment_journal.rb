@@ -20,7 +20,8 @@ module AccountingService
         :amount              => (cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount).round(2) ,
         :real_amount         => cash_bank_adjustment.amount ,
         :exchange_id         => cash_bank_adjustment.cash_bank.exchange_id ,
-        :description => "Debit CashBank"
+        :no_bukti         => cash_bank_adjustment.code ,
+        :description => "#{cash_bank_adjustment.code}"
       )
 
       TransactionDataDetail.create_object(
@@ -28,10 +29,11 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:penyesuaian_modal_level_3][:code]).id        ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (cash_bank_adjustment.amount * cash_bank_adjustment.exchange_rate_amount).round(2),
-        :description => "Credit Penyesuaian Modal"
+        :no_bukti         => cash_bank_adjustment.code ,
+        :description => "#{cash_bank_adjustment.code}"
       )
       ta.confirm
-    end
+  end
 
     def CreateCashBankAdjustmentJournal.undo_create_confirmation_journal(object)
       last_transaction_data = TransactionData.where(

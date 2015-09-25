@@ -11,6 +11,7 @@ json.memorial_details objects do |object|
     json.amount		object.amount
     json.code		object.code  
     json.account_id		object.account_id  
+    json.description		object.description  
     json.account_name		object.account.name 
     json.account_code		object.account.code 
 	

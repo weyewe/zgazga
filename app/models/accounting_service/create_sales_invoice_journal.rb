@@ -30,7 +30,8 @@ module AccountingService
       :amount              => (sales_invoice.amount_receivable   * sales_invoice.exchange_rate_amount).round(2),
       :real_amount         => sales_invoice.amount_receivable,
       :exchange_id         => sales_invoice.exchange_id,
-      :description => "Debit Account Receivable"
+      :no_bukti         => sales_invoice.nomor_surat ,
+      :description => "#{sales_invoice.delivery_order.sales_order.contact.name} #{sales_invoice.nomor_surat}"
       )
     if sales_invoice.discount > 0 
 #       Debit Discount
@@ -50,7 +51,9 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:ppn_keluaran][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (tax   * sales_invoice.exchange_rate_amount).round(2),
-        :description => "Credit PPnkeluaran"
+        :no_bukti         => sales_invoice.nomor_surat ,
+        :description => "#{sales_invoice.delivery_order.sales_order.contact.name} #{sales_invoice.nomor_surat}"
+   
         )
     end
 #     Credit Revenue
@@ -62,7 +65,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:pendapatan_penjualan_level_3][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => amount_revenue,
-        :description         => "Credit Revenue"
+        :no_bukti         => sales_invoice.nomor_surat ,
+        :description => "#{sales_invoice.delivery_order.sales_order.contact.name} #{sales_invoice.nomor_surat}"
         )
 #     Debit COS
     if sales_invoice.total_cos > 0 
@@ -71,7 +75,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:harga_pokok_penjualan_level_3][:code]).id  ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (sales_invoice.total_cos).round(2),
-        :description         => "Debit COS"
+        :no_bukti         => sales_invoice.nomor_surat ,
+        :description => "#{sales_invoice.delivery_order.sales_order.contact.name} #{sales_invoice.nomor_surat}"
         )
     end
     
@@ -83,7 +88,9 @@ module AccountingService
           :account_id          => sid.delivery_order_detail.item.item_type.account_id ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (sid.cos).round(2),
-        :description => "Credit Inventory"
+          :no_bukti         => sales_invoice.nomor_surat ,
+          :description => "#{sales_invoice.delivery_order.sales_order.contact.name} #{sid.delivery_order_detail.item.name} #{sales_invoice.nomor_surat}"
+   
       )
       end
     end

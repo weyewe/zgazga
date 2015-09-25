@@ -156,7 +156,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:persediaan_printing_blanket][:code]).id     ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              =>  persediaan_printing_blanket_amount,
-          :description => "Penambahan Persediaan Blanket hasil manufacturing"
+          :no_bukti              =>  blanket_order_detail.blanket_order.code,
+          :description => "#{blanket_order_detail.blanket_order.contact.name} #{blanket_order_detail.blanket_order.code}"
           )
     
         TransactionDataDetail.create_object(
@@ -164,7 +165,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_overhead_pabrik_level_3][:code]).id     ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => overhead_cost,
-          :description => "Biaya Overhead pabrik untuk manufacturing blanket REJECT"
+          :no_bukti              =>  blanket_order_detail.blanket_order.code,
+          :description => "#{blanket_order_detail.blanket_order.contact.name} #{blanket_order_detail.blanket_order.code}"
           )
     #     Credit Raw
         TransactionDataDetail.create_object(
@@ -172,7 +174,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_blanket][:code]).id  ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => bahan_baku_blanket_cost   ,
-          :description => "Penggunaan roll blanket, adhesive, bar untuk manufacturing"
+          :no_bukti              =>  blanket_order_detail.blanket_order.code,
+          :description => "#{blanket_order_detail.blanket_order.contact.name} #{blanket_order_detail.blanket_order.code}"
           )
       
     

@@ -21,7 +21,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id    ,
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => (recovery_order_detail.accessories_cost).round(2),
-        :description => "Credit Accessories"
+        :no_bukti         => recovery_order_detail.recovery_order.code ,
+        :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
         )
       end
   #     Credit Core
@@ -31,7 +32,8 @@ module AccountingService
             :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => (recovery_order_detail.core_cost).round(2),
-            :description => "Credit Core"
+            :no_bukti         => recovery_order_detail.recovery_order.code ,
+            :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
           )
       end
       
@@ -41,7 +43,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (recovery_order_detail.compound_cost).round(2),
-          :description => "Credit Compound"
+          :no_bukti         => recovery_order_detail.recovery_order.code ,
+          :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
         )
       
       # Debit FinishedGoods
@@ -50,7 +53,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
           :entry_case          => NORMAL_BALANCE[:debit]     ,
           :amount              => (recovery_order_detail.total_cost).round(2),
-          :description => "Debit FinishedGoods"
+          :no_bukti         => recovery_order_detail.recovery_order.code ,
+          :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
         )
       
       ta.confirm
@@ -76,7 +80,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:biaya_overhead_pabrik_level_3][:code]).id    ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (recovery_order_detail.total_cost).round(2),
-        :description => "Debit Recovery Expense"
+        :no_bukti         => recovery_order_detail.recovery_order.code ,
+        :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
         )
   
   #     Credit Core
@@ -86,7 +91,8 @@ module AccountingService
             :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
             :entry_case          => NORMAL_BALANCE[:credit]     ,
             :amount              => (recovery_order_detail.core_cost).round(2),
-            :description => "Credit Core"
+            :no_bukti         => recovery_order_detail.recovery_order.code ,
+            :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
           )
       end
       
@@ -96,7 +102,8 @@ module AccountingService
           :account_id          => Account.find_by_code(ACCOUNT_CODE[:bahan_baku_rollers][:code]).id   ,
           :entry_case          => NORMAL_BALANCE[:credit]     ,
           :amount              => (recovery_order_detail.compound_cost).round(2),
-          :description => "Credit Compound"
+          :no_bukti         => recovery_order_detail.recovery_order.code ,
+          :description => "#{recovery_order_detail.recovery_order.roller_identification_form.contact.name} #{recovery_order_detail.recovery_order.code}"
         )
       ta.confirm
     end

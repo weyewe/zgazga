@@ -27,7 +27,8 @@ module AccountingService
       :amount              => (purchase_invoice.amount_payable * purchase_invoice.exchange_rate_amount).round(2),
       :real_amount         => purchase_invoice.amount_payable ,
       :exchange_id         => purchase_invoice.exchange_id ,
-      :description => "Credit Account Payable"
+      :no_bukti         => purchase_invoice.nomor_surat ,
+      :description => "#{purchase_invoice.purchase_receival.contact.name} #{purchase_invoice.nomor_surat}"
       )
       
    TransactionDataDetail.create_object(
@@ -37,7 +38,8 @@ module AccountingService
       :amount              => (pre_tax * purchase_invoice.exchange_rate_amount).round(2),
       :real_amount         => pre_tax ,
       :exchange_id         => purchase_invoice.exchange_id ,
-      :description => "Debit GoodsPendingClearance"
+      :no_bukti         => purchase_invoice.nomor_surat ,
+      :description => "#{purchase_invoice.purchase_receival.contact.name} #{purchase_invoice.nomor_surat}"
       )  
 #     Debit GoodsPendingClearance
     # purchase_invoice.purchase_invoice_details.each do |pid|
@@ -59,7 +61,8 @@ module AccountingService
         :account_id          => Account.find_by_code(ACCOUNT_CODE[:ppn_masukan][:code]).id     ,
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (tax * purchase_invoice.exchange_rate_amount).round(2) ,
-        :description => "Debit PPN Masukan"
+        :no_bukti         => purchase_invoice.nomor_surat ,
+        :description => "#{purchase_invoice.purchase_receival.contact.name} #{purchase_invoice.nomor_surat}"
         )
     end
     

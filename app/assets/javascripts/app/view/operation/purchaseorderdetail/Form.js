@@ -95,16 +95,20 @@ Ext.define('AM.view.operation.purchaseorderdetail.Form', {
 			},
 				
 			{
-    	        xtype: 'textfield',
+    	        xtype: 'numberfield',
     	        name : 'amount',
     	        fieldLabel: 'Quantity'
     	     },
     	     {
-    	        xtype: 'textfield',
+    	        xtype: 'numberfield',
     	        name : 'price',
     	        fieldLabel: 'Value per item'
     	     },
-		
+					{
+    	        xtype: 'numberfield',
+    	        name : 'discount',
+    	        fieldLabel: 'Discount'
+    	     },
 	 
 			
 	 

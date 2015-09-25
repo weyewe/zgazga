@@ -201,8 +201,7 @@ class PurchaseReceival < ActiveRecord::Base
     total_amount = 0
     self.purchase_receival_details.each do |prd|
 #       Update Item PendingReceival
-      
-      item_price = (self.exchange_rate_amount * prd.purchase_order_detail.price).round(2)    
+      item_price = (self.exchange_rate_amount * (prd.purchase_order_detail.price - prd.purchase_order_detail.discount)).round(2)    
       prd.item.calculate_avg_price(:added_amount => prd.amount,:added_avg_price => item_price)
       
       new_stock_mutation = StockMutation.create_object(
@@ -268,7 +267,7 @@ class PurchaseReceival < ActiveRecord::Base
     self.purchase_receival_details.each do |prd|
       
       amount = prd.amount * -1
-      item_price = (self.exchange_rate_amount * prd.purchase_order_detail.price).round(2)    
+      item_price = (self.exchange_rate_amount * (prd.purchase_order_detail.price - prd.purchase_order_detail.discount)).round(2)   
       prd.item.calculate_avg_price(:added_amount => (amount),:added_avg_price => item_price)
       stock_mutation = StockMutation.where(
         :source_class => self.class.to_s, 

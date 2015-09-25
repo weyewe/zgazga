@@ -97,6 +97,11 @@ Ext.define('AM.view.operation.paymentrequestdetail.Form', {
 	        name : 'amount',
 	        fieldLabel: 'Amount'
 		    },
+		    {
+	        xtype: 'textarea',
+	        name : 'description',
+	        fieldLabel: 'Description'
+	      },
 			]
     }];
 
