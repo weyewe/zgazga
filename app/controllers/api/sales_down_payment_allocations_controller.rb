@@ -104,7 +104,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
     @object = SalesDownPaymentAllocation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_down_payment_allocations, :confirm)
+      if not current_user.has_menu_assignment?( :sales_down_payment_allocations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -122,7 +122,7 @@ class Api::SalesDownPaymentAllocationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_down_payment_allocations, :unconfirm)
+      if not current_user.has_menu_assignment?( :sales_down_payment_allocations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

@@ -118,7 +118,7 @@ class Api::CustomerStockAdjustmentsController < Api::BaseApiController
     @object = CustomerStockAdjustment.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :customer_stock_adjustments, :confirm)
+      if not current_user.has_menu_assignment?( :customer_stock_adjustments, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -136,7 +136,7 @@ class Api::CustomerStockAdjustmentsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :customer_stock_adjustments, :unconfirm)
+      if not current_user.has_menu_assignment?( :customer_stock_adjustments, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

@@ -88,7 +88,7 @@ class Api::PaymentRequestsController < Api::BaseApiController
     @object = PaymentRequest.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :payment_requests, :confirm)
+      if not current_user.has_menu_assignment?( :payment_requests, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -106,7 +106,7 @@ class Api::PaymentRequestsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :payment_requests, :unconfirm)
+      if not current_user.has_menu_assignment?( :payment_requests, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

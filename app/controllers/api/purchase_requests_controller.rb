@@ -110,7 +110,7 @@ class Api::PurchaseRequestsController < Api::BaseApiController
     @object = PurchaseRequest.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :purchase_requests, :confirm)
+      if not current_user.has_menu_assignment?( :purchase_requests, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -128,7 +128,7 @@ class Api::PurchaseRequestsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :purchase_requests, :unconfirm)
+      if not current_user.has_menu_assignment?( :purchase_requests, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

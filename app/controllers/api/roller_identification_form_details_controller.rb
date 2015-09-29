@@ -4,8 +4,6 @@ class Api::RollerIdentificationFormDetailsController < Api::BaseApiController
       "roller_identification_forms"
   end
   
-  
-  
   def index
     @parent = RollerIdentificationForm.find_by_id params[:roller_identification_form_id]
     query = @parent.active_children.joins(:roller_identification_form, :core_builder,:roller_type,:machine)

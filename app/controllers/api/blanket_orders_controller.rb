@@ -131,7 +131,7 @@ class Api::BlanketOrdersController < Api::BaseApiController
     @object = BlanketOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :blanket_orders, :confirm)
+      if not current_user.has_menu_assignment?( :blanket_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -149,7 +149,7 @@ class Api::BlanketOrdersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :blanket_orders, :unconfirm)
+      if not current_user.has_menu_assignment?( :blanket_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

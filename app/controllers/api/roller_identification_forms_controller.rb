@@ -123,7 +123,7 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
     @object = RollerIdentificationForm.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :roller_identification_forms, :confirm)
+      if not current_user.has_menu_assignment?( :roller_identification_forms, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

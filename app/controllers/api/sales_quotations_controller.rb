@@ -146,7 +146,7 @@ class Api::SalesQuotationsController < Api::BaseApiController
     @object = SalesQuotation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_quotations, :confirm)
+      if not current_user.has_menu_assignment?( :sales_quotations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -164,7 +164,7 @@ class Api::SalesQuotationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_quotations, :unconfirm)
+      if not current_user.has_menu_assignment?( :sales_quotations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -179,7 +179,7 @@ class Api::SalesQuotationsController < Api::BaseApiController
       
     elsif params[:approve].present?    
       
-      if not current_user.has_role?( :sales_quotations, :confirm)
+      if not current_user.has_menu_assignment?( :sales_quotations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -195,7 +195,7 @@ class Api::SalesQuotationsController < Api::BaseApiController
        
     elsif params[:reject].present?    
       
-      if not current_user.has_role?( :sales_quotations, :confirm)
+      if not current_user.has_menu_assignment?( :sales_quotations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

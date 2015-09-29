@@ -126,7 +126,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
     @object = WarehouseMutation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :warehouse_mutations, :confirm)
+      if not current_user.has_menu_assignment?( :warehouse_mutations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -144,7 +144,7 @@ class Api::WarehouseMutationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :warehouse_mutations, :unconfirm)
+      if not current_user.has_menu_assignment?( :warehouse_mutations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

@@ -153,7 +153,7 @@ class Api::SalesInvoicesController < Api::BaseApiController
     @object = SalesInvoice.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_invoices, :confirm)
+      if not current_user.has_menu_assignment?( :sales_invoices, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -171,7 +171,7 @@ class Api::SalesInvoicesController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_invoices, :unconfirm)
+      if not current_user.has_menu_assignment?( :sales_invoices, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

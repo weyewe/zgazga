@@ -107,7 +107,7 @@ class Api::RecoveryOrdersController < Api::BaseApiController
     @object = RecoveryOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :recovery_orders, :confirm)
+      if not current_user.has_menu_assignment?( :recovery_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -125,7 +125,7 @@ class Api::RecoveryOrdersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :recovery_orders, :unconfirm)
+      if not current_user.has_menu_assignment?( :recovery_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

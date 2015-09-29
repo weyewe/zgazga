@@ -79,7 +79,7 @@ class Api::UnitConversionsController < Api::BaseApiController
     @object = UnitConversion.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :unit_conversions, :confirm)
+      if not current_user.has_menu_assignment?( :unit_conversions, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -97,7 +97,7 @@ class Api::UnitConversionsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :unit_conversions, :unconfirm)
+      if not current_user.has_menu_assignment?( :unit_conversions, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

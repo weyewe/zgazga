@@ -1,5 +1,8 @@
 class Api::CustomerStockAdjustmentDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "customer_stock_adjustments"
+  end  
   def index
     @parent = CustomerStockAdjustment.find_by_id params[:customer_stock_adjustment_id]
     @objects = @parent.active_children.joins(:customer_stock_adjustment, :item => [:uom]).page(params[:page]).per(params[:limit]).order("id DESC")

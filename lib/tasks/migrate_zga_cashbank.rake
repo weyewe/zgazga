@@ -77,7 +77,7 @@ namespace :migrate_zga do
     
     
     # SystemSetup
-    Menu.create_object(:name => "User",:controller_name => "users")
+    Menu.create_object(:name => "User",:controller_name => "app_users")
     Menu.create_object(:name => "Menu",:controller_name => "menus")
     Menu.create_object(:name => "Employee",:controller_name => "employees")
     

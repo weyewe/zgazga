@@ -93,7 +93,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
     @object = VirtualDeliveryOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :virtual_delivery_orders, :confirm)
+      if not current_user.has_menu_assignment?( :virtual_delivery_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -111,7 +111,7 @@ class Api::VirtualDeliveryOrdersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :virtual_delivery_orders, :unconfirm)
+      if not current_user.has_menu_assignment?( :virtual_delivery_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

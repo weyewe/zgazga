@@ -326,7 +326,7 @@ class Api::BaseApiController < ApplicationController
     # end
     
     
-    # if not current_user.has_role?(current_controller_name.to_sym, params[:action])
+    # if not current_user.has_menu_assignment?(current_controller_name.to_sym, params[:action])
     puts "It is all alright"
     
     return if params[:action] == "search"

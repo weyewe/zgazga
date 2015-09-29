@@ -61,7 +61,7 @@ Ext.define("AM.controller.Master", {
 				iconCls:'text',
 				conditions : [
 				{
-					controller : 'users',
+					controller : 'app_users',
 					action : 'index'
 				}
 				]

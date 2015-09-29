@@ -62,7 +62,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
     @object = CashBankMutation.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :cash_bank_mutations, :confirm)
+      if not current_user.has_menu_assignment?( :cash_bank_mutations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -80,7 +80,7 @@ class Api::CashBankMutationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :cash_bank_mutations, :unconfirm)
+      if not current_user.has_menu_assignment?( :cash_bank_mutations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

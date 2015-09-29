@@ -80,7 +80,7 @@ class Api::RollerAccsController < Api::BaseApiController
     @object = RollerAcc.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :roller_accs, :confirm)
+      if not current_user.has_menu_assignment?( :roller_accs, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -98,7 +98,7 @@ class Api::RollerAccsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :roller_accs, :unconfirm)
+      if not current_user.has_menu_assignment?( :roller_accs, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

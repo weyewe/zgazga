@@ -101,7 +101,7 @@ class Api::IdentificationsController < Api::BaseApiController
     @object = Identification.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :identifications, :confirm)
+      if not current_user.has_menu_assignment?( :identifications, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -119,7 +119,7 @@ class Api::IdentificationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :identifications, :unconfirm)
+      if not current_user.has_menu_assignment?( :identifications, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

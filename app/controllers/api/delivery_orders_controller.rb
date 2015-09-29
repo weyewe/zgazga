@@ -130,7 +130,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
     @object = DeliveryOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :delivery_orders, :confirm)
+      if not current_user.has_menu_assignment?( :delivery_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -148,7 +148,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :delivery_orders, :unconfirm)
+      if not current_user.has_menu_assignment?( :delivery_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -163,7 +163,7 @@ class Api::DeliveryOrdersController < Api::BaseApiController
       
      elsif params[:confirmtemporary].present?    
       
-      if not current_user.has_role?( :delivery_orders, :confirm)
+      if not current_user.has_menu_assignment?( :delivery_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

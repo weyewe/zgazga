@@ -78,7 +78,7 @@ class Api::MemorialsController < Api::BaseApiController
     @object = Memorial.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :memorials, :confirm)
+      if not current_user.has_menu_assignment?( :memorials, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -96,7 +96,7 @@ class Api::MemorialsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :memorials, :unconfirm)
+      if not current_user.has_menu_assignment?( :memorials, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

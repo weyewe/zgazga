@@ -103,7 +103,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     @object = ReceiptVoucher.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :receipt_vouchers, :confirm)
+      if not current_user.has_menu_assignment?( :receipt_vouchers, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -124,7 +124,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :receipt_vouchers, :unconfirm)
+      if not current_user.has_menu_assignment?( :receipt_vouchers, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -139,7 +139,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
       
     elsif params[:reconcile].present?    
       
-      if not current_user.has_role?( :receipt_vouchers, :confirm)
+      if not current_user.has_menu_assignment?( :receipt_vouchers, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -154,7 +154,7 @@ class Api::ReceiptVouchersController < Api::BaseApiController
     
     elsif params[:unreconcile].present?    
       
-      if not current_user.has_role?( :receipt_vouchers, :unconfirm)
+      if not current_user.has_menu_assignment?( :receipt_vouchers, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

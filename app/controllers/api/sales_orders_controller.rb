@@ -176,7 +176,7 @@ class Api::SalesOrdersController < Api::BaseApiController
     @object = SalesOrder.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :sales_orders, :confirm)
+      if not current_user.has_menu_assignment?( :sales_orders, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -194,7 +194,7 @@ class Api::SalesOrdersController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :sales_orders, :unconfirm)
+      if not current_user.has_menu_assignment?( :sales_orders, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

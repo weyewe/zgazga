@@ -107,7 +107,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     @object = RecoveryOrderDetail.find(params[:id])
     
     if params[:finish].present?  
-      if not current_user.has_role?( :recovery_work_processs, :finish)
+      if not current_user.has_menu_assignment?( :recovery_work_processs, :finish)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -120,7 +120,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
       else
       end
     elsif params[:reject].present?  
-      if not current_user.has_role?( :recovery_work_processs, :reject)
+      if not current_user.has_menu_assignment?( :recovery_work_processs, :reject)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -136,7 +136,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
       
     elsif params[:unfinish].present?    
       
-      if not current_user.has_role?( :recovery_work_processs, :unconfirm)
+      if not current_user.has_menu_assignment?( :recovery_work_processs, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -152,7 +152,7 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
     
     elsif params[:unreject].present?    
       
-      if not current_user.has_role?( :recovery_work_processs, :unreject)
+      if not current_user.has_menu_assignment?( :recovery_work_processs, :unreject)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

@@ -102,7 +102,7 @@ class Api::BankAdministrationsController < Api::BaseApiController
     @object = BankAdministration.find(params[:id])
     
     if params[:confirm].present?  
-      if not current_user.has_role?( :bank_administrations, :confirm)
+      if not current_user.has_menu_assignment?( :bank_administrations, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -120,7 +120,7 @@ class Api::BankAdministrationsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :bank_administrations, :unconfirm)
+      if not current_user.has_menu_assignment?( :bank_administrations, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
