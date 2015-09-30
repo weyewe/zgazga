@@ -57,7 +57,7 @@ namespace :migrate_zga do
     # Accounting
     Menu.create_object(:name => "Memorial",:controller_name => "memorials")
     Menu.create_object(:name => "BankAdministration",:controller_name => "bank_administrations")
-    Menu.create_object(:name => "TransactionData",:controller_name => "transaction_data")
+    Menu.create_object(:name => "TransactionData",:controller_name => "transaction_datas")
     Menu.create_object(:name => "Closing",:controller_name => "closings")
     
     # Roller

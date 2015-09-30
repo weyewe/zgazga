@@ -1,5 +1,10 @@
 class Api::TransactionDataDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "transaction_datas"
+  end
+  
+  
   def index
     @parent = TransactionData.find_by_id params[:transaction_data_id]
     query = @parent.active_children.joins(:account  )
