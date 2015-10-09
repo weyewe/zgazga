@@ -141,7 +141,7 @@ class Api::RollerIdentificationFormsController < Api::BaseApiController
       
     elsif params[:unconfirm].present?    
       
-      if not current_user.has_role?( :roller_identification_forms, :unconfirm)
+      if not current_user.has_menu_assignment?( :roller_identification_forms, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

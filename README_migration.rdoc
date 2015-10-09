@@ -85,4 +85,3 @@ included_sku_array = []
 stock_adjustment_sku_list.each do |x|
     included_sku_array << x if sku_with_no_currency.include?( x ) 
 end
-

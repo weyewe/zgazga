@@ -78,6 +78,28 @@ class User < ActiveRecord::Base
        return false if menu.nil? 
        
        current_user_id = self.id 
+       
+        case action_name
+        when "search_compound"          
+        return true
+        when "search_adhesive_roller"          
+        return true
+        when "search_adhesive_blanket"          
+        return true
+        when "search_bar"          
+        return true
+        when "search_roll_blanket"          
+        return true
+        when "search_adhesive_roller"          
+        return true
+        when "search_ledger"          
+        return true
+        when "search_ledger_payable"          
+        return true
+        when "show"          
+        return true
+        end   
+           
        menu_action =  menu.menu_actions.where(:action_name => action_name).first 
        
        if MenuActionAssignment.where{

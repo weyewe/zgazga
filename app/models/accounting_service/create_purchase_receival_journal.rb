@@ -36,7 +36,7 @@ module AccountingService
         :entry_case          => NORMAL_BALANCE[:credit]     ,
         :amount              => total_amount.round(2) ,
         :no_bukti         => purchase_receival.nomor_surat ,
-        :description => "#{purchase_receival.contact.name} #{prd.item.name} #{purchase_receival.nomor_surat}"
+        :description => "#{purchase_receival.contact.name} #{purchase_receival.nomor_surat}"
       )
      ta.confirm
    

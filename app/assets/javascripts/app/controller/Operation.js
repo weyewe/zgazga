@@ -693,7 +693,7 @@ Ext.define("AM.controller.Operation", {
 				iconCls:'text',
 				conditions : [
 					{
-						controller : 'transaction_data',
+						controller : 'transaction_datas',
 						action : 'index'
 					}
 				]
