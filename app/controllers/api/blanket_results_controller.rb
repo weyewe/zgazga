@@ -70,7 +70,7 @@ class Api::BlanketResultsController < Api::BaseApiController
     @object = BlanketOrderDetail.find(params[:id])
     
     if params[:finish].present?  
-      if not current_user.has_menu_assignment?( :blanket_order_details, :finish)
+      if not current_user.has_menu_assignment?( :blanket_order_details, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

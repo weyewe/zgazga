@@ -314,7 +314,7 @@ class Closing < ActiveRecord::Base
   
   
   def generate_laba_rugi_valid_comb
-    penjualan_group = Account.find_by_code( "4101" )
+    penjualan_group = Account.find_by_code(ACCOUNT_CODE[:pendapatan_penjualan_level_1][:code] )
     penjualan_amount = BigDecimal('0')
     penjualan_group.leaves.each do |pjd|
       vc = ValidComb.where(:closing_id => self.id , :account_id => pjd.id ).first

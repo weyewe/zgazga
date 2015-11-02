@@ -82,7 +82,7 @@ class ReceiptVoucher < ActiveRecord::Base
       new_object.code = "RV-" + new_object.id.to_s
       code = ""
       if not new_object.cash_bank.code.nil?
-        code = new_object.cash_bank.code.to_s + " "
+        code = new_object.cash_bank.code.to_s + new_object.receipt_date.month.to_s + " "
       end
       new_object.no_bukti = code +  new_object.no_voucher.to_s
       new_object.save

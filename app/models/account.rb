@@ -326,8 +326,8 @@ class Account < ActiveRecord::Base
       # puts "current Account code: #{new_object.code}" if new_object.errors.messages.count  == 0
       
       if new_object.errors.messages.count  != 0
-        # puts "The object: #{new_object.name}"
-        # new_object.errors.messages.each {|x| puts "error: #{x}"}
+        puts "The object: #{new_object.name}"
+        new_object.errors.messages.each {|x| puts "error: #{x}"}
       end
       new_object.move_to_child_of(parent_account) if not parent_account.nil?
       
@@ -337,9 +337,15 @@ class Account < ActiveRecord::Base
   def self.create_object_from_exchange(exchange)
     created_account = []
 #     create ar
+    new_account = ""
+    if exchange.id.to_s.length == 1 then
+      new_account = "0" + exchange.id.to_s
+    else
+      new_account = exchange.id.to_s
+    end
     ar_account = Account.find_by_code(ACCOUNT_CODE[:piutang_usaha_level_2][:code])
     new_ar_account = self.new
-    new_ar_account.code = ar_account.code + exchange.id.to_s
+    new_ar_account.code = ar_account.code + new_account
     new_ar_account.name = "Account Receivable " + exchange.name.to_s
     new_ar_account.account_case = ACCOUNT_CASE[:ledger]
     new_ar_account.parent_id = ar_account.id
@@ -351,7 +357,7 @@ class Account < ActiveRecord::Base
 #     create ar_gbch
     ar_gbch_account = Account.find_by_code(ACCOUNT_CODE[:piutang_gbch][:code])
     new_ar_gbch_account = self.new
-    new_ar_gbch_account.code = ar_gbch_account.code + exchange.id.to_s
+    new_ar_gbch_account.code = ar_gbch_account.code + new_account
     new_ar_gbch_account.name = "GBCH Receivable " + exchange.name.to_s
     new_ar_gbch_account.account_case = ACCOUNT_CASE[:ledger]
     new_ar_gbch_account.parent_id = ar_gbch_account.id
@@ -362,7 +368,7 @@ class Account < ActiveRecord::Base
 #     create ap
     ap_account = Account.find_by_code(ACCOUNT_CODE[:hutang_usaha_level_2][:code])
     new_ap_account = self.new
-    new_ap_account.code =  ap_account.code + exchange.id.to_s
+    new_ap_account.code =  ap_account.code + new_account
     new_ap_account.name = "Account Payable " + exchange.name.to_s
     new_ap_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_account.parent_id = ap_account.id
@@ -373,7 +379,7 @@ class Account < ActiveRecord::Base
 #     create gbch_payable
     ap_gbch_payable_account = Account.find_by_code(ACCOUNT_CODE[:hutang_gbch][:code])
     new_ap_gbch_payable_account = self.new
-    new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + exchange.id.to_s
+    new_ap_gbch_payable_account.code =  ap_gbch_payable_account.code + new_account
     new_ap_gbch_payable_account.name = "GBCH Payable " + exchange.name.to_s
     new_ap_gbch_payable_account.account_case = ACCOUNT_CASE[:ledger]
     new_ap_gbch_payable_account.parent_id = ap_gbch_payable_account.id
@@ -386,13 +392,19 @@ class Account < ActiveRecord::Base
   
   
   def self.create_object_from_cash_bank(cash_bank)
+    new_account = ""
+    if cash_bank.id.to_s.length == 1 then
+      new_account = "0" + cash_bank.id.to_s
+    else
+      new_account = cash_bank.id.to_s
+    end
     if cash_bank.is_bank == true
       cash_bank_account = Account.find_by_code(ACCOUNT_CODE[:bank][:code])
     else
       cash_bank_account = Account.find_by_code(ACCOUNT_CODE[:kas][:code]) 
     end
     new_cash_bank_account = self.new
-    new_cash_bank_account.code = cash_bank_account.code + cash_bank.id.to_s
+    new_cash_bank_account.code = cash_bank_account.code + new_account
     if cash_bank.is_bank == true
       new_cash_bank_account.name = "Bank " + cash_bank.name.to_s 
       # + " " + cash_bank.exchange.name.to_s

@@ -105,7 +105,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       end
     elsif params[:finish].present?    
       
-      if not current_user.has_menu_assignment?( :recovery_results, :finish)
+      if not current_user.has_menu_assignment?( :recovery_results, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -136,7 +136,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       
     elsif params[:reject].present?    
       
-      if not current_user.has_menu_assignment?( :recovery_results, :reject)
+      if not current_user.has_menu_assignment?( :recovery_results, :confirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end
@@ -151,7 +151,7 @@ class Api::RecoveryResultsController < Api::BaseApiController
       
     elsif params[:unreject].present?    
       
-      if not current_user.has_menu_assignment?( :recovery_results, :unreject)
+      if not current_user.has_menu_assignment?( :recovery_results, :unconfirm)
         render :json => {:success => false, :access_denied => "Tidak punya authorisasi"}
         return
       end

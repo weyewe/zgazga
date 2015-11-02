@@ -1,5 +1,9 @@
 class Api::SalesQuotationDetailsController < Api::BaseApiController
   
+  def parent_controller_name
+      "sales_quotations"
+  end
+  
   def index
     @parent = SalesQuotation.find_by_id params[:sales_quotation_id]
     query = @parent.active_children.joins(:sales_quotation, :item => [:uom])

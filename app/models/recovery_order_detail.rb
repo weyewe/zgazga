@@ -207,7 +207,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
     if self.recovery_order.roller_identification_form.is_in_house == true
     if (core_in_warehouse.amount.to_i - 1) < 0 
       self.errors.add(:generic_errors, 
-      "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
+      "Stock quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} kurang dari 1")
       return self 
     end
       else
@@ -217,7 +217,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
           )
       if (customer_item.amount.to_i - 1) < 0 
         self.errors.add(:generic_errors, 
-        "Stock Customer quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} ")
+        "Stock Customer quantity Core SKU #{core_in_warehouse.item.sku}  #{core_in_warehouse.item.name} kurang dari 1")
         return self 
       end
     end
@@ -694,6 +694,10 @@ class RecoveryOrderDetail < ActiveRecord::Base
       StockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |sm|
         sm.reverse_stock_mutate_object
         sm.delete_object
+      end
+      CustomerStockMutation.where(:source_class => self.class.to_s,:source_id => self.id).each do |csm|
+        csm.reverse_stock_mutate_object
+        csm.delete_object
       end
       AccountingService::CreateRecoveryOrderJournal.undo_create_confirmation_journal(self)
     end

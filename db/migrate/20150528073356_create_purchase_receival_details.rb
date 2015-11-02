@@ -9,7 +9,7 @@ class CreatePurchaseReceivalDetails < ActiveRecord::Migration
       t.decimal :amount, :default => 0,  :precision => 14, :scale => 2
       t.decimal :pending_invoiced_amount, :default => 0 ,  :precision => 14, :scale => 2
       t.boolean :is_all_invoiced, :default => false
-      t.decimal :cogs, :default => 0 , :default => 0,  :precision => 14, :scale => 2
+      t.decimal :cogs, :default => 0  ,:precision => 14, :scale => 2
       t.timestamps
     end
   end

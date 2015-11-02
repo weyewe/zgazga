@@ -283,12 +283,14 @@ namespace :migrate_zga do
                       
 #           [[1, "Rupiah"], [2, "USD"], [3, "Euro"], [4, "CHF"], [5, "GBP"], [6, "SGD"]] 
  
-          
-          new_exchange_id = 2 if not usd_amount.present? 
-          new_exchange_id = 3 if not euro_amount.present? 
+          new_exchange_id = 2 if usd_amount.present? 
+          new_exchange_id = 3 if euro_amount.present? 
           new_exchange_id = 1 if not usd_amount.present? and not euro_amount.present? 
-          
+          msg << "usd_amount #{usd_amount}"
+          msg << "euro_amount #{euro_amount}"
           # puts ">>> the currency inspect"
+          msg << "exchange_id #{new_exchange_id}"
+          # puts msg
           
           invoice_date = Date.parse( invoice_date )
           parsed_invoice_date = get_parsed_date(invoice_date.to_s )
@@ -299,11 +301,11 @@ namespace :migrate_zga do
             
           end
  
-          # if new_exchange_id.nil?
-          #   puts exchange_hash
-          #   puts "nomor surat: #{nomor_surat}, exchange_name: #{exchange_name}"
+          if new_exchange_id.nil?
+            puts exchange_hash
+            puts "nomor surat: #{nomor_surat}, exchange_name: #{exchange_name}"
             
-          # end
+          end
           
           amount_foreign_exchange  = BigDecimal("0") if not usd_amount.present? and not euro_amount.present?
           amount_foreign_exchange = usd_amount if usd_amount.present?

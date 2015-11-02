@@ -61,8 +61,6 @@ class PaymentRequestDetail < ActiveRecord::Base
         return new_object 
       end
     end
-    
-    
     new_object.payment_request_id = params[:payment_request_id]
     new_object.account_id = params[:account_id]
     new_object.status = STATUS_ACCOUNT[:debet]

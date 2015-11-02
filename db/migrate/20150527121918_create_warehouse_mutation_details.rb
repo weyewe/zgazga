@@ -4,7 +4,7 @@ class CreateWarehouseMutationDetails < ActiveRecord::Migration
       t.integer :warehouse_mutation_id
       t.integer :item_id
       t.string  :code
-      t.decimal  :amount, :default => 0 , :default => 0,  :precision => 14, :scale => 2
+      t.decimal  :amount, :default => 0  ,:precision => 14, :scale => 2
       t.timestamps
     end
   end
