@@ -13,7 +13,6 @@ class Api::PasswordsController < Api::BaseApiController
     end
     
     success_value = @user.errors.size == 0 
-    
     if @user.errors.size == 0 
      render :json => {
         :success => true, 

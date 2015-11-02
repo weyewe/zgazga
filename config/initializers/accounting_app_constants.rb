@@ -82,14 +82,14 @@ ACCOUNT_CODE = {
     :code => "11020001",
     :name => "DEPOSITO BERJANGKA RP",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "110201"
   },
   :deposito_berjangka_usd  => {
     :code => "11020002",
     :name => "DEPOSITO BERJANGKA USD",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "110201"
   },
   :piutang_usaha_level_1  => {
@@ -370,7 +370,7 @@ ACCOUNT_CODE = {
     :name => "TANAH",
     :normal_balance => 1,
     :status => 2,
-    :parent_code => "1401"
+    :parent_code => "140101"
     }, 
   :bangunan_level_1 => {
     :code => "1402",
@@ -423,7 +423,7 @@ ACCOUNT_CODE = {
     }, 
   :inventaris_kantor_level_2 => {
     :code => "140501",
-    :name => "INVETARIS KANTOR",
+    :name => "INVEnTARIS KANTOR",
     :normal_balance => 1,
     :status => 1,
     :parent_code => "1405"
@@ -434,6 +434,27 @@ ACCOUNT_CODE = {
     :normal_balance => 1,
     :status => 2,
     :parent_code => "140501"
+    },  
+  :mesin_dan_peralatan_level_1 => {
+    :code => "1406",
+    :name => "MESIN DAN PERALATAN",
+    :normal_balance => 1,
+    :status => 1,
+    :parent_code => "14"
+    }, 
+  :mesin_dan_peralatan_level_2 => {
+    :code => "140601",
+    :name => "MESIN DAN PERALATAN",
+    :normal_balance => 1,
+    :status => 1,
+    :parent_code => "1406"
+    },   
+  :mesin_dan_peralatan_level_3 => {
+    :code => "14060001",
+    :name => "MESIN DAN PERALATAN",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "140601"
     },  
   :instalasi_listrik_level_1 => {
     :code => "1407",
@@ -452,6 +473,13 @@ ACCOUNT_CODE = {
   :instalasi_listrik_level_3 => {
     :code => "14070001",
     :name => "INSTALASI LISTRIK",
+    :normal_balance => 1,
+    :status => 2,
+    :parent_code => "140701"
+    },
+  :aktiva_leasing => {
+    :code => "14070002",
+    :name => "AKTIVA LEASING",
     :normal_balance => 1,
     :status => 2,
     :parent_code => "140701"
@@ -556,31 +584,31 @@ ACCOUNT_CODE = {
     },
   :hutang_bank_level_1 => {
     :code => "2101",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PENDEK",
     :normal_balance => 2,
     :status => 1,
     :parent_code => "21"
     },
   :hutang_bank_level_2 => {
     :code => "210101",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PENDEK",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "2102"
+    :parent_code => "2101"
     },
   :hutang_bank_level_3 => {
     :code => "21010001",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PENDEK",
     :normal_balance => 2,
-    :status => 1,
-    :parent_code => "210201"
+    :status => 2,
+    :parent_code => "210101"
     },
   :hutang_leasing => {
     :code => "21010002",
-    :name => "HUTANG LEASING",
+    :name => "HUTANG LEASING JANGKA PENDEK",
     :normal_balance => 2,
     :status => 2,
-    :parent_code => "210201"
+    :parent_code => "210101"
     },  
   :hutang_usaha_level_1 => {
     :code => "2102",
@@ -780,32 +808,60 @@ ACCOUNT_CODE = {
     },  
   :kewajiban_jangka_panjang => {
     :code => "22",
-    :name => "KEWAJIBAN JANKA PANJANG",
+    :name => "KEWAJIBAN JANGKA PANJANG",
     :normal_balance => 2,
     :status => 1,
     :parent_code => "2"
     },      
   :kewajiban_jangka_panjang_hutang_bank_level_1 => {
     :code => "2201",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PANJANG",
     :normal_balance => 2,
     :status => 1,
     :parent_code => "22"
     },      
   :kewajiban_jangka_panjang_hutang_bank_level_2 => {
     :code => "220101",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PANJANG",
     :normal_balance => 2,
     :status => 1,
     :parent_code => "2201"
     },      
   :kewajiban_jangka_panjang_hutang_bank_level_3 => {
     :code => "22010001",
-    :name => "HUTANG BANK",
+    :name => "HUTANG BANK JANGKA PANJANG",
     :normal_balance => 2,
     :status => 2,
     :parent_code => "220101"
-    },      
+    }, 
+  :kewajiban_jangka_panjang_hutang_leasing => {
+    :code => "22010002",
+    :name => "HUTANG LEASING JANGKA PANJANG",
+    :normal_balance => 2,
+    :status => 2,
+    :parent_code => "220101"
+    }, 
+  :hutang_jangka_panjang_lainnya_level_1 => {
+    :code => "2202",
+    :name => "HUTANG JK. PANJANG LAINNYA ",
+    :normal_balance => 2,
+    :status => 1,
+    :parent_code => "22"
+  },
+  :hutang_jangka_panjang_lainnya_level_2 => {
+    :code => "220201",
+    :name => "HUTANG JK. PANJANG LAINNYA ",
+    :normal_balance => 2,
+    :status => 1,
+    :parent_code => "2202"
+  },
+  :laba_sale_dan_lease_yang_ditagihkan => {
+    :code => "22020002",
+    :name => "LABA SALE & LEASE YG DITAGIHKAN ",
+    :normal_balance => 2,
+    :status => 2,
+    :parent_code => "220201"
+  },
   :modal_level_1 => {
     :code => "3",
     :name => "MODAL",
@@ -838,7 +894,7 @@ ACCOUNT_CODE = {
     :code => "31010001",
     :name => "MODAL DISETOR",
     :normal_balance => 2,
-    :status => 1,
+    :status => 2,
     :parent_code => "310101"
     },
   :laba_rugi_ditahan_level_1 => {
@@ -874,14 +930,14 @@ ACCOUNT_CODE = {
     :name => "LABA/RUGI TAHUN BERJALAN",
     :normal_balance => 2,
     :status => 1,
-    :parent_code => "3104"
+    :parent_code => "3103"
     },
   :laba_rugi_tahun_berjalan_level_3 => {
     :code => "31030001",
     :name => "LABA/RUGI TAHUN BERJALAN",
     :normal_balance => 2,
     :status => 2,
-    :parent_code => "310401"
+    :parent_code => "310301"
     },
   :laba_rugi_bulan_berjalan_level_1 => {
     :code => "3104",
@@ -1326,7 +1382,7 @@ ACCOUNT_CODE = {
     :code => "62010001",
     :name => "BIAYA GAJI DAN UPAH",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "620101"
     },
     
@@ -1334,7 +1390,7 @@ ACCOUNT_CODE = {
     :code => "62010002",
     :name => "PREMI JAMSOSTEK",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "620101"
     },
   
@@ -1342,7 +1398,7 @@ ACCOUNT_CODE = {
     :code => "62010003",
     :name => "BIAYA REKRUITMENT",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "620101"
     },
   
@@ -1350,7 +1406,7 @@ ACCOUNT_CODE = {
     :code => "62010004",
     :name => "BIAYA PENDIDIKAN DAN LATIHAN",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "620101"
     },
   
@@ -1358,7 +1414,7 @@ ACCOUNT_CODE = {
     :code => "62010005",
     :name => "BIAYA PERAWATAN KESEHATAN",
     :normal_balance => 1,
-    :status => 1,
+    :status => 2,
     :parent_code => "620101"
     },
           
@@ -1669,7 +1725,7 @@ ACCOUNT_CODE = {
     :parent_code => "620601"
     },  
   :biaya_seminar_dan_kursus => {
-    :code => "62060008",
+    :code => "62060009",
     :name => "BIAYA SEMINAR DAN KURSUS",
     :normal_balance => 1,
     :status => 2,

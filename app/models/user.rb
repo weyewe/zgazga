@@ -72,13 +72,12 @@ class User < ActiveRecord::Base
    
    def has_menu_assignment?( controller_name , action_name )
        return true if self.is_admin? 
-       
+       return true if controller_name == "passwords"
        menu = Menu.find_by_controller_name controller_name 
        
        return false if menu.nil? 
        
        current_user_id = self.id 
-       
         case action_name
         when "search_compound"          
         return true
@@ -97,6 +96,8 @@ class User < ActiveRecord::Base
         when "search_ledger_payable"          
         return true
         when "show"          
+        return true
+        when "passwords"          
         return true
         end   
            
