@@ -13,11 +13,11 @@ require 'mina/whenever'
 #   branch       - Branch name to deploy. (needed by mina/git)
 # https://github.com/weyewe/shopper-deployment.git
  
-set :domain, '128.199.100.212'
+set :domain, '188.166.243.220'
 set :deploy_to, '/var/www/zengra.com'
 # https://github.com/weyewe/esman.git
 set :repository, 'git://github.com/weyewe/zgazga.git'
-set :branch, 'polishing'
+set :branch, 'master'
 set :user , 'deployer'
 set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
