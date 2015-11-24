@@ -20,7 +20,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 
 gem 'simple_form'
-
+gem "non-stupid-digest-assets"
 
 
 # gem 'wicked_pdf'
