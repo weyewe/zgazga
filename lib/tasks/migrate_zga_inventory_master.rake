@@ -164,6 +164,7 @@ namespace :migrate_zga do
             object = ItemType.create_object(
               :name =>  name   ,
               :description => description  , 
+            
               :account_id =>  new_account_id.to_i , 
               )
           else

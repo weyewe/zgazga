@@ -89,12 +89,26 @@ Ext.define('AM.controller.ReceiptVouchers', {
 			'receiptvoucherProcess receiptvoucherlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
+			'receiptvoucherProcess receiptvoucherlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			},
 			'receiptvoucherform button[action=save]': {
         click: this.updateObject
       }
 		
     });
   },
+	
+		downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'receipt_vouchers/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

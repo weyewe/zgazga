@@ -120,6 +120,7 @@ class ItemType < ActiveRecord::Base
     
     
     self.name = params[:name]
+    self.sku = params[:sku]
     self.description = params[:description]
     self.account_id = params[:account_id]
     self.is_batched  = params[:is_batched]

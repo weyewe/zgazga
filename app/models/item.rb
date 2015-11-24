@@ -9,8 +9,8 @@ class Item < ActiveRecord::Base
   has_many :batch_instances
   
    
-  validates_presence_of :sku
-  validates_uniqueness_of :sku
+  # validates_presence_of :sku
+  # validates_uniqueness_of :sku
   validates_presence_of :name
   validates_presence_of :item_type_id
   validates_presence_of :exchange_id
@@ -169,6 +169,16 @@ class Item < ActiveRecord::Base
     new_object.price_list = BigDecimal( params[:price_list] || '0')  
     new_object.exchange_id = params[:exchange_id]
     new_object.save
+    if new_object.save
+      list_item = Item.where{(item_type_id.eq new_object.item_type_id) &
+                              (id.not_eq new_object.id)}
+      if list_item.count == 0
+         new_object.sku = new_object.item_type.sku + "1"
+      else
+         new_object.sku = list_item.max.sku.succ.to_s
+      end
+      new_object.save
+    end
     return new_object
   end
   

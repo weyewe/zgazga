@@ -30,6 +30,7 @@ describe Item do
     @itp_1 = ItemType.create_object(
       :name => "ItemType_1" ,
       :description => "Description1",
+      :sku => "ITP",
       :account_id => @coa_1.id
       )
     
@@ -207,6 +208,22 @@ describe Item do
     it "should create item" do
       @item.errors.size.should == 0
       @item.should be_valid
+      
+      @item = Item.create_object(
+        :item_type_id => @itp_1.id,
+        :sub_type_id => @sbp_1.id,
+        :sku => @sku_1,
+        :name => @name_1,
+        :description => @description_1,
+        :is_tradeable => @is_tradeable_1,
+        :uom_id => @uom_1.id,
+        :minimum_amount => @minimum_amount_1,
+        :selling_price => @selling_price_1,
+        :exchange_id => @exc_1.id,
+        :price_list => @price_list_1
+      )
+      
+      puts @item.sku
     end
     
     it "should update object" do

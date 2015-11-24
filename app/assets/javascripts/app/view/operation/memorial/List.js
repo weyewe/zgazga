@@ -40,6 +40,12 @@ Ext.define('AM.view.operation.memorial.List' ,{
 			disabled: true
 		});
 		
+		this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+			disabled: true });
+
+
 		this.confirmObjectButton = new Ext.Button({
 			text: 'Confirm',
 			action: 'confirmObject',
@@ -64,7 +70,7 @@ Ext.define('AM.view.operation.memorial.List' ,{
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.confirmObjectButton, this.unconfirmObjectButton,this.downloadButton, 
 					'->',
 					this.searchField ];
 	 
@@ -92,7 +98,7 @@ Ext.define('AM.view.operation.memorial.List' ,{
 		this.deleteObjectButton.enable(); 
 		this.unconfirmObjectButton.enable();
 		this.confirmObjectButton.enable();
-		
+		this.downloadButton.enable();
 		selectedObject = this.getSelectedObject();
 		
 		if( selectedObject && selectedObject.get("is_confirmed") == true ){

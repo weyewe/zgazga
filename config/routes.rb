@@ -21,6 +21,7 @@ Ticketie::Application.routes.draw do
   resources :payment_requests
   resources :payment_vouchers
   resources :receipt_vouchers
+  resources :memorials
   resources :roller_accs
   resources :roller_acc_details
   resources :roller_accessory_details

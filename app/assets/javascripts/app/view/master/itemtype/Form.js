@@ -72,6 +72,11 @@ Ext.define('AM.view.master.itemtype.Form', {
 	        name : 'name',
 	        fieldLabel: 'Nama'
 	      },
+	      		{
+	        xtype: 'textfield',
+	        name : 'sku',
+	        fieldLabel: 'Kode UoM'
+	      },
 				{
 					xtype: 'textfield',
 					name : 'description',

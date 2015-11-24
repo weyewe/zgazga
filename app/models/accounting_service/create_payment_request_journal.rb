@@ -24,7 +24,7 @@ module AccountingService
       :real_amount         => payment_request.amount ,
       :exchange_id         => payment_request.exchange_id ,
       :no_bukti         => payment_request.no_bukti ,
-      :description => "#{payment_request.contact_name}  #{payment_request.no_bukti}"
+      :description => "#{payment_request.contact.name}  #{payment_request.no_bukti}"
       )
 
 #     Debit Account User Input
@@ -36,7 +36,7 @@ module AccountingService
         :entry_case          => NORMAL_BALANCE[:debit]     ,
         :amount              => (prd.amount * payment_request.exchange_rate_amount).round(2),
         :no_bukti         => payment_request.no_bukti ,
-        :description => "#{payment_request.contact_name}  #{payment_request.no_bukti} #{prd.description}"
+        :description => "#{payment_request.contact.name}  #{payment_request.no_bukti} #{prd.description}"
       )
     end
     ta.confirm

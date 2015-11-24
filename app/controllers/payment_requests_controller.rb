@@ -8,7 +8,7 @@ class PaymentRequestsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render :pdf => "payment_request_#{@object.nomor_surat}",
+        render :pdf => "payment_request_#{@object.no_bukti}",
         :template => 'payment_requests/show.pdf.erb',
         :layout => 'pdf.html.erb',
         # :layout => 'balance_sheet_pdf.html.erb',

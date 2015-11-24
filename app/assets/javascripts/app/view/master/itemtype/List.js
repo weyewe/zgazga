@@ -9,6 +9,7 @@ Ext.define('AM.view.master.itemtype.List' ,{
 		this.columns = [
 			{ header: 'ID', dataIndex: 'id'},
 			{ header: 'Nama',  dataIndex: 'name', flex: 1},
+			{ header: 'Kode UoM',  dataIndex: 'sku', flex: 1},
 			{	header: 'Deskripsi', dataIndex: 'description', flex: 1 } ,
 			{
 				xtype : 'templatecolumn',

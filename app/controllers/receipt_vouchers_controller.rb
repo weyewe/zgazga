@@ -4,11 +4,11 @@ class ReceiptVouchersController < ApplicationController
   def show
     @object = ReceiptVoucher.find(params[:id])
     
-    @document_title = "Receipt Request"
+    @document_title = "Receipt Voucher"
     respond_to do |format|
       format.html
       format.pdf do
-        render :pdf => "receipt_voucher_#{@object.nomor_surat}",
+        render :pdf => "receipt_voucher_#{@object.no_bukti}",
         :template => 'receipt_vouchers/show.pdf.erb',
         :layout => 'pdf.html.erb',
         # :layout => 'balance_sheet_pdf.html.erb',

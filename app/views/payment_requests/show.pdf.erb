@@ -1,0 +1,107 @@
+    <div class="container">
+      
+      <%# if not  @object.is_confirmed? %>
+        <%#= render :partial => "layouts/watermark" %>
+      <%# end %> 
+      
+      <div class="row">
+        <div class="col-xs-6">
+          <h1>
+          </h1>
+        </div>
+        <div class="col-xs-6 text-right">
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+            <h1>Payment Request</h1>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+            
+            </div>
+            <div class="panel-body">
+             <p>
+                 Contact : <%= @object.contact.name %>
+                  <br/>
+                 Tanggal   : <%= @object.request_date.strftime("%d-%m-%Y") %>
+                 <br/>
+                 Nomor Surat    : <%= @object.no_bukti %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+
+
+
+      <!-- / end client details section -->
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <h4>No</h4>
+            </th>
+            <th>
+              <h4>Deskripsi</h4>
+            </th>
+            <th>
+              <h4>D/K</h4>
+            </th>
+            <th>
+              <h4>Jumlah</h4>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+          <td>
+              
+          </td>
+          <tr>
+          <% counter  = 1 %>
+          
+          <% total = BigDecimal("0") %>
+          <% @object.payment_request_details.each do |detail| %>
+            <tr>
+              <td><%= counter %></td>
+              <td> <%= detail.account.name %></td>
+              <% if detail.status == 1 %>
+              <td><%= "Debet" %></td>
+              <% else  %>
+              <td><%= "Credit" %></td>
+              <% end %>
+              <td>
+                <%= number_to_currency  detail.amount  , 
+                        unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
+              </td>
+            </tr>
+            <% counter = counter + 1 %> 
+            <% total = total +  detail.amount  %>
+            
+          <% end %>
+ 
+        </tbody>
+      </table>
+      <div class="row text-right">
+        <div class="col-xs-2 col-xs-offset-8">
+          <p>
+            <strong>
+      
+            Total : <br>
+            </strong>
+          </p>
+        </div>
+        <div class="col-xs-2">
+          <strong> 
+          <%= number_to_currency total, unit: '', separator: ',', delimiter: '.', format: '%n %u' %>
+          <br>
+          </strong>
+        </div>
+      </div>
+      
+      

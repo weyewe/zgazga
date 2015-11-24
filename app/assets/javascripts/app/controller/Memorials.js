@@ -73,12 +73,26 @@ Ext.define('AM.controller.Memorials', {
 			'memorialProcess memoriallist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
+			'memorialProcess memoriallist button[action=downloadObject]': {
+			    click: this.downloadObject
+			},
 			'memorialform button[action=save]': {
         click: this.updateObject
       }
 		
     });
   },
+	
+	downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'memorials/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+	},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');

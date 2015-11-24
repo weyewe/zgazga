@@ -8,6 +8,7 @@ class Api::ItemTypesController < Api::BaseApiController
       @objects = ItemType.joins(:account).where{  
         ( name =~ livesearch ) | 
         ( description =~ livesearch ) | 
+        ( sku =~ livesearch ) | 
         ( account.name =~ livesearch ) | 
         ( account.code =~ livesearch )
       }.page(params[:page]).per(params[:limit]).order("id DESC")
@@ -15,6 +16,7 @@ class Api::ItemTypesController < Api::BaseApiController
       @total = ItemType.joins(:account).where{ 
         ( name =~ livesearch ) | 
         ( description =~ livesearch ) | 
+        ( sku =~ livesearch ) | 
         ( account.name =~ livesearch ) | 
         ( account.code =~ livesearch )
       }.count
@@ -111,6 +113,7 @@ class Api::ItemTypesController < Api::BaseApiController
               ( name =~ query ) | 
         ( description =~ query ) | 
         ( account.name =~ query ) | 
+         ( sku =~ query ) | 
         ( account.code =~ query )
                               }.
                         page(params[:page]).
@@ -120,6 +123,7 @@ class Api::ItemTypesController < Api::BaseApiController
       @total = ItemType.joins(:account).where{ 
            ( name =~ query ) | 
         ( description =~ query ) | 
+         ( sku =~ query ) | 
         ( account.name =~ query ) | 
         ( account.code =~ query )
                               }.count

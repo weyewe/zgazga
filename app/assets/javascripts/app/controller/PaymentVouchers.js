@@ -90,12 +90,27 @@ Ext.define('AM.controller.PaymentVouchers', {
 			'paymentvoucherProcess paymentvoucherlist textfield[name=searchField]': {
 				change: this.liveSearch
 			},
+			'paymentvoucherProcess paymentvoucherlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			}	,
 			'paymentvoucherform button[action=save]': {
         click: this.updateObject
       }
 		
     });
   },
+
+	
+	downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'payment_vouchers/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+},
 
 	onColorPickerSelect: function(colorId, theColorPicker){
 		var win = theColorPicker.up('window');
