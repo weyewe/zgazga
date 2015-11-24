@@ -4,3 +4,4 @@ Rails.application.config.assets.precompile += %w( fb/logo.png )
 
 Rails.application.config.assets.precompile += %w( fb/footer_logo.png )
 Rails.application.config.assets.precompile += %w( action_assignments.css )
+Rails.application.config.assets.precompile += %w( print_application.css )
