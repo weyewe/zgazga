@@ -38,7 +38,7 @@ Ticketie::Application.configure do
             'frontend.css',
               'bootstrap-email.css', 
               'bootstrap.css',
-              'print_application'  ]
+              'print_application.css'  ]
   # config.assets.precompile << 'fb/*.js'
   config.assets.precompile << 'fb/*.jpg'
   config.assets.precompile << 'fb/*.png'
