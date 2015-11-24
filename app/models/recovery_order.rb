@@ -54,11 +54,11 @@ class RecoveryOrder < ActiveRecord::Base
   
   def update_object(params)
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if self.recovery_order_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
     self.roller_identification_form_id = params[:roller_identification_form_id]
@@ -77,11 +77,11 @@ class RecoveryOrder < ActiveRecord::Base
   
   def delete_object
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if self.recovery_order_details.count > 0 
-      self.errors.add(:generic,"Sudah memiliki detail")
+      self.errors.add(:generic_errors,"Sudah memiliki detail")
       return self
     end
     self.destroy
@@ -90,11 +90,11 @@ class RecoveryOrder < ActiveRecord::Base
 
   def confirm_object(params)
     if self.is_confirmed == true 
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     if self.recovery_order_details.count == 0 
-      self.errors.add(:generic,"Tidak memiliki detail")
+      self.errors.add(:generic_errors,"Tidak memiliki detail")
       return self
     end
     if params[:confirmed_at].nil?

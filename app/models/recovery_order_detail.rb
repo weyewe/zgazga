@@ -86,7 +86,7 @@ class RecoveryOrderDetail < ActiveRecord::Base
   
   def update_object(params)
     if self.recovery_order.is_confirmed == true
-      self.errors.add(:generic,"Sudah di confirm")
+      self.errors.add(:generic_errors,"Sudah di confirm")
       return self
     end
     self.roller_identification_form_detail_id = params[:roller_identification_form_detail_id]
