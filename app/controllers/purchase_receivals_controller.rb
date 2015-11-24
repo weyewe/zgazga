@@ -10,7 +10,7 @@ class PurchaseReceivalsController < ApplicationController
     end
     
     @object = PurchaseReceival.find(params[:id])
-    @contact = @object.purchase_order.contact
+    @contact = @object.contact
     
     @document_title = "Bukti Penerimaan Barang"
     respond_to do |format|

@@ -1,20 +1,9 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-6">
-<h1>
-                <%= wicked_pdf_image_tag 'logo.png' %>
-          </h1>
         </div>
         <div class="col-xs-6 text-right">
-          <% if @object.is_confirmed %> 
-            <h1><%= @document_title %></h1>
-            <h2><small>No: <%= @object.nomor_surat %> </small></h2>
-            <h3><small>Date: <%= @object.confirmed_at.strftime("%d-%m-%Y") %> </small></h3>
-          <% else %> 
-            <h1>DRAFT <%= @document_title %></h1>
-            <h2><small>No: <%= @object.nomor_surat %> </small></h2>
-            <h3><small>Date: N/A </small></h3>
-          <% end %> 
+         
           
         </div>
       </div>
@@ -22,30 +11,19 @@
         <div class="col-xs-5">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4>From: <a href="#">PT. Zentrum Graphics Asia</a></h4>
+            <h1>DeliveryOrder</h1>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+            
             </div>
             <div class="panel-body">
-              <p>
-  
-        Jl. Raya Serpong Km.7
-
-Komp. Multiguna A.1/1
-
-Pakualam, Serpong Utara,
-
-Tangerang Selatan 15325
-
-Indonesia
-
-<br /> 
-T : + 62 21 531 23 222
-<br /> 
-F : + 62 21 531 24 525
-<br /> 
-E : zga@zengra.com
-<br /> 
-www.zengra.com
- 
+             <p>
+                 No     : <%= @object.nomor_surat %>
+                  <br/>
+                 Date   : <%= @object.delivery_date.strftime("%d-%m-%Y") %>
               </p>
             </div>
           </div>
@@ -125,70 +103,70 @@ www.zengra.com
       </div> -->
       
       
-      <div class="row" style="margin-top:10px;">
+   <!--   <div class="row" style="margin-top:10px;">-->
  
-        <div class="col-xs-12" style='border:none;'>
-          <div class="span12">
-            <div class="panel panel-info" style='border:none;'>
-              <div class="panel-heading">
-                <h4>Notes</h4>
-              </div>
-              <div class="panel-body" style='border:none;'>
-                <p>
+   <!--     <div class="col-xs-12" style='border:none;'>-->
+   <!--       <div class="span12">-->
+   <!--         <div class="panel panel-info" style='border:none;'>-->
+   <!--           <div class="panel-heading">-->
+   <!--             <h4>Notes</h4>-->
+   <!--           </div>-->
+   <!--           <div class="panel-body" style='border:none;'>-->
+   <!--             <p>-->
 
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+   <!--             </p>-->
+   <!--           </div>-->
+   <!--         </div>-->
+   <!--       </div>-->
+   <!--     </div>-->
+   <!--   </div>-->
+   <!-- </div>-->
    
    
-   <div class="row">
-        <div class="col-xs-4 text-center">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4>Authorized Signature</h4>
-            </div>
-            <div class="panel-body">
-              <p>
-                 <br /><br /><br />
-                 <%= "..................."*3 %>
-              </p>
-            </div>
-          </div>
-        </div>
+   <!--<div class="row">-->
+   <!--     <div class="col-xs-4 text-center">-->
+   <!--       <div class="panel panel-default">-->
+   <!--         <div class="panel-heading">-->
+   <!--           <h4>Authorized Signature</h4>-->
+   <!--         </div>-->
+   <!--         <div class="panel-body">-->
+   <!--           <p>-->
+   <!--              <br /><br /><br />-->
+   <!--              <%= "..................."*3 %>-->
+   <!--           </p>-->
+   <!--         </div>-->
+   <!--       </div>-->
+   <!--     </div>-->
         
 
 
 
-        <div class="col-xs-4  text-center">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4>Checked By</h4>
-            </div>
-            <div class="panel-body">
-              <p>
-                  <br /><br /><br />
-               <%= "..................."*3 %>
-              </p>
-            </div>
-          </div>
-        </div>
+   <!--     <div class="col-xs-4  text-center">-->
+   <!--       <div class="panel panel-default">-->
+   <!--         <div class="panel-heading">-->
+   <!--           <h4>Checked By</h4>-->
+   <!--         </div>-->
+   <!--         <div class="panel-body">-->
+   <!--           <p>-->
+   <!--               <br /><br /><br />-->
+   <!--            <%= "..................."*3 %>-->
+   <!--           </p>-->
+   <!--         </div>-->
+   <!--       </div>-->
+   <!--     </div>-->
         
         
-        <div class="col-xs-4  text-center">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4>Signature, name and stamp</h4>
-            </div>
-            <div class="panel-body">
-              <p>
-                  <br /><br /><br />
-               <%= "..................."*3 %>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+   <!--     <div class="col-xs-4  text-center">-->
+   <!--       <div class="panel panel-default">-->
+   <!--         <div class="panel-heading">-->
+   <!--           <h4>Signature, name and stamp</h4>-->
+   <!--         </div>-->
+   <!--         <div class="panel-body">-->
+   <!--           <p>-->
+   <!--               <br /><br /><br />-->
+   <!--            <%= "..................."*3 %>-->
+   <!--           </p>-->
+   <!--         </div>-->
+   <!--       </div>-->
+   <!--     </div>-->
+   <!--   </div>-->
