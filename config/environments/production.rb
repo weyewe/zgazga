@@ -31,11 +31,17 @@ Ticketie::Application.configure do
   config.assets.compile = false
 
 
+  # config.assets.precompile += ['admin/bootstrap_print.css']
+
 
   config.assets.precompile += ['application.js', 
             'frontend.css',
               'bootstrap-email.css', 
-              'bootstrap.css'  ]
+              'bootstrap.css',
+              'print_application.css.scss'  ]
+
+
+              
   # config.assets.precompile << 'fb/*.js'
   config.assets.precompile << 'fb/*.jpg'
   config.assets.precompile << 'fb/*.png'
