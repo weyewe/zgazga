@@ -2,6 +2,8 @@ class Api::BatchInstancesController < Api::BaseApiController
   
   def index
      
+     puts "\n"*10
+     puts "we are awesome"
     query =   BatchInstance.active_objects.joins(:item )
     
     if params[:livesearch].present? 
