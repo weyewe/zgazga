@@ -45,12 +45,12 @@ Ext.define('AM.model.RecoveryWorkProcess', {
   	idProperty: 'id' ,
 
 		proxy: {
-			url: 'api/recovery_work_processs',
+			url: 'api/recovery_work_processes',
 			type: 'rest',
 			format: 'json',
 
 			reader: {
-				root: 'recovery_work_processs',
+				root: 'recovery_work_processes',
 				successProperty: 'success',
 				totalProperty : 'total'
 			},

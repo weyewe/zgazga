@@ -1,7 +1,7 @@
-Ext.define('AM.controller.RecoveryWorkProcesss', {
+Ext.define('AM.controller.RecoveryWorkProcesses', {
   extend: 'Ext.app.Controller',
 
-  stores: ['RecoveryWorkProcesss'],
+  stores: ['RecoveryWorkProcesses'],
   models: ['RecoveryWorkProcess'],
 
   views: [
@@ -114,11 +114,11 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
 	liveSearch : function(grid, newValue, oldValue, options){
 		var me = this;
 
-		me.getRecoveryWorkProcesssStore().getProxy().extraParams = {
+		me.getRecoveryWorkProcessesStore().getProxy().extraParams = {
 		    livesearch: newValue
 		};
 	 
-		me.getRecoveryWorkProcesssStore().load();
+		me.getRecoveryWorkProcessesStore().load();
 	},
  
 
@@ -177,7 +177,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
     var form = win.down('form');
 		var me = this; 
 
-    var store = this.getRecoveryWorkProcesssStore();
+    var store = this.getRecoveryWorkProcessesStore();
     var record = form.getRecord();
     var values = form.getValues();
  
@@ -269,7 +269,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryWorkProcesssStore();
+    var store = this.getRecoveryWorkProcessesStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -318,7 +318,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryWorkProcesssStore();
+    var store = this.getRecoveryWorkProcessesStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -367,7 +367,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryWorkProcesssStore();
+    var store = this.getRecoveryWorkProcessesStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  
@@ -414,7 +414,7 @@ Ext.define('AM.controller.RecoveryWorkProcesss', {
     var form = win.down('form');
 		var list = this.getList();
 
-    var store = this.getRecoveryWorkProcesssStore();
+    var store = this.getRecoveryWorkProcessesStore();
 		var record = this.getList().getSelectedObject();
     var values = form.getValues();
  

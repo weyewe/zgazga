@@ -1,7 +1,7 @@
 Ext.define('AM.controller.RecoveryWorkProcessDetails', {
   extend: 'Ext.app.Controller',
 
-  stores: ['RecoveryWorkProcessDetails', 'RecoveryWorkProcesss'],
+  stores: ['RecoveryWorkProcessDetails', 'RecoveryWorkProcesses'],
   models: ['RecoveryWorkProcessDetail'],
 
   views: [

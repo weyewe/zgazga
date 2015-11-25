@@ -1,4 +1,4 @@
-json.recovery_work_processs objects do |object|
+json.recovery_work_processes objects do |object|
     
     json.id 	object.id  
     json.recovery_order_id 	object.recovery_order_id  

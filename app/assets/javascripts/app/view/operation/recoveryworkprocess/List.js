@@ -2,7 +2,7 @@ Ext.define('AM.view.operation.recoveryworkprocess.List' ,{
   	extend: 'Ext.grid.Panel',
   	alias : 'widget.recoveryworkprocesslist',
 
-  	store: 'RecoveryWorkProcesss',  
+  	store: 'RecoveryWorkProcesses',  
  
 
 	initComponent: function() {

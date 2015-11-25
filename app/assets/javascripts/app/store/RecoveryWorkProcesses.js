@@ -1,4 +1,4 @@
-Ext.define('AM.store.RecoveryWorkProcesss', {
+Ext.define('AM.store.RecoveryWorkProcesses', {
   	extend: 'Ext.data.Store',
 		require : ['AM.model.RecoveryWorkProcess'],
   	model: 'AM.model.RecoveryWorkProcess',
