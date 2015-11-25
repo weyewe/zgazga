@@ -7,7 +7,10 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
   
   
   def index
+    puts "\n"*10
+    puts "inside index biattchh!!!"
     @parent = RecoveryOrder.find_by_id params[:recovery_order_id]
+    puts "recovery_order: #{@parent}"
     query = @parent.active_children.joins(:recovery_order, :roller_identification_form_detail,:roller_builder)
     if params[:livesearch].present? 
        livesearch = "%#{params[:livesearch]}%"
