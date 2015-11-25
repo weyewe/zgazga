@@ -1,4 +1,4 @@
-class Api::RecoveryOrderDetailsController < Api::BaseApiController
+class Api::RecoveryWorkProcessesController < Api::BaseApiController
   
   def index
      
