@@ -18,7 +18,11 @@ class Api::RecoveryOrderDetailsController < Api::BaseApiController
          )         
        } 
     end
+
+    puts "the parent: #{@parent.id}"
+    puts "parent's active children: #{@parent.active_children.count}"
     @objects = query.page(params[:page]).per(params[:limit]).order("id DESC")
+    puts "Total objects: #{@objects.count}"
     @total = query.count
   end
 
