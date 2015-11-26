@@ -321,28 +321,28 @@ class Closing < ActiveRecord::Base
       penjualan_amount = penjualan_amount + vc.amount
     end
     
-    retur_group =  Account.find_by_code( "4103" )
+    retur_group =  Account.find_by_code(ACCOUNT_CODE[:retur_penjualan_level_1][:code] )
     retur_amount = BigDecimal('0')
     retur_group.leaves.each do |pjd|
       vc = ValidComb.where(:closing_id => self.id , :account_id => pjd.id ).first
       retur_amount = retur_amount + vc.amount
     end
     
-    pendapatan_lain_lain_group = Account.find_by_code( "71" )
+    pendapatan_lain_lain_group = Account.find_by_code(ACCOUNT_CODE[:pendapatan_lain_lain][:code] )
     pendapatan_lain_lain_amount = BigDecimal('0')
     pendapatan_lain_lain_group.leaves.each do |pjd|
       vc = ValidComb.where(:closing_id => self.id , :account_id => pjd.id ).first
       pendapatan_lain_lain_amount = pendapatan_lain_lain_amount + vc.amount
     end
     
-    beban_group =  Account.find_by_code( "2" )
+    beban_group =  Account.find_by_code( ACCOUNT_CODE[:beban_usaha][:code] )
     beban_amount = BigDecimal('0')
     beban_group.leaves.each do |pjd|
       vc = ValidComb.where(:closing_id => self.id , :account_id => pjd.id ).first
       beban_amount = beban_amount + vc.amount
     end
     
-    pph_group = Account.find_by_code( "91" )
+    pph_group = Account.find_by_code( ACCOUNT_CODE[:pajak_penghasilan_level_1][:code] )
     pph_amount = BigDecimal('0')
     pph_group.leaves.each do |pjd|
       vc = ValidComb.where(:closing_id => self.id , :account_id => pjd.id ).first
@@ -352,12 +352,12 @@ class Closing < ActiveRecord::Base
     total_laba_rugi = BigDecimal('0')
     total_laba_rugi = penjualan_amount - retur_amount - beban_amount + pendapatan_lain_lain_amount - pph_amount
     
-    laba_rugi_bulan_berjalan = Account.find_by_code( "31040001" )
+    laba_rugi_bulan_berjalan = Account.find_by_code( ACCOUNT_CODE[:laba_rugi_bulan_berjalan_level_3][:code] )
     vc_laba_rugi_bulan_berjalan = ValidComb.find_by_account_id(laba_rugi_bulan_berjalan.id)
     vc_laba_rugi_bulan_berjalan.amount = vc_laba_rugi_bulan_berjalan.amount + total_laba_rugi
     vc_laba_rugi_bulan_berjalan.save
     
-    laba_rugi_tahun_berjalan = Account.find_by_code("31030001")
+    laba_rugi_tahun_berjalan = Account.find_by_code(ACCOUNT_CODE[:laba_rugi_tahun_berjalan_level_3][:code])
     vc_laba_rugi_tahun_berjalan = ValidComb.find_by_account_id(laba_rugi_tahun_berjalan.id)
     vc_laba_rugi_tahun_berjalan.amount = vc_laba_rugi_tahun_berjalan.amount +
     vc_laba_rugi_bulan_berjalan.amount + ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_tahun_berjalan )
@@ -365,7 +365,7 @@ class Closing < ActiveRecord::Base
     
     if not previous_closing.nil?
       if previous_closing.is_year_closing == true
-        laba_rugi_ditahan = Account.find_by_code("31020001")
+        laba_rugi_ditahan = Account.find_by_code(ACCOUNT_CODE[:laba_rugi_ditahan_level_3][:code])
         vc_laba_rugi_ditahan = ValidComb.find_by_account_id(laba_rugi_ditahan.id)
         vc_laba_rugi_ditahan.amount = ValidComb.previous_closing_valid_comb_amount( previous_closing, laba_rugi_ditahan ) +
         vc_laba_rugi_bulan_berjalan.amount + vc_laba_rugi_bulan_berjalan.amount
