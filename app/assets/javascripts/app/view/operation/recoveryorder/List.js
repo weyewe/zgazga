@@ -95,10 +95,16 @@ Ext.define('AM.view.operation.recoveryorder.List' ,{
 			action: 'filterObject' 
 		});
 		
+		
+		this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+		});
+		
 		 
 			this.tbar = [this.addObjectButton, this.editObjectButton, this.deleteObjectButton , 
 				'-',
-					this.confirmObjectButton, this.unconfirmObjectButton,
+					this.confirmObjectButton, this.unconfirmObjectButton,this.downloadButton,
 					'->',
 					this.filterButton, 
 					this.searchField ];

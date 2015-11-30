@@ -6,8 +6,8 @@ class CoreBuilder < ActiveRecord::Base
   validates_presence_of :machine_id
   
   
-  validates_uniqueness_of :base_sku
-  validates_presence_of :base_sku
+  # validates_uniqueness_of :base_sku
+  # validates_presence_of :base_sku
 
   validate :valid_uom_id
   validate :valid_machine_id
@@ -64,6 +64,12 @@ class CoreBuilder < ActiveRecord::Base
     new_object.cd = BigDecimal( params[:cd] || '0') 
     new_object.tl = BigDecimal( params[:tl] || '0') 
     if new_object.save
+      list_item = CoreBuilder.where{(id.not_eq new_object.id)}
+      if list_item.count == 0
+         new_object.base_sku = "CRE1"
+      else
+         new_object.base_sku = list_item.max.base_sku.succ.to_s
+      end      
       # create used core item
       used_core = Core.create_object(
         :sku => new_object.base_sku.to_s + "U",

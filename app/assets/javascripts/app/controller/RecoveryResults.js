@@ -125,8 +125,9 @@ Ext.define('AM.controller.RecoveryResults', {
 	'filterrecoveryresultform button[action=reset]' : {
 		click : this.executeResetFilterObject  
 	},
-	
-	
+	'recoveryresultProcess recoveryresultlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			},
 		
     });
   },
@@ -141,7 +142,17 @@ Ext.define('AM.controller.RecoveryResults', {
 		
 	  view.show(); 
   },
-  
+  downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'recovery_results/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+	},
+	
   executeFilterObject: function(button) {
   	var win = button.up('window');
     var form = win.down('form');

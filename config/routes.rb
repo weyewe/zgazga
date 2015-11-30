@@ -25,7 +25,9 @@ Ticketie::Application.routes.draw do
   resources :roller_accs
   resources :roller_acc_details
   resources :roller_accessory_details
-  
+  resources :roller_identification_forms
+  resources :recovery_orders
+  resources :recovery_results
    
   
   resources :action_assignments 

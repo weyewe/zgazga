@@ -228,13 +228,19 @@ class Blanket < ActiveRecord::Base
     end
     
     if new_object.save
-    
+      list_item = Blanket.where{(id.not_eq new_object.id)}
+      if list_item.count == 0
+         new_object.sku = "BLK1"
+      else
+         new_object.sku = list_item.max.sku.succ.to_s
+      end   
+      new_object.save
     end
     return new_object
   end
   
   def update_object(params)
-    self.sku = params[:sku]
+    # self.sku = params[:sku]
     self.name = params[:name]
     self.description = params[:description]
     # self.minimum_amount =  BigDecimal( params[:minimum_amount] || '0') 
