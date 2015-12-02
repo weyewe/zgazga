@@ -7,7 +7,7 @@ class RecoveryOrdersController < ApplicationController
           return
         end
         
-        @object = RecoveryOrderDetail.find(params[:id])
+        @object = RecoveryOrder.find(params[:id])
         
         @document_title = "RecoveryOrder"
         respond_to do |format|
