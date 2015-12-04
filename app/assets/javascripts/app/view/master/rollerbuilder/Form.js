@@ -549,7 +549,7 @@ Ext.define('AM.view.master.rollerbuilder.Form', {
 					me.companyInfo(), 
 					me.picInfo()
 				]
-	    }];
+	   }];
 
     this.buttons = [{
       text: 'Save',
