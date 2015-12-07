@@ -3,6 +3,7 @@ class PurchaseReceival < ActiveRecord::Base
   belongs_to :contact
   belongs_to :warehouse 
   belongs_to :exchange
+  belongs_to :purchase_order
   has_many :purchase_receival_details
   validates_presence_of :nomor_surat
   validates_presence_of :warehouse_id
