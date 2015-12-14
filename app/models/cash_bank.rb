@@ -77,13 +77,6 @@ class CashBank < ActiveRecord::Base
     self.code = params[:code]
     self.payment_code = params[:payment_code]
     if self.save
-      account = Account.find_by_id(self.account_id)
-      if not account.nil?
-        account.delete_object_base
-      end
-      account_id = Account.create_object_from_cash_bank(self).id
-      self.account_id = account_id
-      self.save
     end
     return self
   end
