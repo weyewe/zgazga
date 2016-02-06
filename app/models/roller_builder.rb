@@ -10,8 +10,8 @@ class RollerBuilder < ActiveRecord::Base
   validates_presence_of :roller_type_id
   validates_presence_of :compound_id
   validates_presence_of :core_builder_id
-  validates_uniqueness_of :base_sku
-  validates_presence_of :base_sku
+  # validates_uniqueness_of :base_sku
+  # validates_presence_of :base_sku
   
   validate :valid_uom_id
   validate :valid_machine_id
@@ -129,6 +129,12 @@ class RollerBuilder < ActiveRecord::Base
     new_object.tl = BigDecimal( params[:tl] || '0') 
     if new_object.save
       # create used core item
+      list_item = RollerBuilder.where{(id.not_eq new_object.id)}
+      if list_item.count == 0
+         new_object.base_sku = "ROL1"
+      else
+         new_object.base_sku = list_item.max.base_sku.succ.to_s
+      end      
       roller_used_core = Roller.create_object(
         :sku => new_object.base_sku.to_s + "U",
         :name => new_object.name,

@@ -8,6 +8,8 @@ Ticketie::Application.routes.draw do
   get 'print_csv_sales_invoices' => 'sales_invoices#print_csv', :as => :print_csv_sales_invoices, :method => :get
   
   
+  get 'sales_orders_download_report' => 'sales_orders#download_report', :as => :sales_orders_download_report
+  get 'purchase_orders_download_report' => 'purchase_orders#download_report', :as => :purchase_orders_download_report
   get 'sales_invoices_download_report' => 'sales_invoices#download_report', :as => :sales_invoices_download_report
   get 'closings_download_report' => 'closings#download_report', :as => :closings_download_report
   get 'neraca_saldos_download_report' => 'neraca_saldos#download_report', :as => :neraca_saldos_download_report
@@ -25,7 +27,9 @@ Ticketie::Application.routes.draw do
   resources :roller_accs
   resources :roller_acc_details
   resources :roller_accessory_details
-  
+  resources :roller_identification_forms
+  resources :recovery_orders
+  resources :recovery_results
    
   
   resources :action_assignments 

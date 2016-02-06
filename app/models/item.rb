@@ -173,7 +173,7 @@ class Item < ActiveRecord::Base
       list_item = Item.where{(item_type_id.eq new_object.item_type_id) &
                               (id.not_eq new_object.id)}
       if list_item.count == 0
-         new_object.sku = new_object.item_type.sku + "1"
+         new_object.sku = "ROL1"
       else
          new_object.sku = list_item.max.sku.succ.to_s
       end

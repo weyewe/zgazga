@@ -25,4 +25,25 @@ class PurchaseOrdersController < ApplicationController
       end
     end
   end
+  
+  
+  def download_report
+    filename = "PurchaseOrderByPaymentDueDate.xlsx"
+    filepath = Rails.root.join('public', 'images', filename )
+    
+    end_date = params[:end_date].to_date
+    start_date = params[:start_date].to_date  
+    
+    PurchaseOrderReport.create_report( filepath, start_date, end_date )
+    # VendorPaymentReport.create_report( filepath, start_date, end_date )
+    
+    file = File.open( filepath , "rb")
+    contents = file.read
+    file.close
+    
+    File.delete(filepath) if File.exist?(filepath)
+    
+    send_data(contents, :filename => filename)
+
+  end
 end

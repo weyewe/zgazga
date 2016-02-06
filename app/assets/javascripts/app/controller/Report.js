@@ -230,7 +230,58 @@ Ext.define("AM.controller.Report", {
   
     ]
 	},
-	 
+	penjualanFolder : {
+		text 			: "Penjualan", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+        
+			{ 
+				text:'SalesOrder', 
+				viewClass:'AM.view.report.SalesOrderReport', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'salesorderreports',
+					action : 'index'
+				}
+				]
+			},  
+			
+			  
+ 
+  
+    ]
+	},
+	
+	pembelianFolder : {
+		text 			: "Pembelian", 
+		viewClass : '',
+		iconCls		: 'text-folder', 
+		expanded	: true,
+		children 	: [
+        
+			{ 
+				text:'PurchaseOrder', 
+				viewClass:'AM.view.report.PurchaseOrderReport', 
+				leaf:true, 
+				iconCls:'text',
+				conditions : [
+				{
+					controller : 'purchaseorderreports',
+					action : 'index'
+				}
+				]
+			},  
+			
+			  
+ 
+  
+    ]
+	},
+	
 	onActiveProtectedContent: function( panel, options) {
 		var me  = this; 
 		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
@@ -240,7 +291,9 @@ Ext.define("AM.controller.Report", {
 			this.financeFolder,
 			this.accountingFolder,
 			this.profitLossFolder,
-			this.balanceSheetFolder
+			this.balanceSheetFolder,
+			this.penjualanFolder,
+			this.pembelianFolder,
 		];
 		
 		console.log("Inside the report");

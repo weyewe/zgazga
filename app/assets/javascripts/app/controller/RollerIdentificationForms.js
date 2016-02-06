@@ -83,6 +83,9 @@ Ext.define('AM.controller.RollerIdentificationForms', {
 			'filterrolleridentificationformform button[action=save]' : {
 				click : this.executeFilterObject  
 			},
+			'rolleridentificationformProcess rolleridentificationformlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			}	,
 			
 			'filterrolleridentificationformform button[action=reset]' : {
 				click : this.executeResetFilterObject  
@@ -92,6 +95,16 @@ Ext.define('AM.controller.RollerIdentificationForms', {
     });
   },
   
+	downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'roller_identification_forms/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+	},
 
   filterObject: function() {
   	// console.log("inside the filter object");

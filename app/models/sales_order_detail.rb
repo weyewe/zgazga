@@ -1,11 +1,12 @@
 class SalesOrderDetail < ActiveRecord::Base
+  belongs_to :sales_order
+  belongs_to :item
   validates_presence_of :item_id
  
   validate :valid_sales_order
   validate :valid_item
   validate :valid_amount
-  belongs_to :sales_order
-  belongs_to :item
+ 
   
   def self.active_objects
     self

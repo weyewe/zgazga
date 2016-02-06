@@ -76,7 +76,9 @@ Ext.define('AM.controller.RecoveryOrders', {
 			'recoveryorderform button[action=save]': {
         click: this.updateObject
       },
-		      
+		    'recoveryorderProcess recoveryorderlist button[action=downloadObject]': {
+			    click: this.downloadObject
+			},
 			'recoveryorderProcess recoveryorderlist button[action=filterObject]': {
 				click: this.filterObject
 			},
@@ -93,7 +95,16 @@ Ext.define('AM.controller.RecoveryOrders', {
     });
   },
 
-
+	downloadObject: function(){
+		var record = this.getList().getSelectedObject();
+		var id = record.get("id");
+		var currentUser = Ext.decode( localStorage.getItem('currentUser'));
+		var auth_token_value = currentUser['auth_token'];
+		if( record ){
+			window.open( 'recovery_orders/' + id + '.pdf' + "?auth_token=" +auth_token_value );
+		}
+		
+	},
   filterObject: function() {
   	// console.log("inside the filter object");
   	var me = this; 

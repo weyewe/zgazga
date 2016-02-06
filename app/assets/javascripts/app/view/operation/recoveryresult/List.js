@@ -126,13 +126,18 @@ Ext.define('AM.view.operation.recoveryresult.List' ,{
 			text: 'Filter',
 			action: 'filterObject' 
 		});
+		
+			this.downloadButton = new Ext.Button({
+			text: 'Print',
+			action: 'downloadObject',
+		});
 		 
 			this.tbar = [ this.processObjectButton, 
 				'-',
 					this.finishObjectButton, this.unfinishObjectButton, 
 					'-',
 					this.rejectObjectButton,
-					this.unrejectObjectButton,
+					this.unrejectObjectButton,this.downloadButton,
 					'->',
 					this.filterButton, 
 					this.searchField ];
