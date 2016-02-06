@@ -5,13 +5,14 @@ shared_dir = File.expand_path('../../../shared/', __FILE__)
 # Set unicorn options
 worker_processes 2
 preload_app true
-timeout 600
+timeout 30
 
 # Fill path to your app
 working_directory app_dir
 
 # Set up socket location
 listen "#{shared_dir}/sockets/unicorn.sock", :backlog => 64
+listen 8000, :tcp_nopush => true
 
 # Loging
 stderr_path "#{shared_dir}/log/unicorn.stderr.log"

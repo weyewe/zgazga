@@ -13,20 +13,29 @@ require 'mina/whenever'
 #   branch       - Branch name to deploy. (needed by mina/git)
 # https://github.com/weyewe/shopper-deployment.git
  
+
 set :domain, '128.199.215.79'
-set :deploy_to, '/var/www/zengra.com'
-# https://github.com/weyewe/esman.git
+
+puts "Gonna deploy in #{domain}"
+set :deploy_to, '/var/www/zga'  #scrapper_slave
+
 set :repository, 'git://github.com/weyewe/zgazga.git'
-set :branch, 'master'
+
+# https://github.com/weyewe/esman.git
+# set :repository, 'git://github.com/weyewe/neobooker.git'
+set :branch, 'master' # slave 
 set :user , 'zga'
 set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
+
+set :rbenv_path, "/usr/local/rbenv"
+
 
 # For system-wide RVM install.
 #   set :rvm_path, '/usr/local/rvm/bin/rvm'
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/database.yml', 'log', 'config/secrets.yml', 'config/initializers/app_secrets.rb']
+set :shared_paths, ['config/database.yml', 'config/application.yml','log', 'config/secrets.yml', 'config/initializers/app_secrets.rb']
 
 # Optional settings:
 #   set :user, 'foobar'    # Username in the server to SSH to.
@@ -49,6 +58,11 @@ end
 # all releases.
 task :setup => :environment do
 
+  # sudo mkdir -p "/var/www/booker.com" && sudo chown -R app_deploy "/var/www/booker.com"
+
+
+
+
   queue! %[mkdir -p "#{deploy_to}/shared/sockets"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
 
@@ -66,6 +80,8 @@ task :setup => :environment do
 
   queue! %[touch "#{deploy_to}/shared/config/secrets.yml"]
   queue %[echo "-----> Be sure to edit 'shared/config/secrets.yml'."]
+  queue! %[touch "#{deploy_to}/shared/config/application.yml"]
+  queue %[echo "-----> Be sure to edit for FIGARO 'shared/config/application.yml'."]
 
   queue! %[touch "#{deploy_to}/shared/config/initializers/app_secrets.rb"]
   queue %[echo "-----> Be sure to edit 'shared/config/initializers/app_secrets.rb'."]
@@ -86,20 +102,12 @@ task :deploy => :environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install'
-    # invoke :'rails:db_create'
+    invoke :'bundle:install' 
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
-    # to :launch do
-    #   queue "restart shopper"
-    # end
-
-    # to :launch do
-    #   queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
-    #   queue "touch #{deploy_to}/#{current_path}/tmp/restart.txt"
-    # end
+   
     to :launch do
       invoke :'unicorn:restart'
       invoke :'whenever:update'
@@ -107,15 +115,7 @@ task :deploy => :environment do
   end
 end
 
-# namespace :unicorn do
-#   task :restart do
-    
-#     queue %{
-#       echo "-----> Restarting Unicorn"
-#       #{echo_cmd %[kill -s USR2 `cat /tmp/unicorn.shopper.pid`]}
-#     }
-#   end
-# end
+#
 
 # For help in making your deploy script, see the Mina documentation:
 #
