@@ -12,7 +12,7 @@ require 'mina/whenever'
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 # https://github.com/weyewe/shopper-deployment.git
- 
+
 
 set :domain, '128.199.215.79'
 
@@ -23,8 +23,8 @@ set :repository, 'git://github.com/weyewe/zgazga.git'
 
 # https://github.com/weyewe/esman.git
 # set :repository, 'git://github.com/weyewe/neobooker.git'
-set :branch, 'master' # slave 
-set :user , 'zga'
+set :branch, 'master' # slave
+set :user , 'jojo'
 set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
 set :rbenv_path, "/usr/local/rbenv"
@@ -102,12 +102,12 @@ task :deploy => :environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install' 
+    invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
-   
+
     to :launch do
       invoke :'unicorn:restart'
       invoke :'whenever:update'
