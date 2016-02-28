@@ -21,7 +21,7 @@ Ticketie::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
   config.serve_static_assets = true
-  config.serve_static_files = true 
+  config.serve_static_files = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -34,14 +34,14 @@ Ticketie::Application.configure do
   # config.assets.precompile += ['admin/bootstrap_print.css']
 
 
-  config.assets.precompile += ['application.js', 
+  config.assets.precompile += ['application.js',
             'frontend.css',
-              'bootstrap-email.css', 
+              'bootstrap-email.css',
               'bootstrap.css',
               'print_application.css.scss'  ]
 
 
-              
+
   # config.assets.precompile << 'fb/*.js'
   config.assets.precompile << 'fb/*.jpg'
   config.assets.precompile << 'fb/*.png'
@@ -98,6 +98,6 @@ Ticketie::Application.configure do
 end
 
 
-BASE_MIGRATION_LOCATION = "/var/www/zengra.com/shared/zga_migration"
+BASE_MIGRATION_LOCATION = "/var/www/zga/shared/zga_migration"
 BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
 BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
