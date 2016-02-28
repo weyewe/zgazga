@@ -16,3 +16,4 @@
 /tmp
 /zga_migration
 
+/config/deploy.rb

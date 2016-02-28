@@ -78,7 +78,7 @@ class PaymentVoucher < ActiveRecord::Base
       new_object.code = "PV-" + new_object.id.to_s
       code = ""
       if not new_object.cash_bank.payment_code.nil?
-        code = new_object.cash_bank.payment_code.to_s + new_object.payment_date.month.to_s + " "
+        code = new_object.cash_bank.payment_code.to_s + new_object.payment_date.month.to_s
       end
       new_object.no_bukti = code +  new_object.no_voucher.to_s
       if new_object.cash_bank.exchange.is_base == true
@@ -120,7 +120,7 @@ class PaymentVoucher < ActiveRecord::Base
     if self.save
       code = ""
       if not self.cash_bank.payment_code.nil?
-        code = self.cash_bank.payment_code.to_s + " "
+        code = self.cash_bank.payment_code.to_s + self.payment_date.month.to_s
       end
       self.no_bukti = code +  self.no_voucher.to_s
       if self.cash_bank.exchange.is_base == true
