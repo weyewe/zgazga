@@ -98,6 +98,6 @@ Ticketie::Application.configure do
 end
 
 
-BASE_MIGRATION_LOCATION = "/var/www/zga/shared/zga_migration"
+BASE_MIGRATION_LOCATION = "/var/www/zga/shared/zga_migration/zga_migration"
 BASE_MIGRATION_ORIGINAL_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'original'
 BASE_MIGRATION_LOOKUP_LOCATION = BASE_MIGRATION_LOCATION + "/" + 'lookup'
