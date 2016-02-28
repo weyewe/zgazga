@@ -1,58 +1,58 @@
 class CoreBuilder < ActiveRecord::Base
- 
+
   belongs_to :machine
   belongs_to :uom
   validates_presence_of :uom_id
   validates_presence_of :machine_id
-  
-  
+
+
   # validates_uniqueness_of :base_sku
   # validates_presence_of :base_sku
 
   validate :valid_uom_id
   validate :valid_machine_id
   validate :valid_core_builder_type
-  
+
   def valid_uom_id
-    return if uom_id.nil? 
+    return if uom_id.nil?
     uom = Uom.find_by_id(uom_id)
-    if uom.nil? 
+    if uom.nil?
       self.errors.add(:uom_id, "Harus ada uom_id")
       return self
     end
   end
-  
+
   def valid_core_builder_type
     return if core_builder_type_case.nil?
-    if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case.to_s) 
-    
+    if not [CORE_BUILDER_TYPE[:hollow],CORE_BUILDER_TYPE[:shaft],CORE_BUILDER_TYPE[:none]].include?( core_builder_type_case.to_s)
+
       self.errors.add(:core_builder_type_case, "CoreBuilder Type harus ada")
 
-      return self 
+      return self
     end
   end
-  
+
   def valid_machine_id
-    return if machine_id.nil? 
+    return if machine_id.nil?
     machine = Machine.find_by_id(machine_id)
-    if machine.nil? 
+    if machine.nil?
       self.errors.add(:machine_id, "Harus ada machine_id")
       return self
     end
   end
-  
+
   def self.active_objects
     self
   end
-  
+
   def used_core_item
     Core.find_by_id(self.used_core_item_id)
   end
-  
+
   def new_core_item
     Core.find_by_id(self.new_core_item_id)
   end
-  
+
   def self.create_object(params)
     new_object = self.new
     new_object.base_sku = params[:base_sku]
@@ -61,15 +61,19 @@ class CoreBuilder < ActiveRecord::Base
     new_object.uom_id = params[:uom_id]
     new_object.core_builder_type_case = params[:core_builder_type_case]
     new_object.machine_id = params[:machine_id]
-    new_object.cd = BigDecimal( params[:cd] || '0') 
-    new_object.tl = BigDecimal( params[:tl] || '0') 
+    new_object.cd = BigDecimal( params[:cd] || '0')
+    new_object.tl = BigDecimal( params[:tl] || '0')
     if new_object.save
-      list_item = CoreBuilder.where{(id.not_eq new_object.id)}
-      if list_item.count == 0
-         new_object.base_sku = "CRE1"
+      if params[:migrate]
+        new_object.base_sku = params[:base_sku]
       else
-         new_object.base_sku = list_item.max.base_sku.succ.to_s
-      end      
+        list_item = CoreBuilder.where{(id.not_eq new_object.id)}
+        if list_item.count == 0
+           new_object.base_sku = "CRE1"
+        else
+           new_object.base_sku = list_item.max.base_sku.succ.to_s
+        end
+      end
       # create used core item
       used_core = Core.create_object(
         :sku => new_object.base_sku.to_s + "U",
@@ -92,15 +96,15 @@ class CoreBuilder < ActiveRecord::Base
     end
     return new_object
   end
-  
+
   def update_object(params)
-    if RollerBuilder.where(:core_builder_id => self.id).count > 0 
+    if RollerBuilder.where(:core_builder_id => self.id).count > 0
       self.errors.add(:generic_errors, "Sudah terpakai di RollerBuilder")
-      return self 
+      return self
     end
-    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0 
+    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0
       self.errors.add(:generic_errors, "Sudah terpakai di RollerIdentificationForm")
-      return self 
+      return self
     end
     self.base_sku = params[:base_sku]
     self.name = params[:name]
@@ -122,21 +126,21 @@ class CoreBuilder < ActiveRecord::Base
     end
     return self
   end
-  
+
   def delete_object
-    if RollerBuilder.where(:core_builder_id => self.id).count > 0 
+    if RollerBuilder.where(:core_builder_id => self.id).count > 0
       self.errors.add(:generic_errors, "Sudah terpakai di RollerBuilder")
-      return self 
+      return self
     end
-    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0 
+    if RollerIdentificationFormDetail.where(:core_builder_id => self.id).count > 0
       self.errors.add(:generic_errors, "Sudah terpakai di RollerIdentificationForm")
-      return self 
+      return self
     end
     self.used_core_item.delete_object
     self.new_core_item.delete_object
     self.destroy
     return self
   end
-    
-    
+
+
 end

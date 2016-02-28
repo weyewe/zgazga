@@ -7,7 +7,7 @@ gem 'awesome_nested_set'
 gem 'pg'
 gem 'whenever', :require => false
 # Use SCSS for stylesheets
- 
+
 gem 'mina'
 gem 'mina-unicorn',    :require => false
 gem 'unicorn'
@@ -27,7 +27,7 @@ gem "non-stupid-digest-assets"
 gem 'wicked_pdf'
 gem 'dropbox-sdk'
 gem 'httparty'
-gem 'json' 
+gem 'json'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -54,12 +54,12 @@ end
 
 
 gem 'devise'
-gem "kaminari"  
+gem "kaminari"
 gem 'uuidtools'
 
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '>= 3.2'
- 
+
 # gem 'the_role' #, '~> 2.5.2'
 # gem 'the_role_bootstrap3_ui'
 # gem 'the_role', '~> 3.0.0'
@@ -67,8 +67,8 @@ gem 'sass-rails', '>= 3.2'
 gem 'the_role_api', '~> 3.0.0'
 gem 'protected_attributes', '~> 1.0.5'
 gem 'squeel', :git => "git://github.com/activerecord-hackery/squeel.git"
- 
- 
+
+
 
 # https://github.com/activerecord-hackery/squeel.git
 group :production do
@@ -80,10 +80,10 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-  
+
 end
 
-gem 'active_record-acts_as' 
+gem 'active_record-acts_as'
 
 
 # gem 'jasper-rails'

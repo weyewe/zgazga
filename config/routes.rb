@@ -1,13 +1,13 @@
 Ticketie::Application.routes.draw do
   devise_for :users
-  
-  root :to => 'home#index' 
+
+  root :to => 'home#index'
   resources :sales_orders
   resources :delivery_orders
   resources :sales_invoices
   get 'print_csv_sales_invoices' => 'sales_invoices#print_csv', :as => :print_csv_sales_invoices, :method => :get
-  
-  
+
+
   get 'sales_orders_download_report' => 'sales_orders#download_report', :as => :sales_orders_download_report
   get 'purchase_orders_download_report' => 'purchase_orders#download_report', :as => :purchase_orders_download_report
   get 'sales_invoices_download_report' => 'sales_invoices#download_report', :as => :sales_invoices_download_report
@@ -16,7 +16,6 @@ Ticketie::Application.routes.draw do
   get 'neraca_saldos_download_posneraca_report' => 'neraca_saldos#download_posneraca_report', :as => :neraca_saldos_download_posneraca_report
   get 'neraca_saldos_download_income_statement_report' => 'neraca_saldos#download_income_statement_report', :as => :neraca_saldos_download_income_statement_report
   get 'closings_download_kartu_buku_besar' => 'closings#download_kartu_buku_besar', :as => :closings_download_kartu_buku_Besar
-  get 'sales_orders_download_report' => 'sales_orders#download_report', :as => :sales_orders_download_report
     
   resources :purchase_orders
   resources :purchase_receivals
@@ -31,17 +30,17 @@ Ticketie::Application.routes.draw do
   resources :roller_identification_forms
   resources :recovery_orders
   resources :recovery_results
-   
-  
-  resources :action_assignments 
-  
+
+
+  resources :action_assignments
+
   namespace :api do
     devise_for :users
-    post 'authenticate_auth_token', :to => 'sessions#authenticate_auth_token', :as => :authenticate_auth_token 
+    post 'authenticate_auth_token', :to => 'sessions#authenticate_auth_token', :as => :authenticate_auth_token
     put 'update_password' , :to => "passwords#update" , :as => :update_password
     get 'search_role' => 'roles#search', :as => :search_role, :method => :get
     get 'search_user' => 'app_users#search', :as => :search_user, :method => :get
-    get 'search_home' => 'homes#search', :as => :search_home, :method => :get 
+    get 'search_home' => 'homes#search', :as => :search_home, :method => :get
     get 'search_home_type' => 'home_types#search', :as => :search_home_type, :method => :get
     get 'search_items' => 'items#search', :as => :search_item, :method => :get
     get 'search_item_compounds' => 'items#search_compound', :as => :search_item_compound, :method => :get
@@ -49,14 +48,14 @@ Ticketie::Application.routes.draw do
     get 'search_item_adhesive_blankets' => 'items#search_adhesive_blanket', :as => :search_item_adhesive_blanket, :method => :get
     get 'search_item_bars' => 'items#search_bar', :as => :search_item_bar, :method => :get
     get 'search_item_roll_blankets' => 'items#search_roll_blanket', :as => :search_item_roll_blanket, :method => :get
-    get 'search_blankets' => 'blankets#search', :as => :search_blanket, :method => :get 
+    get 'search_blankets' => 'blankets#search', :as => :search_blanket, :method => :get
     get 'search_employees' => 'employees#search', :as => :search_employee, :method => :get
     get 'search_customers' => 'customers#search', :as => :search_customer, :method => :get
     get 'search_suppliers' => 'suppliers#search', :as => :search_supplier, :method => :get
     get 'search_cash_bank' => 'cash_banks#search', :as => :search_cash_bank, :method => :get
     get 'search_cash_bank_mutations' => 'cash_bank_mutations#search', :as => :search_cash_bank_mutations, :method => :get
     get 'work_customer_reports' => 'maintenances#customer_reports', :as => :work_customer_reports
-    
+
     get 'search_contact_groups' => 'contact_groups#search', :as => :search_contact_group
     get 'search_ledger_accounts' => 'accounts#search_ledger', :as => :search_ledger_account
     get 'search_ledger_account_payables' => 'accounts#search_ledger_payable', :as => :search_ledger_account_payable
@@ -67,8 +66,8 @@ Ticketie::Application.routes.draw do
     get 'search_warehouses' => 'warehouses#search', :as => :search_warehouse
     get 'search_sales_quotations' => 'sales_quotations#search', :as => :search_sales_quotation
     get 'search_sales_quotation_details' => 'sales_quotation_details#search', :as => :search_sales_quotation_detail
-    get 'search_warehouse_stock_details' => 'warehouse_stock_details#search', :as => :search_warehouse_stock_detail 
-    get 'search_stock_item_details' => 'stock_item_details#search', :as => :search_stock_item_detail 
+    get 'search_warehouse_stock_details' => 'warehouse_stock_details#search', :as => :search_warehouse_stock_detail
+    get 'search_stock_item_details' => 'stock_item_details#search', :as => :search_stock_item_detail
     get 'search_machines' => 'machines#search', :as => :search_machine
     get 'search_core_builders' => 'core_builders#search', :as => :search_core_builder
     get 'search_roller_builders' => 'roller_builders#search', :as => :search_roller_builder
@@ -82,7 +81,7 @@ Ticketie::Application.routes.draw do
     get 'search_unit_conversion_orders' => 'unit_conversion_orders#search', :as => :search_unit_conversion_order
     get 'search_roller_accessorys' => 'roller_identification_form_details#search', :as => :search_roller_accessorys
     get 'search_roller_accessory_details' => 'roller_accessory_details#search', :as => :search_roller_accessory_detail
-    
+
     get 'search_sales_orders' => 'sales_orders#search', :as => :search_sales_order
     get 'search_sales_order_details' => 'sales_order_details#search', :as => :search_sales_order_detail
     get 'search_delivery_orders' => 'delivery_orders#search', :as => :search_delivery_order
@@ -109,9 +108,9 @@ Ticketie::Application.routes.draw do
     get 'search_purchase_down_payments' => 'purchase_down_payments#search', :as => :search_purchase_down_payment
     get 'search_purchase_down_payment_allocations' => 'purchase_down_payment_allocations#search', :as => :search_purchase_down_payment_allocation
     get 'search_purchase_down_payment_allocation_details' => 'purchase_down_payment_allocation_details#search', :as => :search_purchase_down_payment_allocation_detail
-    
-    
-    
+
+
+
     get 'search_purchase_requests' => 'purchase_requests#search', :as => :search_purchase_request
     get 'search_purchase_request_details' => 'purchase_request_details#search', :as => :search_purchase_request_detail
     get 'search_purchase_orders' => 'purchase_orders#search', :as => :search_purchase_order
@@ -131,126 +130,126 @@ Ticketie::Application.routes.draw do
     get 'search_payment_voucher_details' => 'payment_voucher_details#search', :as => :search_payment_voucher_detail
     get 'search_receipt_vouchers' => 'receipt_voucher_details#search', :as => :search_receipt_voucher
     get 'search_receipt_voucher_details' => 'receipt_voucher_details#search', :as => :search_receipt_voucher_detail
- 
+
     get 'search_bank_administrations' => 'bank_administrations#search', :as => :search_bank_administration
     get 'search_bank_administration_details' => 'bank_administration_details#search', :as => :search_bank_administration_detail
- 
-    
+
+
     get 'search_batch_instances' => 'batch_instances#search', :as => :search_batch_instance
     get 'search_neraca_saldos' => 'neraca_saldos#search', :as => :search_neraca_saldo, :method => :get
-    
-    
- 
-   
-    # master data 
+
+
+
+
+    # master data
     resources :app_users
-    resources :contact_groups 
-    resources :customers 
-    resources :suppliers 
+    resources :contact_groups
+    resources :customers
+    resources :suppliers
     resources :employees
     resources :machines
     resources :roller_types
-    
-    # ITEM DB
-    resources :item_types  
-    resources :sub_types
-    resources :uoms 
-    resources :items 
 
-    
+    # ITEM DB
+    resources :item_types
+    resources :sub_types
+    resources :uoms
+    resources :items
+
+
     #   warehousing
     resources :warehouses
-  
+
     # accounting
     resources :memorials
     resources :memorial_details
-    
+
     # finance
     resources :accounts
     resources :cash_banks
-    resources :exchanges  
-    resources :exchange_rates 
-  
-     
+    resources :exchanges
+    resources :exchange_rates
+
+
     # operation
-    
+
     # resources :payables
     # resources :receivables
     resources :stock_adjustments
     resources :stock_adjustment_details
-    
+
     resources :customer_stock_adjustments
     resources :customer_stock_adjustment_details
-    
+
     resources :warehouse_mutations
     resources :warehouse_mutation_details
-    
+
     resources :cash_bank_adjustments
     resources :cash_bank_mutations
-    
+
     resources :sales_orders
     resources :sales_order_details
-    
+
     resources :delivery_orders
     resources :delivery_order_details
-    
+
     resources :virtual_orders
     resources :virtual_order_details
-    
+
     resources :virtual_order_clearances
     resources :virtual_order_clearance_details
-    
+
     resources :virtual_delivery_orders
     resources :virtual_delivery_order_details
-    
+
     resources :temporary_delivery_orders
     resources :temporary_delivery_order_details
-    
+
     resources :sales_invoices
     resources :sales_invoice_details
-    
+
     resources :purchase_orders
     resources :purchase_order_details
-    
+
     resources :purchase_receivals
     resources :purchase_receival_details
-    
+
     resources :purchase_invoices
     resources :purchase_invoice_details
-    
+
     resources :roller_builders
     resources :core_builders
     resources :blankets
-    
+
     resources :payment_requests
     resources :payment_request_details
-    
+
     resources :payment_vouchers
     resources :payment_voucher_details
-    
+
     resources :receipt_vouchers
     resources :receipt_voucher_details
-    
+
     resources :blending_recipes
     resources :blending_recipe_details
-    
+
     resources :blanket_orders
     resources :blanket_order_details
-    
+
     resources :roller_identification_forms
     resources :roller_identification_form_details
-    
+
     resources :recovery_orders
     resources :recovery_order_details
-    
+
     resources :blending_work_orders
-    
+
     resources :blanket_warehouse_mutations
     resources :blanket_warehouse_mutation_details
-    
+
     resources :roller_warehouse_mutations
     resources :roller_warehouse_mutation_details
-    
+
     resources :bank_administrations
     resources :bank_administration_details
     resources :closings
@@ -261,55 +260,55 @@ Ticketie::Application.routes.draw do
     resources :purchase_down_payments
     resources :purchase_down_payment_allocations
     resources :purchase_down_payment_allocation_details
-    
-    
-    
+
+
+
     resources :batch_instances
     resources :blanket_work_processes
-    
-    resources :blanket_results 
-    resources :blanket_result_details 
-    
+
+    resources :blanket_results
+    resources :blanket_result_details
+
     resources :recovery_results
-    resources :recovery_result_details 
-    resources :recovery_result_compound_details 
-    resources :recovery_result_underlayer_details 
-    
+    resources :recovery_result_details
+    resources :recovery_result_compound_details
+    resources :recovery_result_underlayer_details
+
     resources :batch_sources
     resources :batch_source_details
-    
+
     resources :payables
     resources :payable_details
-    
+
     resources :receivables
-    resources :receivable_details 
-    
+    resources :receivable_details
+
     resources :warehouse_stocks
     resources :warehouse_stock_details
-    
+
     resources :stock_items
     resources :stock_item_details
-    
-    resources :menus # select the user  
+
+    resources :menus # select the user
     resources :menu_details  # select the menu action checkbox
-    
+
     resources :ledgers
-    
+
     resources :transaction_datas
     resources :transaction_data_details
-    
+
     resources :sales_quotations
     resources :sales_quotation_details
-    
+
     resources :purchase_requests
     resources :purchase_request_details
-    
+
     resources :unit_conversions
     resources :unit_conversion_details
     resources :unit_conversion_orders
-    
+
     resources :neraca_saldos
   end
-  
-  
+
+
 end

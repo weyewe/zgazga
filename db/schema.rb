@@ -1419,7 +1419,7 @@ ActiveRecord::Schema.define(version: 20150925094551) do
   create_table "transaction_data_non_base_exchange_details", force: true do |t|
     t.integer  "transaction_data_detail_id"
     t.integer  "exchange_id"
-    t.decimal  "amount",                     precision: 18, scale: 11, default: 0.0
+    t.decimal  "amount",                     precision: 14, scale: 2, default: 0.0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
