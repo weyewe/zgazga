@@ -106,7 +106,12 @@ class ItemType < ActiveRecord::Base
     new_object.description = params[:description]
     new_object.account_id = params[:account_id]
     new_object.is_batched = params[:is_batched]
-    new_object.save
+    if new_object.save
+      if new_object.sku == "" or new_object.sku.nil?
+        new_object.sku = new_object.description
+        new_object.save
+      end
+    end
     return new_object
   end
   

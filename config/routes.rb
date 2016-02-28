@@ -14,6 +14,7 @@ Ticketie::Application.routes.draw do
   get 'neraca_saldos_download_posneraca_report' => 'neraca_saldos#download_posneraca_report', :as => :neraca_saldos_download_posneraca_report
   get 'neraca_saldos_download_income_statement_report' => 'neraca_saldos#download_income_statement_report', :as => :neraca_saldos_download_income_statement_report
   get 'closings_download_kartu_buku_besar' => 'closings#download_kartu_buku_besar', :as => :closings_download_kartu_buku_Besar
+  get 'sales_orders_download_report' => 'sales_orders#download_report', :as => :sales_orders_download_report
     
   resources :purchase_orders
   resources :purchase_receivals
